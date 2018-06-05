@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Run and view a kMC model. For this to work one needs a
 kmc_model.(so/pyd) and a kmc_settings.py in the import path."""
+from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
 #
@@ -20,6 +21,7 @@ kmc_model.(so/pyd) and a kmc_settings.py in the import path."""
 import multiprocessing
 import threading
 import os
+import sys
 
 import numpy as np
 import time
@@ -31,27 +33,32 @@ import ase
 try:
     import gtk
     import gobject
-    from ase.gui.view import View
-    from ase.gui.status import Status
-except Exception, e:
-    View = type('View', (), {})
-    Status = type('Status', (), {})
-    print('Warning: GTK not available. Cannot run graphical front-end')
-    print(e)
+except Exception as e:
+    try:
+        import gi
+        gi.require_version('Gtk', '3.0')
+        from gi.repository import Gtk as gtk
+        from gi.repository import GObject as gobject
+        from ase.gui.view import View
+        from ase.gui.status import Status
+    except Exception as e:
+        View = type('View', (), {})
+        Status = type('Status', (), {})
+        print('Warning: GTK not available. Cannot run graphical front-end')
+        print(e)
 
-try:
-    import matplotlib
-    if os.name == 'posix':
-        matplotlib.use('GTKAgg')
-    elif os.name == 'nt':
-        matplotlib.use('wxagg')
-    else:
-        matplotlib.use('GTKAgg')
-    import matplotlib.pylab as plt
-except Exception, e:
-    print('Could not import matplotlib frontend for real-time plotting')
-    print(e)
+import matplotlib
 
+gtk_version = 'GTKAgg'
+if sys.version_info.major == 3:
+    gtk_version = 'GTK3Agg'
+if os.name == 'posix':
+    matplotlib.use(gtk_version)
+elif os.name == 'nt':
+    matplotlib.use('wxagg')
+else:
+    matplotlib.use(gtk_version)
+import matplotlib.pylab as plt
 
 from kmos.run import KMC_Model, get_tof_names, lattice, settings
 
@@ -61,7 +68,8 @@ class ParamSlider(gtk.HScale):
     at runtime.
     """
 
-    def __init__(self, name, value, xmin, xmax, scale, parameter_callback):
+    def __init__(self, name, value, xmin, xmax, scaleInput, parameter_callback):
+        super().__init__()
         self.parameter_callback = parameter_callback
         self.resolution = 1000.
         adjustment = gtk.Adjustment(0, 0, self.resolution, 0.1, 1.)
@@ -71,8 +79,10 @@ class ParamSlider(gtk.HScale):
             self.xmax = self.xmax + 1.
         self.settings = settings
         self.param_name = name
-        self.scale = scale
-        gtk.HScale.__init__(self, adjustment)
+        self.scaleA = scaleInput
+        gtk.HScale.__init__(adjustment)
+        
+    def connect(self):
         self.connect('format-value', self.linlog_scale_format)
         self.connect('value-changed', self.value_changed)
         self.set_tooltip_text(self.param_name)
@@ -173,8 +183,8 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
 
         self.vbox.connect('scroll-event', self.scroll_event)
         self.window.connect('key-press-event', self.on_key_press)
-        View.__init__(self, self.vbox, rotations)
-        Status.__init__(self, self.vbox)
+        View.__init__(self.vbox, rotations)
+        Status.__init__(self.vbox)
         self.vbox.show()
 
         if os.name == 'posix':
@@ -182,11 +192,11 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
         else:
             self.live_plot = False
 
-        self.drawing_area.realize()
+        #self.drawing_area.realize()
         self.scale = 10.0
         self.center = np.array([8, 8, 8])
-        self.set_colors()
-        self.set_coordinates(0)
+        #self.set_colors()
+        #self.set_coordinates(0)
         self.center = np.array([0, 0, 0])
 
         self.tofs = get_tof_names()
@@ -331,7 +341,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
         self.scale *= x
         try:
             atoms = self.image_queue.get()
-        except Exception, e:
+        except Exception as e:
             atoms = ase.atoms.Atoms()
             print(e)
         self.update_vbox(atoms)
@@ -379,8 +389,12 @@ class KMC_Viewer():
     """
 
     def __init__(self, model=None, steps_per_frame=50000):
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.set_position(gtk.WIN_POS_CENTER)
+        if sys.version_info.major == 3:
+            self.window = gtk.Window()
+        else:
+            self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+            self.window.set_position(gtk.WIN_POS_CENTER)
+            
         self.window.connect('delete-event', self.exit)
 
         self.vbox = gtk.VBox()
@@ -404,15 +418,16 @@ class KMC_Viewer():
         adjustable_params = [param for param in settings.parameters
                              if settings.parameters[param]['adjustable']]
 
-        for param_name in sorted(adjustable_params):
-            param = settings.parameters[param_name]
-            slider = ParamSlider(param_name, param['value'],
-                                 param['min'], param['max'],
-                                 param['scale'], self.parameter_callback)
-            self.vbox.add(slider)
-            self.vbox.set_child_packing(slider, expand=False,
-                                        fill=False, padding=0,
-                                        pack_type=gtk.PACK_START)
+        # for param_name in sorted(adjustable_params):
+        #     param = settings.parameters[param_name]
+        #     slider = ParamSlider(param_name, param['value'],
+        #                          param['min'], param['max'],
+        #                          param['scale'], self.parameter_callback)
+        #     slider.connect()
+        #     self.vbox.add(slider)
+        #     self.vbox.set_child_packing(slider, expand=False,
+        #                                 fill=False, padding=0,
+        #                                 pack_type=gtk.PACK_START)
         self.window.set_title('kmos GUI')
         self.window.show_all()
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """kMC modeling on steroids"""
 
 import os
@@ -39,7 +39,7 @@ requires = [
                     'pygtk',
                    ]
 license = 'COPYING'
-long_description = file('README.rst').read()
+long_description = open('README.rst').read()
 name='python-kmos'
 packages = [
            'kmos',

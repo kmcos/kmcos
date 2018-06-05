@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """kmos.gui.forms - GUI forms used by kmos.gui
 The classes defined here heavily draw on the interface provided by
 python-kiwi.
@@ -6,6 +6,7 @@ In the language of underlying MVC (Model-View-Controller) pattern these
 classes form the controller. The view is defined through a *.glade XML file
 and the models are instances of kmos.types.*
 """
+from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
 #
@@ -585,7 +586,7 @@ class ProcessForm(ProxySlaveDelegate, CorrectlyNamed):
                     'Current value: %.5e s^{-1}' %
                     evaluate_rate_expression(expr,
                         self.project_tree.get_parameters()))
-            except Exception, e:
+            except Exception as e:
                 self.rate_constant.set_tooltip_text(str(e))
         rate_constant_terms = ['bar',
                                'beta',
@@ -623,7 +624,7 @@ class ProcessForm(ProxySlaveDelegate, CorrectlyNamed):
             self.rate_constant.set_tooltip_text('Current value: %.2e s^{-1}' %
                 evaluate_rate_expression(expr,
                     self.project_tree.get_parameters()))
-        except Exception, e:
+        except Exception as e:
             return ValidationError(e)
 
     def on_chemical_expression__activate(self, entry):
@@ -649,7 +650,7 @@ class ProcessForm(ProxySlaveDelegate, CorrectlyNamed):
             parse_chemical_expression(eq=text,
                                       process=self.process,
                                       project_tree=self.project_tree)
-        except Exception, e:
+        except Exception as e:
             # first remove last term and try again
             try:
                 print("Error ...")
@@ -663,7 +664,7 @@ class ProcessForm(ProxySlaveDelegate, CorrectlyNamed):
                                           process=self.process,
                                           project_tree=self.project_tree)
 
-            except Exception, e:
+            except Exception as e:
                 print("Fatal Error ... %s" % e)
                 self.process.condition_list = []
                 self.process.action_list = []

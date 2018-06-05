@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Features front-end import/export functions for kMC Projects.
 Currently import and export is supported to XML
 and export is supported to Fortran 90 source code.
 """
+from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
 #
@@ -374,7 +375,7 @@ class ProcListWriter():
                     relative_coord = 'lsite%s' % (action.coord - process.executing_coord()).radd_ff()
 
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -482,7 +483,7 @@ class ProcListWriter():
                     
 
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -498,7 +499,7 @@ class ProcListWriter():
                     relative_coord = 'lsite%s' % (action.coord - process.executing_coord()).radd_ff()
 
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -644,7 +645,7 @@ class ProcListWriter():
                     
 
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -660,7 +661,7 @@ class ProcListWriter():
                     relative_coord = 'lsite%s' % (action.coord - process.executing_coord()).radd_ff()
 
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -806,7 +807,7 @@ class ProcListWriter():
             for action in process.action_list:
                 
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -826,7 +827,7 @@ class ProcListWriter():
                 process_exec = process.action_list[1-i_action].coord.radd_ff()                 
     
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -1022,7 +1023,7 @@ class ProcListWriter():
             for action in process.action_list:
                 
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -1042,7 +1043,7 @@ class ProcListWriter():
                 process_exec = process.action_list[1-i_action].coord.radd_ff()                 
     
                 try:
-                    previous_species = filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list)[0].species
+                    previous_species = list(filter(lambda x: x.coord.ff() == action.coord.ff(), process.condition_list))[0].species
                 except:
                     UserWarning("""Process %s seems to be ill-defined.
                                    Every action needs a corresponding condition
@@ -1512,7 +1513,7 @@ class ProcListWriter():
                 try:
                     action = [action for action in process0.action_list
                                             if condition.coord == action.coord][0]
-                except Exception, e:
+                except Exception as e:
                     print(e)
                     print('Trouble with process %s' % process.name)
                     print('And condition %s' % condition)
@@ -1728,7 +1729,7 @@ class ProcListWriter():
                     lat_int_nr += species_nr*(nr_of_species**j)
                     #print(lat_int_nr, species.name, nr_of_species, j)
                 compression_map[lat_int_nr] = process.name
-                if lat_int_nr > sys.maxint :
+                if lat_int_nr > sys.maxsize :
                     print(("Warning: Lateral interaction index is too large to compile.\n"
                           "          Try to reduce the number of (non-implicit conditions\n"
                           "          or the total number of species.\n\n%s") % process)
@@ -1853,7 +1854,7 @@ class ProcListWriter():
 
                                         # filter out the current condition, because we know we set it to true
                                         # right now
-                                        other_conditions = filter(lambda x: x.coord != condition.coord, process.condition_list)
+                                        other_conditions = list(filter(lambda x: x.coord != condition.coord, process.condition_list))
                                         # note how '-' operation is defined for Coord class !
                                         # we change the coordinate part to already point at
                                         # the right relative site
@@ -2006,7 +2007,7 @@ class ProcListWriter():
                 out.write('%scall del_proc(%s, %s)\n' % (' ' * indent, item[1][0], item[1][1]))
 
         # and only keep those that have conditions
-        items = filter(lambda x: x[0], items)
+        items = list(filter(lambda x: len(x[0]) > 1, items))
         if not items:
             return
 
@@ -2028,18 +2029,18 @@ class ProcListWriter():
             out.write('%scase(%s)\n' % ((indent) * ' ', answer))
             # this very crazy expression matches at items that contain
             # a question for the same coordinate and have the same answer here
-            nested_items = filter(
+            nested_items = list(filter(
                 lambda x: (most_common_coord in [y.coord for y in x[0]]
-                and answer == filter(lambda y: y.coord == most_common_coord, x[0])[0].species),
-                items)
+                and answer == list(filter(lambda y: y.coord == most_common_coord, x[0]))[0].species),
+                items))
             # pruned items are almost identical to nested items, except the have
             # the one condition removed, that we just met
             pruned_items = []
             for nested_item in nested_items:
-                conditions = filter(lambda x: most_common_coord != x.coord, nested_item[0])
+                conditions = list(filter(lambda x: most_common_coord != x.coord, nested_item[0]))
                 pruned_items.append((conditions, nested_item[1]))
 
-            items = filter(lambda x: x not in nested_items, items)
+            items = list(filter(lambda x: x not in nested_items, items))
             self._write_optimal_iftree(pruned_items, indent + 4, out)
         out.write('%send select\n\n' % (indent * ' ',))
 
@@ -2055,7 +2056,10 @@ class ProcListWriter():
         handles rate constants update at fortran level'''
 
         import tokenize
-        import StringIO
+        try:
+            import StringIO
+        except ImportError:
+            from io import StringIO 
         import itertools
         from kmos import evaluate_rate_expression
         from kmos import rate_aliases
@@ -2160,7 +2164,7 @@ class ProcListWriter():
             specs_dict = {}
             for byst in process.bystander_list:
                 for flg in byst.flag.split():
-                    if specs_dict.has_key(flg):
+                    if flg in specs_dict:
                         specs_dict[flg].extend(byst.allowed_species)
                     else:
                         specs_dict[flg] = copy.deepcopy(byst.allowed_species)
@@ -2291,7 +2295,10 @@ class ProcListWriter():
 
 
     def _otf_get_auxilirary_params(self,data):
-        import StringIO
+        try:
+            import StringIO
+        except ImportError:
+            from io import StringIO 
         import tokenize
         from kmos import units, rate_aliases
         units_list = []
@@ -2378,7 +2385,11 @@ class ProcListWriter():
         returning the processed line and a list of the
         nr_<species>_<flag> encountered
         """
-        import StringIO, tokenize
+        import tokenize
+        try:
+            import StringIO
+        except ImportError:
+            from io import StringIO 
         from kmos import units, rate_aliases
 
         param_names = [param.name for param in data.parameter_list]
@@ -2811,7 +2822,7 @@ class ProcListWriter():
                 out.write('%scall del_proc(%s, %s)\n' % (' ' * indent, item[1][0], rel_site))
 
         # and only keep those that have conditions
-        items = filter(lambda x: x[0], items)
+        items = list(filter(lambda x: len(x[0]) > 1, items))
         if not items:
             return
 
@@ -2849,11 +2860,11 @@ class ProcListWriter():
             # print('for most_common_coord: %s' % most_common_coord)
             # print(' ')
 
-            nested_items = filter(
+            nested_items = list(filter(
                 lambda x:
                 (most_common_coord in [y.coord for y in x[0]]
-                and answer == filter(lambda y: y.coord == most_common_coord, x[0])[0].species),
-                items)
+                and answer == list(filter(lambda y: y.coord == most_common_coord, x[0]))[0].species),
+                items))
 
             # print('nested items resulted in:')
             # print(nested_items)
@@ -2864,10 +2875,10 @@ class ProcListWriter():
             pruned_items = []
             for nested_item in nested_items:
 
-                conditions = filter(lambda x: most_common_coord != x.coord, nested_item[0])
+                conditions = list(filter(lambda x: most_common_coord != x.coord, nested_item[0]))
                 pruned_items.append((conditions, nested_item[1]))
 
-            items = filter(lambda x: x not in nested_items, items)
+            items = list(filter(lambda x: x not in nested_items, items))
             self._write_optimal_iftree_otf(pruned_items, indent + 4, out)
         out.write('%send select\n\n' % (indent * ' ',))
 
@@ -2924,13 +2935,13 @@ class ProcListWriter():
                 parameters = {}
                 for param in data.parameter_list:
                     parameters[param.name] = {'value': param.value}
-            except Exception, e:
+            except Exception as e:
                 raise UserWarning('Parameter ill-defined(%s)\n%s\nProcess: %s'
                                   % (param, e, process.name))
 
             try:
                 evaluate_rate_expression(process.rate_constant, parameters)
-            except Exception, e:
+            except Exception as e:
                 raise UserWarning('Could not evaluate (%s)\n%s\nProcess: %s'
                                   % (process.rate_constant, e, process.name))
         out.write('    }\n\n')
@@ -3079,7 +3090,7 @@ def export_source(project_tree, export_dir=None, code_generator=None, options=No
 
     for filename in exec_files:
         shutil.copy(os.path.join(APP_ABS_PATH, filename), export_dir)
-        os.chmod(os.path.join(export_dir, filename), 0755)
+        os.chmod(os.path.join(export_dir, filename), 0o755)
 
     # SECOND
     # produce those source files that are written on the fly
