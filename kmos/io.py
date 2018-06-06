@@ -1362,7 +1362,7 @@ class ProcListWriter():
         representation_length = max([len(species.representation) for species in data.species_list])
         out.write('integer(kind=iint), parameter, public :: representation_length = %s\n' % representation_length)
         if os.name == 'posix':
-            out.write('integer(kind=iint), public :: seed_size = 12\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         elif os.name == 'nt':
             out.write('integer(kind=iint), public :: seed_size = 12\n')
         else:
@@ -2504,7 +2504,7 @@ class ProcListWriter():
         representation_length = max([len(species.representation) for species in data.species_list])
         out.write('integer(kind=iint), parameter, public :: representation_length = %s\n' % representation_length)
         if os.name == 'posix':
-            out.write('integer(kind=iint), public :: seed_size = 12\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         elif os.name == 'nt':
             out.write('integer(kind=iint), public :: seed_size = 12\n')
         else:
