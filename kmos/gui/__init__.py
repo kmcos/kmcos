@@ -20,7 +20,10 @@ from __future__ import print_function
 
 # standard modules
 import optparse
-import StringIO
+try:
+    import StringIO
+except ImportError:
+    from io import StringIO 
 import sys
 import os
 
@@ -34,9 +37,14 @@ from kmos.config import GLADEFILE
 import kmos.io
 
 import gobject
-import pygtk
-pygtk.require('2.0')
-import gtk
+try:
+    import pygtk
+    pygtk.require('2.0')
+    import gtk
+except ModuleNotFoundError:
+    import gi
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gtk as gtk
 
 #Kiwi imports
 import kiwi.ui

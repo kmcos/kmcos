@@ -212,10 +212,15 @@ class KMC_Model(Process):
         self.reset()
 
         if hasattr(settings, 'setup_model'):
-            import new
-            self.setup_model = new.instancemethod(settings.setup_model,
-                                                  self,
-                                                  KMC_Model)
+            try:
+                import new
+                self.setup_model = new.instancemethod(settings.setup_model,
+                                                      self,
+                                                      KMC_Model)
+            except ModuleNotFoundError:
+                import types
+                self.setup_model =  types.MethodType(settings.setup_model,
+                                         KMC_Model)
             self.setup_model()
 
     def __enter__(self, *args, **kwargs):
@@ -411,6 +416,10 @@ class KMC_Model(Process):
         """Runs the model indefinitely. To control the
         simulations, model must have been initialized
         with proper Queues."""
+        try:
+            xrange
+        except NameError:
+            xrange = range
         if not base.is_allocated():
             self.reset()
         while True:
