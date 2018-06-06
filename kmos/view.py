@@ -82,15 +82,14 @@ class ParamSlider(gtk.HScale):
         self.scaleA = scaleInput
         gtk.HScale.__init__(adjustment)
         
-    def connect(self):
         self.connect('format-value', self.linlog_scale_format)
         self.connect('value-changed', self.value_changed)
         self.set_tooltip_text(self.param_name)
-        if self.scale == 'linear':
+        if self.scaleA == 'linear':
             scaled_value = (self.resolution * (float(value) - self.xmin) /
                                                (self.xmax - self.xmin))
             self.set_value(scaled_value)
-        elif self.scale == 'log':
+        elif self.scaleA == 'log':
             scaled_value = 1000 * (np.log(float(value) / self.xmin) /
                                    np.log(float(self.xmax / self.xmin)))
             self.set_value(scaled_value)
@@ -109,20 +108,20 @@ class ParamSlider(gtk.HScale):
             unit = 'bar'
         if name == 'T':
             unit = 'K'
-        if self.scale == 'log':
+        if self.scaleA == 'log':
             vstr = '%s: %.2e %s (log)' % (name,
                            self.xmin * (self.xmax / self.xmin) ** value, unit)
-        elif self.scale == 'linear':
+        elif self.scaleA == 'linear':
             vstr = '%s: %s %s' % (name,
                            self.xmin + value * (self.xmax - self.xmin), unit)
         else:
-            raise UserWarning("Unexpected scale mode %s" % self.scale)
+            raise UserWarning("Unexpected scale mode %s" % self.scaleA)
         return vstr
 
     def value_changed(self, _widget):
         """Handle the event, that slider bar has been dragged."""
         scale_value = self.get_value() / self.resolution
-        if self.scale == 'log':
+        if self.scaleA == 'log':
             value = self.xmin * (self.xmax / self.xmin) ** scale_value
         else:
             value = self.xmin + (self.xmax - self.xmin) * scale_value
@@ -193,7 +192,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
             self.live_plot = False
 
         #self.drawing_area.realize()
-        self.scale = 10.0
+        self.scaleA = 10.0
         self.center = np.array([8, 8, 8])
         #self.set_colors()
         #self.set_coordinates(0)
@@ -338,7 +337,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
 
     def _do_zoom(self, x):
         """Utility method for zooming"""
-        self.scale *= x
+        self.scaleA *= x
         try:
             atoms = self.image_queue.get()
         except Exception as e:
@@ -418,16 +417,16 @@ class KMC_Viewer():
         adjustable_params = [param for param in settings.parameters
                              if settings.parameters[param]['adjustable']]
 
-        # for param_name in sorted(adjustable_params):
-        #     param = settings.parameters[param_name]
-        #     slider = ParamSlider(param_name, param['value'],
-        #                          param['min'], param['max'],
-        #                          param['scale'], self.parameter_callback)
-        #     slider.connect()
-        #     self.vbox.add(slider)
-        #     self.vbox.set_child_packing(slider, expand=False,
-        #                                 fill=False, padding=0,
-        #                                 pack_type=gtk.PACK_START)
+        for param_name in sorted(adjustable_params):
+            param = settings.parameters[param_name]
+            slider = ParamSlider(param_name, param['value'],
+                                 param['min'], param['max'],
+                                 param['scale'], self.parameter_callback)
+            self.vbox.add(slider)
+            start_pack = self.vbox.query_child_packing(slider).pack_type
+            self.vbox.set_child_packing(slider, expand=False,
+                                        fill=False, padding=0,
+                                        pack_type=start_pack)
         self.window.set_title('kmos GUI')
         self.window.show_all()
 
