@@ -126,7 +126,7 @@ def _most_common(L):
             min_index = min(min_index, where)
         return count, - min_index
     # pick the highest-count/earliest item
-    return max(groups, key=_auxfun)[0]
+    return list(max(groups, key=_auxfun))[0]
 
 
 class ProcListWriter():
@@ -1998,7 +1998,7 @@ class ProcListWriter():
         # So consider this a heuristic solution which should give
         # on average better results than the brute force way
 
-        for item in filter(lambda x: not x[0], items):
+        for item in list(filter(lambda x: not x[0], items)):
             # [1][2] field of the item determine if this search is intended for enabling (=True) or
             # disabling (=False) a process
             if item[1][2]:
@@ -2007,8 +2007,9 @@ class ProcListWriter():
                 out.write('%scall del_proc(%s, %s)\n' % (' ' * indent, item[1][0], item[1][1]))
 
         # and only keep those that have conditions
-        items = list(filter(lambda x: len(x[0]) > 1, items))
-        if not items:
+        items = filter(lambda x: x[0], items)
+        items = list(items)
+        if len(items) <= 0:
             return
 
         # now the GENERAL CASE
