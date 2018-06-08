@@ -691,7 +691,7 @@ class KMC_Model(Process):
                                                       - len(ad_atoms),
                                                       len(atoms)):
                                         kmos_tags[atom] = \
-                                        self.species_tags.values()[species]
+                                        list(self.species_tags.values())[species]
 
                         if self.lattice_representation:
                             lattice_repr = deepcopy(self.lattice_representation)
