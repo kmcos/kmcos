@@ -114,6 +114,11 @@ except Exception as e:
     Hint: are you in a directory containing a compiled kMC model?
     """ % e)
 
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 INTERACTIVE = hasattr(sys, 'ps1') or hasattr(sys, 'ipcompleter')
 INTERACTIVE = True  # Turn it off for now because it doesn work reliably
 
@@ -416,10 +421,6 @@ class KMC_Model(Process):
         """Runs the model indefinitely. To control the
         simulations, model must have been initialized
         with proper Queues."""
-        try:
-            xrange
-        except NameError:
-            xrange = range
         if not base.is_allocated():
             self.reset()
         while True:
