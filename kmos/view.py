@@ -41,6 +41,7 @@ except Exception as e:
         from gi.repository import GObject as gobject
         from ase.gui.view import View
         from ase.gui.status import Status
+        from ase.gui.gui import GUI
     except Exception as e:
         View = type('View', (), {})
         Status = type('Status', (), {})
@@ -173,6 +174,8 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
         self.configured = False
         self.ui = FakeUI.__init__(self)
         self.images = Images()
+        self.aseGui = GUI()
+        #self.aseGui.images.initialize([ase.atoms.Atoms()])
         self.images.initialize([ase.atoms.Atoms()])
         self.killed = False
         self.paused = False
@@ -182,8 +185,9 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
 
         self.vbox.connect('scroll-event', self.scroll_event)
         self.window.connect('key-press-event', self.on_key_press)
-        View.__init__(self.vbox, rotations)
-        Status.__init__(self.vbox)
+        rotations = '0.0x,0.0y,0.0z'#[3,3,3]#np.zeros(3)
+        View.__init__(self, rotations)
+        Status.__init__(self)
         self.vbox.show()
 
         if os.name == 'posix':
@@ -192,7 +196,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
             self.live_plot = False
 
         #self.drawing_area.realize()
-        self.scaleA = 10.0
+        self.scaleA = 3.0
         self.center = np.array([8, 8, 8])
         #self.set_colors()
         #self.set_coordinates(0)
@@ -232,13 +236,20 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
         """Update the ViewBox."""
         if not self.center.any():
             self.center = atoms.cell.diagonal() * .5
-        self.images = Images([atoms])
-        self.images.filenames = ['kmos GUI - %s' % settings.model_name]
-        self.set_colors()
-        self.set_coordinates(0)
-        self.draw()
-        self.label.set_label('%.3e s (%.3e steps)' % (atoms.kmc_time,
-                                                    atoms.kmc_step))
+        #self.images = Images([atoms])
+        #self.images.filenames = ['kmos GUI - %s' % settings.model_name]
+        #self.set_colors()
+        #self.set_coordinates(0)
+        #self.set_atoms(atoms)
+        self.scale = self.scaleA
+        self.aseGui.scale = self.scale
+        atoms.center(vacuum=3.0)
+        self.aseGui.images.initialize([atoms])
+        self.aseGui.images.center()
+        self.aseGui.set_frame()
+        #self.draw()
+        #self.label.set_label('%.3e s (%.3e steps)' % (atoms.kmc_time,
+        #                                            atoms.kmc_step))
 
     def update_plots(self, atoms):
         """Update the coverage and TOF plots."""
@@ -296,7 +307,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
     def run(self):
         time.sleep(1.)
         while not self.killed:
-            time.sleep(0.05)
+            time.sleep(1)
             if not self.image_queue.empty():
                 atoms = self.image_queue.get()
                 gobject.idle_add(self.update_vbox, atoms)
@@ -423,6 +434,7 @@ class KMC_Viewer():
                                  param['min'], param['max'],
                                  param['scale'], self.parameter_callback)
             self.vbox.add(slider)
+            self.vbox.pack_start(self.vbox, False, False, 0)
             start_pack = self.vbox.query_child_packing(slider).pack_type
             self.vbox.set_child_packing(slider, expand=False,
                                         fill=False, padding=0,
