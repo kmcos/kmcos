@@ -444,15 +444,12 @@ def build(options):
     from numpy import f2py
     sys.argv = call
     #f2py.main()  # Doesn't work
-    from subprocess import Popen, STDOUT, PIPE
+    from subprocess import call
     command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
-               module_name] + src_files
+               module_name, '-c'] + src_files
     print(' '.join(command))
 
-    p = Popen(command, stdout=PIPE, stderr=PIPE)
-    stdout, stderr = p.communicate()
-    print(stdout)
-    print(stderr)
+    call(command)
     sys.argv = true_argv
 
 
