@@ -1,3 +1,6 @@
 numpy
 lxml
 ase
+kiwi-gtk
+PyGObject
+
