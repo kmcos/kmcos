@@ -186,6 +186,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
         self.vbox.connect('scroll-event', self.scroll_event)
         self.window.connect('key-press-event', self.on_key_press)
         rotations = '0.0x,0.0y,0.0z'#[3,3,3]#np.zeros(3)
+        self.config = {'force_vector_scale': None, 'velocity_vector_scale': None, 'swap_mouse': False}
         View.__init__(self, rotations)
         Status.__init__(self)
         self.vbox.show()
