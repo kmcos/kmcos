@@ -443,7 +443,16 @@ def build(options):
     true_argv = deepcopy(sys.argv)  # save for later
     from numpy import f2py
     sys.argv = call
-    f2py.main()
+    #f2py.main()  # Doesn't work
+    from subprocess import Popen, STDOUT, PIPE
+    command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
+               module_name] + src_files
+    print(' '.join(command))
+
+    p = Popen(command, stdout=PIPE, stderr=PIPE)
+    stdout, stderr = p.communicate()
+    print(stdout)
+    print(stderr)
     sys.argv = true_argv
 
 
