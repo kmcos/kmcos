@@ -65,9 +65,9 @@ class ProgressBar(object):
         data = self.TEMPLATE % {
             'percent': percent,
             'color': self.color,
-            'progress': self.block * self.progress,
+            'progress': self.block * int(self.progress),
             'normal': terminal.NORMAL,
-            'empty': self.empty * (bar_width - self.progress),
+            'empty': self.empty * int(bar_width - self.progress),
             'message': message
         }
         sys.stdout.write(data)
@@ -78,5 +78,5 @@ class ProgressBar(object):
     def clear(self):
         """Clear all printed lines"""
         sys.stdout.write(
-            self.lines * (terminal.UP + terminal.BOL + terminal.CLEAR_EOL)
+            str(self.lines * (terminal.UP + terminal.BOL + terminal.CLEAR_EOL))
         )

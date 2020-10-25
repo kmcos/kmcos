@@ -108,7 +108,7 @@ def make_ewma_plots(data, L, alpha, bias_threshold, seed):
     Most for debugging purposes if the EWMA based steady-state analysis makes was sensible.
     """
     from matplotlib import pyplot as plt
-    for key, y in data.items():
+    for key, y in list(data.items()):
         if not 'time' in key or 'step' in key:
             y = np.array(y)
             plt.clf()
@@ -184,7 +184,7 @@ def sample_steady_state(model, batch_size=1000000,
         data = model.get_std_sampled_data(
             100, batch_size, tof_method=tof_method, output='dict')
 
-        for key, data_point in data.items():
+        for key, data_point in list(data.items()):
             hist.setdefault(key, []).append(data_point)
 
         max_scrap = 0.
@@ -196,7 +196,7 @@ def sample_steady_state(model, batch_size=1000000,
 
         else:
             if batch % check_frequency == 0:
-                for key, y in hist.items():
+                for key, y in list(hist.items()):
                     if 'time' in key or 'step' in key:
                         continue
                     scrap_fraction = get_scrap_fraction(
@@ -223,11 +223,11 @@ def sample_steady_state(model, batch_size=1000000,
                     break
 
     steady_state_start = int(batch * bias_threshold)
-    for key, value in hist.items():
+    for key, value in list(hist.items()):
         hist[key] = np.array(value[steady_state_start:])
 
     data = {}
-    for key, values in hist.items():
+    for key, values in list(hist.items()):
         if 'time' in key:
             data[key] = values[-1]
         elif 'step' in key:

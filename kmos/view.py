@@ -47,19 +47,21 @@ except Exception as e:
         Status = type('Status', (), {})
         print('Warning: GTK not available. Cannot run graphical front-end')
         print(e)
-
-import matplotlib
-
-gtk_version = 'GTKAgg'
-if sys.version_info.major == 3:
-    gtk_version = 'GTK3Agg'
-if os.name == 'posix':
-    matplotlib.use(gtk_version)
-elif os.name == 'nt':
-    matplotlib.use('wxagg')
-else:
-    matplotlib.use(gtk_version)
-import matplotlib.pylab as plt
+try:
+    import matplotlib
+    gtk_version = 'GTKAgg' #initailizing
+    if sys.version_info.major == 3:
+      gtk_version = 'GTK3Agg'
+    if os.name == 'posix':
+        matplotlib.use(gtk_version)
+    elif os.name == 'nt':
+        matplotlib.use('wxagg')
+    else:
+        matplotlib.use(gtk_version)
+    import matplotlib.pylab as plt
+except Exception as e:
+    print('Could not import matplotlib frontend for real-time plotting')
+    print(e)
 
 from kmos.run import KMC_Model, get_tof_names, lattice, settings
 
@@ -333,7 +335,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
                 self.signal_queue.put('START')
                 self.paused = False
         elif event.string in ['?']:
-            for key, command in signal_dict.items():
+            for key, command in list(signal_dict.items()):
                 print('%4s %s' % (key, command))
         elif event.string in signal_dict:
             self.signal_queue.put(signal_dict.get(event.string, ''))

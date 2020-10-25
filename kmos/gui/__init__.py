@@ -20,10 +20,7 @@ from __future__ import print_function
 
 # standard modules
 import optparse
-try:
-    import StringIO
-except ImportError:
-    from io import StringIO 
+import io
 import sys
 import os
 
@@ -368,7 +365,7 @@ class UndoStack():
                         '/MainMenuBar/MenuEdit/EditRedo').set_sensitive(False)
 
     def _set_state_cb(self, string):
-        tmpfile = StringIO.StringIO()
+        tmpfile = io.StringIO()
         tmpfile.write(string)
         tmpfile.seek(0)
         self.set_state_from_file_cb(tmpfile)
@@ -601,7 +598,7 @@ class Editor(GladeDelegate):
         """
         if len(self.project_tree.layer_list) == 1:
             kiwi.ui.dialogs.warning('Entering multi-lattice mode',
-                long='This is an unpublished feature\n' +
+                int='This is an unpublished feature\n' +
                 'Please ask me about publishing results obtained\n' +
                 'from using this feature mjhoffmann@gmail.com')
         if self.project_tree.meta.model_dimension in [1, 3]:

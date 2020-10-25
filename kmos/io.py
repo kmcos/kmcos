@@ -27,6 +27,8 @@ import os
 import sys
 import copy
 import numpy as np
+#NB needed for sorted without cmp argument
+import functools
 
 from pprint import pformat
 
@@ -43,7 +45,7 @@ def _casetree_dict(dictionary, indent='', out=None):
     # at the end of a 'select case' statement.
     # Thus we use reversed() to move the 'default'
     # branch from the beginning to the end.
-    for key, value in reversed(list(dictionary.iteritems())):
+    for key, value in reversed(list(dictionary.items())):
         if isinstance(value, dict):
             if isinstance(key, Coord):
                 out.write('%sselect case(get_species(cell%s))\n' % (indent, key.radd_ff()))
@@ -52,7 +54,7 @@ def _casetree_dict(dictionary, indent='', out=None):
             else:
                 if key != 'default':
                     # allowing for or in species
-                    keys = ', '.join(map(lambda x: x.strip(), key.split(' or ')))
+                    keys = ', '.join([x.strip() for x in key.split(' or ')])
                     out.write('%scase(%s)\n' % (indent, keys))
                     _casetree_dict(value, indent + '  ', out)
                 else:
@@ -64,7 +66,7 @@ def _casetree_dict(dictionary, indent='', out=None):
 def _print_dict(dictionary, indent = ''):
     """ Recursively prints nested dictionaries."""
 
-    for key, value in dictionary.iteritems():
+    for key, value in dictionary.items():
         if isinstance(value, dict):
             print('%s%s:' % (indent, key) )
             _print_dict(value, indent+'    ')
@@ -1268,21 +1270,23 @@ class ProcListWriter():
         ################################################################
         lat_int_groups = {}
         for process in process_list:
-            for lat_int_group, processes in lat_int_groups.iteritems():
+            for lat_int_group, processes in lat_int_groups.items():
                 p0 = processes[0]
                 same = True
                 # check if conditions are identical
-                if sorted(p0.condition_list, key=lambda x: x.coord, cmp=cmp_coords) \
-                   != sorted(process.condition_list, key=lambda x: x.coord, cmp=cmp_coords):
+                #NB if sorted(p0.condition_list, key=lambda x: x.coord, cmp=cmp_coords) \
+                #NB replace with functools.cmp_to_key based syntax
+                if sorted(p0.condition_list, key=functools.cmp_to_key(lambda a, b : cmp_coords(a.coord,b.coord))) \
+                   != sorted(process.condition_list, key=functools.cmp_to_key(lambda a, b : cmp_coords(a.coord,b.coord))):
                     same = False
                 # check if actions are identical
-                if sorted(p0.action_list, key=lambda x: x.coord, cmp=cmp_coords) \
-                   != sorted(process.action_list, key=lambda x: x.coord, cmp=cmp_coords):
+                if sorted(p0.action_list, key=functools.cmp_to_key(lambda a, b : cmp_coords(a.coord,b.coord))) \
+                   != sorted(process.action_list, key=functools.cmp_to_key(lambda a, b : cmp_coords(a.coord,b.coord))):
                     same = False
 
                 # check if coords of bystanders are identical
-                if [x.coord for x in sorted(p0.bystanders, key=lambda x: x.coord, cmp=cmp_coords)] \
-                   != [x.coord for x in sorted(process.bystanders, key=lambda x: x.coord, cmp=cmp_coords)]:
+                if [x.coord for x in sorted(p0.bystanders, key=functools.cmp_to_key(lambda a, b : cmp_coords(a.coord,b.coord)))] \
+                   != [x.coord for x in sorted(process.bystanders, key=functools.cmp_to_key(lambda a, b : cmp_coords(a.coord,b.coord)))]:
                     same = False
 
                 if same:
@@ -1364,7 +1368,7 @@ class ProcListWriter():
         if os.name == 'posix':
             out.write('integer(kind=iint), public :: seed_size = 33\n')
         elif os.name == 'nt':
-            out.write('integer(kind=iint), public :: seed_size = 12\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         else:
             out.write('integer(kind=iint), public :: seed_size = 8\n')
         out.write('integer(kind=iint), public :: seed ! random seed\n')
@@ -1414,7 +1418,7 @@ class ProcListWriter():
             out.write('    print *, "  PROCLIST/RUN_PROC_NR/NR_CELL", nr_cell\n')
             out.write('    print *, "  PROCLIST/RUN_PROC_NR/CELL", cell\n')
         out.write('    select case(proc)\n')
-        for lat_int_group, processes in lat_int_groups.iteritems():
+        for lat_int_group, processes in lat_int_groups.items():
             proc_names = ', '.join([proc.name for proc in processes])
             out.write('    case(%s)\n' % _chop_line(proc_names, line_length=60))
             out.write('        call run_proc_%s(cell)\n' % lat_int_group)
@@ -1446,7 +1450,7 @@ class ProcListWriter():
         out.write('        endif\n')
         out.write('    end do\n\n')
 
-        for lat_int_group, process in lat_int_groups.iteritems():
+        for lat_int_group, process in lat_int_groups.items():
             out.write('    call add_proc(nli_%s(cell), site)\n' % (lat_int_group))
         out.write('end subroutine touchup_cell\n\n')
 
@@ -1459,7 +1463,7 @@ class ProcListWriter():
         for a given process.
         """
 
-        for lat_int_loop, (lat_int_group, processes) in enumerate(lat_int_groups.iteritems()):
+        for lat_int_loop, (lat_int_group, processes) in enumerate(lat_int_groups.items()):
             out = open('%s/run_proc_%04d.f90' % (self.dir, lat_int_loop), 'w')
             self._db_print('PROCESS: %s' % lat_int_group)
             # initialize needed data structure
@@ -1483,7 +1487,7 @@ class ProcListWriter():
             # add "another process" to the processes to be modified/updated.
             for action in process0.action_list:
                 self._db_print('    ACTION: %s' % action)
-                for _, other_processes in lat_int_groups.iteritems():
+                for _, other_processes in lat_int_groups.items():
                     other_process = other_processes[0]
                     self._db_print('      OTHER PROCESS %s' % (pformat(other_process, indent=12)))
                     other_conditions = other_process.condition_list + other_process.bystanders
@@ -1534,7 +1538,7 @@ class ProcListWriter():
                 if len(condition_species.split(' or ') ) > 1 :
                     out.write('    select case(get_species((cell%s)))\n'
                               % (action.coord.radd_ff(),))
-                    for condition_species in map(lambda x: x.strip(), condition_species.split(' or ')):
+                    for condition_species in [x.strip() for x in condition_species.split(' or ')]:
                         out.write('    case(%s)\n' % condition_species)
                         out.write('    call replace_species(cell%s, %s, %s)\n'
                                   % (action.coord.radd_ff(),
@@ -1566,7 +1570,7 @@ class ProcListWriter():
                     if len(condition_species.split(' or ') ) > 1 :
                         out.write('    select case(get_species((cell%s)))\n'
                                   % (action.coord.radd_ff(),))
-                        for condition_species in map(lambda x: x.strip(), condition_species.split(' or ')):
+                        for condition_species in [x.strip() for x in condition_species.split(' or ')]:
                             out.write('    case(%s)\n' % condition_species)
                             out.write('            call replace_species(cell%s, %s, %s)\n'
                                       % (action.coord.radd_ff(),
@@ -1609,7 +1613,7 @@ class ProcListWriter():
 
         """
 
-        for lat_int_loop, (lat_int_group, processes) in enumerate(lat_int_groups.iteritems()):
+        for lat_int_loop, (lat_int_group, processes) in enumerate(lat_int_groups.items()):
             out = open('%s/nli_%04d.f90' % (self.dir, lat_int_loop), 'w')
             out.write('module nli_%04d\n' % lat_int_loop)
             out.write('use kind_values\n')
@@ -1642,8 +1646,9 @@ class ProcListWriter():
             # the needed conditions as parent nodes
             case_tree = {}
             for process in processes:
+                #NB
                 conditions = [y for y in sorted(process.condition_list + process.bystanders,
-                                                 key=lambda x: x.coord, cmp=cmp_coords)
+                                                 key=functools.cmp_to_key(lambda a,b : cmp_coords(a.coord,b.coord)))
                                                  if not y.implicit]
                 node = case_tree
                 for condition in conditions:
@@ -1682,7 +1687,7 @@ class ProcListWriter():
 
         """
 
-        for lat_int_loop, (lat_int_group, processes) in enumerate(lat_int_groups.iteritems()):
+        for lat_int_loop, (lat_int_group, processes) in enumerate(lat_int_groups.items()):
             process0 = processes[0]
 
             # put together the bystander conditions and true conditions,
@@ -1744,7 +1749,7 @@ class ProcListWriter():
             # use generator object to save memory
             if USE_ARRAY:
                 compression_index = (compression_map.get(i, 0) for
-                                     i in xrange(nr_of_species**len(conditions0)))
+                                     i in range(nr_of_species**len(conditions0)))
                 out.write('    integer, dimension(%s), parameter :: lat_int_index_%s = (/ &\n'
                           % (len(compression_index), lat_int_group))
                 outstr = ', '.join(map(str, compression_index))
@@ -1768,7 +1773,7 @@ class ProcListWriter():
                           % (lat_int_group, lat_int_group))
             else:
                 out.write('\n    select case(n)\n')
-                for i, proc_name in sorted(compression_map.iteritems()):
+                for i, proc_name in sorted(compression_map.items()):
                     if proc_name:
                         out.write('    case(%s)\n' % i)
                         out.write('        nli_%s = %s\n' %
@@ -1953,9 +1958,8 @@ class ProcListWriter():
                             out.write('    call replace_species(site, species, null_species)\n\n')
 
                         for process in data.process_list:
-                            for condition in filter(lambda condition: condition.coord.name == site.name and
-                                                                      condition.coord.layer == layer.name,
-                                                                      process.condition_list):
+                            for condition in [condition for condition in process.condition_list if condition.coord.name == site.name and
+                                                                      condition.coord.layer == layer.name]:
                                 if special_op == 'create':
                                     other_conditions = [ConditionAction(
                                             species=other_condition.species,
@@ -1997,7 +2001,6 @@ class ProcListWriter():
         # I actually don't know if this tree is optimal
         # So consider this a heuristic solution which should give
         # on average better results than the brute force way
-
         for item in list(filter(lambda x: not x[0], items)):
             # [1][2] field of the item determine if this search is intended for enabling (=True) or
             # disabling (=False) a process
@@ -2017,7 +2020,7 @@ class ProcListWriter():
         most_common_coord = _most_common([y.coord for y in _flatten([x[0] for x in items])])
 
         # filter out list of uniq answers for this site
-        answers = [y.species for y in filter(lambda x: x.coord == most_common_coord, _flatten([x[0] for x in items]))]
+        answers = [y.species for y in [x for x in _flatten([x[0] for x in items]) if x.coord == most_common_coord]]
         uniq_answers = list(set(answers))
 
         if self.data.meta.debug > 1:
@@ -2040,8 +2043,7 @@ class ProcListWriter():
             for nested_item in nested_items:
                 conditions = list(filter(lambda x: most_common_coord != x.coord, nested_item[0]))
                 pruned_items.append((conditions, nested_item[1]))
-
-            items = list(filter(lambda x: x not in nested_items, items))
+            items = list(filter(lambda x: x not in nested_items, items)) #like [x for x in items if x not in nested_items]
             self._write_optimal_iftree(pruned_items, indent + 4, out)
         out.write('%send select\n\n' % (indent * ' ',))
 
@@ -2057,10 +2059,7 @@ class ProcListWriter():
         handles rate constants update at fortran level'''
 
         import tokenize
-        try:
-            import StringIO
-        except ImportError:
-            from io import StringIO 
+        import io
         import itertools
         from kmos import evaluate_rate_expression
         from kmos import rate_aliases
@@ -2171,7 +2170,7 @@ class ProcListWriter():
                         specs_dict[flg] = copy.deepcopy(byst.allowed_species)
                     flags.append(flg)
             flags = sorted(list(set(flags)))
-            for flg,spclist in specs_dict.iteritems():
+            for flg,spclist in specs_dict.items():
                 specs_dict[flg] = sorted(spclist)
 
 
@@ -2296,10 +2295,7 @@ class ProcListWriter():
 
 
     def _otf_get_auxilirary_params(self,data):
-        try:
-            import StringIO
-        except ImportError:
-            from io import StringIO 
+        import io
         import tokenize
         from kmos import units, rate_aliases
         units_list = []
@@ -2310,10 +2306,10 @@ class ProcListWriter():
             if process.otf_rate:
                 exprs.append(process.otf_rate)
             for expr in exprs:
-                for old, new in rate_aliases.iteritems():
+                for old, new in rate_aliases.items():
                     expr=expr.replace(old, new)
                 try:
-                    tokenize_input = StringIO.StringIO(expr).readline
+                    tokenize_input = io.StringIO(expr).readline
                     tokens = list(tokenize.generate_tokens(tokenize_input))
                 except:
                     raise Exception('Could not tokenize expression: %s' % expr)
@@ -2386,11 +2382,7 @@ class ProcListWriter():
         returning the processed line and a list of the
         nr_<species>_<flag> encountered
         """
-        import tokenize
-        try:
-            import StringIO
-        except ImportError:
-            from io import StringIO 
+        import io, tokenize
         from kmos import units, rate_aliases
 
         param_names = [param.name for param in data.parameter_list]
@@ -2405,12 +2397,12 @@ class ProcListWriter():
         expr = expr.replace('otf_rate','gr_{}'.format(procname))
 
         # And all aliases need to be replaced
-        for old, new in rate_aliases.iteritems():
+        for old, new in rate_aliases.items():
             expr = expr.replace(old,new)
 
         # Then time to tokenize:
         try:
-            tokenize_input = StringIO.StringIO(expr).readline
+            tokenize_input = io.StringIO(expr).readline
             tokens = list(tokenize.generate_tokens(tokenize_input))
         except:
             raise Exception('kmos.io: Could not tokenize expression: %s' % expr)
@@ -2507,7 +2499,7 @@ class ProcListWriter():
         if os.name == 'posix':
             out.write('integer(kind=iint), public :: seed_size = 33\n')
         elif os.name == 'nt':
-            out.write('integer(kind=iint), public :: seed_size = 12\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         else:
             out.write('integer(kind=iint), public :: seed_size = 8\n')
         out.write('integer(kind=iint), public :: seed ! random seed\n')
@@ -2628,7 +2620,7 @@ class ProcListWriter():
                 out2.write('use lattice\n')
                 out2.write('use proclist_pars\n')
                 if self.separate_proclist_pars:
-                    for i in xrange(nprocs):
+                    for i in range(nprocs):
                         out2.write('use gr_{0:04d}\n'.format(i+1))
                 ## TODO Finish with use statments
 
@@ -2644,7 +2636,7 @@ class ProcListWriter():
             # We will sort out all processes that are (potentially) influenced
             # (inhibited, activated or changed rate)
             # by the executing process
-            inh_procs = [copy.copy([]) for i in xrange(nprocs)]
+            inh_procs = [copy.copy([]) for i in range(nprocs)]
             enh_procs = copy.deepcopy(inh_procs)
             aff_procs = copy.deepcopy(enh_procs)
             # And look into how each of its actions...
@@ -2681,9 +2673,9 @@ class ProcListWriter():
                 print('  ')
 
             ## Get rid of repetition
-            for ip in xrange(nprocs):
+            for ip in range(nprocs):
                 inh_procs[ip] = [rel_pos for rel_pos in set(inh_procs[ip])]
-            for ip in xrange(nprocs):
+            for ip in range(nprocs):
                 enh_procs[ip] = [rel_pos for rel_pos in set(enh_procs[ip]) if not
                                  (rel_pos in inh_procs[ip])]
                 aff_procs[ip] = [rel_pos for rel_pos in set(aff_procs[ip]) if not
@@ -2806,7 +2798,7 @@ class ProcListWriter():
         # print('ROUTINE GOT CALLED')
         # print(' ')
 
-        for item in filter(lambda x: not x[0], items):
+        for item in [x for x in items if not x[0]]:
             # [1][2] field of the item determine if this search is intended for enabling (=True) or
             # disabling (=False) a process
             if item[1][2]:
@@ -2823,7 +2815,7 @@ class ProcListWriter():
                 out.write('%scall del_proc(%s, %s)\n' % (' ' * indent, item[1][0], rel_site))
 
         # and only keep those that have conditions
-        items = list(filter(lambda x: len(x[0]) > 1, items))
+        items = list(filter(lambda x: len(x[0]) > 1, items)) #like [x for x in items if x[0]]
         if not items:
             return
 
@@ -2832,7 +2824,7 @@ class ProcListWriter():
         most_common_coord = _most_common([y.coord for y in _flatten([x[0] for x in items])])
 
         # filter out list of uniq answers for this site
-        answers = [y.species for y in filter(lambda x: x.coord == most_common_coord, _flatten([x[0] for x in items]))]
+        answers = [y.species for y in [x for x in _flatten([x[0] for x in items]) if x.coord == most_common_coord]]
         uniq_answers = list(set(answers))
 
         if self.data.meta.debug > 1:
@@ -2860,13 +2852,11 @@ class ProcListWriter():
             # print(items)
             # print('for most_common_coord: %s' % most_common_coord)
             # print(' ')
-
             nested_items = list(filter(
                 lambda x:
-                (most_common_coord in [y.coord for y in x[0]]
+                (most_common_coord in [y.coord for y in x[0]] #like [x for x in items if (most_common_coord in [y.coord for y in x[0]]
                 and answer == list(filter(lambda y: y.coord == most_common_coord, x[0]))[0].species),
                 items))
-
             # print('nested items resulted in:')
             # print(nested_items)
             # print(' ')
@@ -2875,11 +2865,9 @@ class ProcListWriter():
             # the one condition removed, that we just met
             pruned_items = []
             for nested_item in nested_items:
-
-                conditions = list(filter(lambda x: most_common_coord != x.coord, nested_item[0]))
+                conditions = list(filter(lambda x: most_common_coord != x.coord, nested_item[0])) #like [x for x in nested_item[0] if most_common_coord != x.coord]
                 pruned_items.append((conditions, nested_item[1]))
-
-            items = list(filter(lambda x: x not in nested_items, items))
+            items = list(filter(lambda x: x not in nested_items, items))#like [x for x in items if x not in nested_items]
             self._write_optimal_iftree_otf(pruned_items, indent + 4, out)
         out.write('%send select\n\n' % (indent * ' ',))
 
