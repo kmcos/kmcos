@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Holds all the data models used in kmos.
 """
+from __future__ import print_function
 
 # stdlib imports
 import os
@@ -318,7 +319,6 @@ class Project(object):
         """
         from configparser import ConfigParser
         from io import StringIO
-
         config = ConfigParser()
         config.optionxform = str
         # Meta
@@ -326,8 +326,8 @@ class Project(object):
         config.set('Meta', 'author', self.meta.author)
         config.set('Meta', 'email', self.meta.email)
         config.set('Meta', 'model_name', self.meta.model_name)
-        config.set('Meta', 'model_dimension', self.meta.model_dimension)
-        config.set('Meta', 'debug', self.meta.debug)
+        config.set('Meta', 'model_dimension', str(self.meta.model_dimension))
+        config.set('Meta', 'debug', str(self.meta.debug))
 
         config.add_section('SpeciesList')
         if hasattr(self.species_list, 'default_species'):
@@ -349,7 +349,7 @@ class Project(object):
         for parameter in self.get_parameters():
             section_name = 'Parameter %s' % parameter.name
             config.add_section(section_name)
-            config.set(section_name, 'value', parameter.value)
+            config.set(section_name, 'value', str(parameter.value))
             config.set(section_name, 'adjustable', str(parameter.adjustable))
             config.set(section_name, 'min', str(parameter.min))
             config.set(section_name, 'max', str(parameter.max))
@@ -394,7 +394,7 @@ class Project(object):
             section_name = 'Process %s' % process.name
             config.add_section(section_name)
             config.set(section_name, 'rate_constant', process.rate_constant)
-            config.set(section_name, 'otf_rate', process.otf_rate)
+            config.set(section_name, 'otf_rate', str(process.otf_rate))
             config.set(section_name, 'enabled', str(process.enabled))
             if process.bystander_list:
                 bystanders = [bystander._shorthand()
@@ -592,10 +592,15 @@ class Project(object):
         self.filename = filename
 
     def import_ini_file(self, filename):
-        from configparser import ConfigParser
+        try:
+            from ConfigParser import ConfigParser
+        except ImportError:
+            from configparser import ConfigParser
         from kmos.utils import evaluate_template
-        from io import StringIO
-
+        try:
+            from StringIO import StringIO
+        except ImportError:
+            from io import StringIO 
         config = ConfigParser()
         config.optionxform = str
         if type(filename) is str:
@@ -1512,8 +1517,7 @@ class LayerList(FixedObject, list):
 
         offset = np.array(coord.offset)
         cell = self.cell
-        # layer = filter(lambda x: x.name == coord.layer, list(self))[0]
-        layer = [x for x in list(self) if x.name == coord.layer][0]
+        layer = list(filter(lambda x: x.name == coord.layer, list(self)))[0] #like layer = [x for x in list(self) if x.name == coord.layer][0]
         sites = [x for x in layer.sites if x.name == coord.name]
         if not sites:
             raise UserWarning('No site names %s in %s found!' %
@@ -2204,7 +2208,8 @@ def parse_chemical_expression(eq, process, project_tree):
 
         if len(coord_term) == 2:
             name = coord_term[0]
-            active_layers = [x for x in project_tree.get_layers() if x.active]
+            active_layers = list(filter(lambda x: x.active,
+                                   project_tree.get_layers())) #like [x for x in project_tree.get_layers() if x.active]
             if len(active_layers) == 1:
                 layer = active_layers[0].name
             else:  # if more than one active try to guess layer from name
@@ -2238,8 +2243,8 @@ def parse_chemical_expression(eq, process, project_tree):
                 raise UserWarning("Layer %s not known, must be one of %s"
                                   % (layer, layer_names))
             else:
-                layer_instance = filter(lambda x: x.name == layer,
-                                        project_tree.get_layers())[0]
+                layer_instance = list(filter(lambda x: x.name == layer,
+                                        project_tree.get_layers()))[0]
                 site_names = [x.name for x in layer_instance.sites]
                 if name not in site_names:
                     raise UserWarning("Site %s not known, must be one of %s"

@@ -7,6 +7,7 @@ Example of usage:
     print BLUE + UNDERLINE + 'Blue underlined text' + NORMAL
     print BLUE + BG_YELLOW + BOLD + 'text' + NORMAL
 """
+from __future__ import print_function
 
 import sys
 

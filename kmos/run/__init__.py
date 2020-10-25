@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 A front-end module to run a compiled kMC model. The actual model is
 imported in kmc_model.so and all parameters are stored in kmc_settings.py.
@@ -20,6 +20,7 @@ a GUI so that the CPU intensive kMC integration can run at
 full throttle without impeding the front-end. Interaction with
 the model happens through Queues.
 """
+from __future__ import print_function
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
@@ -113,6 +114,11 @@ except Exception as e:
     Hint: are you in a directory containing a compiled kMC model?
     """ % e)
 
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 INTERACTIVE = hasattr(sys, 'ps1') or hasattr(sys, 'ipcompleter')
 INTERACTIVE = True  # Turn it off for now because it doesn work reliably
 
@@ -211,12 +217,15 @@ class KMC_Model(Process):
         self.reset()
 
         if hasattr(settings, 'setup_model'):
-            #NB import new
-            #NB self.setup_model = new.instancemethod(settings.setup_model,
-                                                  # self,
-                                                  # KMC_Model)
-            import types
-            self.setup_model = types.MethodType(settings.setup_model, self)
+            try:
+                import types #https://stackoverflow.com/questions/37455426/advantages-of-using-methodtype-in-python
+                self.setup_model =  types.MethodType(settings.setup_model,
+                                         KMC_Model)
+            except ModuleNotFoundError:
+                import new
+                self.setup_model = new.instancemethod(settings.setup_model,
+                                                      self,
+                                                      KMC_Model)
             self.setup_model()
 
     def __enter__(self, *args, **kwargs):
@@ -304,7 +313,7 @@ class KMC_Model(Process):
         # # for otf backend only
         # print('kmos.run : Updating proclist_pars!')
         # if hasattr(self.proclist,'recalculate_rates_matrix'):
-        #     for key,entry in settings.parameters.iteritems():
+        #     for key,entry in settings.parameters.items():
         #         # print('kmos.run key.lower() : %s' % key.lower())
         #         # print('kmos.run entry[value] : %s' % entry.value)
         #         # print('kmos.run result : %s' %

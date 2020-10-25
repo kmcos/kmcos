@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """kmos.gui.forms - GUI forms used by kmos.gui
 The classes defined here heavily draw on the interface provided by
 python-kiwi.
@@ -6,6 +6,7 @@ In the language of underlying MVC (Model-View-Controller) pattern these
 classes form the controller. The view is defined through a *.glade XML file
 and the models are instances of kmos.types.*
 """
+from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
 #
@@ -25,10 +26,17 @@ and the models are instances of kmos.types.*
 import re
 import copy
 #gtk import
-import pygtk
-pygtk.require('2.0')
-import gtk
-import goocanvas
+try:
+    import pygtk
+    pygtk.require('2.0')
+    import gtk
+    import goocanvas
+except ModuleNotFoundError:
+    import gi
+    gi.require_version('Gtk', '3.0')
+    gi.require_version('GooCanvas', '2.0')
+    from gi.repository import Gtk as gtk
+    from gi.repository import GooCanvas as goocanvas
 
 #kiwi imports
 from kiwi.ui.delegates import ProxySlaveDelegate, GladeDelegate, \

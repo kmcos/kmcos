@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Entry point module for the command-line
    interface. The kmos executable should be
    on the program path, import this modules
@@ -40,6 +40,8 @@
 #    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import with_statement
+from __future__ import print_function
 import os
 import shutil
 

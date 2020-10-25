@@ -68,7 +68,7 @@ was successful includes
     * Export the Fortran90 source code and compile in one step
       from the generated XML file ::
 
-        kmos export ZGB_model.xml
+        kmos -f gfortran export ZGB_model.xml
 
     * Change to the export directory ::
 

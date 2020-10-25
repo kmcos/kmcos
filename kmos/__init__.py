@@ -29,6 +29,7 @@ or it may be used as an API via the *kmos* module.
 .. [#code] The source code is generated in Fortran90, written in a modular
             fashion. Python bindings are generated using `f2py  <http://cens.ioc.ee/projects/f2py2e/>`_.
 """
+from __future__ import print_function
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
@@ -90,7 +91,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
             input = io.StringIO(rate_expr).readline
             tokens = list(tokenize.generate_tokens(input))
         except:
-            raise Exception('Could not tokenize expression: %s' % input)
+            raise Exception('Could not tokenize expression: %s' % input_text)
         for i, token, _, _, _ in tokens:
             if token in ['sqrt', 'exp', 'sin', 'cos', 'pi', 'pow', 'log']:
                 replaced_tokens.append((i, 'math.' + token))
