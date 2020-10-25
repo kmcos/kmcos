@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
     Several commonly used constants and conversion factors are offered
     by this module, such a pi, the speed of light, the Planck constant,

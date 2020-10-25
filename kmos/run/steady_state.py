@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 """
 ## Initial Bias Detection
@@ -13,6 +13,7 @@ Hoad, Kathryn, Stewart Robinson, and Ruth Davies. “Automating Warm-up Length E
 Rossetti, M. D., Zhe Li, and Peng Qu. “Exploring Exponentially Weighted Moving Average Control Charts to Determine the Warm-up Period.” In Simulation Conference, 2005 Proceedings of the Winter, 10 pp. – , 2005. doi:10.1109/WSC.2005.1574321.
 
 """
+from __future__ import print_function
 
 # import the necessary python modules
 import numpy as np

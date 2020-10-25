@@ -6,8 +6,9 @@ Usage:
     p = ProgressBar("blue")
     p.render(percentage, message)
 """
+from __future__ import absolute_import
 
-import terminal
+from . import terminal
 import sys
 
 class ProgressBar(object):

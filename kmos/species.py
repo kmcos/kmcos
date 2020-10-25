@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Very simple module that keeps several species
 commonly needed to model heterogeneous catalyst kinetics
 """
+from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
 

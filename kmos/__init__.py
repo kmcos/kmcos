@@ -29,6 +29,7 @@ or it may be used as an API via the *kmos* module.
 .. [#code] The source code is generated in Fortran90, written in a modular
             fashion. Python bindings are generated using `f2py  <http://cens.ioc.ee/projects/f2py2e/>`_.
 """
+from __future__ import print_function
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
@@ -67,7 +68,10 @@ def evaluate_rate_expression(rate_expr, parameters={}):
         parameters = [Parameter(), ... ]
      """
     import tokenize
-    import StringIO
+    try:
+        import StringIO
+    except ImportError:
+        from io import StringIO 
     import math
     from kmos import units
 
@@ -84,13 +88,13 @@ def evaluate_rate_expression(rate_expr, parameters={}):
         replaced_tokens = []
 
         # replace some aliases
-        for old, new in rate_aliases.iteritems():
-            rate_expr = rate_expr.replace(old, new)
+        for key in rate_aliases.keys():
+            rate_expr = rate_expr.replace(key, rate_aliases[key])
         try:
-            input = StringIO.StringIO(rate_expr).readline
-            tokens = list(tokenize.generate_tokens(input))
+            input_text = StringIO(rate_expr).readline
+            tokens = list(tokenize.generate_tokens(input_text))
         except:
-            raise Exception('Could not tokenize expression: %s' % input)
+            raise Exception('Could not tokenize expression: %s' % input_text)
         for i, token, _, _, _ in tokens:
             if token in ['sqrt', 'exp', 'sin', 'cos', 'pi', 'pow', 'log']:
                 replaced_tokens.append((i, 'math.' + token))
@@ -140,7 +144,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
         rate_expr = tokenize.untokenize(replaced_tokens)
         try:
             rate_const = eval(rate_expr)
-        except Exception, e:
+        except Exception as e:
             raise UserWarning(
             "Could not evaluate rate expression: %s\nException: %s" \
                 % (rate_expr, e))

@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """A GUI frontend to create and edit kMC models.
 """
+from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
 #
@@ -19,7 +20,10 @@
 
 # standard modules
 import optparse
-import StringIO
+try:
+    import StringIO
+except ImportError:
+    from io import StringIO 
 import sys
 import os
 
@@ -33,9 +37,14 @@ from kmos.config import GLADEFILE
 import kmos.io
 
 import gobject
-import pygtk
-pygtk.require('2.0')
-import gtk
+try:
+    import pygtk
+    pygtk.require('2.0')
+    import gtk
+except ModuleNotFoundError:
+    import gi
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gtk as gtk
 
 #Kiwi imports
 import kiwi.ui
@@ -77,17 +86,17 @@ menu_layout = """\
 def verbose(func):
     """Debugging helper that allows to track input and output of function
     via decoration"""
-    print >> sys.stderr, "monitor %r" % (func.func_name)
+    print("monitor %r" % (func.__name__), file=sys.stderr)
 
     def wrapper_func(*args, **kwargs):
         """The wrapping function
         """
-        print >> sys.stderr, "call(\033[0;31m%s.%s\033[0;30m): %r\n" % \
-                (type(args[0]).__name__, func.func_name, args[1:]), \
-                sys.stderr.flush()
+        print("call(\033[0;31m%s.%s\033[0;30m): %r\n" % \
+                (type(args[0]).__name__, func.__name__, args[1:]), \
+                sys.stderr.flush(), file=sys.stderr)
         ret = func(*args, **kwargs)
-        print >> sys.stderr, "    ret(%s): \033[0;32m%r\033[0;30m\n" % \
-                 (func.func_name, ret)
+        print("    ret(%s): \033[0;32m%r\033[0;30m\n" % \
+                 (func.__name__, ret), file=sys.stderr)
         return ret
     return wrapper_func
 
@@ -484,7 +493,7 @@ class Editor(GladeDelegate):
         self.menubar.insert_action_group(actions, 0)
         try:
             mergeid = self.menubar.add_ui_from_string(menu_layout)
-        except gobject.GError, error:
+        except gobject.GError as error:
             print('Building menu failed: %s, %s' % (error, mergeid))
 
         # Initialize the project tree, passing in the menu bar

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Several utility functions that do not seem to fit somewhere
    else.
 """
@@ -19,9 +19,13 @@
 #    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import with_statement
+from __future__ import print_function
 import re
 from time import time
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO 
 from kmos.utils.ordered_dict import OrderedDict
 
 ValidationError = UserWarning
@@ -135,7 +139,7 @@ def write_py(fileobj, images, **kwargs):
 
 def get_ase_constructor(atoms):
     """Return the ASE constructor string for `atoms`."""
-    if isinstance(atoms, basestring):
+    if isinstance(atoms, str):
         #return atoms
         atoms = eval(atoms)
     if type(atoms) is list:
@@ -197,7 +201,10 @@ def download(project):
     try:
         from cStringIO import StringIO
     except:
-        from StringIO import StringIO
+        try:
+            from StringIO import StringIO
+        except ImportError:
+            from io import StringIO 
     stringio = StringIO()
     zfile = zipfile.ZipFile(stringio, 'w')
 
@@ -322,8 +329,8 @@ def evaluate_kind_values(infile, outfile):
         args, kwargs = parse_args(args)
         return import_selected_kind().real_kind(*args, **kwargs)
 
-    infile = file(infile)
-    outfile = file(outfile, 'w')
+    infile = open(infile)
+    outfile = open(outfile, 'w')
     int_pattern = re.compile((r'(?P<before>.*)selected_int_kind'
                               '\((?P<args>.*)\)(?P<after>.*)'),
                              flags=re.IGNORECASE)
@@ -436,7 +443,13 @@ def build(options):
     true_argv = deepcopy(sys.argv)  # save for later
     from numpy import f2py
     sys.argv = call
-    f2py.main()
+    #f2py.main()  # Doesn't work
+    from subprocess import call
+    command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
+               module_name, '-c'] + src_files
+    print(' '.join(command))
+
+    call(command)
     sys.argv = true_argv
 
 
@@ -548,7 +561,6 @@ def evaluate_template(template, escape_python=False, **kwargs):
     """
     locals().update(kwargs)
 
-    result = ''
     NEWLINE = '\n'
     PREFIX = '#@'
     lines = [line + NEWLINE for line in template.split(NEWLINE)]
@@ -575,13 +587,13 @@ def evaluate_template(template, escape_python=False, **kwargs):
             if re.match('^\s*%s ' % PREFIX, line):
                 python_lines += line.lstrip()[3:]
             elif re.match('^\s*%s$' % PREFIX, line):
-                python_lines += '%sresult += "\\n"\n' % (
+                python_lines += '%sfortran_code += "\\n"\n' % (
                     ' ' * (len(line) - len(line.lstrip())))
             elif re.match('^$', line):
-                # python_lines += 'result += """\n"""\n'
+                # python_lines += 'fortran_code += """\n"""\n'
                 pass
             else:
-                python_lines += '%sresult += ("""%s""".format(**dict(locals())))\n' \
+                python_lines += '%sfortran_code += ("""%s""".format(**dict(locals())))\n' \
                     % (' ' * (len(line.expandtabs(4)) - len(line.lstrip())),  line.lstrip())
 
         exec(python_lines)
@@ -605,17 +617,20 @@ def evaluate_template(template, escape_python=False, **kwargs):
 
         # second turn literary lines into write statements
         python_lines = ''
+        python_lines = 'fortran_code =\"\"\n'
         for line in lines:
             if re.match('\s*%s ' % PREFIX, line):
-                python_lines += '%sresult += ("""%s""".format(**dict(locals())))\n' \
+                python_lines += '%sfortran_code += ("""%s""".format(**dict(locals())))\n' \
                     % (' ' * (len(line) - len(line.lstrip())),
                        line.lstrip()[3:])
             elif re.match('\s*%s' % PREFIX, line):
-                python_lines += '%sresult += "\\n"\n' % (
+                python_lines += '%sfortran_code += "\\n"\n' % (
                     ' ' * (len(line) - len(line.lstrip())))
             else:
                 python_lines += line
 
-        exec(python_lines)
+        fortran_code = ""
+        namespace = locals()
+        exec(python_lines, globals(), namespace)
 
-    return result
+    return namespace["fortran_code"]

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 A front-end module to run a compiled kMC model. The actual model is
 imported in kmc_model.so and all parameters are stored in kmc_settings.py.
@@ -20,6 +20,7 @@ a GUI so that the CPU intensive kMC integration can run at
 full throttle without impeding the front-end. Interaction with
 the model happens through Queues.
 """
+from __future__ import print_function
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmos.
@@ -78,7 +79,7 @@ import sys
 try:
     from kmc_model import base, lattice, proclist
     import kmc_model
-except Exception, e:
+except Exception as e:
     base = lattice = proclist = None
     print("""Error: %s
     Could not find the kmc module. The kmc implements the actual
@@ -104,7 +105,7 @@ except:
 
 try:
     import kmc_settings as settings
-except Exception, e:
+except Exception as e:
     settings = None
     print("""Error %s
     Could import settings file
@@ -113,6 +114,11 @@ except Exception, e:
     Hint: are you in a directory containing a compiled kMC model?
     """ % e)
 
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 INTERACTIVE = hasattr(sys, 'ps1') or hasattr(sys, 'ipcompleter')
 INTERACTIVE = True  # Turn it off for now because it doesn work reliably
 
@@ -211,10 +217,15 @@ class KMC_Model(Process):
         self.reset()
 
         if hasattr(settings, 'setup_model'):
-            import new
-            self.setup_model = new.instancemethod(settings.setup_model,
-                                                  self,
-                                                  KMC_Model)
+            try:
+                import new
+                self.setup_model = new.instancemethod(settings.setup_model,
+                                                      self,
+                                                      KMC_Model)
+            except ModuleNotFoundError:
+                import types
+                self.setup_model =  types.MethodType(settings.setup_model,
+                                         KMC_Model)
             self.setup_model()
 
     def __enter__(self, *args, **kwargs):
@@ -245,9 +256,9 @@ class KMC_Model(Process):
         # prepare structures for TOF evaluation
         self.tofs = tofs = get_tof_names()
         self.tof_matrix = np.zeros((len(tofs), proclist.nr_of_proc))
-        for process, tof_count in sorted(settings.tof_count.iteritems()):
+        for process, tof_count in sorted(settings.tof_count.items()):
             process_nr = getattr(self.proclist, process.lower())
-            for tof, tof_factor in tof_count.iteritems():
+            for tof, tof_factor in tof_count.items():
                 self.tof_matrix[tofs.index(tof), process_nr - 1] += tof_factor
 
         # prepare procstat
@@ -263,7 +274,7 @@ class KMC_Model(Process):
                 try:
                     self.species_representation[len(self.species_representation)] \
                     = eval(settings.representations[species])
-                except Exception, e:
+                except Exception as e:
                     print('Trouble with representation %s'
                            % settings.representations[species])
                     print(e)
@@ -302,7 +313,7 @@ class KMC_Model(Process):
         # # for otf backend only
         # print('kmos.run : Updating proclist_pars!')
         # if hasattr(self.proclist,'recalculate_rates_matrix'):
-        #     for key,entry in settings.parameters.iteritems():
+        #     for key,entry in settings.parameters.items():
         #         # print('kmos.run key.lower() : %s' % key.lower())
         #         # print('kmos.run entry[value] : %s' % entry.value)
         #         # print('kmos.run result : %s' %
@@ -353,7 +364,7 @@ class KMC_Model(Process):
         Useful for the header line of an ASCII output.
         """
         tofs = []
-        for _, value in settings.tof_count.iteritems():
+        for _, value in settings.tof_count.items():
             for name in value:
                 if name not in tofs:
                     tofs.append(name)
@@ -680,7 +691,7 @@ class KMC_Model(Process):
                                                       - len(ad_atoms),
                                                       len(atoms)):
                                         kmos_tags[atom] = \
-                                        self.species_tags.values()[species]
+                                        list(self.species_tags.values())[species]
 
                         if self.lattice_representation:
                             lattice_repr = deepcopy(self.lattice_representation)
@@ -1269,7 +1280,7 @@ class KMC_Model(Process):
                 if self.base.get_avail_site(process, site, 2):
                     avail.append(ProcInt(process, self.settings))
 
-        except Exception, e:
+        except Exception as e:
             # if is not iterable, interpret as process
             for x in range(self.lattice.system_size[0]):
                 for y in range(self.lattice.system_size[1]):
@@ -1752,7 +1763,7 @@ class Model_Rate_Constants_OTF(Model_Rate_Constants):
                           ).split()
         if nr_vars:
             input_array = np.zeros([len(nr_vars)],int)
-            for nr_var, value in kwargs.iteritems():
+            for nr_var, value in kwargs.items():
                 if nr_var in nr_vars:
                     input_array[nr_vars.index(nr_var)] = int(value)
 
@@ -2249,7 +2260,7 @@ def set_rate_constants(parameters=None, print_rates=None):
             if print_rates:
                 n = int(4 * log(rate_const))
                 print('%30s: %.3e s^{-1}: %s' % (proc, rate_const, '#' * n))
-        except Exception, e:
+        except Exception as e:
             raise UserWarning(
                 "Could not set %s for process %s!\nException: %s" \
                     % (rate_expr, proc, e))
@@ -2259,7 +2270,7 @@ def set_rate_constants(parameters=None, print_rates=None):
     # FIXME
     # update chemical potentials (works for otf backend only)
     if hasattr(proclist,'update_user_parameter'):
-         for name,entry in settings.parameters.iteritems():
+         for name,entry in settings.parameters.items():
              proclist.update_user_parameter(
                  getattr(proclist,name.lower()),
                  evaluate_rate_expression(
@@ -2290,7 +2301,7 @@ def import_ase():
 def get_tof_names():
     """Return names turn-over-frequencies (TOF) previously defined in model."""
     tofs = []
-    for process, tof_count in settings.tof_count.iteritems():
+    for process, tof_count in settings.tof_count.items():
         for tof in tof_count:
             if tof not in tofs:
                 tofs.append(tof)

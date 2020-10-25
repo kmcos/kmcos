@@ -82,9 +82,9 @@ if code_generator == 'local_smart':
     #@
     #@ integer(kind=iint), parameter, public :: representation_length = {representation_length}
     if os.name == 'posix':
-        #@ integer(kind=iint), public :: seed_size = 12
+        #@ integer(kind=iint), public :: seed_size = 33
     elif os.name == 'nt':
-        #@ integer(kind=iint), public :: seed_size = 12
+        #@ integer(kind=iint), public :: seed_size = 11
     else:
         #@ integer(kind=iint), public :: seed_size = 8
     #@ integer(kind=iint), public :: seed ! random seed
