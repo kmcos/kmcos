@@ -39,7 +39,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import with_statement
+
 import os
 import shutil
 
@@ -270,7 +270,7 @@ def main(args=None):
 
     global model, pt, np, cm_model
 
-    if not args[0] in usage.keys():
+    if not args[0] in list(usage.keys()):
         args[0] = match_keys(args[0], usage, parser)
 
     if args[0] == 'benchmark':
@@ -352,7 +352,7 @@ def main(args=None):
                     if options.overwrite :
                         overwrite = 'y'
                     else:
-                        overwrite = raw_input(('Should I overwrite existing %s ?'
+                        overwrite = input(('Should I overwrite existing %s ?'
                                                '[y/N]  ') % out).lower()
                     if overwrite.startswith('y') :
                         print('Overwriting {out}'.format(**locals()))

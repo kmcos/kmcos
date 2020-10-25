@@ -18,10 +18,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import with_statement
+
 import re
 from time import time
-from StringIO import StringIO
+from io import StringIO
 from kmos.utils.ordered_dict import OrderedDict
 
 ValidationError = UserWarning
@@ -135,7 +135,7 @@ def write_py(fileobj, images, **kwargs):
 
 def get_ase_constructor(atoms):
     """Return the ASE constructor string for `atoms`."""
-    if isinstance(atoms, basestring):
+    if isinstance(atoms, str):
         #return atoms
         atoms = eval(atoms)
     if type(atoms) is list:
@@ -191,13 +191,13 @@ def download(project):
     response = HttpResponse(mimetype='application/x-zip-compressed')
     response['Content-Disposition'] = 'attachment; filename="kmos_export.zip"'
 
-    if isinstance(project, basestring):
+    if isinstance(project, str):
         project = import_xml(project)
 
     try:
-        from cStringIO import StringIO
+        from io import StringIO
     except:
-        from StringIO import StringIO
+        from io import StringIO
     stringio = StringIO()
     zfile = zipfile.ZipFile(stringio, 'w')
 
@@ -322,8 +322,8 @@ def evaluate_kind_values(infile, outfile):
         args, kwargs = parse_args(args)
         return import_selected_kind().real_kind(*args, **kwargs)
 
-    infile = file(infile)
-    outfile = file(outfile, 'w')
+    infile = open(infile)
+    outfile = open(outfile, 'w')
     int_pattern = re.compile((r'(?P<before>.*)selected_int_kind'
                               '\((?P<args>.*)\)(?P<after>.*)'),
                              flags=re.IGNORECASE)
@@ -426,7 +426,12 @@ def build(options):
 
     if options.debug:
         extra_flags += ' -DDEBUG'
-    call.append('--f90flags="%s"' % extra_flags)
+    #NB presence of " around f90flags argument confuses f2py.  
+    #NB Command line argument separation already set by 
+    #NB split into separate str items in list. Not
+    #NB sure why it ever worked.
+    #NB call.append('--f90flags="%s"' % extra_flags)
+    call.append('--f90flags=%s' % extra_flags)
     call.append('-m')
     call.append(module_name)
     call += src_files
@@ -567,7 +572,13 @@ def evaluate_template(template, escape_python=False, **kwargs):
         # just return the original
         if not matched:
             return template
-        exec(python_lines)
+        #NB python3 exec doesn't modify local variables.
+        #NB create local dict and copy back "result" explicitly
+        #NB if any other local variables are modified, that change
+        #NB will be lost.
+        ldict = locals().copy()
+        exec(python_lines, globals(), ldict)
+        result = ldict['result']
 
         # second turn literary lines into write statements
         python_lines = ''
@@ -584,7 +595,10 @@ def evaluate_template(template, escape_python=False, **kwargs):
                 python_lines += '%sresult += ("""%s""".format(**dict(locals())))\n' \
                     % (' ' * (len(line.expandtabs(4)) - len(line.lstrip())),  line.lstrip())
 
-        exec(python_lines)
+        #NB see note above
+        ldict = locals().copy()
+        exec(python_lines, globals(), ldict)
+        result = ldict['result'] 
 
     else:
         # first just replace verbose lines by pass to check syntax
@@ -601,7 +615,10 @@ def evaluate_template(template, escape_python=False, **kwargs):
                 python_lines += line
         if not matched:
             return template
-        exec(python_lines)
+        #NB see note above
+        ldict = locals().copy()
+        exec(python_lines, globals(), ldict)
+        result = ldict['result']
 
         # second turn literary lines into write statements
         python_lines = ''
@@ -616,6 +633,9 @@ def evaluate_template(template, escape_python=False, **kwargs):
             else:
                 python_lines += line
 
-        exec(python_lines)
+        #NB see note above
+        ldict = locals().copy()
+        exec(python_lines, globals(), ldict) 
+        result = ldict['result']
 
     return result

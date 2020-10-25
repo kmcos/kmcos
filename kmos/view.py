@@ -33,7 +33,7 @@ try:
     import gobject
     from ase.gui.view import View
     from ase.gui.status import Status
-except Exception, e:
+except Exception as e:
     View = type('View', (), {})
     Status = type('Status', (), {})
     print('Warning: GTK not available. Cannot run graphical front-end')
@@ -48,7 +48,7 @@ try:
     else:
         matplotlib.use('GTKAgg')
     import matplotlib.pylab as plt
-except Exception, e:
+except Exception as e:
     print('Could not import matplotlib frontend for real-time plotting')
     print(e)
 
@@ -312,7 +312,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
                 self.signal_queue.put('START')
                 self.paused = False
         elif event.string in ['?']:
-            for key, command in signal_dict.items():
+            for key, command in list(signal_dict.items()):
                 print('%4s %s' % (key, command))
         elif event.string in signal_dict:
             self.signal_queue.put(signal_dict.get(event.string, ''))
@@ -331,7 +331,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
         self.scale *= x
         try:
             atoms = self.image_queue.get()
-        except Exception, e:
+        except Exception as e:
             atoms = ase.atoms.Atoms()
             print(e)
         self.update_vbox(atoms)

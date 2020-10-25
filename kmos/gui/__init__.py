@@ -19,7 +19,7 @@
 
 # standard modules
 import optparse
-import StringIO
+import io
 import sys
 import os
 
@@ -77,17 +77,17 @@ menu_layout = """\
 def verbose(func):
     """Debugging helper that allows to track input and output of function
     via decoration"""
-    print >> sys.stderr, "monitor %r" % (func.func_name)
+    print >> sys.stderr, "monitor %r" % (func.__name__)
 
     def wrapper_func(*args, **kwargs):
         """The wrapping function
         """
         print >> sys.stderr, "call(\033[0;31m%s.%s\033[0;30m): %r\n" % \
-                (type(args[0]).__name__, func.func_name, args[1:]), \
+                (type(args[0]).__name__, func.__name__, args[1:]), \
                 sys.stderr.flush()
         ret = func(*args, **kwargs)
         print >> sys.stderr, "    ret(%s): \033[0;32m%r\033[0;30m\n" % \
-                 (func.func_name, ret)
+                 (func.__name__, ret)
         return ret
     return wrapper_func
 
@@ -359,7 +359,7 @@ class UndoStack():
                         '/MainMenuBar/MenuEdit/EditRedo').set_sensitive(False)
 
     def _set_state_cb(self, string):
-        tmpfile = StringIO.StringIO()
+        tmpfile = io.StringIO()
         tmpfile.write(string)
         tmpfile.seek(0)
         self.set_state_from_file_cb(tmpfile)
@@ -484,7 +484,7 @@ class Editor(GladeDelegate):
         self.menubar.insert_action_group(actions, 0)
         try:
             mergeid = self.menubar.add_ui_from_string(menu_layout)
-        except gobject.GError, error:
+        except gobject.GError as error:
             print('Building menu failed: %s, %s' % (error, mergeid))
 
         # Initialize the project tree, passing in the menu bar
@@ -592,7 +592,7 @@ class Editor(GladeDelegate):
         """
         if len(self.project_tree.layer_list) == 1:
             kiwi.ui.dialogs.warning('Entering multi-lattice mode',
-                long='This is an unpublished feature\n' +
+                int='This is an unpublished feature\n' +
                 'Please ask me about publishing results obtained\n' +
                 'from using this feature mjhoffmann@gmail.com')
         if self.project_tree.meta.model_dimension in [1, 3]:

@@ -78,7 +78,7 @@ import sys
 try:
     from kmc_model import base, lattice, proclist
     import kmc_model
-except Exception, e:
+except Exception as e:
     base = lattice = proclist = None
     print("""Error: %s
     Could not find the kmc module. The kmc implements the actual
@@ -104,7 +104,7 @@ except:
 
 try:
     import kmc_settings as settings
-except Exception, e:
+except Exception as e:
     settings = None
     print("""Error %s
     Could import settings file
@@ -211,10 +211,12 @@ class KMC_Model(Process):
         self.reset()
 
         if hasattr(settings, 'setup_model'):
-            import new
-            self.setup_model = new.instancemethod(settings.setup_model,
-                                                  self,
-                                                  KMC_Model)
+            #NB import new
+            #NB self.setup_model = new.instancemethod(settings.setup_model,
+                                                  # self,
+                                                  # KMC_Model)
+            import types
+            self.setup_model = types.MethodType(settings.setup_model, self)
             self.setup_model()
 
     def __enter__(self, *args, **kwargs):
@@ -245,9 +247,9 @@ class KMC_Model(Process):
         # prepare structures for TOF evaluation
         self.tofs = tofs = get_tof_names()
         self.tof_matrix = np.zeros((len(tofs), proclist.nr_of_proc))
-        for process, tof_count in sorted(settings.tof_count.iteritems()):
+        for process, tof_count in sorted(settings.tof_count.items()):
             process_nr = getattr(self.proclist, process.lower())
-            for tof, tof_factor in tof_count.iteritems():
+            for tof, tof_factor in tof_count.items():
                 self.tof_matrix[tofs.index(tof), process_nr - 1] += tof_factor
 
         # prepare procstat
@@ -263,7 +265,7 @@ class KMC_Model(Process):
                 try:
                     self.species_representation[len(self.species_representation)] \
                     = eval(settings.representations[species])
-                except Exception, e:
+                except Exception as e:
                     print('Trouble with representation %s'
                            % settings.representations[species])
                     print(e)
@@ -353,7 +355,7 @@ class KMC_Model(Process):
         Useful for the header line of an ASCII output.
         """
         tofs = []
-        for _, value in settings.tof_count.iteritems():
+        for _, value in settings.tof_count.items():
             for name in value:
                 if name not in tofs:
                     tofs.append(name)
@@ -413,7 +415,7 @@ class KMC_Model(Process):
         if not base.is_allocated():
             self.reset()
         while True:
-            for _ in xrange(self.steps_per_frame):
+            for _ in range(self.steps_per_frame):
                 proclist.do_kmc_step()
             if self.autosend and not self.image_queue.full():
                 atoms = self.get_atoms()
@@ -543,7 +545,7 @@ class KMC_Model(Process):
         import ase.data.colors
         jmol_colors = ase.data.colors.jmol_colors
 
-        for i in xrange(frames):
+        for i in range(frames):
             atoms = self.get_atoms(reset_time_overrun=False)
             filename = '{prefix:s}_{i:06d}.{suffix:s}'.format(**locals())
             #write('%s_%06i.%s' % (prefix, i, suffix),
@@ -644,10 +646,10 @@ class KMC_Model(Process):
             kmos_tags = {}
             ase = import_ase()
             atoms = ase.atoms.Atoms()
-            for i in xrange(lattice.system_size[0]):
-                for j in xrange(lattice.system_size[1]):
-                    for k in xrange(lattice.system_size[2]):
-                        for n in xrange(1, 1 + lattice.spuck):
+            for i in range(lattice.system_size[0]):
+                for j in range(lattice.system_size[1]):
+                    for k in range(lattice.system_size[2]):
+                        for n in range(1, 1 + lattice.spuck):
                             species = lattice.get_species([i, j, k, n])
                             if species == self.null_species:
                                 continue
@@ -680,7 +682,7 @@ class KMC_Model(Process):
                                                       - len(ad_atoms),
                                                       len(atoms)):
                                         kmos_tags[atom] = \
-                                        self.species_tags.values()[species]
+                                        list(self.species_tags.values())[species]
 
                         if self.lattice_representation:
                             lattice_repr = deepcopy(self.lattice_representation)
@@ -819,7 +821,7 @@ class KMC_Model(Process):
         _ = self.get_atoms(geometry = False, reset_time_overrun = False)
 
         # sample over trajectory
-        for sample in xrange(samples):
+        for sample in range(samples):
             self.do_steps(sample_size/samples)
             atoms = self.get_atoms(geometry=False, reset_time_overrun=False)
             delta_ts.append(atoms.delta_t)
@@ -856,7 +858,7 @@ class KMC_Model(Process):
             return ((' '.join(['%.5e'] * len(outdata)) + '\n') % outdata)
         elif output == 'dict':
             header = self.get_std_header()[1:].split()
-            return dict(zip(header, outdata))
+            return dict(list(zip(header, outdata)))
         else:
             raise UserWarning(
                 "Output format {output} not defined. I only know 'str' and 'dict'")
@@ -1269,7 +1271,7 @@ class KMC_Model(Process):
                 if self.base.get_avail_site(process, site, 2):
                     avail.append(ProcInt(process, self.settings))
 
-        except Exception, e:
+        except Exception as e:
             # if is not iterable, interpret as process
             for x in range(self.lattice.system_size[0]):
                 for y in range(self.lattice.system_size[1]):
@@ -1350,7 +1352,8 @@ class KMC_Model(Process):
         """
         if hasattr(self.proclist, 'backend'):
             try:
-                return ''.join(self.proclist.backend)
+                #NB return ''.join(self.proclist.backend)
+                return self.proclist.backend.tostring().decode('utf-8')
             except:
                 return '???'
         else:
@@ -1552,7 +1555,7 @@ class Model_Parameters(object):
     def __repr__(self):
         fixed_parameters = dict((name, param)
                                 for name, param
-                                in settings.parameters.items()
+                                in list(settings.parameters.items())
                                 if not param['adjustable'])
         res = '# kMC model parameters (%i, fixed %i)\n' \
                % (len(settings.parameters), len(fixed_parameters))
@@ -1752,7 +1755,7 @@ class Model_Rate_Constants_OTF(Model_Rate_Constants):
                           ).split()
         if nr_vars:
             input_array = np.zeros([len(nr_vars)],int)
-            for nr_var, value in kwargs.iteritems():
+            for nr_var, value in kwargs.items():
                 if nr_var in nr_vars:
                     input_array[nr_vars.index(nr_var)] = int(value)
 
@@ -1867,7 +1870,7 @@ class _ModelRunner(type):
         obj = super(_ModelRunner, cls).__new__(cls, name, bases, dct)
         obj.runner_name = name
         obj.parameters = OrderedDict()
-        for key, item in dct.items():
+        for key, item in list(dct.items()):
             if key == '__module__':
                 pass
             elif isinstance(item, ModelParameter):
@@ -1875,7 +1878,7 @@ class _ModelRunner(type):
 
         return obj
 
-class ModelRunner(object):
+class ModelRunner(object, metaclass=_ModelRunner):
     """
 Setup and initiate many runs in parallel over a regular grid
 of parameters. A standard type of script is given below.
@@ -1897,15 +1900,13 @@ and <classname>.lock should be moved out of the way ::
 
     """
 
-    __metaclass__ = _ModelRunner
-
     def __product(self, *args, **kwds):
         """Manual implementation of itertools.product for
           python <= 2.5 """
 
         # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
         # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
-        pools = map(tuple, args) * kwds.get('repeat', 1)
+        pools = list(map(tuple, args)) * kwds.get('repeat', 1)
         result = [[]]
         for pool in pools:
             result = [x + [y] for x in result for y in pool]
@@ -1967,7 +1968,7 @@ and <classname>.lock should be moved out of the way ::
             #===========================
             self.__touch(lockfile)
             fdata = file(lockfile)
-            readlines = map(lambda x: x.strip(), fdata.readlines())
+            readlines = [x.strip() for x in fdata.readlines()]
             fdata.close()
             if input_line in readlines:
                 continue
@@ -1983,7 +1984,7 @@ and <classname>.lock should be moved out of the way ::
                               random_seed=random_seed,
                               cache_file='%s_configs/config_%s.pckl'
                                           % (self.runner_name, input_line))
-            for name, value in zip(self.parameters.keys(), datapoint):
+            for name, value in zip(list(self.parameters.keys()), datapoint):
                 setattr(model.parameters, name, value)
 
             #============================
@@ -2092,7 +2093,7 @@ and <classname>.lock should be moved out of the way ::
 
         if variable_parameters is None:
             variable_parameters = {}
-            for param_name, param in self.parameters.items():
+            for param_name, param in list(self.parameters.items()):
                 if param.steps > 1:
                     variable_parameters[param_name] = param
         else:
@@ -2112,7 +2113,7 @@ and <classname>.lock should be moved out of the way ::
         if len(variable_parameters) == 0:
             print("No variable parameter. Nothing to plot.")
         elif len(variable_parameters) == 1:
-            xvar = variable_parameters.keys()[0]
+            xvar = list(variable_parameters.keys())[0]
             data.sort(order=xvar)
             for occ in plot_occs:
                 occs = [data[name] for name in data.dtype.names if name.startswith(occ)]
@@ -2147,8 +2148,8 @@ and <classname>.lock should be moved out of the way ::
         if len(variable_parameters) == 0:
             print("No variable parameter. Nothing to plot.")
         elif len(variable_parameters) == 1:
-            xvar = variable_parameters.keys()[0]
-            param = variable_parameters.values()[0]
+            xvar = list(variable_parameters.keys())[0]
+            param = list(variable_parameters.values())[0]
             data.sort(order=xvar)
             for tof in plot_tofs:
                 tof = tof.replace(')', '').replace('(', '')
@@ -2198,7 +2199,7 @@ and <classname>.lock should be moved out of the way ::
         """
 
         parameters = []
-        for parameter in self.parameters.values():
+        for parameter in list(self.parameters.values()):
             parameters.append(parameter.get_grid())
         points = list(self.__product(*tuple(parameters)))
 
@@ -2249,7 +2250,7 @@ def set_rate_constants(parameters=None, print_rates=None):
             if print_rates:
                 n = int(4 * log(rate_const))
                 print('%30s: %.3e s^{-1}: %s' % (proc, rate_const, '#' * n))
-        except Exception, e:
+        except Exception as e:
             raise UserWarning(
                 "Could not set %s for process %s!\nException: %s" \
                     % (rate_expr, proc, e))
@@ -2259,7 +2260,7 @@ def set_rate_constants(parameters=None, print_rates=None):
     # FIXME
     # update chemical potentials (works for otf backend only)
     if hasattr(proclist,'update_user_parameter'):
-         for name,entry in settings.parameters.iteritems():
+         for name,entry in settings.parameters.items():
              proclist.update_user_parameter(
                  getattr(proclist,name.lower()),
                  evaluate_rate_expression(
@@ -2290,7 +2291,7 @@ def import_ase():
 def get_tof_names():
     """Return names turn-over-frequencies (TOF) previously defined in model."""
     tofs = []
-    for process, tof_count in settings.tof_count.iteritems():
+    for process, tof_count in settings.tof_count.items():
         for tof in tof_count:
             if tof not in tofs:
                 tofs.append(tof)

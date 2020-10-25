@@ -316,8 +316,8 @@ class Project(object):
         """Return representation of model as can be written into a *.ini File.
 
         """
-        from ConfigParser import ConfigParser
-        from StringIO import StringIO
+        from configparser import ConfigParser
+        from io import StringIO
 
         config = ConfigParser()
         config.optionxform = str
@@ -572,7 +572,7 @@ class Project(object):
                               os.path.splitext(filename)[-1])
 
     def export_xml_file(self, filename, validate=True):
-        f = file(filename, 'w')
+        f = open(filename, 'w')
         f.write(str(self))
         f.close()
 
@@ -592,9 +592,9 @@ class Project(object):
         self.filename = filename
 
     def import_ini_file(self, filename):
-        from ConfigParser import ConfigParser
+        from configparser import ConfigParser
         from kmos.utils import evaluate_template
-        from StringIO import StringIO
+        from io import StringIO
 
         config = ConfigParser()
         config.optionxform = str
@@ -1215,8 +1215,7 @@ class Project(object):
         for x in self.get_processes():
             for y in x.condition_list + x.action_list:
                 stripped_speciess = y.species.replace('$', '').replace('^', '')
-                stripped_speciess = map(
-                    lambda x: x.strip(), stripped_speciess.split(' or '))
+                stripped_speciess = [x.strip() for x in stripped_speciess.split(' or ')]
 
                 for stripped_species in stripped_speciess:
                     if not stripped_species in species_names:
@@ -1461,7 +1460,7 @@ class LayerList(FixedObject, list):
         """
 
         def drange(n):
-            return range(1 - n, n)
+            return list(range(1 - n, n))
 
         layers = [layer for layer in self if layer.name == layer_name]
         if layers:
@@ -1469,7 +1468,7 @@ class LayerList(FixedObject, list):
         else:
             raise UserWarning('No Layer named %s found.' % layer_name)
 
-        if site_name is not None and not any(map(lambda x: re.search(site_name, x), ['_'.join(x.name.split('_')) for x in layer.sites])):
+        if site_name is not None and not any([re.search(site_name, x) for x in ['_'.join(x.name.split('_')) for x in layer.sites]]):
             raise UserWarning('Layer {layer_name} has no site matching {site_name}. Please check spelling and try again.'.format(**locals()))
 
         if site_name is None:
@@ -1513,7 +1512,8 @@ class LayerList(FixedObject, list):
 
         offset = np.array(coord.offset)
         cell = self.cell
-        layer = filter(lambda x: x.name == coord.layer, list(self))[0]
+        # layer = filter(lambda x: x.name == coord.layer, list(self))[0]
+        layer = [x for x in list(self) if x.name == coord.layer][0]
         sites = [x for x in layer.sites if x.name == coord.name]
         if not sites:
             raise UserWarning('No site names %s in %s found!' %
@@ -1560,8 +1560,7 @@ class Layer(FixedObject, CorrectlyNamed):
             self.sites.append(site)
 
     def get_site(self, site_name):
-        sites = filter(lambda site: site.name == site_name,
-                       self.sites)
+        sites = [site for site in self.sites if site.name == site_name]
         if not sites:
             raise Exception('Site not found')
         return sites[0]
@@ -1726,12 +1725,6 @@ class Coord(FixedObject):
     def __hash__(self):
         return hash(self.__repr__())
 
-    def __cmp__(self, other):
-        return cmp(
-            (self.layer, tuple(self.offset), self.name),
-            (other.layer, tuple(other.offset), other.name)
-        )
-
     def __sub__(a, b):
         """When subtracting two lattice coordinates from each other,
         i.e. a-b, we want to keep the name and layer from a, and just
@@ -1802,12 +1795,13 @@ class Coord(FixedObject):
 
 
 def cmp_coords(self, other):
+    #NB maybe there's a cleaner/faster way of replicating old cmp behavior
     if self.layer != other.layer:
-        return cmp(self.layer, other.layer)
+        return (-1 if self.layer < other.layer else 1)
     elif (self.offset != other.offset).any():
         for i in range(3):
             if self.offset[i] != other.offset[i]:
-                return cmp(self.offset[i], other.offset[i])
+                return (-1 if self.offset[i] < other.offset[i] else 1)
     else:
         return 0
 
@@ -2164,7 +2158,7 @@ def parse_chemical_expression(eq, process, project_tree):
 
     # split at ->
     if eq.count('->') != 1:
-        raise StandardError('Chemical expression must contain ' +
+        raise Exception('Chemical expression must contain ' +
                             'exactly one "->"\n%s' % eq)
     eq = re.split('->', eq)
     left, right = eq
@@ -2182,7 +2176,7 @@ def parse_chemical_expression(eq, process, project_tree):
     # small validity checking
     for term in left + right:
         if term.count('@') != 1:
-            raise StandardError('Each term needs to contain ' +
+            raise Exception('Each term needs to contain ' +
                                 'exactly one @:\n%s' % term)
 
     # split each term again at @
@@ -2194,11 +2188,9 @@ def parse_chemical_expression(eq, process, project_tree):
     # check if species is defined
     for term in left + right:
         if term[0][0] in ['$', '^'] and term[0][1:]:
-            if not filter(lambda x: x.name == term[0][1:],
-                          project_tree.get_speciess()):
+            if not [x for x in project_tree.get_speciess() if x.name == term[0][1:]]:
                 raise UserWarning('Species %s unknown ' % term[0:])
-        elif not filter(lambda x: x.name == term[0],
-                        project_tree.get_speciess()):
+        elif not [x for x in project_tree.get_speciess() if x.name == term[0]]:
             raise UserWarning('Species %s unknown ' % term[0])
 
     condition_list = []
@@ -2212,8 +2204,7 @@ def parse_chemical_expression(eq, process, project_tree):
 
         if len(coord_term) == 2:
             name = coord_term[0]
-            active_layers = filter(lambda x: x.active,
-                                   project_tree.get_layers())
+            active_layers = [x for x in project_tree.get_layers() if x.active]
             if len(active_layers) == 1:
                 layer = active_layers[0].name
             else:  # if more than one active try to guess layer from name
@@ -2266,7 +2257,7 @@ def parse_chemical_expression(eq, process, project_tree):
     # every condition that does not have a corresponding action on the
     # same coordinate gets complemented with a 'default_species' action
     for condition in condition_list:
-        if not filter(lambda x: x.coord == condition.coord, action_list):
+        if not [x for x in action_list if x.coord == condition.coord]:
             action_list.append(ConditionAction(species=default_species,
                                                coord=condition.coord))
 
@@ -2274,7 +2265,7 @@ def parse_chemical_expression(eq, process, project_tree):
     # the same coordinate gets complemented with a 'default_species'
     # condition
     for action in action_list:
-        if not filter(lambda x: x.coord == action.coord, condition_list) \
+        if not [x for x in condition_list if x.coord == action.coord] \
                 and not action.species[0] in ['^', '$']:
             condition_list.append(ConditionAction(species=default_species,
                                                   coord=action.coord))
@@ -2289,9 +2280,7 @@ def parse_chemical_expression(eq, process, project_tree):
         #      the left side, the condition will be added with the same
         #      species as the annihilated one.
         if action.species[0] == '$':
-            corresponding_condition = filter(lambda x:
-                                             x.coord == action.coord,
-                                             condition_list)
+            corresponding_condition = [x for x in condition_list if x.coord == action.coord]
             if action.species[1:]:
                 if not corresponding_condition:
                     condition_list.append(
