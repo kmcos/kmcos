@@ -438,13 +438,14 @@ def build(options):
     true_argv = deepcopy(sys.argv)  # save for later
     from numpy import f2py
     sys.argv = call
-    #f2py.main()  # Doesn't work
-    from subprocess import call
-    command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
-               module_name, '-c'] + src_files
-    print(' '.join(command))
-
-    call(command)
+    try:
+        f2py.main()  # Doesn't work according to Alberdi, but works in Erwin's.
+    except:
+        from subprocess import call
+        command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
+                   module_name, '-c'] + src_files
+        print(' '.join(command))
+        call(command)
     sys.argv = true_argv
 
 
@@ -556,6 +557,7 @@ def evaluate_template(template, escape_python=False, **kwargs):
     """
     locals().update(kwargs)
 
+    result = ''
     NEWLINE = '\n'
     PREFIX = '#@'
     lines = [line + NEWLINE for line in template.split(NEWLINE)]
@@ -588,13 +590,13 @@ def evaluate_template(template, escape_python=False, **kwargs):
             if re.match('^\s*%s ' % PREFIX, line):
                 python_lines += line.lstrip()[3:]
             elif re.match('^\s*%s$' % PREFIX, line):
-                python_lines += '%sfortran_code += "\\n"\n' % (
+                python_lines += '%sresult += "\\n"\n' % (
                     ' ' * (len(line) - len(line.lstrip())))
             elif re.match('^$', line):
-                # python_lines += 'fortran_code += """\n"""\n'
+                # python_lines += 'result += """\n"""\n'
                 pass
             else:
-                python_lines += '%sfortran_code += ("""%s""".format(**dict(locals())))\n' \
+                python_lines += '%sresult += ("""%s""".format(**dict(locals())))\n' \
                     % (' ' * (len(line.expandtabs(4)) - len(line.lstrip())),  line.lstrip())
 
         #NB see note above
@@ -624,20 +626,21 @@ def evaluate_template(template, escape_python=False, **kwargs):
 
         # second turn literary lines into write statements
         python_lines = ''
-        python_lines = 'fortran_code =\"\"\n'
+                                             
         for line in lines:
             if re.match('\s*%s ' % PREFIX, line):
-                python_lines += '%sfortran_code += ("""%s""".format(**dict(locals())))\n' \
+                python_lines += '%sresult += ("""%s""".format(**dict(locals())))\n' \
                     % (' ' * (len(line) - len(line.lstrip())),
                        line.lstrip()[3:])
             elif re.match('\s*%s' % PREFIX, line):
-                python_lines += '%sfortran_code += "\\n"\n' % (
+                python_lines += '%sresult += "\\n"\n' % (
                     ' ' * (len(line) - len(line.lstrip())))
             else:
                 python_lines += line
-                
+
         #NB see note above
         ldict = locals().copy()
         exec(python_lines, globals(), ldict) 
         result = ldict['result']
-    return ldict["fortran_code"]
+
+    return result
