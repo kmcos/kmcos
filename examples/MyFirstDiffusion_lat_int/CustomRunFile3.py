@@ -40,3 +40,5 @@ with open(filename1, 'a') as f1:
 		model.do_steps(sps)
 		Step += sps
 		atoms = model.get_atoms(geometry=False) # Have to recall it everytime or it will not refresh atoms
+        
+print("Finished with Custom Runfile!")
