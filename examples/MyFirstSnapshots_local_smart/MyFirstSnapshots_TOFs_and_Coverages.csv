@@ -1,0 +1,12 @@
+Simulation_name,Step,Time_(s),sps/tps,CO_simple_cubic_hollow,empty_simple_cubic_hollow
+MyFirstSnapshots,0,0.0,0,0.0,1.0
+MyFirstSnapshots,10,3.791937587039263e-09,10,0.025,0.975
+MyFirstSnapshots,20,6.207475200239411e-09,10,0.05,0.95
+MyFirstSnapshots,30,8.485320647387863e-09,10,0.065,0.935
+MyFirstSnapshots,40,1.086564599792154e-08,10,0.075,0.925
+MyFirstSnapshots,50,1.1907822498249199e-08,10,0.085,0.915
+MyFirstSnapshots,60,1.3859156832741162e-08,10,0.085,0.915
+MyFirstSnapshots,70,1.5464567517543656e-08,10,0.085,0.915
+MyFirstSnapshots,80,1.7523743951082547e-08,10,0.1,0.9
+MyFirstSnapshots,90,1.922107027850749e-08,10,0.1,0.9
+MyFirstSnapshots,100,2.1491014036017702e-08,10,0.1,0.9

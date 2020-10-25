@@ -1,0 +1,45 @@
+from snapshots import *
+import snapshots_globals as sg
+import os
+
+#sg.simulation_name = model_name  #<--- You can change this to whatever you want, but this is the default. All it does is affect the filenames of the exports the format for this type would be MyFirstModel_TOFs_and_Coverages.csv.
+#other common options are:
+#sg.simulation_name = os.path.basename(__file__)[:-3] #<--- Uses the runfile name as part of the file names i.e. runfile_TOFs_and_Coverages.csv  . The [:-3] is to remove the ".py" from the end of the filename.
+#sg.simulation_name = '%s_%s' %(model_name,random_seed) #<--- Includes the model_name and random seed (e.g., 6483) used for the KMC as part of the file names e.g., MyFirstModel_6483_TOFs_and_Coverages.csv
+
+
+#Below sets up some "options" for running the snapshots.
+sg.parameters_of_interest = 'None'#['T','R'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
+sps = 10 # <-- this is just an example
+n_snapshots = 10 # <-- this is just an example
+
+
+#The kmos Model is initialized in create_headers
+create_headers()
+
+#If it is desired to run snapshots without writing output to a file, set sg.write_output = 'False'.
+#If you want to start writing again, set sg.write_output = 'True' before running
+#more snapshots.
+
+#If you need to change a parameter after each snapshot, only do 1 snapshot at a time with n_snapshots=1.
+do_snapshots(sps, n_snapshots)
+
+#do_snapshots(500, 2) <-- here is another example of how to use the syntax.
+
+#If you want to dump a configuration between snapshots, you may want to do something
+#like this.
+#sg.model.dump_config(sg.simulation_name + str(sg.steps_so_far))#
+
+
+#below are  some examples of  arrays and lists that may be of interest.
+print("line 35 of the runfile, sg.TOF_header_array:", sg.TOF_header_array)
+print("line 36 of the runfile, sg.model.get_tof_header():", sg.model.get_tof_header())
+#print sg.occ_header_array
+#print sg.TOF_data_list
+#print sg.occ_data_list
+#print("line 40 of the runfile, sg.last_snapshot_outputs:", sg.last_snapshot_outputs)
+#print("line 41 of the runfile, sg.snapshot_output_headers:", sg.snapshot_output_headers)
+
+
+#The final command below writes the simulation details to the logfile
+create_log()
