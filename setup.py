@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """kMC modeling on steroids"""
 
 import os
@@ -29,17 +29,16 @@ classifiers = [
               ]
 requires = [
                     'ase',
-                    'cairo',
-                    'gobject',
+                    'pycairo==1.11.1',
+                    'pygobject==3.30',
                     'goocanvas',
-                    'gtk',
                     'kiwi',
                     'lxml',
                     'matplotlib',
-                    'pygtk',
+#                    'pygtk', #This is only for windows so should be under extras.
                    ]
 license = 'COPYING'
-long_description = open('README.rst').read()
+long_description = file('README.rst').read()
 name='python-kmos'
 packages = [
            'kmos',
@@ -72,7 +71,6 @@ setup(
       author=author,
       author_email=author_email,
       description=description,
-      #requires=requires,
       license=license,
       long_description=long_description,
       maintainer=maintainer,
