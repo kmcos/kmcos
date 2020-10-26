@@ -2,5 +2,8 @@ numpy
 lxml
 ase
 kiwi-gtk
-PyGObject
-
+pycairo==1.11.1
+pygobject==3.30
+#goocanvas  part of pygobject now, I think.
+kiwi
+matplotlib
