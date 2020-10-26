@@ -31,8 +31,9 @@ requires = [
                     'ase',
                     'pycairo==1.11.1',
                     'pygobject==3.30',
-                    'goocanvas',
+                    #'goocanvas', #part of pygobject now, I think.
                     'kiwi',
+                    'kiwi-gtk',
                     'lxml',
                     'matplotlib',
 #                    'pygtk', #This is only for windows so should be under extras.
