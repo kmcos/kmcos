@@ -40,6 +40,8 @@ species_tags = {
     }
 
 tof_count = {
+    "CO_adsorption":{'CO_adsorption': 1},
+    "CO_desorption":{'CO_desorption': 1},
     }
 
 xml = """<?xml version="1.0" ?>
@@ -61,11 +63,11 @@ xml = """<?xml version="1.0" ?>
         </layer>
     </lattice>
     <process_list>
-        <process enabled="True" name="CO_adsorption" rate_constant="0.1*p_COgas*A*bar/sqrt(2*m_CO*umass/beta)">
+        <process enabled="True" name="CO_adsorption" rate_constant="0.1*p_COgas*A*bar/sqrt(2*m_CO*umass/beta)" tof_count="{'CO_adsorption': 1}">
             <condition coord_layer="simple_cubic" coord_name="hollow" coord_offset="0 0 0" species="empty"/>
             <action coord_layer="simple_cubic" coord_name="hollow" coord_offset="0 0 0" species="CO"/>
         </process>
-        <process enabled="True" name="CO_desorption" rate_constant="p_COgas*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(-deltaG*eV)">
+        <process enabled="True" name="CO_desorption" rate_constant="p_COgas*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(-deltaG*eV)" tof_count="{'CO_desorption': 1}">
             <condition coord_layer="simple_cubic" coord_name="hollow" coord_offset="0 0 0" species="CO"/>
             <action coord_layer="simple_cubic" coord_name="hollow" coord_offset="0 0 0" species="empty"/>
         </process>

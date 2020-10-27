@@ -32,8 +32,6 @@ do_snapshots(sps, n_snapshots)
 
 
 #below are  some examples of  arrays and lists that may be of interest.
-print("line 35 of the runfile, sg.TOF_header_array:", sg.TOF_header_array)
-print("line 36 of the runfile, sg.model.get_tof_header():", sg.model.get_tof_header())
 #print sg.occ_header_array
 #print sg.TOF_data_list
 #print sg.occ_data_list

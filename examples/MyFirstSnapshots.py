@@ -34,12 +34,14 @@ coord = pt.lattice.generate_coord('hollow.(0,0,0).simple_cubic')
 pt.add_process(name='CO_adsorption',
                conditions=[Condition(species='empty', coord=coord)],
                actions=[Action(species='CO', coord=coord)],
-               rate_constant='0.1*p_COgas*A*bar/sqrt(2*m_CO*umass/beta)')
+               rate_constant='0.1*p_COgas*A*bar/sqrt(2*m_CO*umass/beta)',
+               tof_count={'CO_adsorption':1}) 
 
 pt.add_process(name='CO_desorption',
                conditions=[Condition(coord=coord, species='CO')],
                actions=[Action(coord=coord, species='empty')],
-               rate_constant='p_COgas*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(-deltaG*eV)')
+               rate_constant='p_COgas*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(-deltaG*eV)',
+               tof_count={'CO_desorption':1}) 
 
 pt.filename = model_name + ".xml"
 pt.save()
