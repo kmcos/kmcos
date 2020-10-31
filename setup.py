@@ -39,7 +39,7 @@ requires = [
 #                    'pygtk', #This is only for windows so should be under extras.
                    ]
 license = 'COPYING'
-long_description = file('README.rst').read()
+long_description = open('README.rst').read()
 name='python-kmos'
 packages = [
            'kmos',
