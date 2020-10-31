@@ -261,12 +261,12 @@ def run(i=0, edir=''):
     assert not model.deallocate()
 
 def run_in_serial(edir):
-    for i in xrange(20):
+    for i in range(20):
         run(i, edir)
 
 def run_in_parallel(edir):
     from multiprocessing import Process
-    for i in xrange(8):
+    for i in range(8):
         process = Process(target=run, args=(10, edir))
         process.start()
 
@@ -285,7 +285,7 @@ def export_and_run_many_models():
     EXPORT_DIR = tempfile.mkdtemp()
     XML_FILENAME = '%s.xml' % tempfile.mktemp()
 
-    with file(XML_FILENAME, 'w') as XML_FILE:
+    with open(XML_FILENAME, 'w') as XML_FILE:
         XML_FILE.write(XML)
 
     main('export %s %s' % (XML_FILENAME, EXPORT_DIR))
