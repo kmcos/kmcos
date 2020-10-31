@@ -60,7 +60,7 @@ package_data = {'kmos':['fortran_src/*f90',
 platforms = ['linux', 'windows']
 if os.name == 'nt':
     scripts = [
-            'tools/kmos.bat'
+            'tools/kmos.bat',
             'tools/kmcos.bat'
             ]
 else:
