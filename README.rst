@@ -107,7 +107,7 @@ BUGS, ISSUES, TROUBLE
 
 This code is research code for scientists by scientists. If you
 believe you have hit a bug, have a feature request get in touch
-with us either via the `mailing list <https://groups.google.com/forum/#!forum/kmos-users>`_, `Gitter <https://gitter.im/mhoffman/kmos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge>`_, or open an `issue <https://github.com/mhoffman/kmos/issues/new>`_ .
+with us either via the `mailing list <https://groups.google.com/forum/#!forum/kmcos-users>`_, or open an `issue <https://github.com/kmcos/kmcos/issues/new>`_ .
 
 THANKS
 ######
