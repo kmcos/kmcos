@@ -3,7 +3,7 @@
 
 import os
 #from distutils.core import setup
-from kmos import __version__ as version
+from kmos import __version__ as version #Update this in __init__.py file of the main directory.
 from setuptools import find_packages, Command, setup
 
 maintainer = 'Aditya Savara'
