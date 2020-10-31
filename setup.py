@@ -121,4 +121,5 @@ setup(
       scripts=scripts,
       url=url,
       version=version,
+      cmdclass={'upload': UploadCommand,}, #setup.py publish support
       )
