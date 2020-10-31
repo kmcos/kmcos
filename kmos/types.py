@@ -612,7 +612,7 @@ class Project(object):
         infile = StringIO()
         infile.write(evaluate_template(inputtxt, escape_python=True, pt=self))
         infile.seek(0)
-        config.readfp(infile)
+        config.read_file(infile) #Changed 10/31/20 to replace readfp https://docs.python.org/3/library/configparser.html
 
         for section in config.sections():
             if section == 'Lattice':
@@ -1448,6 +1448,7 @@ class LayerList(FixedObject, list):
             if value:
                 from kmos.utils import get_ase_constructor
                 from ase.atoms import Atoms
+                print("line 1451", value)
                 value = eval(value)
                 if (not hasattr(self, 'representation') or
                         not self.representation):
