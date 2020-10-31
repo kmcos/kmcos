@@ -61,6 +61,7 @@ platforms = ['linux', 'windows']
 if os.name == 'nt':
     scripts = [
             'tools/kmos.bat'
+            'tools/kmcos.bat'
             ]
 else:
     scripts = [
