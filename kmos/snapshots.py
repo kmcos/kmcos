@@ -6,7 +6,7 @@
 import timeit
 import numpy
 from kmc_settings import *
-import snapshots_globals as sg
+import kmos.snapshots_globals as sg
 
 #This function creates the output file for the TOF data, occupations data and 
 #parameters file. The file that is created to hold the data is called 
