@@ -1,5 +1,5 @@
-from snapshots import *
-import snapshots_globals as sg
+from kmos.snapshots import *
+import kmos.snapshots_globals as sg
 import os
 
 #sg.simulation_name = model_name  #<--- You can change this to whatever you want, but this is the default. All it does is affect the filenames of the exports the format for this type would be MyFirstModel_TOFs_and_Coverages.csv.
