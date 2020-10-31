@@ -89,8 +89,8 @@ Please refer to
 
 or links therein for tutorials, user guide, reference, and troubleshooting hints.
 
-BUGS, ISSUES, TROUBLE
-#####################
+HELP, BUGS, ISSUES, TROUBLE
+###########################
 
 This code is research code for scientists by scientists. If you
 believe you have hit a bug, have a feature request get in touch
