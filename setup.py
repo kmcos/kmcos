@@ -5,8 +5,8 @@ import os
 from distutils.core import setup
 from kmos import __version__ as version
 
-maintainer = 'Max J. Hoffmann'
-maintainer_email = 'mjhoffmann@gmail.com'
+maintainer = 'Aditya Savara'
+maintainer_email = 'AdityaSavara2008@u.northwestern.edu'
 author = 'Max J. Hoffmann'
 author_email = 'mjhoffmann@gmail.com'
 description =  __doc__
@@ -40,7 +40,7 @@ requires = [
                    ]
 license = 'COPYING'
 long_description = open('README.rst').read()
-name='python-kmos'
+name='kmcos'
 packages = [
            'kmos',
            'kmos.utils',
@@ -66,7 +66,7 @@ else:
             'tools/kmos',
             'tools/kmos-install-dependencies-ubuntu',
             ]
-url = 'https://github.com/mhoffman/kmos'
+url = 'https://github.com/kmcos/kmcos'
 
 setup(
       author=author,
