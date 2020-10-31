@@ -21,4 +21,5 @@ last_snapshot_outputs = []
 snapshot_output_headers = []
 sp_steps = 0.0
 sp_steps_initial = 0.0
+kmc_time = sg.atoms.kmc_time
 #to get atoms.kmc_time access it by from sg.atoms.kmc_time
