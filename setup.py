@@ -6,6 +6,10 @@ from distutils.core import setup
 from kmos import __version__ as version
 
 maintainer = 'Aditya Savara'
+url = 'https://github.com/kmcos/kmcos'                 
+license = 'COPYING'
+long_description = open('README.rst').read()
+name='kmcos'
 maintainer_email = 'AdityaSavara2008@u.northwestern.edu'
 author = 'Max J. Hoffmann'
 author_email = 'mjhoffmann@gmail.com'
@@ -38,9 +42,6 @@ requires = [
                     'matplotlib',
 #                    'pygtk', #This is only for windows so should be under extras.
                    ]
-license = 'COPYING'
-long_description = open('README.rst').read()
-name='kmcos'
 packages = [
            'kmos',
            'kmos.utils',
@@ -66,8 +67,42 @@ else:
             'tools/kmos',
             'tools/kmos-install-dependencies-ubuntu',
             ]
-url = 'https://github.com/kmcos/kmcos'
 
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds…')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Building Source and Wheel (universal) distribution…')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+
+        self.status('Uploading the package to PyPI via Twine…')
+        os.system('twine upload dist/*')
+
+        self.status('Pushing git tags…')
+        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git push --tags')
+
+        sys.exit()
 setup(
       author=author,
       author_email=author_email,
