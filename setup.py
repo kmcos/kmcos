@@ -2,8 +2,9 @@
 """kMC modeling on steroids"""
 
 import os
-from distutils.core import setup
+#from distutils.core import setup
 from kmos import __version__ as version
+from setuptools import find_packages, Command, setup
 
 maintainer = 'Aditya Savara'
 url = 'https://github.com/kmcos/kmcos'                 
