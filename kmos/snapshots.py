@@ -5,7 +5,10 @@
 # will be written to .csv files. In addition, the configuration and a
 # simulation log will be written when the simulation is complete.
 import time
-import kmos.snapshots_globals as sg
+try:
+    import kmos.snapshots_globals as sg
+except:
+    import snapshots_globals as sg
 
 # This function creates the output file for the TOF data, occupations data and
 # parameters file. The file that is created to hold the data is called
