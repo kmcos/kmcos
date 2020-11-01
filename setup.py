@@ -67,6 +67,7 @@ else:
     scripts = [
             'tools/kmos-build-standalone',
             'tools/kmos',
+            'tools/kmcos',
             'tools/kmos-install-dependencies-ubuntu',
             ]
 
