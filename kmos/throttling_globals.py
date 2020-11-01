@@ -63,9 +63,9 @@ EF_range_flag = 'split'
 # Requested compression ranges (ratio of fastest rate to slowest rate). These
 # are adjusted below depending on the value of EF_range_flag. Any ranges not
 # associated with the specified EF_range_flag are set to None.
-EF_range_fast = 1e2     # For fast processes only ('split')
-EF_range_slow = 1e20    # For slow processes only ('split')
-EF_range_full = 1e6     # For both fast and slow together ('full')
+EF_range_fast_requested = 1e2     # For fast processes only ('split')
+EF_range_slow_requested = 1e20    # For slow processes only ('split')
+EF_range_full_requested = 1e6     # For both fast and slow together ('full')
 
 # Any processes not expected to occur more than Nsites times within this cutoff
 # time during the simulations will be excluded from throttling as irrelevant.
@@ -76,8 +76,8 @@ max_time = 10. * 3600
 # stop.
 cutoff_time = 100.0
 
-# This is the minimum rate for FFPs. In a system with FFPs, the throttling
-# algorithm will step down the slowest FFP until it hits this value. The value
+# The characteristic_EF is the primary benchmark for FFPs. In a system with FFPs, the throttling
+# algorithm will step down the slowest FFP until it approaches this value. The value
 # is user-adjustable and based on the desired timescale. The floor should be
 # approximately the rate of the FRP times Nsites. We leave this in the
 # user-adjustable section as this is just a guideline and can be changed as
@@ -85,24 +85,25 @@ cutoff_time = 100.0
 # runfile.
 characteristic_EF = 0.2  # Characteristic transition rate
 FFP_floor = characteristic_EF * Nsites
-FFP_roof = 1000
+#it is good to use an FFP_roof: the compression will be required to satisfy *both* the roof *and* the EF_range requirementes.
+FFP_roof = None 
 #By default, the FRP_Buffer between FFP_floor and the FRP is Nsites.
 FRP_Buffer = Nsites 
 
 # Total number of KMC steps to execute per snapshot. This should be at least
-#   throttling_sps = EF_range_fast * Nsites * n_characteristic_events_target
+#   throttling_sps = EF_range_fast_requested * Nsites * n_characteristic_events_target
 # for split range and
-#   throttling_sps = EF_range_full
+#   throttling_sps = EF_range_full_requested
 # for full range. If the user wants to change this value, it should be done
 # here or in the runfile. The variable n_characteristic_events_target is the
 # number of times that the characteristic event (e.g., FRP) should occur during
 # the snapshot.
 n_characteristic_events_target = 10
 if EF_range_flag == 'split':
-    throttling_sps = int(EF_range_fast * Nsites *
+    throttling_sps = int(EF_range_fast_requested * Nsites *
         n_characteristic_events_target)
 else:
-    throttling_sps = int(EF_range_full)
+    throttling_sps = int(EF_range_full_requested)
 
 # Total KMC time to execute per snapshot. A value of None will cause the
 # algorithm to use a fixed number of steps (this should be the typical case).
@@ -120,8 +121,8 @@ default_FFP_step_down = 10.0
 
 # Do we want to use guidelines for setting various quantities?
 use_guideline_FFP_step_down = True  # FFP step down
-use_guideline_FFP_floor = True  # Floor level
-use_guideline_sps = True    # SPS size
+use_guideline_FFP_floor = False  # Floor level #this will override what is set for FFP_floor
+use_guideline_sps = False    # SPS size #this will override what is set for throttling_sps
 
 # These are the staggering factors controlling the compression of scales. Each
 # factor is used at the corresponding scale (1, 2, or 3). These are all
@@ -299,15 +300,15 @@ slow_throttling_scale = 0
 
 # Adjustments to the requested EF range values
 if EF_range_flag == 'full':
-    EF_range_fast = None
-    EF_range_slow = None
+    EF_range_fast_requested = None
+    EF_range_slow_requested = None
 elif EF_range_flag == 'split':
-    EF_range_full = None
+    EF_range_full_requested = None
 else:
     print('WARNING: Invalid EF_range_flag detected')
-    EF_range_fast = None
-    EF_range_slow = None
-    EF_range_full = None
+    EF_range_fast_requested = None
+    EF_range_slow_requested = None
+    EF_range_full_requested = None
 
 # Variables containing the actual compression ratios
 EF_range_fast_actual = None
@@ -355,8 +356,8 @@ __var_list__ = ['print_throttling_info', 'aggregate_throttling_factors',
     'compression_scheme_flag', 'current_ranking_scheme', 'current_snapshot',
     'cutoff_time', 'default_FFP_step_down', 'descend_SP_list', 'proc_names',
     'EF_indices_dict', 'oEF_TOF_list_next', 'oEF_TOF_list', 'uEF_list',
-    'ptEF_list', 'EF_range_fast', 'EF_range_fast_actual', 'EF_range_flag',
-    'EF_range_full', 'EF_range_full_actual', 'EF_range_slow',
+    'ptEF_list', 'EF_range_fast_requested', 'EF_range_fast_actual', 'EF_range_flag',
+    'EF_range_full_requested', 'EF_range_full_actual', 'EF_range_slow_requested',
     'EF_range_slow_actual', 'fast_throttling_scale', 'FFP_floor',
     'FFP_step_down', 'FFP_step_down_type', 'incremental_throttling_factors',
     'incremental_throttling_factors_dict', 'loop_base', 'machine_epsilon',

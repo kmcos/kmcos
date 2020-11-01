@@ -1,3 +1,4 @@
+#Version 8.1
 # This module has functions related to ranking, sorting, and calculating the
 # throttling factors required to achieve a desired scale compression. It relies
 # on data stored in throttling_globals.
@@ -14,6 +15,14 @@ except:
 import re   # Regular Expressions module
 from copy import deepcopy
 from timeit import default_timer as timer
+
+#These veriables have been renamed so are being reassigned for backwards compatibility.
+    if hasattr(tg, 'EF_range_fast'):
+        tg.EF_range_fast_requested = tg.EF_range_fast
+    if hasattr(tg, 'EF_range_slow'):
+        tg.EF_range_slow_requested = tg.EF_range_slow
+    if hasattr(tg, 'EF_range_full'):
+        tg.EF_range_full_requested = tg.EF_range_full
 
 # TODO: Because rare configuration slow processes do not increase when the rate
 # constants for them are increased, this could potentially inhibit compression
@@ -534,7 +543,7 @@ def set_compression_schemes(FFP_ranks, SP_ranks):
 
             # If we are using full range scaling, we need to exclude slow
             # throttling (slow throttling scales larger than zero) for fast
-            # scales equal to zero to avoid meeting the EF_range_full criterion
+            # scales equal to zero to avoid meeting the EF_range_full_requested criterion
             # by accidentally compressing the slow processes when there are fast
             # processes that could be compressed instead. This condition will
             # still allow an initial combination of (0, 0).
@@ -650,6 +659,11 @@ def calculate_ptEFs():
                 tg.ptEF_list[EF_list_index][EF_list_rxn_index] = ptEF
 
     # Now update the ptEF_list structure with the throttled max EFs
+    # right now we have separate if statements to take whatever is not None.
+    # This is because max & ">" comparisons don't work with None types.
+    # Another approach would be to populate two temporary variables and then
+    # give the value "0" to the temporary variable for a None Type,
+    # and that way a ">" or max type operator could be used.
     for i in range(len(tg.ptEF_list)):
         if (tg.ptEF_list[i][1] is not None and
             tg.ptEF_list[i][2] is not None):
@@ -659,7 +673,8 @@ def calculate_ptEFs():
         elif tg.ptEF_list[i][2] is not None:
             tg.ptEF_list[i][4] = tg.ptEF_list[i][2]
         else:
-            pass # Should not happen
+            tg.ptEF_list[i][4] = None #This means both forward and reverse reaction had no events.
+            pass 
 
 # This function checks for whether the requested throttling amount meets the
 # requested scale compression level.
@@ -741,10 +756,10 @@ def check_scale_compression():
                 # adequate.
                 fast_met = True
             elif tg.FFP_roof is None:
-                fast_met = (tg.EF_range_fast_actual <= tg.EF_range_fast
+                fast_met = (tg.EF_range_fast_actual <= tg.EF_range_fast_requested
                     * (1 + tg.floating_point_rel_tol))
             elif tg.FFP_roof is not None:
-                fast_met = (tg.EF_range_fast_actual <= tg.EF_range_fast
+                fast_met = (tg.EF_range_fast_actual <= tg.EF_range_fast_requested
                     * (1 + tg.floating_point_rel_tol) and fFFP_ptEF < tg.FFP_roof)
         else: # No fast processes, so this is true by default
             fast_met = True
@@ -761,7 +776,7 @@ def check_scale_compression():
                 slow_met = True
             else:
                 tg.EF_range_slow_actual = FRP_ptEF / sSP_ptEF
-                slow_met = (tg.EF_range_slow_actual <= tg.EF_range_slow
+                slow_met = (tg.EF_range_slow_actual <= tg.EF_range_slow_requested
                             * (1 + tg.floating_point_rel_tol))
         else: # No slow processes, so this is true by default
             slow_met = True
@@ -786,7 +801,7 @@ def check_scale_compression():
 
         # Successful compression is achieved when the compression ratio meets
         # the criterion plus a small amount to account for finite precision.
-        compression_achieved = (tg.EF_range_full_actual <= tg.EF_range_full
+        compression_achieved = (tg.EF_range_full_actual <= tg.EF_range_full_requested
                                 * (1 + tg.floating_point_rel_tol))
 
     return compression_achieved
@@ -855,7 +870,6 @@ def find_aggregate_throttling_factors():
 
     # Iterate over all fast processes
     for i in range(0, FFP_ranks):
-
         current_rank_uEF = tg.ascend_FFP_list[i][1]
         if current_rank_uEF >= tg.FFP_floor and not sFFP_found:
             # If if current_rank_uEF < tg.FFP_floor then it's an FQP, not an FFP.
@@ -1559,7 +1573,7 @@ def printout_throttling_info(unthrottled_step=False):
     else:
         BPstring = str(tg.BP_name)
     scale = (tg.fast_throttling_scale, tg.slow_throttling_scale)
-    TargetEF_Ratios = (tg.EF_range_full, tg.EF_range_fast, tg.EF_range_slow)
+    TargetEF_Ratios = (tg.EF_range_full_requested, tg.EF_range_fast_requested, tg.EF_range_slow_requested)
     ActualEF_ratios = (tg.EF_range_full_actual, tg.EF_range_fast_actual,
         tg.EF_range_slow_actual)
 
@@ -1632,10 +1646,10 @@ def update_throttling_guidelines():
         tg.FFP_floor = tg.characteristic_EF * tg.Nsites
     if tg.use_guideline_sps:
         if tg.EF_range_flag == 'split':
-            tg.throttling_sps = int(tg.EF_range_fast * tg.Nsites *
+            tg.throttling_sps = int(tg.EF_range_fast_requested * tg.Nsites *
                 tg.n_characteristic_events_target)
         elif tg.EF_range_flag == 'full':
-            tg.throttling_sps = int(tg.EF_range_full)
+            tg.throttling_sps = int(tg.EF_range_full_requested)
     if tg.use_guideline_FFP_step_down:
         tg.FFP_step_down = max(float(tg.throttling_sps)/tg.Nsites,
             tg.default_FFP_step_down)
