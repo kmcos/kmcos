@@ -7,3 +7,5 @@ pygobject==3.30
 #goocanvas  part of pygobject now, I think.
 kiwi
 matplotlib
+UnitTesterSG
+CiteSoft

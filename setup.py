@@ -41,6 +41,8 @@ requires = [
                     'kiwi-gtk',
                     'lxml',
                     'matplotlib',
+                    'UnitTesterSG',
+                    'CiteSoft'
 #                    'pygtk', #This is only for windows so should be under extras.
                    ]
 packages = [
