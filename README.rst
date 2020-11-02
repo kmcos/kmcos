@@ -100,13 +100,16 @@ with us either via the `mailing list <https://groups.google.com/forum/#!forum/km
 CONTRIBUTORS
 ############
 Creator:
+
 * Max J. Hoffmann
 
 Current Project Directors:
+
 * Karsten Reuter
 * Aditya (Ashi) Savara
 
 Developers:
+
 * Sebastian Matera
 * Juan M. Lorenzi
 
