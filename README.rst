@@ -113,6 +113,7 @@ Developers:
 * Juan M. Lorenzi
 
 Other:
+
 * Thomas Danielson
 * Jonathan Sutton
 * Joseba Alberdi
