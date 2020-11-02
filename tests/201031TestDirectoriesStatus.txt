@@ -17,3 +17,8 @@ inside \test_cli_generated_model\   no python file, but typing "kmos benchmark" 
 inside \test_run\  --> it seems to run most of the way, it compiles the model, then it says "Trajectories differ for backend local_smart".  --> there is a file called "test_procs_sites_local_smart.log" and there is a reference file called "ref_procs_sites_local_smart.log".  They are different. This may be why Joseba said that the processes may be out of order. This could simply be some kind of random seed difference. In fact, we already know that the gcc random() function has changed compared to when kmos was written.  We should perhaps at this stage check a model where we know what the correct reaction rate and/or chemical behaviour should be.
 
 inside \test_types\  test_coordinates_list.py  and  test_xml_ini_conversion.py  both run and pass (the 2nd one has 2 tests in it)
+
+
+inside \MyFirstThrottling\ is a throttling unit test example
+
+inside \SQERTSS_unit_tests\ are some SQERTSS (throttling) unit tests
