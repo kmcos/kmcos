@@ -11,7 +11,7 @@
 
 kmcos: Kinetic Monte Carlo of Systems
 =====================================
-*A vigorous attempt to make lattice kinetic Monte Carlo modelling more accessible.  kmcos is designed for lattice based Kinetic Monte Carlo simulations to understand chemical kinetics and mechanisms.  A quickstart as well as tutorials and other documentation are below.*
+*kmcos is designed for lattice based Kinetic Monte Carlo simulations to understand chemical kinetics and mechanisms. It has been used to produce more than 10 scientific publications. A quickstart as well as tutorials and other documentation are below.*
 
 
 QUICKSTART
