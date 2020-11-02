@@ -9,9 +9,9 @@
    :alt: Join the chat at https://gitter.im/mhoffman/kmos
    :target: https://gitter.im/mhoffman/kmos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-kmos: Kinetic Monte Carlo of Systems
+kmcos: Kinetic Monte Carlo of Systems
 =====================================
-*a vigorous attempt to make lattice kinetic Monte Carlo modelling more accessible.*
+*A vigorous attempt to make lattice kinetic Monte Carlo modelling more accessible.  kmcos is designed for lattice based Kinetic Monte Carlo simulations to understand chemical kinetics and mechanisms.  A quickstart as well as tutorials and other documentation are below.*
 
 
 QUICKSTART
@@ -82,10 +82,9 @@ DOCUMENTATION
 
 Please refer to
 
-* https://www.th4.ch.tum.de/index.php?id=1321
+* Documentation: http://kmos.readthedocs.org/
+* Tutorial: https://github.com/jmlorenzi/intro2kmos
 * http://mhoffman.github.io/kmos/
-* http://kmos.readthedocs.org/
-* https://github.com/jmlorenzi/intro2kmos
 
 or links therein for tutorials, user guide, reference, and troubleshooting hints.
 
