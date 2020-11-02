@@ -112,6 +112,12 @@ Developers:
 * Sebastian Matera
 * Juan M. Lorenzi
 
+Other:
+* Thomas Danielson
+* Jonathan Sutton
+* Joseba Alberdi
+* Steve Erwin & NB
+
 THANKS
 ######
 
