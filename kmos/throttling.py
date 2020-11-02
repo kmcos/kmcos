@@ -1,13 +1,14 @@
-#Version 8.1
+#Version 8.2
 # This module has functions related to ranking, sorting, and calculating the
 # throttling factors required to achieve a desired scale compression. It relies
 # on data stored in throttling_globals.
 
 try:
     import kmos.snapshots_globals as sg
+    from kmos.snapshots import do_snapshots
 except:
     import snapshots_globals as sg
-from snapshots import do_snapshots
+    from snapshots import do_snapshots
 try:
     import kmos.throttling_globals as tg
 except:
@@ -17,12 +18,12 @@ from copy import deepcopy
 from timeit import default_timer as timer
 
 #These veriables have been renamed so are being reassigned for backwards compatibility.
-    if hasattr(tg, 'EF_range_fast'):
-        tg.EF_range_fast_requested = tg.EF_range_fast
-    if hasattr(tg, 'EF_range_slow'):
-        tg.EF_range_slow_requested = tg.EF_range_slow
-    if hasattr(tg, 'EF_range_full'):
-        tg.EF_range_full_requested = tg.EF_range_full
+if hasattr(tg, 'EF_range_fast'):
+    tg.EF_range_fast_requested = tg.EF_range_fast
+if hasattr(tg, 'EF_range_slow'):
+    tg.EF_range_slow_requested = tg.EF_range_slow
+if hasattr(tg, 'EF_range_full'):
+    tg.EF_range_full_requested = tg.EF_range_full
 
 # TODO: Because rare configuration slow processes do not increase when the rate
 # constants for them are increased, this could potentially inhibit compression

@@ -69,7 +69,7 @@ EF_range_full_requested = 1e6     # For both fast and slow together ('full')
 
 # Any processes not expected to occur more than Nsites times within this cutoff
 # time during the simulations will be excluded from throttling as irrelevant.
-max_time = 10. * 3600
+max_time = 10. * 3600 #This is the maximum relevant simulation time (MRST in the original SQERTSS paper)
 
 # This is the maximum relevant simulation time that we are concerned with
 # simulating. This is a hard limit -- if we reach it, the throttling loop will
