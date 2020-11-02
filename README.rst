@@ -9,7 +9,7 @@
    :alt: Join the chat at https://gitter.im/mhoffman/kmos
    :target: https://gitter.im/mhoffman/kmos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-kmos: kMC modelling on steroids
+kmos: Kinetic Monte Carlo of Systems
 =====================================
 *a vigorous attempt to make lattice kinetic Monte Carlo modelling more accessible.*
 
@@ -95,6 +95,20 @@ HELP, BUGS, ISSUES, TROUBLE
 This code is research code for scientists by scientists. If you
 believe you have hit a bug, have a feature request get in touch
 with us either via the `mailing list <https://groups.google.com/forum/#!forum/kmcos-users>`_, or open an `issue <https://github.com/kmcos/kmcos/issues/new>`_ .
+
+
+CONTRIBUTORS
+############
+Creator:
+* Max J. Hoffmann
+
+Current Project Directors:
+* Karsten Reuter
+* Aditya (Ashi) Savara
+
+Developers:
+* Sebastian Matera
+* Juan M. Lorenzi
 
 THANKS
 ######
