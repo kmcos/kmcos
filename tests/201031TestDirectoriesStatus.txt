@@ -1,7 +1,7 @@
 python "test_cli_generation.py" runs
 
-inside \ini_test\
-mini_101 ini test from quickstart works, but other ini tests in the ini test directory do not.
+inside \ini_test\ --> test_advanced_templating.py seems to succeed.
+for mini_101.ini, foo.ini, and the ZGB ini, kmos export followed by benchmark works. However, test_ini_conversion.py and test_ini_import.py fail. It seems that the test_ini_conversion is having an error. 
 
 inside \complex render test\ does not work. seems like a relatively similar error.
 
