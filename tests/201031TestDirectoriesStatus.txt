@@ -5,7 +5,7 @@ mini_101 ini test from quickstart works, but other ini tests in the ini test dir
 
 inside \complex render test\ does not work. seems like a relatively similar error.
 
-omsode \test_acf\ is now partially fixed. test_1.py and test_2.py both pass. test_3.py gives "Segmentation Fault (Core Dumped)" yet running acf_test_function.py (which basically runs all three tests in a single loop) passes. I don't understand the reason. It could mean that acf is not yet working correctly with the otf backend. However, a reasonable trajectory is produced by test_3.py, so it seems like acf is working with the otf backend.
+omsode \test_acf\ is now partially fixed. test_1.py and test_2.py both pass. test_3.py gives "Segmentation Fault (Core Dumped)" yet running acf_test_function.py (which basically runs all three tests in a single loop) passes. I don't understand the reason. It could mean that acf is not yet working correctly with the otf backend. However, a reasonable trajectory is produced by acf_test_function.py, so it seems like acf might actually be working with the otf backend.
 
 inside \export_test\test_build_run.py runs but test_import_export.py does not
 
