@@ -1,9 +1,8 @@
 python "test_cli_generation.py" runs
 
-inside \ini_test\ --> test_advanced_templating.py seems to succeed.
-for mini_101.ini, foo.ini, and the ZGB ini, kmos export followed by benchmark works. However, test_ini_conversion.py and test_ini_import.py fail. It seems that the test_ini_conversion is having an error. 
+inside \ini_test\ --> got the tests to work after editing types.py and utils\__init.py . Ini's work. For mini_101.ini, foo.ini, and the ZGB ini, kmos export followed by benchmark works. 
 
-inside \complex render test\ does not work. seems like a relatively similar error.
+inside \complex render test\ works now also
 
 omsode \test_acf\ is now partially fixed. test_1.py and test_2.py both pass. test_3.py gives "Segmentation Fault (Core Dumped)" yet running acf_test_function.py (which basically runs all three tests in a single loop) passes. I don't understand the reason. It could mean that acf is not yet working correctly with the otf backend. However, a reasonable trajectory is produced by acf_test_function.py, so it seems like acf might actually be working with the otf backend.
 
