@@ -888,9 +888,9 @@ class Project(object):
                                      for i in
                                      child.attrib['cell_size'].split()])
                     if len(cell) == 3:
-                        self.layer_list.cell = np.diag(cell)
+                        self.layer_list.cell = np.diag(np.array(cell))
                     elif len(cell) == 9:
-                        self.layer_list.cell = cell.reshape(3, 3)
+                        self.layer_list.cell = np.array(cell).reshape(3, 3)
                     else:
                         raise UserWarning('%s not understood' % cell)
                     self.layer_list.default_layer = \
@@ -1448,11 +1448,13 @@ class LayerList(FixedObject, list):
             if value:
                 from kmos.utils import get_ase_constructor
                 from ase.atoms import Atoms
-                print("line 1451", value)
                 value = eval(value)
                 if (not hasattr(self, 'representation') or
                         not self.representation):
-                    self.cell = value[0].cell
+                    try:# if it's a list or a tuple, then take first value.
+                        self.cell = value[0].get_cell()
+                    except:
+                        self.cell = value.get_cell()
                 value = '[%s]' % get_ase_constructor(value)
             self.__dict__[key] = '%s' % value
         else:
