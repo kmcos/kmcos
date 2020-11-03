@@ -113,21 +113,23 @@ def write_py(fileobj, images, **kwargs):
             chemical_formula = image.get_chemical_formula(mode='reduce')
         else:
             chemical_formula = image.get_name()
-
+        cell_string = repr(image.cell)
+        cell_string = cell_string.replace('cell', '')
+        cell_string = cell_string.replace('Cell', '')
         fileobj.write("    Atoms(symbols='%s',\n"
                       "          pbc=np.%s,\n"
-                      "          cell=np.array(\n      %s,\n" % (
+                      "          cell=np.array(      %s),\n" % (
                           chemical_formula,
                           repr(image.pbc),
-                          repr(image.cell)[6:]))
+                          cell_string))
 
         if not scaled_positions:
-            fileobj.write("          positions=np.array(\n      %s),\n"
+            fileobj.write("          positions=np.array(      %s),\n"
                           % repr(list(image.positions)))
         else:
-            fileobj.write("          scaled_positions=np.array(\n      %s),\n"
+            fileobj.write("          scaled_positions=np.array(      %s),\n"
                           % repr(list((np.around(image.get_scaled_positions(), decimals=7)).tolist())))
-        print(image.get_scaled_positions())
+        #print(image.get_scaled_positions())
         fileobj.write('),\n')
 
     fileobj.write(']')
@@ -138,7 +140,7 @@ def get_ase_constructor(atoms):
     if isinstance(atoms, str):
         #return atoms
         atoms = eval(atoms)
-    if type(atoms) is list:
+    if type(atoms) is type([]):
         atoms = atoms[0]
     f = StringIO()
     write_py(f, atoms)
