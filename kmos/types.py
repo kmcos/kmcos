@@ -549,14 +549,14 @@ class Project(object):
                 long_name = process.name
                 stub = process.name[:max_length - digits]
                 short_number = len(stub_map.get(stub, []))
-                short_name = '{stub}{short_number:04d}'.format(**locals())
+                short_name = '{stub}{short_number:04d}'
                 stub_map.setdefault(stub, []).append((short_name, long_name))
                 abbreviation_map[short_name] = long_name
                 fullform_map[long_name] = short_name
 
                 process.name = short_name
 
-        with open('abbreviations_{self.meta.model_name}.dat'.format(**locals()), 'w') as outfile:
+        with open('abbreviations_{self.meta.model_name}.dat', 'w') as outfile:
             outfile.write(pprint.pformat(stub_map))
 
     def save(self, filename=None, validate=True):
@@ -1477,7 +1477,7 @@ class LayerList(FixedObject, list):
             raise UserWarning('No Layer named %s found.' % layer_name)
 
         if site_name is not None and not any([re.search(site_name, x) for x in ['_'.join(x.name.split('_')) for x in layer.sites]]):
-            raise UserWarning('Layer {layer_name} has no site matching {site_name}. Please check spelling and try again.'.format(**locals()))
+            raise UserWarning('Layer {layer_name} has no site matching {site_name}. Please check spelling and try again.')
 
         if site_name is None:
             return [
