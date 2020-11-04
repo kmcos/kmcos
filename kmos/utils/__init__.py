@@ -623,6 +623,7 @@ def evaluate_template(template, escape_python=False, **kwargs):
             return template
         #NB see note above
         ldict = locals().copy()
+        print("line 626", ldict)
         exec(python_lines, globals(), ldict)
         result = ldict['result']
 
