@@ -6,7 +6,7 @@ inside \complex render test\ works now also
 
 omsode \test_acf\ is now partially fixed. test_1.py and test_2.py both pass. test_3.py gives "Segmentation Fault (Core Dumped)" yet running acf_test_function.py (which basically runs all three tests in a single loop) passes. I don't understand the reason. It could mean that acf is not yet working correctly with the otf backend. However, a reasonable trajectory is produced by acf_test_function.py, so it seems like acf might actually be working with the otf backend.
 
-inside \export_test\test_build_run.py runs but test_import_export.py does not
+inside \export_test\test_build_run.py runs but test_import_export.py does not run to completion. I have separated test_import_export.py into test_1.py through test_8.py.  Only a small number are passing.  It is possible that some of the failing ones are actually operating correctly, but I have not investigated as taht is not a priority.
 
 inside \test_cli_generated_model\   no python file, but typing "kmos benchmark" does not work. Says no model dimension.
 
