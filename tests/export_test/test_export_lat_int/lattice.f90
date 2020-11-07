@@ -73,7 +73,7 @@ integer(kind=iint), dimension(3), public :: system_size
 !   If the system size shall be changed programmatically, it needs to happen before the `KMC_Model`
 !   is instantiated and Fortran array are allocated accordingly, like to
 !
-!       #!/usr/bin/env python
+!       #!/usr/bin/env python3
 !
 !       import kmc_settings
 !       import kmos.run

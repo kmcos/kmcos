@@ -147,7 +147,7 @@ integer(kind=iint), parameter, public :: oxidize1 = 46
 
 
 integer(kind=iint), parameter, public :: representation_length = 31
-integer(kind=iint), public :: seed_size = 12
+integer(kind=iint), public :: seed_size = 33
 integer(kind=iint), public :: seed ! random seed
 integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed
 
@@ -354,7 +354,7 @@ subroutine initialize_state(layer, seed_in)
     allocate(seed_arr(seed_size))
     seed = seed_in
     seed_arr = seed
-    call random_seed(seed_size)
+    call random_seed(size=seed_size)
     call random_seed(put=seed_arr)
     deallocate(seed_arr)
     do k = 0, system_size(3)-1
@@ -1278,18 +1278,18 @@ subroutine put_CO_PdO_bridge2(site)
 
     case(empty)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
-        case(CO)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-            case(CO)
-                call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            case(empty)
-                call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            end select
-
         case(empty)
             select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
             case(empty)
                 call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+            case(empty)
+                call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            case(CO)
+                call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
             end select
 
         end select
@@ -1334,6 +1334,26 @@ subroutine take_CO_PdO_bridge2(site)
     ! enable affected processes
     call add_proc(o_COads_bridge2, site)
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_bridge2/)))
+    case(empty)
+        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
+        case(empty)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            case(CO)
+                call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+            case(empty)
+                call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            case(CO)
+                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            end select
+
+        end select
+
     case(CO)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
         case(empty)
@@ -1342,26 +1362,6 @@ subroutine take_CO_PdO_bridge2(site)
                 call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
             case(empty)
                 call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            end select
-
-        end select
-
-    case(empty)
-        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
-        case(CO)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-            case(CO)
-                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-            case(CO)
-                call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            case(empty)
-                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
             end select
 
         end select
@@ -1427,18 +1427,18 @@ subroutine put_CO_PdO_hollow1(site)
         select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
         case(CO)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             case(empty)
                 call add_proc(destruct10, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             case(empty)
                 call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
         end select
@@ -1492,41 +1492,41 @@ subroutine take_CO_PdO_hollow1(site)
     ! enable affected processes
     call add_proc(o_COads_hollow1, site)
     select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
-    case(CO)
-        select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            case(empty)
-                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            end select
-
-        end select
-
     case(empty)
         call add_proc(o_O2ads_h2h1, site)
         select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
+        case(empty)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            end select
+
         case(CO)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
             case(empty)
                 call add_proc(destruct3, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
+        end select
+
+    case(CO)
+        select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             case(empty)
-                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+            case(empty)
+                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
         end select
@@ -1602,20 +1602,20 @@ subroutine put_CO_PdO_hollow2(site)
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/)))
     case(empty)
         select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
-        case(CO)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            case(empty)
-                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            end select
-
         case(empty)
             select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             case(empty)
                 call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+            case(empty)
+                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             end select
 
         end select
@@ -1656,42 +1656,42 @@ subroutine take_CO_PdO_hollow2(site)
     ! enable affected processes
     call add_proc(o_COads_hollow2, site)
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/)))
-    case(CO)
-        call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
-        select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
-        case(CO)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            case(empty)
-                call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            case(empty)
-                call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            end select
-
-        end select
-
     case(empty)
         call add_proc(o_O2ads_h2h1, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
         select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+        case(empty)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            end select
+
         case(CO)
             select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
             case(empty)
                 call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             end select
 
+        end select
+
+    case(CO)
+        call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
+        select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+        case(CO)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+            case(empty)
+                call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            end select
+
         case(empty)
             select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             case(empty)
-                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             end select
 
         end select
@@ -1751,28 +1751,28 @@ subroutine put_CO_PdO_bridge1(site)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             case(empty)
                 call add_proc(destruct10, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
 
     case(empty)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            case(empty)
-                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            end select
-
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
             case(empty)
                 call add_proc(destruct3, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+            case(empty)
+                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
@@ -1817,34 +1817,34 @@ subroutine take_CO_PdO_bridge1(site)
     ! enable affected processes
     call add_proc(o_COads_bridge1, site)
     select case(get_species(site + (/0, 0, 0, PdO_hollow1 - PdO_bridge1/)))
-    case(CO)
+    case(empty)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             case(empty)
-                call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+            case(empty)
+                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
 
-    case(empty)
+    case(CO)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            end select
-
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             case(empty)
-                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
@@ -2477,6 +2477,26 @@ subroutine take_Pd_PdO_bridge2(site)
     ! enable affected processes
     call add_proc(o_COads_bridge2, site)
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_bridge2/)))
+    case(empty)
+        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
+        case(empty)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            case(CO)
+                call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+            case(empty)
+                call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            case(CO)
+                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            end select
+
+        end select
+
     case(CO)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
         case(empty)
@@ -2485,26 +2505,6 @@ subroutine take_Pd_PdO_bridge2(site)
                 call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
             case(empty)
                 call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            end select
-
-        end select
-
-    case(empty)
-        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
-        case(CO)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-            case(CO)
-                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-            case(CO)
-                call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            case(empty)
-                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
             end select
 
         end select
@@ -2575,41 +2575,41 @@ subroutine take_Pd_PdO_hollow1(site)
     ! enable affected processes
     call add_proc(o_COads_hollow1, site)
     select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
-    case(CO)
-        select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            case(empty)
-                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            end select
-
-        end select
-
     case(empty)
         call add_proc(o_O2ads_h2h1, site)
         select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
+        case(empty)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            end select
+
         case(CO)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
             case(empty)
                 call add_proc(destruct3, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
+        end select
+
+    case(CO)
+        select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             case(empty)
-                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+            case(empty)
+                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
         end select
@@ -2693,42 +2693,42 @@ subroutine take_Pd_PdO_hollow2(site)
     ! enable affected processes
     call add_proc(o_COads_hollow2, site)
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/)))
-    case(CO)
-        call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
-        select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
-        case(CO)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            case(empty)
-                call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            case(empty)
-                call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            end select
-
-        end select
-
     case(empty)
         call add_proc(o_O2ads_h2h1, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
         select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+        case(empty)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            end select
+
         case(CO)
             select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
             case(empty)
                 call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             end select
 
+        end select
+
+    case(CO)
+        call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
+        select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+        case(CO)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+            case(empty)
+                call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            end select
+
         case(empty)
             select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             case(empty)
-                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             end select
 
         end select
@@ -2794,34 +2794,34 @@ subroutine take_Pd_PdO_bridge1(site)
     ! enable affected processes
     call add_proc(o_COads_bridge1, site)
     select case(get_species(site + (/0, 0, 0, PdO_hollow1 - PdO_bridge1/)))
-    case(CO)
+    case(empty)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             case(empty)
-                call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+            case(empty)
+                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
 
-    case(empty)
+    case(CO)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            end select
-
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             case(empty)
-                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
@@ -3477,6 +3477,26 @@ subroutine take_oxygen_PdO_bridge2(site)
     ! enable affected processes
     call add_proc(o_COads_bridge2, site)
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_bridge2/)))
+    case(empty)
+        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
+        case(empty)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            case(CO)
+                call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+            case(empty)
+                call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            case(CO)
+                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+            end select
+
+        end select
+
     case(CO)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
         case(empty)
@@ -3485,26 +3505,6 @@ subroutine take_oxygen_PdO_bridge2(site)
                 call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
             case(empty)
                 call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            end select
-
-        end select
-
-    case(empty)
-        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
-        case(CO)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-            case(CO)
-                call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-            case(CO)
-                call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-            case(empty)
-                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
             end select
 
         end select
@@ -3595,41 +3595,41 @@ subroutine take_oxygen_PdO_hollow1(site)
     ! enable affected processes
     call add_proc(o_COads_hollow1, site)
     select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
-    case(CO)
-        select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            case(empty)
-                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-            end select
-
-        end select
-
     case(empty)
         call add_proc(o_O2ads_h2h1, site)
         select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
+        case(empty)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            end select
+
         case(CO)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
             case(empty)
                 call add_proc(destruct3, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
+        end select
+
+    case(CO)
+        select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             case(empty)
-                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+            case(empty)
+                call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+            case(CO)
+                call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
             end select
 
         end select
@@ -3733,42 +3733,42 @@ subroutine take_oxygen_PdO_hollow2(site)
     ! enable affected processes
     call add_proc(o_COads_hollow2, site)
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/)))
-    case(CO)
-        call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
-        select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
-        case(CO)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            case(empty)
-                call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            case(empty)
-                call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-            end select
-
-        end select
-
     case(empty)
         call add_proc(o_O2ads_h2h1, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
         select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+        case(empty)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+            case(empty)
+                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            end select
+
         case(CO)
             select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
             case(empty)
                 call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             end select
 
+        end select
+
+    case(CO)
+        call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
+        select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+        case(CO)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+            case(empty)
+                call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            end select
+
         case(empty)
             select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             case(empty)
-                call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+            case(CO)
+                call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
             end select
 
         end select
@@ -3834,34 +3834,34 @@ subroutine take_oxygen_PdO_bridge1(site)
     ! enable affected processes
     call add_proc(o_COads_bridge1, site)
     select case(get_species(site + (/0, 0, 0, PdO_hollow1 - PdO_bridge1/)))
-    case(CO)
+    case(empty)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             case(empty)
-                call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+            case(empty)
+                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
 
-    case(empty)
+    case(CO)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            case(empty)
-                call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-            end select
-
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-            case(CO)
-                call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             case(empty)
-                call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+            case(CO)
+                call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
             end select
 
         end select
@@ -4710,10 +4710,10 @@ subroutine touchup_Pd100_b1(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b1, site)
     case(empty)
         call add_proc(m_COads_b1, site)
+    case(CO)
+        call add_proc(m_COdes_b1, site)
     end select
 
 end subroutine touchup_Pd100_b1
@@ -4861,10 +4861,10 @@ subroutine touchup_Pd100_b2(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b2, site)
     case(empty)
         call add_proc(m_COads_b2, site)
+    case(CO)
+        call add_proc(m_COdes_b2, site)
     end select
 
 end subroutine touchup_Pd100_b2
@@ -5012,10 +5012,10 @@ subroutine touchup_Pd100_b3(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b3, site)
     case(empty)
         call add_proc(m_COads_b3, site)
+    case(CO)
+        call add_proc(m_COdes_b3, site)
     end select
 
 end subroutine touchup_Pd100_b3
@@ -5163,10 +5163,10 @@ subroutine touchup_Pd100_b4(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b4, site)
     case(empty)
         call add_proc(m_COads_b4, site)
+    case(CO)
+        call add_proc(m_COdes_b4, site)
     end select
 
 end subroutine touchup_Pd100_b4
@@ -5314,10 +5314,10 @@ subroutine touchup_Pd100_b5(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b5, site)
     case(empty)
         call add_proc(m_COads_b5, site)
+    case(CO)
+        call add_proc(m_COdes_b5, site)
     end select
 
 end subroutine touchup_Pd100_b5
@@ -5465,10 +5465,10 @@ subroutine touchup_Pd100_b6(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b6, site)
     case(empty)
         call add_proc(m_COads_b6, site)
+    case(CO)
+        call add_proc(m_COdes_b6, site)
     end select
 
 end subroutine touchup_Pd100_b6
@@ -5616,10 +5616,10 @@ subroutine touchup_Pd100_b7(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b7, site)
     case(empty)
         call add_proc(m_COads_b7, site)
+    case(CO)
+        call add_proc(m_COdes_b7, site)
     end select
 
 end subroutine touchup_Pd100_b7
@@ -5767,10 +5767,10 @@ subroutine touchup_Pd100_b8(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b8, site)
     case(empty)
         call add_proc(m_COads_b8, site)
+    case(CO)
+        call add_proc(m_COdes_b8, site)
     end select
 
 end subroutine touchup_Pd100_b8
@@ -5918,10 +5918,10 @@ subroutine touchup_Pd100_b9(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b9, site)
     case(empty)
         call add_proc(m_COads_b9, site)
+    case(CO)
+        call add_proc(m_COdes_b9, site)
     end select
 
 end subroutine touchup_Pd100_b9
@@ -6069,66 +6069,66 @@ subroutine touchup_Pd100_b10(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site + (/0, 1, 0, PdO_hollow1 - Pd100_b10/)))
-    case(CO)
-        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - Pd100_b10/)))
-        case(empty)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - Pd100_b10/)))
-            case(CO)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
-                case(CO)
-                    call add_proc(destruct11, site)
-                case(empty)
-                    call add_proc(destruct10, site)
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
-                case(CO)
-                    call add_proc(destruct9, site)
-                case(empty)
-                    call add_proc(destruct8, site)
-                end select
-
-            end select
-
-        end select
-
     case(empty)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - Pd100_b10/)))
-        case(CO)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - Pd100_b10/)))
-            case(CO)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
-                case(CO)
-                    call add_proc(destruct7, site)
-                case(empty)
-                    call add_proc(destruct6, site)
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
-                case(CO)
-                    call add_proc(destruct5, site)
-                case(empty)
-                    call add_proc(destruct4, site)
-                end select
-
-            end select
-
         case(empty)
             select case(get_species(site + (/0, 1, 0, PdO_bridge1 - Pd100_b10/)))
+            case(empty)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
+                case(empty)
+                    call add_proc(destruct1, site)
+                case(CO)
+                    call add_proc(destruct2, site)
+                end select
+
             case(CO)
                 select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
                 case(empty)
                     call add_proc(destruct3, site)
                 end select
 
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - Pd100_b10/)))
             case(empty)
                 select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
-                case(CO)
-                    call add_proc(destruct2, site)
                 case(empty)
-                    call add_proc(destruct1, site)
+                    call add_proc(destruct4, site)
+                case(CO)
+                    call add_proc(destruct5, site)
+                end select
+
+            case(CO)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
+                case(empty)
+                    call add_proc(destruct6, site)
+                case(CO)
+                    call add_proc(destruct7, site)
+                end select
+
+            end select
+
+        end select
+
+    case(CO)
+        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - Pd100_b10/)))
+        case(empty)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - Pd100_b10/)))
+            case(CO)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
+                case(empty)
+                    call add_proc(destruct10, site)
+                case(CO)
+                    call add_proc(destruct11, site)
+                end select
+
+            case(empty)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - Pd100_b10/)))
+                case(empty)
+                    call add_proc(destruct8, site)
+                case(CO)
+                    call add_proc(destruct9, site)
                 end select
 
             end select
@@ -6138,8 +6138,6 @@ subroutine touchup_Pd100_b10(site)
     end select
 
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b10, site)
     case(empty)
         call add_proc(m_COads_b10, site)
         select case(get_species(site + (/0, 1, 0, Pd100_h1 - Pd100_b10/)))
@@ -6159,6 +6157,8 @@ subroutine touchup_Pd100_b10(site)
 
         end select
 
+    case(CO)
+        call add_proc(m_COdes_b10, site)
     end select
 
 end subroutine touchup_Pd100_b10
@@ -6450,10 +6450,10 @@ subroutine touchup_PdO_bridge2(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(o_COdes_bridge2, site)
     case(empty)
         call add_proc(o_COads_bridge2, site)
+    case(CO)
+        call add_proc(o_COdes_bridge2, site)
     end select
 
 end subroutine touchup_PdO_bridge2
@@ -6601,18 +6601,6 @@ subroutine touchup_PdO_hollow1(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(o_COdes_hollow1, site)
-        select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
-        case(empty)
-            call add_proc(o_COdif_h1h2down, site)
-        end select
-
-        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_hollow1/)))
-        case(empty)
-            call add_proc(o_COdif_h1h2up, site)
-        end select
-
     case(oxygen)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_hollow1/)))
         case(oxygen)
@@ -6634,6 +6622,18 @@ subroutine touchup_PdO_hollow1(site)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
         case(empty)
             call add_proc(o_O2ads_h2h1, site)
+        end select
+
+    case(CO)
+        call add_proc(o_COdes_hollow1, site)
+        select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
+        case(empty)
+            call add_proc(o_COdif_h1h2down, site)
+        end select
+
+        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_hollow1/)))
+        case(empty)
+            call add_proc(o_COdif_h1h2up, site)
         end select
 
     end select
@@ -6783,10 +6783,10 @@ subroutine touchup_PdO_hollow2(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(o_COdes_hollow2, site)
     case(empty)
         call add_proc(o_COads_hollow2, site)
+    case(CO)
+        call add_proc(o_COdes_hollow2, site)
     end select
 
 end subroutine touchup_PdO_hollow2
@@ -6934,10 +6934,10 @@ subroutine touchup_PdO_bridge1(site)
         call del_proc(oxidize1, site)
     endif
     select case(get_species(site))
-    case(CO)
-        call add_proc(o_COdes_bridge1, site)
     case(empty)
         call add_proc(o_COads_bridge1, site)
+    case(CO)
+        call add_proc(o_COdes_bridge1, site)
     end select
 
 end subroutine touchup_PdO_bridge1
@@ -7931,8 +7931,6 @@ subroutine create_Pd100_b1(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b1, site)
     case(empty)
         call add_proc(m_COads_b1, site)
         select case(get_species(site + (/0, 0, 0, Pd100_h1 - Pd100_b1/)))
@@ -7952,6 +7950,8 @@ subroutine create_Pd100_b1(site, species)
 
         end select
 
+    case(CO)
+        call add_proc(m_COdes_b1, site)
     end select
 
 
@@ -7991,10 +7991,10 @@ subroutine create_Pd100_b2(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b2, site)
     case(empty)
         call add_proc(m_COads_b2, site)
+    case(CO)
+        call add_proc(m_COdes_b2, site)
     end select
 
 
@@ -8030,10 +8030,10 @@ subroutine create_Pd100_b3(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b3, site)
     case(empty)
         call add_proc(m_COads_b3, site)
+    case(CO)
+        call add_proc(m_COdes_b3, site)
     end select
 
 
@@ -8069,10 +8069,10 @@ subroutine create_Pd100_b4(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b4, site)
     case(empty)
         call add_proc(m_COads_b4, site)
+    case(CO)
+        call add_proc(m_COdes_b4, site)
     end select
 
 
@@ -8108,10 +8108,10 @@ subroutine create_Pd100_b5(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b5, site)
     case(empty)
         call add_proc(m_COads_b5, site)
+    case(CO)
+        call add_proc(m_COdes_b5, site)
     end select
 
 
@@ -8147,10 +8147,10 @@ subroutine create_Pd100_b6(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b6, site)
     case(empty)
         call add_proc(m_COads_b6, site)
+    case(CO)
+        call add_proc(m_COdes_b6, site)
     end select
 
 
@@ -8186,8 +8186,6 @@ subroutine create_Pd100_b7(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b7, site)
     case(empty)
         call add_proc(m_COads_b7, site)
         select case(get_species(site + (/0, 1, 0, Pd100_h1 - Pd100_b7/)))
@@ -8207,6 +8205,8 @@ subroutine create_Pd100_b7(site, species)
 
         end select
 
+    case(CO)
+        call add_proc(m_COdes_b7, site)
     end select
 
 
@@ -8246,10 +8246,10 @@ subroutine create_Pd100_b8(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b8, site)
     case(empty)
         call add_proc(m_COads_b8, site)
+    case(CO)
+        call add_proc(m_COdes_b8, site)
     end select
 
 
@@ -8285,8 +8285,6 @@ subroutine create_Pd100_b9(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b9, site)
     case(empty)
         call add_proc(m_COads_b9, site)
         select case(get_species(site + (/0, 0, 0, Pd100_h1 - Pd100_b9/)))
@@ -8306,6 +8304,8 @@ subroutine create_Pd100_b9(site, species)
 
         end select
 
+    case(CO)
+        call add_proc(m_COdes_b9, site)
     end select
 
 
@@ -8345,8 +8345,6 @@ subroutine create_Pd100_b10(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(m_COdes_b10, site)
     case(empty)
         call add_proc(m_COads_b10, site)
         select case(get_species(site + (/0, 1, 0, Pd100_h1 - Pd100_b10/)))
@@ -8366,6 +8364,8 @@ subroutine create_Pd100_b10(site, species)
 
         end select
 
+    case(CO)
+        call add_proc(m_COdes_b10, site)
     end select
 
 
@@ -8427,6 +8427,43 @@ subroutine create_PdO_bridge2(site, species)
 
     ! enable affected processes
     select case(get_species(site))
+    case(empty)
+        call add_proc(o_COads_bridge2, site)
+        select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_bridge2/)))
+        case(empty)
+            select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
+            case(empty)
+                select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+                case(empty)
+                    call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+                case(CO)
+                    call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+                end select
+
+            case(CO)
+                select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+                case(empty)
+                    call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+                case(CO)
+                    call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+                end select
+
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
+            case(empty)
+                select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+                case(CO)
+                    call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+                case(empty)
+                    call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+                end select
+
+            end select
+
+        end select
+
     case(CO)
         call add_proc(o_COdes_bridge2, site)
         select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_bridge2/)))
@@ -8444,55 +8481,18 @@ subroutine create_PdO_bridge2(site, species)
 
         case(empty)
             select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
-            case(CO)
-                select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-                case(CO)
-                    call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-                case(empty)
-                    call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-                end select
-
             case(empty)
                 select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
                 case(empty)
                     call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
                 end select
 
-            end select
-
-        end select
-
-    case(empty)
-        call add_proc(o_COads_bridge2, site)
-        select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_bridge2/)))
-        case(CO)
-            select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
-            case(empty)
-                select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-                case(CO)
-                    call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-                case(empty)
-                    call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-                end select
-
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_bridge2/)))
             case(CO)
                 select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
-                case(CO)
-                    call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
                 case(empty)
-                    call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_bridge2/)))
+                    call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
                 case(CO)
-                    call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
-                case(empty)
-                    call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
+                    call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_bridge2/))
                 end select
 
             end select
@@ -8578,37 +8578,6 @@ subroutine create_PdO_hollow1(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(o_COdes_hollow1, site)
-        select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
-        case(empty)
-            call add_proc(o_COdif_h1h2down, site)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
-            case(CO)
-                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-                case(CO)
-                    call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                case(empty)
-                    call add_proc(destruct10, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-                case(CO)
-                    call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                case(empty)
-                    call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                end select
-
-            end select
-
-        end select
-
-        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_hollow1/)))
-        case(empty)
-            call add_proc(o_COdif_h1h2up, site)
-        end select
-
     case(oxygen)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_hollow1/)))
         case(oxygen)
@@ -8623,41 +8592,41 @@ subroutine create_PdO_hollow1(site, species)
     case(empty)
         call add_proc(o_COads_hollow1, site)
         select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
-        case(CO)
-            select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
-            case(CO)
-                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-                case(CO)
-                    call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                case(empty)
-                    call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-                case(CO)
-                    call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                case(empty)
-                    call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
-                end select
-
-            end select
-
         case(empty)
             call add_proc(o_O2ads_h2h1, site)
             select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
+            case(empty)
+                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+                case(empty)
+                    call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                case(CO)
+                    call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                end select
+
             case(CO)
                 select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
                 case(empty)
                     call add_proc(destruct3, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
                 end select
 
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
             case(empty)
                 select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
-                case(CO)
-                    call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
                 case(empty)
-                    call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                    call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                case(CO)
+                    call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                end select
+
+            case(CO)
+                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+                case(empty)
+                    call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                case(CO)
+                    call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
                 end select
 
             end select
@@ -8667,6 +8636,37 @@ subroutine create_PdO_hollow1(site, species)
         select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_hollow1/)))
         case(empty)
             call add_proc(o_O2ads_h1h2, site)
+        end select
+
+    case(CO)
+        call add_proc(o_COdes_hollow1, site)
+        select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_hollow1/)))
+        case(empty)
+            call add_proc(o_COdif_h1h2down, site)
+            select case(get_species(site + (/0, 0, 0, PdO_bridge1 - PdO_hollow1/)))
+            case(CO)
+                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+                case(empty)
+                    call add_proc(destruct10, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                case(CO)
+                    call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                end select
+
+            case(empty)
+                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_hollow1/)))
+                case(empty)
+                    call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                case(CO)
+                    call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_hollow1/))
+                end select
+
+            end select
+
+        end select
+
+        select case(get_species(site + (/0, 0, 0, PdO_hollow2 - PdO_hollow1/)))
+        case(empty)
+            call add_proc(o_COdif_h1h2up, site)
         end select
 
     end select
@@ -8772,31 +8772,6 @@ subroutine create_PdO_hollow2(site, species)
 
     ! enable affected processes
     select case(get_species(site))
-    case(CO)
-        call add_proc(o_COdes_hollow2, site)
-        select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/)))
-        case(empty)
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
-            case(CO)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-                case(CO)
-                    call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                case(empty)
-                    call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-                case(CO)
-                    call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                case(empty)
-                    call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                end select
-
-            end select
-
-        end select
-
     case(oxygen)
         select case(get_species(site + (/0, 0, 0, PdO_hollow1 - PdO_hollow2/)))
         case(oxygen)
@@ -8811,42 +8786,42 @@ subroutine create_PdO_hollow2(site, species)
     case(empty)
         call add_proc(o_COads_hollow2, site)
         select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/)))
-        case(CO)
-            call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
-            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
-            case(CO)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-                case(CO)
-                    call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                case(empty)
-                    call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-                case(CO)
-                    call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                case(empty)
-                    call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
-                end select
-
-            end select
-
         case(empty)
             call add_proc(o_O2ads_h2h1, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
             select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+            case(empty)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+                case(empty)
+                    call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                case(CO)
+                    call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                end select
+
             case(CO)
                 select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
                 case(empty)
                     call add_proc(destruct3, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
                 end select
 
+            end select
+
+        case(CO)
+            call add_proc(o_COdif_h1h2down, site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/))
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+            case(CO)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+                case(empty)
+                    call add_proc(destruct10, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                case(CO)
+                    call add_proc(destruct11, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                end select
+
             case(empty)
                 select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
-                case(CO)
-                    call add_proc(destruct2, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
                 case(empty)
-                    call add_proc(destruct1, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                    call add_proc(destruct8, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                case(CO)
+                    call add_proc(destruct9, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
                 end select
 
             end select
@@ -8858,6 +8833,31 @@ subroutine create_PdO_hollow2(site, species)
             call add_proc(o_COdif_h1h2up, site + (/0, 0, 0, PdO_hollow1 - PdO_hollow2/))
         case(empty)
             call add_proc(o_O2ads_h1h2, site + (/0, 0, 0, PdO_hollow1 - PdO_hollow2/))
+        end select
+
+    case(CO)
+        call add_proc(o_COdes_hollow2, site)
+        select case(get_species(site + (/0, 1, 0, PdO_hollow1 - PdO_hollow2/)))
+        case(empty)
+            select case(get_species(site + (/0, 1, 0, PdO_bridge1 - PdO_hollow2/)))
+            case(empty)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+                case(empty)
+                    call add_proc(destruct4, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                case(CO)
+                    call add_proc(destruct5, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                end select
+
+            case(CO)
+                select case(get_species(site + (/0, 0, 0, PdO_bridge2 - PdO_hollow2/)))
+                case(empty)
+                    call add_proc(destruct6, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                case(CO)
+                    call add_proc(destruct7, site + (/0, 0, 0, Pd100_b10 - PdO_hollow2/))
+                end select
+
+            end select
+
         end select
 
     end select
@@ -8963,6 +8963,43 @@ subroutine create_PdO_bridge1(site, species)
 
     ! enable affected processes
     select case(get_species(site))
+    case(empty)
+        call add_proc(o_COads_bridge1, site)
+        select case(get_species(site + (/0, 0, 0, PdO_hollow1 - PdO_bridge1/)))
+        case(empty)
+            select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
+            case(empty)
+                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+                case(empty)
+                    call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                case(CO)
+                    call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                end select
+
+            case(CO)
+                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+                case(empty)
+                    call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                case(CO)
+                    call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                end select
+
+            end select
+
+        case(CO)
+            select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
+            case(empty)
+                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+                case(empty)
+                    call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                case(CO)
+                    call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                end select
+
+            end select
+
+        end select
+
     case(CO)
         call add_proc(o_COdes_bridge1, site)
         select case(get_species(site + (/0, 0, 0, PdO_hollow1 - PdO_bridge1/)))
@@ -8970,65 +9007,28 @@ subroutine create_PdO_bridge1(site, species)
             select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
             case(empty)
                 select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-                case(CO)
-                    call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
                 case(empty)
                     call add_proc(destruct10, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                case(CO)
+                    call add_proc(destruct11, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
                 end select
 
             end select
 
         case(empty)
             select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
-            case(CO)
-                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-                case(CO)
-                    call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-                case(empty)
-                    call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-                end select
-
             case(empty)
                 select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
                 case(empty)
                     call add_proc(destruct3, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
                 end select
 
-            end select
-
-        end select
-
-    case(empty)
-        call add_proc(o_COads_bridge1, site)
-        select case(get_species(site + (/0, 0, 0, PdO_hollow1 - PdO_bridge1/)))
-        case(CO)
-            select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
-            case(empty)
-                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-                case(CO)
-                    call add_proc(destruct9, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-                case(empty)
-                    call add_proc(destruct8, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-                end select
-
-            end select
-
-        case(empty)
-            select case(get_species(site + (/0, -1, 0, PdO_hollow2 - PdO_bridge1/)))
             case(CO)
                 select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
-                case(CO)
-                    call add_proc(destruct5, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
                 case(empty)
-                    call add_proc(destruct4, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-                end select
-
-            case(empty)
-                select case(get_species(site + (/0, -1, 0, PdO_bridge2 - PdO_bridge1/)))
+                    call add_proc(destruct6, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
                 case(CO)
-                    call add_proc(destruct2, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
-                case(empty)
-                    call add_proc(destruct1, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
+                    call add_proc(destruct7, site + (/0, -1, 0, Pd100_b10 - PdO_bridge1/))
                 end select
 
             end select
