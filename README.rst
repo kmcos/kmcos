@@ -98,19 +98,20 @@ with us either via the `mailing list <https://groups.google.com/forum/#!forum/km
 
 CONTRIBUTORS
 ############
-Creator:
-
-* Max J. Hoffmann
-
-Current Project Directors:
+Current Project Leaders:
 
 * Karsten Reuter
 * Aditya (Ashi) Savara
+
+Creator:
+
+* Max J. Hoffmann
 
 Developers:
 
 * Sebastian Matera
 * Juan M. Lorenzi
+* Mie Andersen
 
 Other:
 
