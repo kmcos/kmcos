@@ -2,7 +2,7 @@
 
 from glob import glob
 from os.path import splitext
-from kmos.io import import_xml_file
+from kmcos.io import import_xml_file
 
 
 def test_ini_conversion():

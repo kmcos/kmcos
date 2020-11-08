@@ -5,8 +5,8 @@ Note how the process editor cannot correctly display non-orthogonal lattices. (a
 
 """
 
-from kmos.types import *
-from kmos.io import *
+from kmcos.types import *
+from kmcos.io import *
 import numpy as np
 
 

@@ -11,7 +11,7 @@
 
 ### System information
 
-- result of `kmos version`, operating system, version, python version, possibly link to model file
+- result of `kmcos version`, operating system, version, python version, possibly link to model file
 
 ```
 

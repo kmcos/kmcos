@@ -3,8 +3,8 @@
 #DISCLAIMER: this is hacked down really quickly
 #BEWARE OF BUGS
 
-from kmos.types import *
-from kmos.io import *
+from kmcos.types import *
+from kmcos.io import *
 import numpy as np
 
 pt = Project()

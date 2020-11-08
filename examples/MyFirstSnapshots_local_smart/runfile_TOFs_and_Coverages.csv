@@ -1,0 +1,3 @@
+Simulation_name,Step,Time_(s),sps/tps,CO_adsorption_tof_data,CO_desorption_tof_data,CO_adsorption_tof_integ,CO_desorption_tof_integ,CO_simple_cubic_hollow,empty_simple_cubic_hollow
+runfile,0,0.0,0,0.0,0.0,0.0,0.0,0.0,1.0
+runfile,10,2.45965331134e-07,10,101640.340469,0.0,98680.412181,10.4093848207,0.025,0.975

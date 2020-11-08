@@ -4,20 +4,20 @@ Developer's guide
 Introduction and disclaimer
 ---------------------------
 
-This guide intends to work as an introduction into kmos' internal
+This guide intends to work as an introduction into kmcos' internal
 structure, including both the automatically generated Fortran code, as
 well as the code generation procedure. As the name suggest, the intended
-audience are those who want to contribute to kmos as developers. This
-guide will assume that you are familiar with the way in which kmos is
+audience are those who want to contribute to kmcos as developers. This
+guide will assume that you are familiar with the way in which kmcos is
 used. If that is not the case, you should start reading the sections of
-the `documentation <http://kmos.readthedocs.io>`__ intended for users
+the `documentation <http://kmcos.readthedocs.io>`__ intended for users
 and/or go through the `Intro to
-kmos <http://github.com/jmlorenzi/intro2kmos>`__ tutorial.
+kmcos <http://github.com/jmlorenzi/intro2kmcos>`__ tutorial.
 
 **DISCLAIMER**: This is information is provided with the hopes that it
-will ease your way into kmos' codebase, but it may contain errors. In
+will ease your way into kmcos' codebase, but it may contain errors. In
 the end only the interpretation of the code itself can really let you
-effectively add functionality to kmos.
+effectively add functionality to kmcos.
 
 Some nomenclature.
 ------------------
@@ -27,7 +27,7 @@ ambiguity on exact meaning. Here we present some definitions to try to
 alleviate this. Probably some ambiguity will remain, but hopefully not
 anything that cannot be discerned from context.
 
-**site**: In kmos, this can have two different interpretations: either a
+**site**: In kmcos, this can have two different interpretations: either a
 specific node of the lattice or a type of site, e.g. a crystallographic
 site (top, fcc, hollow…). In this guide we use the former meaning: an
 specific position on the simulation lattice. When we need to indicate
@@ -47,7 +47,7 @@ and actions, and a rate constant expression.
 used as a reference for the relative positions of conditions and actions
 when defining the Fortran routines. In ``local_smart`` and ``lat_int``
 the executing coordinate is found with the help of the
-``kmos.types.Process.executing_coord`` method. In ``otf`` the concept of
+``kmcos.types.Process.executing_coord`` method. In ``otf`` the concept of
 executing coordinate is not used, the reference position in the lattice
 is the central position implied by the user during model definition,
 i.e. the position in which coordinates have ``offset = (0, 0, 0)``.
@@ -58,7 +58,7 @@ i.e. the position in which coordinates have ``offset = (0, 0, 0)``.
 of the lattice, i.e. an event for which all associated conditions are
 fulfilled.
 
-**lateral interactions**: For kmos models built for the ``local_smart``
+**lateral interactions**: For kmcos models built for the ``local_smart``
 or ``lat_int``, we will say that such model includes *lateral
 interactions* if there is one or more groups of processes with the
 following characteristics:
@@ -93,7 +93,7 @@ given time.
 
 **bystander** (``otf`` backend): In the ``otf`` backend, the concept of
 bystander is explicitly included in the model definition, i.e. it is a
-new class ``kmos.types.Bystander`` exclusive to this backend. An ``otf``
+new class ``kmcos.types.Bystander`` exclusive to this backend. An ``otf``
 model is said to include lateral interactions if one of its processes
 includes such bystanders. Note that models *without* lateral
 interactions should not be built using the ``otf`` backend, as
@@ -102,7 +102,7 @@ interactions should not be built using the ``otf`` backend, as
 The three *backends*
 --------------------
 
-While most kmos users will only need to worry about the Python interface
+While most kmcos users will only need to worry about the Python interface
 to build and run the model, developers will also need to familiarize
 with the FORTRAN core code. The exact structure of this code depends on
 the *backend* that one selects. Which backend is most appropriate
@@ -112,7 +112,7 @@ present a qualitative description of each backend.
 ``local_smart``
 ~~~~~~~~~~~~~~~
 
-This is the original kmos backend and has been used as a basis and
+This is the original kmcos backend and has been used as a basis and
 inspiration for the rest of the backends. It was built with the implicit
 objective of offering the best run time performance at the expense of
 memory usage. For this reason, a key element in this backend is a
@@ -175,7 +175,7 @@ description, as it is the original backend and contains
 the fewest files. For the other backends, we will only explain
 the differences with ``local_smart``.
 
-All kmos models contain train main source files: ``base.f90``,
+All kmcos models contain train main source files: ``base.f90``,
 ``lattice.f90`` and ``proclist.f90``. Each of these source files defines
 a module of the same name. These modules are exposed to Python
 interface.
@@ -202,7 +202,7 @@ index (integer value) that identifies a site on the 1D representation of
 the lattice (i.e. the ND lattice of the problem, flattened).
 
 The contents of ``base.f90`` are (mostly) fixed, i.e. it is (almost) the
-same file for all kmos models (as long as they use the same backend).
+same file for all kmcos models (as long as they use the same backend).
 
 .. _lattice:
 
@@ -334,9 +334,9 @@ Key data-structures
 -------------------
 
 Here we describe the most important arrays required for bookkeeping in
-kmos. Understanding what information these arrays contain is crucial to
-understand how kmos selects the next kMC process to be executed. This is
-explained in :ref:`One kmc step in kmos <kmc-step>`. All these data
+kmcos. Understanding what information these arrays contain is crucial to
+understand how kmcos selects the next kMC process to be executed. This is
+explained in :ref:`One kmc step in kmcos <kmc-step>`. All these data
 structures are declared in the ``base`` module and their dimensions are
 based on the "flattened" representation of the lattice in 1 dimension.
 
@@ -421,7 +421,7 @@ kMC step.
 -  Type: int
 -  Size: ``nr_of_proc * volume * 2``
 
-This is arguably the most important bookkeeping array for kmos, which
+This is arguably the most important bookkeeping array for kmcos, which
 keeps track of which processes can be executed each sites on the
 lattice, i.e. keeps track of all active events. To accelerate the update
 time of these arrays (see :ref:`here <updating-avail-sites>`), the
@@ -498,13 +498,13 @@ of this matrix are sorted in the same order as the elements of
 
 .. _kmc-step:
 
-One kmc step in kmos
+One kmc step in kmcos
 --------------------
 
 .. figure:: ../img/step_local_smart.png
    :align: center
 
-   A kMC step using kmos' ``local_smart`` backend. Subroutines are represented by labeled boxes. The content of a given box summarizes the operations performed by the subroutine or the subroutines called by it. Variables (scalar or arrays) are indicated by gray boxes. An arrow pointing to a variable indicates that a subroutine updates it (or defines it). Arrows pointing to a subroutine indicate that the routine uses the variable. In kmos, the passing of information occurs both through subroutine arguments and through module-wide shared variables; this distinction is not present in the diagram.
+   A kMC step using kmcos' ``local_smart`` backend. Subroutines are represented by labeled boxes. The content of a given box summarizes the operations performed by the subroutine or the subroutines called by it. Variables (scalar or arrays) are indicated by gray boxes. An arrow pointing to a variable indicates that a subroutine updates it (or defines it). Arrows pointing to a subroutine indicate that the routine uses the variable. In kmcos, the passing of information occurs both through subroutine arguments and through module-wide shared variables; this distinction is not present in the diagram.
 
 The main role of the bookkeeping arrays from last section, specially
 ``avail_sites`` and ``nr_of_sites``, is to make kMC steps execute fast
@@ -559,7 +559,7 @@ organized in a case-select block for the ``proc`` variable.
 
 The ``proclist/take_<species>_<layer>_<site>`` and
 ``proclist/put_<species>_<layer>_<site>`` subroutines are arguably the
-most complex of a ``local_smart`` kmos model. Their ultimate goal is to
+most complex of a ``local_smart`` kmcos model. Their ultimate goal is to
 call ``lattice/add_proc`` and/or ``lattice/del_proc`` to update
 ``avail_sites`` and ``nr_of_sites`` in correspondence with the change in
 the lattice they are effecting. To do this they need to query the
@@ -584,7 +584,7 @@ changes, some formerly active events need to be deactivated, while some
 formerly inactive events need to be activated. Figuring out which those
 events are is the main role of the ``put`` and ``take`` routines.
 
-In kmos, processes are represented by a list of conditions and a list of
+In kmcos, processes are represented by a list of conditions and a list of
 actions. An event is active if and only if all the conditions of its
 associated process are satisfied. As the put and take routines only look
 at the change of an individual site in the lattice, determining which
@@ -623,7 +623,7 @@ could become quickly the main computational bottleneck of the
 simulation.
 
 The alternative to this naive approach, is to try to build a decision
-tree that queries the lattice state more efficiently. kmos generates
+tree that queries the lattice state more efficiently. kmcos generates
 such a decision tree using an heuristic algorithm. The main idea behind
 it is to group all the sites that would need to be queried and to sort
 them by the number of candidate events with conditions on them. A
@@ -680,7 +680,7 @@ A kmc step with the ``lat_int`` backend
 .. figure:: ../img/step_lat_int.png
    :align: center
 
-   A kMC step using kmos' ``lat_int`` backend. Subroutines are represented by labeled boxes. The content of a given box summarizes the operations performed by the subroutine or the subroutines called by it. Variables (scalar or arrays) are indicated by gray boxes. An arrow pointing to a variable indicates that a subroutine updates it (or defines it). Arrows pointing to a subroutine indicate that the routine uses the variable. In kmos, the passing of information occurs both through subroutine arguments and through module-wide shared variables; this distinction is not present in the diagram.
+   A kMC step using kmcos' ``lat_int`` backend. Subroutines are represented by labeled boxes. The content of a given box summarizes the operations performed by the subroutine or the subroutines called by it. Variables (scalar or arrays) are indicated by gray boxes. An arrow pointing to a variable indicates that a subroutine updates it (or defines it). Arrows pointing to a subroutine indicate that the routine uses the variable. In kmcos, the passing of information occurs both through subroutine arguments and through module-wide shared variables; this distinction is not present in the diagram.
 
 The process of executing a kMC step with the ``lat_int`` backend is very
 similar as that of the ``local_smart`` backend. In particular, the way
@@ -830,36 +830,36 @@ The code generation routines
 .. figure:: ../img/export_procedure.png
    :align: center
 
-   Routines called during the export of a kmos model
+   Routines called during the export of a kmcos model
    
 
 As most of the source code described in the previous sections is
 generated automatically, it is crucial to also understand how this
-works. Code generation are contained in the ``kmos.io`` Python
+works. Code generation are contained in the ``kmcos.io`` Python
 submodule. The normal way to use this module is through the command
-line, i.e. invoking the ``kmos export`` command. The figure :ref:`above <fig-export-proc>` shows the subroutines/functions which are called
+line, i.e. invoking the ``kmcos export`` command. The figure :ref:`above <fig-export-proc>` shows the subroutines/functions which are called
 when this is done. The command line call itself is handled by the
-``kmos.cli`` submodule. Furthermore, the export procedure relies on the
-classes from the ``kmos.types`` submodule, which define the abstract
+``kmcos.cli`` submodule. Furthermore, the export procedure relies on the
+classes from the ``kmcos.types`` submodule, which define the abstract
 representation of the kMC model. Specifically, a model definition from
-an ``xml`` or ``ini`` file into a ``kmos.types.Project`` object. The
+an ``xml`` or ``ini`` file into a ``kmcos.types.Project`` object. The
 rest is done with the help of an instance of the
-``kmos.io.ProcListWriter`` class, which contains several methods that
+``kmcos.io.ProcListWriter`` class, which contains several methods that
 write source code. Specifically, Fortran source code is generated in one
 of three ways:
 
--  files are copied directly from kmos' installation
+-  files are copied directly from kmcos' installation
 -  code is generated with the help of a template file, which is
-   processed by the ``kmos.io.ProcListWriter.write_template`` method
+   processed by the ``kmcos.io.ProcListWriter.write_template`` method
 -  code is written from scratch by one of the several
-   ``kmos.io.ProcListWriter.write_proclist_*`` methods.
+   ``kmcos.io.ProcListWriter.write_proclist_*`` methods.
 
 The format of the template files and how
-``kmos.io.ProcListWriter.write_template`` works is explained in next
-section. The ``kmos.io.ProcListWriter.write_proclist`` method calls
+``kmcos.io.ProcListWriter.write_template`` works is explained in next
+section. The ``kmcos.io.ProcListWriter.write_proclist`` method calls
 several other methods in charge of building different parts of the
 source code, these methods are named according to the pattern
-``kmos.io.ProcListWriter.write_proclist_*``. Exactly which of these
+``kmcos.io.ProcListWriter.write_proclist_*``. Exactly which of these
 methods are called depends on the backend being used. Some of such
 functions are specific to a certain backend, while other work for more
 than one backend. This is detailed under :ref:`The write_proclist method <sec-write-proclist>`.
@@ -867,27 +867,27 @@ than one backend. This is detailed under :ref:`The write_proclist method <sec-wr
 The source file template
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Template files are located in the ``kmos/fortran_src/`` folder of the
-kmos' source code and have the ``mpy`` extension. Each line of these
+Template files are located in the ``kmcos/fortran_src/`` folder of the
+kmcos' source code and have the ``mpy`` extension. Each line of these
 files contains either
 
 -  Python source code or
 -  template text prefixed with ``#@``
 
-``kmos.utils.evaluate_template`` processes these files to convert them
+``kmcos.utils.evaluate_template`` processes these files to convert them
 into valid python code. The Python lines are left unchanged, while the
 template lines are replaced by code adding the content of the line (i.e.
 things after the ``#@``) to a string variable ``result``. Template lines
 can contain placeholders, included as a variable name enclosed in curly
 brackets ( ``{`` and ``}`` ). If those variable names are found within
 the local variables of the corresponding
-``kmos.utils.evaluate_templates`` call, the placeholders are replaced by
-the variable values. The ``kmos.utils.evaluate_template`` method accepts
+``kmcos.utils.evaluate_templates`` call, the placeholders are replaced by
+the variable values. The ``kmcos.utils.evaluate_template`` method accepts
 `arbitrary keyword
 arguments <https://docs.python.org/2/tutorial/controlflow.html#keyword-arguments>`__.
-In addition, the ``kmos.io.ProcListWriter.write_template`` is passed the
+In addition, the ``kmcos.io.ProcListWriter.write_template`` is passed the
 current instance of the ``ProcListWriter`` class as ``self``, the loaded
-kMC model information (i.e. the ``kmos.types.Project``) instance as
+kMC model information (i.e. the ``kmcos.types.Project``) instance as
 ``data`` and an ``options`` dictionary with additional settings as
 ``options``.
 
@@ -916,14 +916,14 @@ The ``write_proclist`` method
    Routines used to write ``proclist`` and associated modules for the different backends.
 	   
 The scheme above shows the methods called by
-``kmos.io.ProcListWriter.write_proclist`` to write ``proclist.f90`` and,
+``kmcos.io.ProcListWriter.write_proclist`` to write ``proclist.f90`` and,
 for ``lat_int`` and ``otf``, related files (``proclist_constants.f90``,
 ``proclist_pars.f90``, ``run_proc_*.f90``, ``nli_*.f90``). All these
-``kmos.io.Proclist.write_proclist_*`` methods take an ``out`` argument
+``kmcos.io.Proclist.write_proclist_*`` methods take an ``out`` argument
 which is a `file
 object <https://docs.python.org/2/library/stdtypes.html#file-objects>`__
 to which the code is to be written and most take a ``data`` argument
-which is an instance of ``kmos.types.Project`` containing the abstract
+which is an instance of ``kmcos.types.Project`` containing the abstract
 kMC model definition. Many of them also take a ``code_generator``
 keyword argument with the backend's name. In what follows we briefly
 describe each of the individual methods. For clarity, they have been
@@ -972,7 +972,7 @@ Writes the ``proclist/run_proc_nr`` function, which calls ``put`` and
 over the processes and then over the actions of such process. The only
 tricky part is to input correctly the relative coordinate for which the
 ``take`` and ``put`` routines need to be called. This is done with the
-help of the ``kmos.types.Coord.radd_ff`` method.
+help of the ``kmcos.types.Coord.radd_ff`` method.
 
 .. _write-put-take:
 
@@ -1005,7 +1005,7 @@ a condition associated to the default species on the site affected by a
 the ``enabled_procs`` list. This marker is a nested tuple with the
 following structure:
 
--  first a list of ``kmos.types.ConditionAction`` objects (see below)
+-  first a list of ``kmcos.types.ConditionAction`` objects (see below)
 -  then a tuple containing
 
    -  the name of the process
@@ -1039,7 +1039,7 @@ Once these ``enabled_procs`` and ``disabled_procs`` lists have been
 collected, a ``del_proc`` statement for each event in ``disabled_procs``
 is written. Finally, the routine needs to write the decision tree to
 figure out which events to activate. This is done by the
-``kmos.io.ProcListWriter._write_optimal_iftree`` method, which calls
+``kmcos.io.ProcListWriter._write_optimal_iftree`` method, which calls
 itself recursively to build an optimized ``select-case`` tree.
 
 ``_write_optimal_iftree`` expects an object with the same structure as
@@ -1166,7 +1166,7 @@ of the processes in a lateral interaction group can be executed in a
 given site of the lattice. For this, the method builds a nested
 dictionary, ``case_tree``, which encodes the decision tree. This is then
 translated into a ``select-case`` Fortran block by the
-``kmos.io._casetree_dict`` function.
+``kmcos.io._casetree_dict`` function.
 
 Methods called to build ``otf`` source code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1188,7 +1188,7 @@ declared to help with the indexing of this array. The
 constants, including the definitions of physical units, atomic masses
 and chemical potentials used in the rate expressions in the model. The
 constants and atomic masses are declared as constants with their
-corresponding value (evaluated using ``kmos.evaluate_rate_expression``).
+corresponding value (evaluated using ``kmcos.evaluate_rate_expression``).
 If needed, a ``chempot`` array is included, which is used to store the
 value of the chemical potentials used in the model (auxiliary indexing
 variables are also included for this array).
@@ -1203,11 +1203,11 @@ and a ``rate_<process_name>`` are written. ``gr_<process_name>`` loops
 through all the bystanders to count how many neighbors of a given
 species there is for each "flag" associated to the process (see as
 determined by its
-`bystanders <http://kmos.readthedocs.io/en/latest/topic_guides/otf_backend.html>`__).
+`bystanders <http://kmcos.readthedocs.io/en/latest/topic_guides/otf_backend.html>`__).
 These counts are accumulated in the ``nr_vars`` array. This array is
 used as input to the corresponding ``rate_<process_name>`` routine. The
 content of this routine is directly obtained from the ``otf_rate``
-attribute of the the ``kmos.types.Process`` object. This user-defined
+attribute of the the ``kmcos.types.Process`` object. This user-defined
 string is processed by the ``_parse_otf_rate`` method to replace the
 standard parameter and constant names with the names understood by this
 Fortran module.

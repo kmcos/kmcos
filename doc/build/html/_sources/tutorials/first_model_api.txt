@@ -19,12 +19,12 @@ Construct the model
 
 We start by making the necessary import statements (in *python* or better *ipython*)::
 
-  from kmos.types import *
-  from kmos.io import *
+  from kmcos.types import *
+  from kmcos.io import *
   import numpy as np
 
 which imports all classes that make up a kMC project. The functions
-from `kmos.io` will only be needed at the end to save the project
+from `kmcos.io` will only be needed at the end to save the project
 or to export compilable code.
 
 The example sketched out here leads you to a kMC model for CO adsorption
@@ -170,7 +170,7 @@ Then the desorption process is almost the same, except the reverse::
                  rate_constant='p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
 
 
-To reduce typing, kmos also knows a shorthand notation for processes.
+To reduce typing, kmcos also knows a shorthand notation for processes.
 In order to produce the same process you could also type ::
 
   pt.parse_process('CO_desorption; CO@hollow->empty@hollow ; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
@@ -211,7 +211,7 @@ and you can create the source code and binaries in just one line.
 So on the command line in the same directory as the XML file
 you run ::
 
-  kmos export myfirst_kmc.xml
+  kmcos export myfirst_kmc.xml
 
 
 Make sure this finishes gracefully without any line
@@ -219,7 +219,7 @@ containining an error.
 
 If you now `cd` to that folder `myfirst_kmc` and run::
 
-  kmos view
+  kmcos view
 
 ... and dada! Your first running kMC model right there!
 

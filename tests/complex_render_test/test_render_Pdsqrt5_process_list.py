@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import pdb
 
-from kmos.io import *
-from kmos.types import *
-import kmos
+from kmcos.io import *
+from kmcos.types import *
+import kmcos
 import numpy as np
-import kmos.utils
+import kmcos.utils
 from ase.atoms import Atoms
 import ase.io.castep
 import os
@@ -73,7 +73,7 @@ class ModelBuilder(object):
                              'O2_adsorption', 'O2_desorption', 'O_diffusion',
                              'Reaction']:
             nprocs = len([x for x in self.pt.get_processes() if x.name.startswith(process_type)])
-            print('\t- %s : %s' % (process_type, nprocs))
+            print(('\t- %s : %s' % (process_type, nprocs)))
 
     def set_meta(self):
         # Meta
@@ -135,7 +135,7 @@ class ModelBuilder(object):
                                     4. + z),
                             'tags': "hollow oxygen"}
 
-        for name, data in sites.iteritems():
+        for name, data in sites.items():
             tags = data['tags']
             site = Site(name=name,
                         default_species='empty',

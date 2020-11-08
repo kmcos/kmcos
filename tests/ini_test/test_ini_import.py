@@ -4,7 +4,7 @@ from glob import glob
 
 def test_ini_import():
     for ini_filename in glob('*.ini'):
-        from kmos.types import Project
+        from kmcos.types import Project
         pt = Project()
         pt.import_ini_file(open(ini_filename))
         pt.save('foo.ini')

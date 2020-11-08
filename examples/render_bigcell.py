@@ -4,7 +4,7 @@
    non-periodically
 """
 
-from kmos.types import *
+from kmcos.types import *
 
 pt = Project()
 pt.set_meta(author='Max J. Hoffmann',

@@ -10,7 +10,7 @@ or ::
     python setup.py install --user
 
 in order to install without admin rights. Please refer to the
-`Manual <http://kmos.readthedocs.org>`_ for further
+`Manual <http://kmcos.readthedocs.org>`_ for further
 instructions.
 
 
@@ -68,7 +68,7 @@ was successful includes
     * Export the Fortran90 source code and compile in one step
       from the generated XML file ::
 
-        kmos export ZGB_model.xml
+        kmcos -f gfortran export ZGB_model.xml
 
     * Change to the export directory ::
 
@@ -76,7 +76,7 @@ was successful includes
 
     * Run benchmark ::
 
-        kmos benchmark
+        kmcos benchmark
 
 
 If everything is working you should see
@@ -88,28 +88,28 @@ GETTING STARTED
 
 Before creating any models of your own you might take look around
 the *examples* folder and try playing with the models already
-specified there. Instead of `kmos benchmark`, try ::
+specified there. Instead of `kmcos benchmark`, try ::
 
-    kmos view
+    kmcos view
 
 on an exported model and observe how it behaves for different
 conditions.
 
-Create a model XML file as explained in the `Tutorials <http://kmos.readthedocs.org/en/latest/tutorials/index.html>`_ or alternatively  (and optionally) inspect and change it with ::
+Create a model XML file as explained in the `Tutorials <http://kmcos.readthedocs.org/en/latest/tutorials/index.html>`_ or alternatively  (and optionally) inspect and change it with ::
 
-  kmos edit [<xml-file>]
+  kmcos edit [<xml-file>]
 
 Both ways will give a XML file that contains the entire
 definition of your kMC model. Run ::
 
-  kmos export <xml-file>
+  kmcos export <xml-file>
 
 and you will find a new folder under the same name with the compiled
 model and self-contained source code. Inside that directory run ::
 
-  kmos view
+  kmcos view
 
 and readily watch your model and manipulate parameters at the same time.
 
 For other ways of running models interactively or scripted please
-refer to the `tutorial <http://kmos.readthedocs.org/en/latest/tutorials/index.html#running-the-model-the-api-way>`_
+refer to the `tutorial <http://kmcos.readthedocs.org/en/latest/tutorials/index.html#running-the-model-the-api-way>`_

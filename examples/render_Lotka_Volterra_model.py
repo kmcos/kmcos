@@ -2,7 +2,7 @@
 
 
 import numpy as np
-from kmos.types import Project, Site, Condition, Action
+from kmcos.types import Project, Site, Condition, Action
 
 pt = Project()
 

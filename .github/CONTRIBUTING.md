@@ -1,11 +1,11 @@
-## Contributing to kmos
+## Contributing to kmcos
 
-The kmos project welcomes contributions from everyone. There are a
+The kmcos project welcomes contributions from everyone. There are a
 number of ways you can help:
 
 ## Git and Pull requests
 * Contributions are submitted, reviewed, and accepted using Github pull requests. [Read this article](https://help.github.com/articles/using-pull-requests) for some details. We use the _Fork and Pull_ model, as described there.
-* The latest changes are in the `develop https://github.com/mhoffman/kmos/tree/develop`_ branch.
+* The latest changes are in the `develop https://github.com/mhoffman/kmcos/tree/develop`_ branch.
 * Make a new branch for every feature `feature_<...>` you're working on.
 * Try to make clean commits that are easily readable (including descriptive commit messages!)
 * Test before you push. Get familiar with `Nosetest <http://nose.readthedocs.io/en/latest/>`_ , our test suite. Ideally create your own free account on [Travis](https://travis-ci.org/) and test your branch on it.
@@ -27,7 +27,7 @@ number of ways you can help:
 
 When opening new issues or commenting on existing issues please make
 sure discussions are related to concrete technical issues with the
-kmos software.
+kmcos software.
 
 It's imperative that issue reports outline the steps to reproduce
 the defect. If the issue can't be reproduced it will be closed.
@@ -36,26 +36,26 @@ and describe what results you are seeing and what results you expect.
 
 ## Documentation
 
-The official documentation of kmos resides at
-[**ReadTheDocs.org**](https://kmos.rtfd.org).
+The official documentation of kmcos resides at
+[**ReadTheDocs.org**](https://kmcos.rtfd.org).
 
 ## Code Contributions
 
-The kmos project welcomes new contributors. Individuals making
+The kmcos project welcomes new contributors. Individuals making
 significant and valuable contributions over time are made
-[_Co-developers_](http://mhoffman.github.io/kmos/)
+[_Co-developers_](http://mhoffman.github.io/kmcos/)
 
 This document will guide you through the contribution process.
 
 ### Step 1: Fork
 
-Fork the project [on Github](https://github.com/mhoffman/kmos)
+Fork the project [on Github](https://github.com/mhoffman/kmcos)
 and check out your copy locally.
 
 ```text
-% git clone git@github.com:username/kmos.git
-% cd kmos
-% git remote add upstream git://github.com/mhoffman/kmos.git
+% git clone git@github.com:username/kmcos.git
+% cd kmcos
+% git remote add upstream git://github.com/mhoffman/kmcos.git
 ```
 
 #### Dependencies

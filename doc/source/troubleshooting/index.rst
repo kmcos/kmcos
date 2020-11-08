@@ -3,16 +3,16 @@ Trouble Shooting
 ================
 
 I found a bug or have a feature request. How can I get in touch ?
-    Please post issues `here <https://github.com/mhoffman/kmos/issues>`_
+    Please post issues `here <https://github.com/mhoffman/kmcos/issues>`_
     or via email mjhoffmann .at. gmail .dot. com
     or via twitter @maxjhoffmann
 
 
 My rate constant expression doesn't work. How can I debug it?
     When initializing the model, the backend uses
-    `kmos.evaluate_rate_expression`. So you can try ::
+    `kmcos.evaluate_rate_expression`. So you can try ::
 
-        from kmos import evaluate_rate_expression
+        from kmcos import evaluate_rate_expression
         evaluate_rate_expression('<your-string-here'>, parameters={})
 
     where parameters is a dictionary defining the variable that
@@ -28,11 +28,11 @@ My rate constant expression doesn't work. How can I debug it?
     overflow if written in the exponent.
 
 
-How can I print the chemical potential value, that kmos is using internally?
-    You can then print the explicit value for specific conditions in `kmos shell`, for
+How can I print the chemical potential value, that kmcos is using internally?
+    You can then print the explicit value for specific conditions in `kmcos shell`, for
     example like so ::
 
-        from kmos import evaluate_rate_expression
+        from kmcos import evaluate_rate_expression
         print(
             evaluate_rate_expression('mu_COgas',
                 {'T':{'value':600},
@@ -42,19 +42,19 @@ How can I print the chemical potential value, that kmos is using internally?
 
     where 'CO' should be replaced by whatever gas species you are inspecting. And the
     resulting number is given in eV.
-    kmos linearly interpolates the gas phase chemical potential from the NIST JANAF
+    kmcos linearly interpolates the gas phase chemical potential from the NIST JANAF
     thermochemical tables if you have downloaded them manually. If you don't have them
     installed, an error message should get raised which explains how to do so.
 
 
 
 
-When I use `kmos shell` the model doesn't have the species and sites I have defined.
+When I use `kmcos shell` the model doesn't have the species and sites I have defined.
     Note that Fortran is case-insensitive. Therefore f2py turns
     all variable and functions names into lower case by convention.
     Try to lower-case your species or site name.
 
-When I run kmos the GUI way and close it, it seems to hang and I need to use the window manager to kill it.
+When I run kmcos the GUI way and close it, it seems to hang and I need to use the window manager to kill it.
   This is a bug waiting to be fixed. To avoid it close
   the window showing the atoms object by clicking on its
   close button or Alt-F4 or whichever shortcut your WM uses.
@@ -74,13 +74,13 @@ Running a model it sometimes prints `Warning: numerical precision too low, to re
 
 
 When running a model without GUI evaluation steps seem very slow.
-  If you have a `kmos.run.KMC_Model` instance and call `model.get_atoms()`
+  If you have a `kmcos.run.KMC_Model` instance and call `model.get_atoms()`
   the generation of the real-space geometry takes the longest time. If you
   only have to evaluate coverages or turn-over frequencies you are
   better off using `model.get_atoms(geometry=False)`, which returns an
   object with all numbers but without the actual geometry.
 
-What units is kmos using ?
+What units is kmcos using ?
   By default length are measured in angstrom, energies in eV, pressure
   in bar, constants are taken from CODATA 2010. Note that the rate
   expressions though contain explicit conversion factors like `bar`,

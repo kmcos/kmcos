@@ -1,0 +1,5 @@
+A = (3.5*angstrom)**2
+p_COgas = 0.002
+R = 8.3145
+T = 600
+deltaG = -0.5

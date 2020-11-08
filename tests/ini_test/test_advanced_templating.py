@@ -3,7 +3,7 @@
 from os.path import dirname, join
 
 def test_advanced_templating():
-    from kmos.utils import evaluate_template
+    from kmcos.utils import evaluate_template
     with open(join(dirname(__file__), 'pairwise_interaction.ini')) as infile:
         ini = infile.read()
         

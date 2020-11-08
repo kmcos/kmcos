@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>A first kMC Model–the API way &mdash; kmos 0.2.1 documentation</title>
+    <title>A first kMC Model–the API way &mdash; kmcos 0.2.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="kmos 0.2.1 documentation" href="../index.html" /> 
+    <link rel="top" title="kmcos 0.2.1 documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,13 +37,13 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/kmos_logo.png" alt="Logo"/>
+              <img class="logo" src="../_static/kmcos_logo.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -96,13 +96,13 @@ with your existing models and make little changes here and there.</p>
 <div class="section" id="construct-the-model">
 <h2>Construct the model<a class="headerlink" href="#construct-the-model" title="Permalink to this headline">¶</a></h2>
 <p>We start by making the necessary import statements (in <em>python</em> or better <em>ipython</em>):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmos.types</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">kmos.io</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmcos.types</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">kmcos.io</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
 <p>which imports all classes that make up a kMC project. The functions
-from <cite>kmos.io</cite> will only be needed at the end to save the project
+from <cite>kmcos.io</cite> will only be needed at the end to save the project
 or to export compilable code.</p>
 <p>The example sketched out here leads you to a kMC model for CO adsorption
 and desorption on Pd(100) including a simple lateral interaction. Granted
@@ -230,7 +230,7 @@ that we need conversion factors of bar and umass.</p>
                <span class="n">rate_constant</span><span class="o">=</span><span class="s">&#39;p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>To reduce typing, kmos also knows a shorthand notation for processes.
+<p>To reduce typing, kmcos also knows a shorthand notation for processes.
 In order to produce the same process you could also type</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">pt</span><span class="o">.</span><span class="n">parse_process</span><span class="p">(</span><span class="s">&#39;CO_desorption; CO@hollow-&gt;empty@hollow ; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)&#39;</span><span class="p">)</span>
 </pre></div>
@@ -267,12 +267,12 @@ This XML file contains the full definition of your model
 and you can create the source code and binaries in just one line.
 So on the command line in the same directory as the XML file
 you run</p>
-<div class="highlight-python"><pre>kmos export myfirst_kmc.xml</pre>
+<div class="highlight-python"><pre>kmcos export myfirst_kmc.xml</pre>
 </div>
 <p>Make sure this finishes gracefully without any line
 containining an error.</p>
 <p>If you now <cite>cd</cite> to that folder <cite>myfirst_kmc</cite> and run:</p>
-<div class="highlight-python"><pre>kmos view</pre>
+<div class="highlight-python"><pre>kmcos view</pre>
 </div>
 <p>... and dada! Your first running kMC model right there!</p>
 <p>If you wonder why the CO molecules are basically just dangling
@@ -324,7 +324,7 @@ explains how that works.</td></tr>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

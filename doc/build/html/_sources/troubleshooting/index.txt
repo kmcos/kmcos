@@ -20,7 +20,7 @@ What other kMC codes are there?
   inaccurate.
 
 
-When I run kmos the GUI way and close it, it seems to hang and I need to use the window manager to kill it.
+When I run kmcos the GUI way and close it, it seems to hang and I need to use the window manager to kill it.
   This is a bug waiting to be fixed. To avoid it close
   the window showing the atoms object by clicking on its
   close button or Alt-F4 or whichever shortcut your WM uses.
@@ -41,13 +41,13 @@ Running a model it sometimes prints
 
 
 When running a model without GUI evaluation steps seem very slow.
-  If you have a `kmos.run.KMC_Model` instance and call `model.get_atoms()`
+  If you have a `kmcos.run.KMC_Model` instance and call `model.get_atoms()`
   the generation of the real-space geometry takes the longest time. If you
   only have to evaluate coverages or turn-over frequencies you are
   better off using `model.get_atoms(geometry=False)`, which returns an
   object with all numbers but without the actual geometry.
 
-What units is kmos using ?
+What units is kmcos using ?
   By default length are measured in angstrom, energies in eV, pressure
   in bar, constants are taken from CODATA 2010. Note that the rate
   expressions though contain explicit conversion factors like `bar`,
@@ -73,7 +73,7 @@ How can I change the occupation of a model at runtime?
 More to follow.
 
 Please post issues
-`here <https://github.com/mhoffman/kmos/issues>`_
+`here <https://github.com/mhoffman/kmcos/issues>`_
 or via email mjhoffmann .at. gmail .dot. com
 or via twitter @maxjhoffmann
 

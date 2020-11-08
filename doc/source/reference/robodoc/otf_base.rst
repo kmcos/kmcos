@@ -1,4 +1,4 @@
-kmos/base
+kmcos/base
 ----------------------------------------
 
     The base kMC module, which implements the kMC method on a :math:`d = 1`

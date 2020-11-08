@@ -3,7 +3,7 @@ Modelling Workflows
 
 At the core of modelling lies the art to capture
 the most important features of a system and leave
-all others out. kmos is designed around the fact
+all others out. kmcos is designed around the fact
 that modelling is a creative and iterative process.
 
 A typical type of approach for modelling could be:
@@ -39,17 +39,17 @@ You enter a new model by filling in
 in roughly this order or open an existing one by opening a kMC XML file.
 
 If you want to see the model run
-`kmos export <xml-file>` and you will get a subfolder with a self-contained
+`kmcos export <xml-file>` and you will get a subfolder with a self-contained
 Fortran90 code, which solves the model. If all necessary dependencies are
-installed you can simply run `kmos view` in the export folder.
+installed you can simply run `kmcos view` in the export folder.
 
 
 
-kmos workflows
+kmcos workflows
 ^^^^^^^^^^^^^^
 
-Since `kmos` has several entry points, there are several ways of using it.
-This section will outline different ways of using kmos:
+Since `kmcos` has several entry points, there are several ways of using it.
+This section will outline different ways of using kmcos:
 
 - *the render script*
 
@@ -62,7 +62,7 @@ This section will outline different ways of using kmos:
 
   Open an existing project \*.xml file with ::
 
-    kmos edit <project_name>.xml
+    kmcos edit <project_name>.xml
 
   and inspect or edit it through on screen
 
@@ -70,13 +70,13 @@ This section will outline different ways of using kmos:
 
   Open an existing project \*.xml file with ::
 
-    kmos import <project_name>.xml
+    kmcos import <project_name>.xml
 
   and edit the project interactively on the ipython console.
 
 - *edit the XML file*
 
-  Just open the XML file of your kmos project with a text
+  Just open the XML file of your kmcos project with a text
   editor of your choice and inspect or your model right
   there. This might only be a last resort to figure out
   what is going on. XML is often not considered very

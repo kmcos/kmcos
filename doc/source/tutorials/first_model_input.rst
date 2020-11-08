@@ -152,12 +152,12 @@ Then the desorption process is almost the same, except the reverse::
 
 Finally save the file and run from the same directory ::
 
-    kmos export myfrist_kmc.ini
+    kmcos export myfrist_kmc.ini
 
 
 If you now `cd` to that folder `myfirst_kmc` and run::
 
-  kmos view
+  kmcos view
 
 ... and dada! Your first running kMC model right there!
 
@@ -170,8 +170,8 @@ lattice setup for extra credit :-).
 Wondering where to go from here? If the work-flow makes
 complete sense, you have a specific model in mind,
 and just need some more idioms to implement it
-I suggest you take a look at the `examples folder <https://github.com/mhoffman/kmos/tree/master/examples>`_.
-for some hints. To learn more about the kmos approach
+I suggest you take a look at the `examples folder <https://github.com/mhoffman/kmcos/tree/master/examples>`_.
+for some hints. To learn more about the kmcos approach
 and methods you should into :ref:`topic guides <topic-guides>`.
 
 Embedding python code [EXPERIMENTAL]

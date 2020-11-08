@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction &mdash; kmos v0.0.1 documentation</title>
+    <title>Introduction &mdash; kmcos v0.0.1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -19,9 +19,9 @@
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="kmos v0.0.1 documentation" href="index.html" />
+    <link rel="top" title="kmcos v0.0.1 documentation" href="index.html" />
     <link rel="next" title="Reference" href="reference.html" />
-    <link rel="prev" title="Welcome to kmos’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Welcome to kmcos’s documentation!" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,9 +37,9 @@
           <a href="reference.html" title="Reference"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to kmos’s documentation!"
+          <a href="index.html" title="Welcome to kmcos’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">kmos v0.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">kmcos v0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -48,11 +48,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-kmos">
-<h1>Introduction<a class="headerlink" href="#module-kmos" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-kmcos">
+<h1>Introduction<a class="headerlink" href="#module-kmcos" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="feature-overview">
 <h2>Feature overview<a class="headerlink" href="#feature-overview" title="Permalink to this headline">¶</a></h2>
-<p>With kmos you can:</p>
+<p>With kmcos you can:</p>
 <blockquote>
 <ul class="simple">
 <li>easily create and modify kMC models through GUI</li>
@@ -61,18 +61,18 @@
 <li>run kMC models through GUI or python bindings</li>
 </ul>
 </blockquote>
-<p>kmos has been developed in the context of first-principles based modelling
+<p>kmcos has been developed in the context of first-principles based modelling
 of surface chemical reactions but might be of help for other types of
 kMC models as well.</p>
-<p>kmos&#8217; goal is to significantly reduce the time you need
+<p>kmcos&#8217; goal is to significantly reduce the time you need
 to implement and run a lattice kmc simulation. However it can not help
 you plan the model.</p>
-<p>kmos can be invoked directly from the command line in one of the following
+<p>kmcos can be invoked directly from the command line in one of the following
 ways:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">kmos</span> <span class="p">[</span><span class="n">help</span><span class="p">]</span> <span class="p">(</span><span class="n">edit</span><span class="o">|</span><span class="n">export</span><span class="o">|</span><span class="n">view</span><span class="p">)</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">kmcos</span> <span class="p">[</span><span class="n">help</span><span class="p">]</span> <span class="p">(</span><span class="n">edit</span><span class="o">|</span><span class="n">export</span><span class="o">|</span><span class="n">view</span><span class="p">)</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>or it may be used as an API via the kmos module.</p>
+<p>or it may be used as an API via the kmcos module.</p>
 <p class="rubric">Footnotes</p>
 <table class="docutils footnote" frame="void" id="code" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -85,8 +85,8 @@ fashion. Python bindings are generated using <a class="reference external" href=
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>You can fetch the current version of kmos using <em>git</em></p>
-<div class="highlight-python"><pre>git clone http://www.github.com/mhoffman/kmos</pre>
+<p>You can fetch the current version of kmcos using <em>git</em></p>
+<div class="highlight-python"><pre>git clone http://www.github.com/mhoffman/kmcos</pre>
 </div>
 <p>and install it using <em>setuptools</em></p>
 <div class="highlight-python"><pre>./setup.py install [--user]</pre>
@@ -120,9 +120,9 @@ You enter a new model by filling in</p>
 </blockquote>
 <p>in roughly this order or open an existing one by opening a kMC XML file.</p>
 <p>If you want to see the model run
-<cite>kmos export &lt;xml-file&gt;</cite> and you will get a subfolder with a self-contained
+<cite>kmcos export &lt;xml-file&gt;</cite> and you will get a subfolder with a self-contained
 Fortran90 code, which solves the model. If all necessary dependencies are
-installed you can simply run <cite>kmos view</cite> in the export folder.</p>
+installed you can simply run <cite>kmcos view</cite> in the export folder.</p>
 </div>
 
 
@@ -143,7 +143,7 @@ installed you can simply run <cite>kmos view</cite> in the export folder.</p>
 
             <h4>Previous topic</h4>
             <p class="topless"><a href="index.html"
-                                  title="previous chapter">Welcome to kmos&#8217;s documentation!</a></p>
+                                  title="previous chapter">Welcome to kmcos&#8217;s documentation!</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="reference.html"
                                   title="next chapter">Reference</a></p>
@@ -182,9 +182,9 @@ installed you can simply run <cite>kmos view</cite> in the export folder.</p>
           <a href="reference.html" title="Reference"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to kmos’s documentation!"
+          <a href="index.html" title="Welcome to kmcos’s documentation!"
              >previous</a> |</li>
-        <li><a href="index.html">kmos v0.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">kmcos v0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -6,42 +6,42 @@ Reference
 Data Types
 ==========
 
-kmos.types
+kmcos.types
 ==========
 
-.. automodule:: kmos.types
-.. autoclass:: kmos.types.ProjectTree
-.. automethod:: kmos.type.ProjectTree.export_xml_file
-.. autoclass:: kmos.types.Meta
-.. autoclass:: kmos.types.Parameter
-.. autoclass:: kmos.types.Layer
-.. autoclass:: kmos.types.Site
-.. autoclass:: kmos.types.Species
-.. autoclass:: kmos.types.Process
-.. autoclass:: kmos.types.ConditionAction
-.. autoclass:: kmos.types.Coord
+.. automodule:: kmcos.types
+.. autoclass:: kmcos.types.ProjectTree
+.. automethod:: kmcos.type.ProjectTree.export_xml_file
+.. autoclass:: kmcos.types.Meta
+.. autoclass:: kmcos.types.Parameter
+.. autoclass:: kmcos.types.Layer
+.. autoclass:: kmcos.types.Site
+.. autoclass:: kmcos.types.Species
+.. autoclass:: kmcos.types.Process
+.. autoclass:: kmcos.types.ConditionAction
+.. autoclass:: kmcos.types.Coord
 
-kmos.io
+kmcos.io
 =======
 
-.. automodule:: kmos.io
+.. automodule:: kmcos.io
    :members: export_source, import_xml, export_xml
 
 ===============
 Editor frontend
 ===============
 
-kmos.gui
+kmcos.gui
 ==========
 
-.. automodule:: kmos.gui
-.. autoclass:: kmos.gui.Editor
-.. autoclass:: kmos.gui.GTKProjectTree
+.. automodule:: kmcos.gui
+.. autoclass:: kmcos.gui.Editor
+.. autoclass:: kmcos.gui.GTKProjectTree
 
-kmos.forms
+kmcos.forms
 ==========
 
-.. automodule:: kmos.forms
+.. automodule:: kmcos.forms
    :members: MetaForm, SpeciesListForm, SpeciesForm, ParameterForm,
              LatticeForm, LayerEditor, SiteForm, ProcessForm, 
              parse_chemical_expression, BatchProcessForm
@@ -52,20 +52,20 @@ Runtime frontend
 ================
 
 
-kmos.run
+kmcos.run
 ==========
 
-.. automodule:: kmos.run
+.. automodule:: kmcos.run
 
-kmos.view
+kmcos.view
 =========
 
-.. automodule:: kmos.view
+.. automodule:: kmcos.view
    :members: KMC_Viewer
 
 
 ====================
-kmos kMC project DTD
+kmcos kMC project DTD
 ====================
 
 The central storage and exchange format is XML. XML was chosen over
@@ -74,7 +74,7 @@ and universal format with good methods to define the overall
 structure of the data.
 
 One way to define an XML format is by using a document type description
-(DTD) and in fact at every import a kmos file is validated against
+(DTD) and in fact at every import a kmcos file is validated against
 the DTD below.
 
-.. literalinclude:: ../../kmos/kmc_project_v0.2.dtd
+.. literalinclude:: ../../kmcos/kmc_project_v0.2.dtd

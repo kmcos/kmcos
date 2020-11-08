@@ -4,4 +4,4 @@ Getting Started
 Introduction
 ^^^^^^^^^^^^
 
-.. automodule:: kmos
+.. automodule:: kmcos

@@ -21,14 +21,14 @@ do
         rm -rf ${model}
         echo -e "BENCHMARK ${model} ${backend} ${compiler}" >> ${BENCHMARK_FILE}
         echo "    COMPILE TIME" >> ${BENCHMARK_FILE}
-        /usr/bin/time -o ${BENCHMARK_FILE} -a kmos export -b ${backend} ${model}.xml
+        /usr/bin/time -o ${BENCHMARK_FILE} -a kmcos export -b ${backend} ${model}.xml
         #cp kmc_settings.py ${model}
         #cp setup_model.py ${model}
         cd ${model}
         echo "    RUN TIME" >> ${BENCHMARK_FILE}
         for i in $(seq 3)
         do
-            kmos benchmark >> ${BENCHMARK_FILE}
+            kmcos benchmark >> ${BENCHMARK_FILE}
         done
         cd ..
         echo -e "\n\n\n" >> ${BENCHMARK_FILE}

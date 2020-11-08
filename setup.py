@@ -2,11 +2,16 @@
 """kMC modeling on steroids"""
 
 import os
-from distutils.core import setup
-from kmos import __version__ as version
+#from distutils.core import setup
+from kmcos import __version__ as version #Update this in __init__.py file of the main directory.
+from setuptools import find_packages, Command, setup
 
-maintainer = 'Max J. Hoffmann'
-maintainer_email = 'mjhoffmann@gmail.com'
+maintainer = 'Aditya Savara'
+url = 'https://github.com/kmcos/kmcos'                 
+license = 'COPYING'
+long_description = open('README.rst').read()
+name='kmcos'
+maintainer_email = 'AdityaSavara2008@u.northwestern.edu'
 author = 'Max J. Hoffmann'
 author_email = 'mjhoffmann@gmail.com'
 description =  __doc__
@@ -29,26 +34,25 @@ classifiers = [
               ]
 requires = [
                     'ase',
-                    'cairo',
-                    'gobject',
-                    'goocanvas',
-                    'gtk',
+                    'pycairo==1.11.1',
+                    'pygobject==3.30',
+                    #'goocanvas', #part of pygobject now, I think.
                     'kiwi',
+                    'kiwi-gtk',
                     'lxml',
                     'matplotlib',
-                    'pygtk',
+                    'UnitTesterSG',
+                    'CiteSoft'
+#                    'pygtk', #This is only for windows so should be under extras.
                    ]
-license = 'COPYING'
-long_description = file('README.rst').read()
-name='python-kmos'
 packages = [
-           'kmos',
-           'kmos.utils',
-           'kmos.run',
-           'kmos.gui',
+           'kmcos',
+           'kmcos.utils',
+           'kmcos.run',
+           'kmcos.gui',
            ]
-package_dir = {'kmos':'kmos'}
-package_data = {'kmos':['fortran_src/*f90',
+package_dir = {'kmcos':'kmcos'}
+package_data = {'kmcos':['fortran_src/*f90',
                         'fortran_src/*.mpy',
                         'kmc_editor.glade',
                         'fortran_src/assert.ppc',
@@ -58,21 +62,56 @@ package_data = {'kmos':['fortran_src/*f90',
 platforms = ['linux', 'windows']
 if os.name == 'nt':
     scripts = [
-            'tools/kmos.bat'
+            'tools/kmos.bat',
+            'tools/kmcos.bat'
             ]
 else:
     scripts = [
-            'tools/kmos-build-standalone',
+            'tools/kmcos-build-standalone',
             'tools/kmos',
-            'tools/kmos-install-dependencies-ubuntu',
+            'tools/kmcos',
+            'tools/kmcos-install-dependencies-ubuntu',
             ]
-url = 'https://github.com/mhoffman/kmos'
 
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds…')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Building Source and Wheel (universal) distribution…')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+
+        self.status('Uploading the package to PyPI via Twine…')
+        os.system('twine upload dist/*')
+
+        self.status('Pushing git tags…')
+        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git push --tags')
+
+        sys.exit()
 setup(
       author=author,
       author_email=author_email,
       description=description,
-      #requires=requires,
       license=license,
       long_description=long_description,
       maintainer=maintainer,
@@ -86,4 +125,5 @@ setup(
       scripts=scripts,
       url=url,
       version=version,
+      cmdclass={'upload': UploadCommand,}, #setup.py publish support
       )

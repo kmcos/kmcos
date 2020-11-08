@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Running the Model–the API way &mdash; kmos 0.2.1 documentation</title>
+    <title>Running the Model–the API way &mdash; kmcos 0.2.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="kmos 0.2.1 documentation" href="../index.html" /> 
+    <link rel="top" title="kmcos 0.2.1 documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,13 +37,13 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/kmos_logo.png" alt="Logo"/>
+              <img class="logo" src="../_static/kmcos_logo.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -88,7 +88,7 @@ will likely be integrated into the runtime API. For starters
 a simple script could look as follows</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 
-<span class="kn">from</span> <span class="nn">kmos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
+<span class="kn">from</span> <span class="nn">kmcos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">KMC_Model</span><span class="p">()</span>
 </pre></div>
@@ -223,8 +223,8 @@ at once using</p>
 <h1>Running models in parallel<a class="headerlink" href="#running-models-in-parallel" title="Permalink to this headline">¶</a></h1>
 <p>Due to the global clock in kMC there seems to be no
 simple and efficient way to parallelize a kMC program.
-kmos certainly cannot parallelize a single system over
-processors. However one can run several kmos instances
+kmcos certainly cannot parallelize a single system over
+processors. However one can run several kmcos instances
 in parallel which might accelerate sampling or efficiently
 check for steady state conditions.</p>
 <p>However in many applications it is still useful to
@@ -236,10 +236,10 @@ since it requires no communication between the runs.</p>
 which is in the Python standard library since version 2.6.
 For older versions this needs to be <cite>downloaded &lt;http://pypi.python.org/pypi/multiprocessing/&gt;</cite>
 and installed manually. The latter is pretty straightforward.</p>
-<p>Then besides <cite>kmos</cite> we need to import <cite>multiprocessing</cite></p>
+<p>Then besides <cite>kmcos</cite> we need to import <cite>multiprocessing</cite></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linspace</span>
-<span class="kn">from</span> <span class="nn">kmos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
+<span class="kn">from</span> <span class="nn">kmcos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
 </pre></div>
 </div>
 <p>and let&#8217;s say you wanted to scan a range of temperature,
@@ -259,7 +259,7 @@ and runs the simulation for each</p>
 </div>
 <p>In order to split our full range of input parameters, we
 can use a utility function</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmos.utils</span> <span class="kn">import</span> <span class="n">split_sequence</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmcos.utils</span> <span class="kn">import</span> <span class="n">split_sequence</span>
 </pre></div>
 </div>
 <p>All that is left to do, is to define the input parameters,
@@ -289,7 +289,7 @@ split the list and start subprocesses for each sublist</p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -14,7 +14,7 @@ from multiprocessing import Pool
 import numpy as np
 
 import kmc_settings
-from kmos.run import KMC_Model
+from kmcos.run import KMC_Model
 
 DATA_FILENAME = 'data.dat'
 INITIAL_STEPS = int(1e5)
@@ -43,7 +43,7 @@ def run(point):
 
         # Run simulation
         last_time = 0.
-        for double_step in xrange(3):
+        for double_step in range(3):
             last_time = model.base.get_kmc_time()
             model.double()
             model.base.set_kmc_time(last_time)
@@ -55,7 +55,7 @@ def run(point):
         occupation = []
         tof = []
         delta_ts = []
-        for i in xrange(SAMPLES):
+        for i in range(SAMPLES):
             model.do_steps()
             atoms = model.get_atoms(geometry=False)
 
@@ -79,4 +79,4 @@ if __name__ == '__main__':
     p_O2gas = [1.] * len(p_COgas)
     nproc = 8
     pool = Pool(processes=nproc)
-    pool.map(run, zip(T, p_COgas, p_O2gas))
+    pool.map(run, list(zip(T, p_COgas, p_O2gas)))

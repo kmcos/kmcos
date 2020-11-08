@@ -45,7 +45,7 @@ Let's start with a very simple and basic process: molecular
 adsorption of a gas phase species, let call it ``A`` on a
 surface site. For this we need a species ::
 
-  from kmos.types import *
+  from kmcos.types import *
   pt = Project()
 
   A = Species(name='A')

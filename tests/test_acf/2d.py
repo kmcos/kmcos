@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*-coding: utf-8-*-
-from kmos.types import *
-from kmos.io import *
+from kmcos.types import *
+from kmcos.io import *
 import numpy as np
 
 pt = Project()
