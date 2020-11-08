@@ -1,13 +1,13 @@
-.. image:: https://travis-ci.org/mhoffman/kmcos.png?branch=master
-    :target: https://travis-ci.org/mhoffman/kmcos
+.. image:: https://travis-ci.org/kmcos/kmcos.png?branch=master
+    :target: https://travis-ci.org/kmcos/kmcos
 .. image:: https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)
     :target COPYING
 .. image:: https://readthedocs.org/projects/kmcos/badge/?version=latest
     :target: http://kmcos.readthedocs.org/en/latest/?badge=latest
     :alt: Documentation Status
-.. image:: https://badges.gitter.im/mhoffman/kmcos.svg
-   :alt: Join the chat at https://gitter.im/mhoffman/kmcos
-   :target: https://gitter.im/mhoffman/kmcos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+.. image:: https://badges.gitter.im/kmcos/kmcos.svg
+   :alt: Join the chat at https://gitter.im/kmcos/kmcos
+   :target: https://gitter.im/kmcos/kmcos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 kmcos: Kinetic Monte Carlo of Systems
 =====================================
