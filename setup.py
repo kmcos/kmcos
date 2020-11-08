@@ -35,7 +35,7 @@ classifiers = [
 requires = [
                     'ase',
                     'pycairo==1.11.1',
-                    'pygobject==3.30',
+                    #'pygobject==3.30',
                     #'goocanvas', #part of pygobject now, I think.
                     'kiwi',
                     'kiwi-gtk',
