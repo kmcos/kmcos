@@ -62,13 +62,13 @@ package_data = {'kmcos':['fortran_src/*f90',
 platforms = ['linux', 'windows']
 if os.name == 'nt':
     scripts = [
-            'tools/kmcos.bat',
+            'tools/kmos.bat',
             'tools/kmcos.bat'
             ]
 else:
     scripts = [
             'tools/kmcos-build-standalone',
-            'tools/kmcos',
+            'tools/kmos',
             'tools/kmcos',
             'tools/kmcos-install-dependencies-ubuntu',
             ]
