@@ -73,7 +73,7 @@ How can I change the occupation of a model at runtime?
 More to follow.
 
 Please post issues
-`here <https://github.com/mhoffman/kmcos/issues>`_
+`here <https://github.com/kmcos/kmcos/issues>`_
 or via email mjhoffmann .at. gmail .dot. com
 or via twitter @maxjhoffmann
 

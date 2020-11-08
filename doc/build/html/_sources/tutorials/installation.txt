@@ -3,7 +3,7 @@ Installation on Ubuntu Linux
 
 You can fetch the current version of kmcos using *git* ::
 
-    git clone http://www.github.com/mhoffman/kmcos
+    git clone http://www.github.com/kmcos/kmcos
 
 
 and install it using *setuptools* ::
@@ -149,14 +149,14 @@ number of programs.
 
 #. **kmcos**
    is finally what we are after, so download the latest version
-   from `github <http://mhoffman.github.com/kmcos/>`_ and install
+   from `github <http://kmcos.github.com/kmcos/>`_ and install
    it in the same way as you installed **ASE**.
 
 
 There are probably a number of small changes you have to make
 which are not described in this document. Please post questions
 and comments in the
-`issues forum <https://github.com/mhoffman/kmcos/issues>`_ .
+`issues forum <https://github.com/kmcos/kmcos/issues>`_ .
 
 
 Installing JANAF Thermochemical Tables
