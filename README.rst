@@ -83,8 +83,7 @@ DOCUMENTATION
 Please refer to
 
 * Documentation: http://kmcos.readthedocs.org/
-* Tutorial: https://github.com/jmlorenzi/intro2kmcos
-* http://mhoffman.github.io/kmcos/
+* Tutorial: https://github.com/jmlorenzi/intro2kmos
 
 or links therein for tutorials, user guide, reference, and troubleshooting hints.
 
