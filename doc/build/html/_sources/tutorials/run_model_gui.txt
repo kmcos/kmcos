@@ -6,7 +6,7 @@ two files: kmc_model.so and kmc_settings.py. These two files
 are really all you need for simulations. So a simple
 way to view the model is the ::
 
-  kmos view
+  kmcos view
 
 command from the command line. For this two work you need to
 be in the same directory as these two file (more precisely
@@ -34,8 +34,8 @@ care of the correct allocation and deallocation ::
 
   #!/usr/bin/env python
 
-  from kmos.run import KMC_Model
-  from kmos.view import main
+  from kmcos.run import KMC_Model
+  from kmcos.view import main
 
 
   with KMC_Model(print_rates=False, banner=False) as model:

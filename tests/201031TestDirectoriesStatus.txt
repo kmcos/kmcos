@@ -1,6 +1,6 @@
 python "test_cli_generation.py" runs
 
-inside \ini_test\ --> got the tests to work after editing types.py and utils\__init.py . Ini's work. For mini_101.ini, foo.ini, and the ZGB ini, kmos export followed by benchmark works. 
+inside \ini_test\ --> got the tests to work after editing types.py and utils\__init.py . Ini's work. For mini_101.ini, foo.ini, and the ZGB ini, kmcos export followed by benchmark works. 
 
 inside \complex render test\ works now also
 
@@ -8,7 +8,7 @@ omsode \test_acf\ is now partially fixed. test_1.py and test_2.py both pass. tes
 
 inside \export_test\test_build_run.py runs but test_import_export.py does not run to completion. I have separated test_import_export.py into test_1.py through test_8.py.  Only a small number are passing.  It is possible that some of the failing ones are actually operating correctly, but I have not investigated as taht is not a priority.
 
-inside \test_cli_generated_model\   no python file, but typing "kmos benchmark" does not work. Says no model dimension.
+inside \test_cli_generated_model\   no python file, but typing "kmcos benchmark" does not work. Says no model dimension.
 
 inside \test_run\  --> upgraded to UnitTesterSG. Now test_1.py and test_2.py both pass. test_3.py fails, does not create the final ".so" file, and displays an error that can be traced, so it seems the otf backend is not completely working yet. However, running test_3.py provides an opportunity to debug the otf backend creation.
 

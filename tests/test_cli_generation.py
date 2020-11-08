@@ -4,8 +4,8 @@ import os
 
 
 def generate_model():
-    import kmos
-    from kmos.types import \
+    import kmcos
+    from kmcos.types import \
         ConditionAction, \
         Coord, \
         Layer, \
@@ -57,7 +57,7 @@ def generate_model():
 
 
 def test_model_generation_and_export():
-    from kmos.io import export_source
+    from kmcos.io import export_source
     model = generate_model()
     cwd = os.path.abspath(os.curdir)
     os.chdir(os.path.dirname(os.path.abspath(__file__)))

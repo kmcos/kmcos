@@ -1,7 +1,7 @@
 # Throttling test case 7: Same as case 4, but with aggregate throttling factors.
 
 try:
-    import kmos.throttling_globals as tg
+    import kmcos.throttling_globals as tg
 except:
     import throttling_globals as tg
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# kmos documentation build configuration file, created by
+# kmcos documentation build configuration file, created by
 # sphinx-quickstart on Fri Aug 19 14:58:17 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -43,7 +43,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'kmos'
+project = 'kmcos'
 copyright = '2009-2013, Max J. Hoffmann'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -51,7 +51,7 @@ copyright = '2009-2013, Max J. Hoffmann'
 # built documents.
 #
 # The short X.Y version.
-from kmos import __version__
+from kmcos import __version__
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -117,7 +117,7 @@ html_theme = 'default'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = 'img/kmos_logo.png'
+html_logo = 'img/kmcos_logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -165,7 +165,7 @@ html_static_path = ['_static']
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'kmosdoc'
+htmlhelp_basename = 'kmcosdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -179,7 +179,7 @@ latex_font_size = '10pt'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'kmos.tex', 'kmos Documentation',
+  ('index', 'kmcos.tex', 'kmcos Documentation',
    'Max J. Hoffmann', 'manual'),
 ]
 

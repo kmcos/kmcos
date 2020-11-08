@@ -1,12 +1,12 @@
 #Snapshots Module version 6.6
-# The following functions can be utilized to run a KMOS simulation with a user
+# The following functions can be utilized to run a kmcos simulation with a user
 # defined snapshot size. The associated KMC data (simulation name, parameters
 # of interest (user defined), atoms.tof_data, atoms.tof_integ, atoms.occupation)
 # will be written to .csv files. In addition, the configuration and a
 # simulation log will be written when the simulation is complete.
 import time
 try:
-    import kmos.snapshots_globals as sg
+    import kmcos.snapshots_globals as sg
 except:
     import snapshots_globals as sg
 
@@ -181,9 +181,9 @@ def do_snapshots(n_snapshots, sps, tps=None):
                     sps_actual = sg.model.do_steps_time(tps, sps)
                 except:
                     # Something went wrong, probably because we don't have this
-                    # custom add-on to KMOS, so just fall back to the default
+                    # custom add-on to kmcos, so just fall back to the default
                     # routine.
-                    print('WARNING: TPS specified but this version of KMOS does not support time-based snapshots. Using fixed-step snapshots instead.')
+                    print('WARNING: TPS specified but this version of kmcos does not support time-based snapshots. Using fixed-step snapshots instead.')
                     sg.model.do_steps(sps)
             sg.atoms = sg.model.get_atoms(geometry=False)
             sg.steps_so_far = sg.atoms.kmc_step
@@ -260,14 +260,14 @@ def seed_PRNG(restart=False, state=None):
 
     if not restart:
         if state is None:
-            print('New simulation with no random seed supplied -- using KMOS default.')
+            print('New simulation with no random seed supplied -- using kmcos default.')
             return
         else:
             try:
                 prng_state = sg.model.proclist.seed_gen(state)
                 sg.model.proclist.put_seed(prng_state)
             except:
-                print('PRNG seeding routines not available -- using KMOS default.')
+                print('PRNG seeding routines not available -- using kmcos default.')
                 return
 
     else:
@@ -278,7 +278,7 @@ def seed_PRNG(restart=False, state=None):
             try:
                 sg.model.proclist.put_seed(state)
             except:
-                print('PRNG seeding routines not available -- using KMOS default.')
+                print('PRNG seeding routines not available -- using kmcos default.')
                 return
 
 #For snapshots module. Requires the module_state_export_import  module
@@ -308,9 +308,9 @@ def reload(sg_module_state):
     #Update the rate constants based on the temperature etc. 
     #This is necessary, or rate constants will be those of kmc_settings parameter settings.
     try:
-        sg.kmos.run.set_rate_constants() # <-- was getting a math domain error for some reason...
+        sg.kmcos.run.set_rate_constants() # <-- was getting a math domain error for some reason...
     except:
-        print("Warning: kmos.run.set_rate_constants() did not work correctly in the restart. \n \
+        print("Warning: kmcos.run.set_rate_constants() did not work correctly in the restart. \n \
                This is a known bug, but the reason is not yet looked into. \n \
                You may need to throw away your first restarted datapoint,  \n \
                and if it affects your system dynamics then this bug needs to be fixed.")

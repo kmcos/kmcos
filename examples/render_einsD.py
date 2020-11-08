@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from kmos.types import Project, Condition, Action
+from kmcos.types import Project, Condition, Action
 import numpy as np
 
 

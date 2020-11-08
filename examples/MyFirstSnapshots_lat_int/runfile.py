@@ -1,5 +1,5 @@
-from kmos.snapshots import *
-import kmos.snapshots_globals as sg
+from kmcos.snapshots import *
+import kmcos.snapshots_globals as sg
 import os
 
 #sg.simulation_name = model_name  #<--- You can change this to whatever you want, but this is the default. All it does is affect the filenames of the exports the format for this type would be MyFirstModel_TOFs_and_Coverages.csv.
@@ -14,7 +14,7 @@ sps = 10 # <-- this is just an example
 n_snapshots = 10 # <-- this is just an example
 
 
-#The kmos Model is initialized in create_headers
+#The kmcos Model is initialized in create_headers
 create_headers()
 
 #If it is desired to run snapshots without writing output to a file, set sg.write_output = 'False'.

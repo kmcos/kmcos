@@ -3,20 +3,20 @@
 """
 from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
-#    This file is part of kmos.
+#    This file is part of kmcos.
 #
-#    kmos is free software: you can redistribute it and/or modify
+#    kmcos is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    kmos is distributed in the hope that it will be useful,
+#    kmcos is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
+#    along with kmcos.  If not, see <http://www.gnu.org/licenses/>.
 
 # standard modules
 import optparse
@@ -24,14 +24,14 @@ import io
 import sys
 import os
 
-from kmos.types import Project, Layer, LayerList, Meta, OutputList, \
+from kmcos.types import Project, Layer, LayerList, Meta, OutputList, \
                        Parameter, Process, ProcessList, SpeciesList, \
                        OutputItem, Species
-from kmos.gui.forms import LayerEditor, MetaForm, InlineMessage, OutputForm, \
+from kmcos.gui.forms import LayerEditor, MetaForm, InlineMessage, OutputForm, \
                        ParameterForm, ProcessForm, BatchProcessForm, \
                        SpeciesForm, SpeciesListForm, LatticeForm
-from kmos.config import GLADEFILE
-import kmos.io
+from kmcos.config import GLADEFILE
+import kmcos.io
 
 import gobject
 try:
@@ -99,7 +99,7 @@ def verbose(func):
 
 
 class GTKProject(SlaveDelegate):
-    """A facade of kmos.types.Project so that
+    """A facade of kmcos.types.Project so that
     pygtk can display in a TreeView.
     """
 
@@ -131,8 +131,8 @@ class GTKProject(SlaveDelegate):
         SlaveDelegate.__init__(self, toplevel=self.project_data)
 
     def _set_treeview_hooks(self):
-        """Fudge function to import to access function to kmos.types.Project
-        to kmos.gui.GTKProject.
+        """Fudge function to import to access function to kmcos.types.Project
+        to kmcos.gui.GTKProject.
         """
         self.project_data.clear()
         # Meta
@@ -497,7 +497,7 @@ class Editor(GladeDelegate):
         self.project_tree = GTKProject(parent=self, menubar=self.menubar)
         self.main_window.add_accel_group(self.menubar.get_accel_group())
         self.attach_slave('overviewtree', self.project_tree)
-        self.set_title('%s - kmos' % self.project_tree.get_name())
+        self.set_title('%s - kmcos' % self.project_tree.get_name())
         self.project_tree.show()
 
         wid = self.project_tree.menubar.get_widget('/MainMenuBar')
@@ -703,7 +703,7 @@ class Editor(GladeDelegate):
             if self.get_slave('overviewtree'):
                 self.detach_slave('overviewtree')
             self.attach_slave('overviewtree', self.project_tree)
-            self.set_title('%s - kmos' % self.project_tree.get_name())
+            self.set_title('%s - kmcos' % self.project_tree.get_name())
             self.project_tree.show()
             self.import_file(filename)
 
@@ -715,7 +715,7 @@ class Editor(GladeDelegate):
         self.project_tree._set_treeview_hooks()
         # Import
         self.project_tree.import_file(filename)
-        self.set_title('%s - kmos' % self.project_tree.get_name())
+        self.set_title('%s - kmcos' % self.project_tree.get_name())
         if hasattr(self.project_tree.meta, 'model_name'):
             self.toast('Imported model %s' %
                        self.project_tree.meta.model_name)
@@ -765,18 +765,18 @@ class Editor(GladeDelegate):
             self.toast('No folder selected.')
             return
 
-        kmos.io.export_source(self.project_tree, export_dir)
+        kmcos.io.export_source(self.project_tree, export_dir)
 
         # return directory name
         self.toast('Wrote FORTRAN sources to %s\n' % export_dir +
-            'Please go to the directory and run "kmos build".\n' +
+            'Please go to the directory and run "kmcos build".\n' +
            'If this finished successfully you can run the simulation\n' +
-           'by executing "kmos view"')
+           'by executing "kmcos view"')
 
     def on_btn_help__clicked(self, _button):
         """Preliminary help function."""
-        help_url = 'http://mhoffman.github.com/kmos/doc/build/html/index.html'
-        issues_url = 'https://github.com/mhoffman/kmos/issues'
+        help_url = 'http://mhoffman.github.com/kmcos/doc/build/html/index.html'
+        issues_url = 'https://github.com/mhoffman/kmcos/issues'
         gtk.show_uri(None, help_url, gtk.gdk.CURRENT_TIME)
         self.toast(('Please refer to online help at\n%s.\n\n'
                     'Or post issues at\n%s.') %
@@ -821,12 +821,12 @@ def main():
     parser = optparse.OptionParser()
     parser.add_option('-o', '--open',
                       dest='xml_file',
-                      help='Immediately import kmos XML file')
+                      help='Immediately import kmcos XML file')
     parser.add_option('-x', '--export-dir',
                       dest='export_dir',
                       type=str)
     (options, args) = parser.parse_args()
-    editor = kmos.gui.Editor()
+    editor = kmcos.gui.Editor()
     if len(args) >= 2:
         options.xml_file = args[1]
 

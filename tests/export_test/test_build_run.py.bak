@@ -254,7 +254,7 @@ XML = """<?xml version="1.0" ?>
 def run(i=0, edir=''):
     from sys import path
     path.append(edir)
-    from kmos.run import KMC_Model
+    from kmcos.run import KMC_Model
     model = KMC_Model(banner=False, print_rates=False)
     model.settings.random_seed = i
     assert not model.do_steps(1000)
@@ -280,7 +280,7 @@ def export_and_run_many_models():
     from sys import path
 
     import tempfile
-    from kmos.cli import main
+    from kmcos.cli import main
 
     EXPORT_DIR = tempfile.mkdtemp()
     XML_FILENAME = '%s.xml' % tempfile.mktemp()

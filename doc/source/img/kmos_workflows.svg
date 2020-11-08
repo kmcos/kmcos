@@ -14,8 +14,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="kmos_workflows.svg"
-   inkscape:export-filename="/home/mhoffman/src/kmos/doc/source/img/kmos_workflows.png"
+   sodipodi:docname="kmcos_workflows.svg"
+   inkscape:export-filename="/home/mhoffman/src/kmcos/doc/source/img/kmcos_workflows.png"
    inkscape:export-xdpi="31.111067"
    inkscape:export-ydpi="31.111067">
   <defs
@@ -107,7 +107,7 @@
            y="341.46002"
            x="364.72357"
            id="tspan2987"
-           sodipodi:role="line">kmos kMC Project</tspan></text>
+           sodipodi:role="line">kmcos kMC Project</tspan></text>
       <rect
          ry="17.777843"
          rx="20.724314"

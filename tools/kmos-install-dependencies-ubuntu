@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-# The kmos dependency list is horribly wrong
+# The kmcos dependency list is horribly wrong
 # and right now even depends on a repository
 # which is outside the Ubuntu repositories
 # let's hope that this changes soon

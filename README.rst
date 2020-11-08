@@ -1,13 +1,13 @@
-.. image:: https://travis-ci.org/mhoffman/kmos.png?branch=master
-    :target: https://travis-ci.org/mhoffman/kmos
+.. image:: https://travis-ci.org/mhoffman/kmcos.png?branch=master
+    :target: https://travis-ci.org/mhoffman/kmcos
 .. image:: https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)
     :target COPYING
-.. image:: https://readthedocs.org/projects/kmos/badge/?version=latest
-    :target: http://kmos.readthedocs.org/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/kmcos/badge/?version=latest
+    :target: http://kmcos.readthedocs.org/en/latest/?badge=latest
     :alt: Documentation Status
-.. image:: https://badges.gitter.im/mhoffman/kmos.svg
-   :alt: Join the chat at https://gitter.im/mhoffman/kmos
-   :target: https://gitter.im/mhoffman/kmos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+.. image:: https://badges.gitter.im/mhoffman/kmcos.svg
+   :alt: Join the chat at https://gitter.im/mhoffman/kmcos
+   :target: https://gitter.im/mhoffman/kmcos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 kmcos: Kinetic Monte Carlo of Systems
 =====================================
@@ -65,26 +65,26 @@ Prepare a minimal input file with the following content and save it as ``mini_10
     actions = empty@hollow
     tof_count = {'desorption':1}
 
-In the same directory run ``kmos export mini_101.ini``. You should now have a folder ``mini_101_local_smart``
-in the same directory. ``cd`` into it and run ``kmos benchmark``. If everything went well you should see something
+In the same directory run ``kmcos export mini_101.ini``. You should now have a folder ``mini_101_local_smart``
+in the same directory. ``cd`` into it and run ``kmcos benchmark``. If everything went well you should see something
 like ::
 
     Using the [local_smart] backend.
     1000000 steps took 1.51 seconds
     Or 6.62e+05 steps/s
 
-In the same directory try running ``kmos view`` to watch the model run or fire up ``kmos shell``
-to interact with the model interactively. Explore more commands with ``kmos help`` and please
-refer to the documentation how to build complex model and evaluate them systematically. To test all bells and whistles try ``kmos edit mini_101.ini`` and inspect the model visually.
+In the same directory try running ``kmcos view`` to watch the model run or fire up ``kmcos shell``
+to interact with the model interactively. Explore more commands with ``kmcos help`` and please
+refer to the documentation how to build complex model and evaluate them systematically. To test all bells and whistles try ``kmcos edit mini_101.ini`` and inspect the model visually.
 
 DOCUMENTATION
 ##############
 
 Please refer to
 
-* Documentation: http://kmos.readthedocs.org/
-* Tutorial: https://github.com/jmlorenzi/intro2kmos
-* http://mhoffman.github.io/kmos/
+* Documentation: http://kmcos.readthedocs.org/
+* Tutorial: https://github.com/jmlorenzi/intro2kmcos
+* http://mhoffman.github.io/kmcos/
 
 or links therein for tutorials, user guide, reference, and troubleshooting hints.
 
@@ -143,7 +143,7 @@ FILES
 | ├── requirements.txt                             # Dependencies which can be installed via pip
 | ├── setup.py                                     # setuptools using setup script
 | ├── index.html                                   # landing website
-| ├── kmos/                                        # the core kmos python modules
+| ├── kmcos/                                        # the core kmcos python modules
 | │   ├── cli.py                                   # the command line interface
 | │   ├── config.py                                # configuration of some project wide paths
 | │   ├── fortran_src/                             # static Fortran 90 source files
@@ -152,7 +152,7 @@ FILES
 | │   │   ├── base_lat_int.f90                     # slightly modified kMC solver for lat_int backend
 | │   │   ├── kind_values.f90                      # definition of project wide kind values
 | │   │   └── main.f90                             # source template for standalone Fortran 90 clients
-| │   ├── gui/                                     # kmos.gui module
+| │   ├── gui/                                     # kmcos.gui module
 | │   │   ├── forms.py                             # view definitions (MVC) of editor GUI
 | │   │   └── __init__.py                          # controller definitions (MVC) of editor GUI
 | │   ├── __init__.py                              # root import module
@@ -194,10 +194,10 @@ FILES
 | │   └── small.xml                                # demo file
 | ├── tests/                                       # Unit tests and test data
 | └── tools                                        # Entry points for command line interface
-|     ├── kmos
-|     ├── kmos.bat
-|     ├── kmos-build-standalone
-|     └── kmos-install-dependencies-ubuntu
+|     ├── kmcos
+|     ├── kmcos.bat
+|     ├── kmcos-build-standalone
+|     └── kmcos-install-dependencies-ubuntu
 
 
 COPYRIGHT AND LICENSE

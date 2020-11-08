@@ -2,8 +2,8 @@
 
 from ase.lattice.surface import fcc111
 import ase
-from kmos.utils import get_ase_constructor
-from kmos.types import *
+from kmcos.utils import get_ase_constructor
+from kmcos.types import *
 import numpy as np
 
 

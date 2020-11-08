@@ -1,6 +1,6 @@
 import os
 gpl = self._gpl_message()
-#@ {gpl}!****h* kmos/proclist
+#@ {gpl}!****h* kmcos/proclist
 #@ ! FUNCTION
 #@ !    Implements the kMC process list.
 #@ !

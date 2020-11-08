@@ -19,15 +19,15 @@ processes. Slow processes should not be throttled unless the approach to steady
 state is very slow. They should be turned off once steady state is reached and
 should not be throttled at all if the transient dynamics are important.
 
-This package was originally designed to work with the KMOS KMC simulation
+This package was originally designed to work with the kmcos KMC simulation
 package. However, it is possible to modify it to work with other packages, as we
 describe below.
 
 We have also designed this package to employ a process naming scheme that can be
 represented by a regular expression (specifically an 'F' or an 'R' followed by
 a sequence of any number of digits, a 'p', and another sequence of any number of
-digits). This is necessary for our use case and for common use cases with KMOS
-because KMOS will frequently return process name and reaction rate lists that
+digits). This is necessary for our use case and for common use cases with kmcos
+because kmcos will frequently return process name and reaction rate lists that
 have extra entries corresponding to groups of processes or that are
 more-friendly aliases to another process name. The regular expression method
 eases parsing these lists to extract only the relevant information.
@@ -46,9 +46,9 @@ changed in the throttling_globals module (variable 'regex').
 Our throttling code was originally written to interface with an in-house module
 for collecting time averaged statistics on rates and coverages in sampling
 windows known as snapshots. Our snapshots module was written to interface with
-the KMC package KMOS. Recognizing that not everyone will necessarily wish to use
-KMOS, we have intentionally limited the interaction of our throttling code with
-our snapshots code and with KMOS. Nevertheless, some dependencies remain. We
+the KMC package kmcos. Recognizing that not everyone will necessarily wish to use
+kmcos, we have intentionally limited the interaction of our throttling code with
+our snapshots code and with kmcos. Nevertheless, some dependencies remain. We
 summarize here the interfaces these dependencies have so that the throttling
 code can be adapted to interface with other snapshots and/or KMC
 implementations. We cover each throttling module file in turn.
@@ -237,7 +237,7 @@ At the moment,  the code has a primitive regularization code
  which puts a roof on what a rate constant is allowed to achieve.
  we recommend only using the  regularization if necessary.
  it can distort the selectivity, and it slows down the code.
- the slowdown is actually because kmos updates *all* rate constants
+ the slowdown is actually because kmcos updates *all* rate constants
  even if only one needs to be updated. So this slowdown is not
  actually due to the throttling module.
  One thing to note  it is that the the throttling code

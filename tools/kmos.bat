@@ -1,3 +1,3 @@
 @setlocal enabledelayedexpansion && python -x "%~f0" %* & exit /b !ERRORLEVEL!
-from kmos import cli
+from kmcos import cli
 cli.main()

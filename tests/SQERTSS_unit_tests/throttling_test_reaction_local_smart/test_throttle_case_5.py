@@ -1,7 +1,7 @@
 # Throttling test case 5: Only slow processes.
 
 try:
-    import kmos.throttling_globals as tg
+    import kmcos.throttling_globals as tg
 except:
     import throttling_globals as tg
 

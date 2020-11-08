@@ -177,8 +177,8 @@ def sample_steady_state(model, batch_size=1000000,
     hist = {}
 
     if show_progress:
-        import kmos.utils.progressbar
-        progress_bar = kmos.utils.progressbar.ProgressBar()
+        import kmcos.utils.progressbar
+        progress_bar = kmcos.utils.progressbar.ProgressBar()
 
     for batch in itertools.count():
         data = model.get_std_sampled_data(
@@ -240,8 +240,8 @@ def sample_steady_state(model, batch_size=1000000,
         return ' '.join(format(data[key.replace('#', '')], '.5e') for key in model.get_std_header().split()) + '\n'
 
 if __name__ == '__main__':
-    import kmos.run
-    with kmos.run.KMC_Model(banner=False, print_rates=False) as model:
+    import kmcos.run
+    with kmcos.run.KMC_Model(banner=False, print_rates=False) as model:
         hist = sample_steady_state(
             model, 100000, tof_method='integ', show_progress=True, make_plots=True)
     print(model.get_std_header())

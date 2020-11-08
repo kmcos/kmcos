@@ -3,7 +3,7 @@
 
 import os
 #from distutils.core import setup
-from kmos import __version__ as version #Update this in __init__.py file of the main directory.
+from kmcos import __version__ as version #Update this in __init__.py file of the main directory.
 from setuptools import find_packages, Command, setup
 
 maintainer = 'Aditya Savara'
@@ -46,13 +46,13 @@ requires = [
 #                    'pygtk', #This is only for windows so should be under extras.
                    ]
 packages = [
-           'kmos',
-           'kmos.utils',
-           'kmos.run',
-           'kmos.gui',
+           'kmcos',
+           'kmcos.utils',
+           'kmcos.run',
+           'kmcos.gui',
            ]
-package_dir = {'kmos':'kmos'}
-package_data = {'kmos':['fortran_src/*f90',
+package_dir = {'kmcos':'kmcos'}
+package_data = {'kmcos':['fortran_src/*f90',
                         'fortran_src/*.mpy',
                         'kmc_editor.glade',
                         'fortran_src/assert.ppc',
@@ -62,15 +62,15 @@ package_data = {'kmos':['fortran_src/*f90',
 platforms = ['linux', 'windows']
 if os.name == 'nt':
     scripts = [
-            'tools/kmos.bat',
+            'tools/kmcos.bat',
             'tools/kmcos.bat'
             ]
 else:
     scripts = [
-            'tools/kmos-build-standalone',
-            'tools/kmos',
+            'tools/kmcos-build-standalone',
             'tools/kmcos',
-            'tools/kmos-install-dependencies-ubuntu',
+            'tools/kmcos',
+            'tools/kmcos-install-dependencies-ubuntu',
             ]
 
 class UploadCommand(Command):

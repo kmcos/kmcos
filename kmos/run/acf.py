@@ -5,9 +5,9 @@ A  module to run the acf features for a compiled kMC model.
 
 The model can be used directly like so::
 
-    import kmos.run.acf as acf
-    from kmos.run import KMC_Model
-    import kmos.run.acf as acf
+    import kmcos.run.acf as acf
+    from kmcos.run import KMC_Model
+    import kmcos.run.acf as acf
 
     model = KMC_Model()
 
@@ -43,7 +43,7 @@ which, of course can also be part of a python script.
 """
 
 #    Copyright 2015-2016 Andreas Garhammer
-#    This file is part of kmos.
+#    This file is part of kmcos.
 
 def get_id_arr(kmc_model):
     """Return the id's from id_arr.

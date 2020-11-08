@@ -7,7 +7,7 @@ def test_build_model(indexOfBackendToTest='all'):
     #indexOfBackendToTest is intended to be an integer. However, 'all' will test all.
     import os
     import sys
-    import kmos.cli
+    import kmcos.cli
     import time
     import pprint
     import filecmp
@@ -22,27 +22,27 @@ def test_build_model(indexOfBackendToTest='all'):
         backends_list = [ possible_backends_list[indexOfBackendToTest] ] #Still need to put it in a list of one item since below will iterate over the list.
     for backend in backends_list:
         export_dir = '_tmp_export_' + backend + ''
-        kmos.cli.main('export 2d_grid.xml '+export_dir+' -o --acf -b ' + backend + '')
+        kmcos.cli.main('export 2d_grid.xml '+export_dir+' -o --acf -b ' + backend + '')
         os.chdir('..')
         sys.path.insert(0, os.path.abspath('.'))
-        import kmos.run
-        import kmos.run.acf as acf
+        import kmcos.run
+        import kmcos.run.acf as acf
         
-        if kmos.run.settings is None:
+        if kmcos.run.settings is None:
             import kmc_settings as settings
-            kmos.run.settings = settings
+            kmcos.run.settings = settings
 
-        if kmos.run.lattice is None:
+        if kmcos.run.lattice is None:
             from kmc_model import base, lattice, proclist, base_acf, proclist_acf
             import kmc_model
-            kmos.run.kmc_model = kmc_model
-            kmos.run.base = base
-            kmos.run.lattice = lattice
-            kmos.run.proclist = proclist
-            kmos.run.base_acf = base_acf
-            kmos.run.proclist_acf = proclist_acf
+            kmcos.run.kmc_model = kmc_model
+            kmcos.run.base = base
+            kmcos.run.lattice = lattice
+            kmcos.run.proclist = proclist
+            kmcos.run.base_acf = base_acf
+            kmcos.run.proclist_acf = proclist_acf
 
-        with kmos.run.KMC_Model(print_rates=False, banner=False) as model:
+        with kmcos.run.KMC_Model(print_rates=False, banner=False) as model:
             print("Model compilation successfull")
             nr_of_steps = 100
             trace_species = 'ion'
@@ -85,8 +85,8 @@ def test_build_model(indexOfBackendToTest='all'):
             # Clean-up action
             os.chdir('..')
 
-            #kmos.run.lattice = None
-            #kmos.run.settings = None
+            #kmcos.run.lattice = None
+            #kmcos.run.settings = None
 
     os.chdir(old_path)
 

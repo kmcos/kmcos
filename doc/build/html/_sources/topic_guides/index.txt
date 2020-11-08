@@ -8,7 +8,7 @@ Topic Guides
   kmc_concept
   workflows
   data_models
-  kmos_speed
+  kmcos_speed
   proc_syntax
   coord_syntax
 

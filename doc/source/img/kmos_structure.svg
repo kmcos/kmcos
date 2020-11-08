@@ -14,8 +14,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="kmos_structure.svg"
-   inkscape:export-filename="/home/juanm/work/presentations/ICTP2016/ictp2016_intro2kmos/pics/kmos_structure.png"
+   sodipodi:docname="kmcos_structure.svg"
+   inkscape:export-filename="/home/juanm/work/presentations/ICTP2016/ictp2016_intro2kmcos/pics/kmcos_structure.png"
    inkscape:export-xdpi="200"
    inkscape:export-ydpi="200">
   <defs
@@ -455,7 +455,7 @@
            x="67.85714"
            y="90.219322" /></flowRegion><flowPara
          id="flowPara3761-5-07-1"
-         style="font-size:15px">kmos view </flowPara></flowRoot>    <rect
+         style="font-size:15px">kmcos view </flowPara></flowRoot>    <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect3819-26-2-2"
        width="267.85715"
@@ -531,7 +531,7 @@
            x="67.85714"
            y="90.219322" /></flowRegion><flowPara
          id="flowPara3761-5-07-1-7-4"
-         style="font-size:15px">kmos edit</flowPara></flowRoot>    <rect
+         style="font-size:15px">kmcos edit</flowPara></flowRoot>    <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect3819-2"
        width="208.84987"
@@ -631,7 +631,7 @@
       <rect
          inkscape:export-ydpi="120"
          inkscape:export-xdpi="120"
-         inkscape:export-filename="/data/lorenzi/presentations/DPG2015/kmos_logo.png"
+         inkscape:export-filename="/data/lorenzi/presentations/DPG2015/kmcos_logo.png"
          y="977.77252"
          x="39.934971"
          height="8.7862959"
@@ -651,7 +651,7 @@
            sodipodi:role="line"><tspan
              id="tspan2997"
              y="1018.6217"
-             x="10.171356">kmos</tspan></tspan></text>
+             x="10.171356">kmcos</tspan></tspan></text>
     </g>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"

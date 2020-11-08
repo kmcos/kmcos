@@ -1,19 +1,19 @@
-Welcome to kmos's documentation!
+Welcome to kmcos's documentation!
 ================================
 
-.. figure:: img/kmos_structure.png
+.. figure:: img/kmcos_structure.png
   :align: center
 
-  Things you can do with kmos.
+  Things you can do with kmcos.
 
 
-kmos is a vigorous attempt to make (lattice) kMC modelling more accessible.
+kmcos is a vigorous attempt to make (lattice) kMC modelling more accessible.
 
 
-kmos is designed for and by kMC model developers. As of this writing there
+kmcos is designed for and by kMC model developers. As of this writing there
 is no standardized way to develop kMC models, thus there is no standardized
-way to use kmos. kmos can be an Editor, an API, a viewer. However all in all
-kmos wants to save time filled with repetitive labor and enlarge your stride.
+way to use kmcos. kmcos can be an Editor, an API, a viewer. However all in all
+kmcos wants to save time filled with repetitive labor and enlarge your stride.
 
 Not sure how to begin? Start with the :ref:`API tutorial <api-tutorial>`.
 

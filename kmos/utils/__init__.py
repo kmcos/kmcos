@@ -3,26 +3,26 @@
    else.
 """
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
-#    This file is part of kmos.
+#    This file is part of kmcos.
 #
-#    kmos is free software: you can redistribute it and/or modify
+#    kmcos is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    kmos is distributed in the hope that it will be useful,
+#    kmcos is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
+#    along with kmcos.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import with_statement
 from __future__ import print_function
 import re
 from time import time
 from io import StringIO
-from kmos.utils.ordered_dict import OrderedDict
+from kmcos.utils.ordered_dict import OrderedDict
 
 ValidationError = UserWarning
 try:
@@ -187,11 +187,11 @@ def download(project):
     import tempfile
     from os.path import join, basename
     from glob import glob
-    from kmos.io import import_xml, export_source
+    from kmcos.io import import_xml, export_source
 
     # return HTTP download response (e.g. via django)
     response = HttpResponse(mimetype='application/x-zip-compressed')
-    response['Content-Disposition'] = 'attachment; filename="kmos_export.zip"'
+    response['Content-Disposition'] = 'attachment; filename="kmcos_export.zip"'
 
     if isinstance(project, str):
         project = import_xml(project)
@@ -212,7 +212,7 @@ def download(project):
     for srcfile in glob(join(srcdir, '*')):
         zfile.write(srcfile, join('src', basename(srcfile)))
 
-    # add standalone kmos program
+    # add standalone kmcos program
     # TODO
 
     # write temporary file to response
@@ -488,7 +488,7 @@ def timeit(func):
 
     To stop time for function call f
     just ::
-        from kmos.utils import timeit
+        from kmcos.utils import timeit
         @timeit
         def f():
             ...

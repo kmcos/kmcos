@@ -11,47 +11,47 @@ Command Line Interface (CLI)
 Data Types
 ==========
 
-kmos.types
+kmcos.types
 ^^^^^^^^^^
 
-.. automodule:: kmos.types
-.. autoclass:: kmos.types.Project
+.. automodule:: kmcos.types
+.. autoclass:: kmcos.types.Project
    :members: add_layer, add_parameter, add_process, add_species,
              get_layers, get_parameters, get_processes, get_speciess,
              import_xml_file, lattice, parse_and_add_process, parse_process,
              print_statistics, save, set_meta, validate_model
-.. autoclass:: kmos.types.Meta
-.. autoclass:: kmos.types.Parameter
-.. autoclass:: kmos.types.Layer
-.. autoclass:: kmos.types.Site
-.. autoclass:: kmos.types.Species
-.. autoclass:: kmos.types.Process
-.. autoclass:: kmos.types.ConditionAction
-.. autoclass:: kmos.types.Coord
+.. autoclass:: kmcos.types.Meta
+.. autoclass:: kmcos.types.Parameter
+.. autoclass:: kmcos.types.Layer
+.. autoclass:: kmcos.types.Site
+.. autoclass:: kmcos.types.Species
+.. autoclass:: kmcos.types.Process
+.. autoclass:: kmcos.types.ConditionAction
+.. autoclass:: kmcos.types.Coord
 
-kmos.io
+kmcos.io
 ^^^^^^^
 
-.. automodule:: kmos.io
+.. automodule:: kmcos.io
    :members: export_source, import_xml, export_xml
 
-.. autoclass:: kmos.io.ProcListWriter
+.. autoclass:: kmcos.io.ProcListWriter
    :members: write_lattice, write_proclist, write_settings
 
 Editor frontend
 ===============
 
-kmos.gui
+kmcos.gui
 ^^^^^^^^^^
 
-.. automodule:: kmos.gui
-.. autoclass:: kmos.gui.Editor
-.. autoclass:: kmos.gui.GTKProject
+.. automodule:: kmcos.gui
+.. autoclass:: kmcos.gui.Editor
+.. autoclass:: kmcos.gui.GTKProject
 
-kmos.forms
+kmcos.forms
 ^^^^^^^^^^
 
-.. automodule:: kmos.forms
+.. automodule:: kmcos.forms
    :members: MetaForm, SpeciesListForm, SpeciesForm, ParameterForm,
              LatticeForm, LayerEditor, SiteForm, ProcessForm,
              parse_chemical_expression, BatchProcessForm
@@ -61,12 +61,12 @@ Runtime frontend
 ================
 
 
-kmos.run
+kmcos.run
 ^^^^^^^^
 
-.. automodule:: kmos.run
+.. automodule:: kmcos.run
 
-.. autoclass:: kmos.run.KMC_Model
+.. autoclass:: kmcos.run.KMC_Model
   :members: deallocate,
             do_steps,
             double,
@@ -88,28 +88,28 @@ kmos.run
             _get_configuration,
             _set_configuration,
 
-.. autoclass:: kmos.run.Model_Rate_Constants
+.. autoclass:: kmcos.run.Model_Rate_Constants
    :members: __call__,
              by_name,
              inverse
 
-.. autoclass:: kmos.run.Model_Parameters
+.. autoclass:: kmcos.run.Model_Parameters
    :members: __call__
 
-kmos.view
+kmcos.view
 ^^^^^^^^^
 
-.. automodule:: kmos.view
+.. automodule:: kmcos.view
    :members: KMC_Viewer
 
-kmos.utils
+kmcos.utils
 ^^^^^^^^^
 
-.. automodule:: kmos.utils
+.. automodule:: kmcos.utils
    :members: T_grid, build, evaluate_kind_values, get_ase_constructor, p_grid \
              product, split_sequence, write_py
 
-kmos kMC project DTD
+kmcos kMC project DTD
 ====================
 
 The central storage and exchange format is XML. XML was chosen over
@@ -118,7 +118,7 @@ and universal format with good methods to define the overall
 structure of the data.
 
 One way to define an XML format is by using a document type description
-(DTD) and in fact at every import a kmos file is validated against
+(DTD) and in fact at every import a kmcos file is validated against
 the DTD below.
 
 .. literalinclude:: kmc_project_v0.2.dtd
@@ -149,11 +149,11 @@ to justify encoding and compilation at the Fortran level and so they
 are typical read and parsed from a python script.
 
 
-The `kmos.run.KMC_Model` class implements a convenient interface for most of
+The `kmcos.run.KMC_Model` class implements a convenient interface for most of
 these functions, however all public methods (in Fortran called subroutines)
 and variables can also be accessed directly like so ::
 
-  from kmos.run import KMC_Model
+  from kmcos.run import KMC_Model
   model = KMC_Model(print_rates=False, banner=False)
   model.base.<TAB>
   model.lattice.<TAB>

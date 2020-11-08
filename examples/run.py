@@ -17,7 +17,7 @@ via ScanKinetics.lock. To redo a calculation ScanKinetics.dat
 and ScanKinetics.lock should be moved out of the way.
 """
 
-from kmos.run import ModelRunner, PressureParameter, TemperatureParameter
+from kmcos.run import ModelRunner, PressureParameter, TemperatureParameter
 
 
 class ScanKinetics(ModelRunner):

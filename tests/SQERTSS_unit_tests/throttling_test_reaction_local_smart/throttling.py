@@ -4,13 +4,13 @@
 # on data stored in throttling_globals.
 
 try:
-    import kmos.snapshots_globals as sg
-    from kmos.snapshots import do_snapshots
+    import kmcos.snapshots_globals as sg
+    from kmcos.snapshots import do_snapshots
 except:
     import snapshots_globals as sg
     from snapshots import do_snapshots
 try:
-    import kmos.throttling_globals as tg
+    import kmcos.throttling_globals as tg
 except:
     import throttling_globals as tg
 import re   # Regular Expressions module
@@ -1394,8 +1394,8 @@ def apply_throttling_factors():
     # constants as the next function call will be to the KMC algorithm, and we
     # need the rate constants to be correct for that.
     
-    #Jan 8th 2018. Ashi believes the below seattr  line actually uses the "last value" of param to call kmos to updates *all* parameters,
-    #and that it is saved for outside of the loop to prevent all parameters from updating. His memory is that kmos does not
+    #Jan 8th 2018. Ashi believes the below seattr  line actually uses the "last value" of param to call kmcos to updates *all* parameters,
+    #and that it is saved for outside of the loop to prevent all parameters from updating. His memory is that kmcos does not
     #update *any* parameters when you just change the "value" in the dictionary as shown in the loop above, thus this is necessary.
     #however, this will cause a bug if there are no parameters in the above loop (he encountered such a crash) so he added the if statement.
     if len(tg.aggregate_throttling_factors_dict) > 0:

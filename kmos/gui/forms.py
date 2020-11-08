@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
-"""kmos.gui.forms - GUI forms used by kmos.gui
+"""kmcos.gui.forms - GUI forms used by kmcos.gui
 The classes defined here heavily draw on the interface provided by
 python-kiwi.
 In the language of underlying MVC (Model-View-Controller) pattern these
 classes form the controller. The view is defined through a *.glade XML file
-and the models are instances of kmos.types.*
+and the models are instances of kmcos.types.*
 """
 from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
-#    This file is part of kmos.
+#    This file is part of kmcos.
 #
-#    kmos is free software: you can redistribute it and/or modify
+#    kmcos is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    kmos is distributed in the hope that it will be useful,
+#    kmcos is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
+#    along with kmcos.  If not, see <http://www.gnu.org/licenses/>.
 # Standard library imports
 import re
 import copy
@@ -47,17 +47,17 @@ from kiwi.datatypes import ValidationError
 from kiwi.ui.objectlist import Column
 
 # own modules
-from kmos.config import GLADEFILE
-from kmos.utils import CorrectlyNamed, \
+from kmcos.config import GLADEFILE
+from kmcos.utils import CorrectlyNamed, \
                        get_ase_constructor, \
                        col_str2tuple, \
                        jmolcolor_in_hex
 
-from kmos.types import ProcessFormSite, Process, OutputItem, Coord, \
+from kmcos.types import ProcessFormSite, Process, OutputItem, Coord, \
                        ConditionAction, Site
 
-from kmos import evaluate_rate_expression
-from kmos.types import parse_chemical_expression
+from kmcos import evaluate_rate_expression
+from kmcos.types import parse_chemical_expression
 
 # ASE import
 import numpy as np
@@ -70,7 +70,7 @@ class MetaForm(ProxySlaveDelegate, CorrectlyNamed):
     Allows to enter meta information about the project.
     Please enter author and email so people can credit you for the model.
 
-    Increasing the debug level makes the kmos backed create a lot of
+    Increasing the debug level makes the kmcos backed create a lot of
     output but is typically not needed.
     """
     gladefile = GLADEFILE
@@ -96,7 +96,7 @@ class MetaForm(ProxySlaveDelegate, CorrectlyNamed):
             'so a 3d simulation might require considerably more RAM.')
         self.debug.set_tooltip_text(
             'Increasing the debug level might give hints if one suspects ' +
-            'errors in kmos itself. It does not help to debug your model. ' +
+            'errors in kmcos itself. It does not help to debug your model. ' +
             'So usually one wants to keep it a 0.')
         self.author.grab_focus()
 
@@ -172,7 +172,7 @@ class ParameterForm(ProxySlaveDelegate, CorrectlyNamed):
     formula to calculate rate constants.
 
     If 'adjustable' is activated then they maybe be changed via
-    the `kmos view` front end while watching the model run.
+    the `kmcos view` front end while watching the model run.
     """
     gladefile = GLADEFILE
     toplevel_name = 'parameter_form'

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import pdb
 
-from kmos.io import *
-from kmos.types import *
-import kmos
+from kmcos.io import *
+from kmcos.types import *
+import kmcos
 import numpy as np
-import kmos.utils
+import kmcos.utils
 from ase.atoms import Atoms
 import ase.io.castep
 import os

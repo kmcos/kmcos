@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from kmos.types import *
+from kmcos.types import *
 
 def main():
 

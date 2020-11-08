@@ -19,7 +19,7 @@ The file snapshots.py contains 4 functions:
 
 
 2) do_snapshots_time(tps, n_snapshots)
-	- executes the model.do_steps_time() KMOS command and extracts the tof and 
+	- executes the model.do_steps_time() kmcos command and extracts the tof and 
 	concentration data from the sequence of steps to the file created in 
 	create_headers().  Each sequence of steps here will correspond to a given
 	increment of time.  
@@ -28,16 +28,16 @@ The file snapshots.py contains 4 functions:
 		- n_snapshots is the total number of snapshots that user wants to run
 
 3) do_snapshots(sps, n_snapshots)
-	- executes the model.do_steps() KMOS command and extracts the tof and 
+	- executes the model.do_steps() kmcos command and extracts the tof and 
 	concentration data from the snapshot to the file created in create_headers().
 		- the argument sps stands for 'steps per snapshot'.  So, an sps
-		of 1000 would equate to model.do_steps(1000) in KMOS.
+		of 1000 would equate to model.do_steps(1000) in kmcos.
 		- n_snapshots is the total number of snapshots the user wants to run
 
 4) create_log()
 	- this function executes when called if the global variable write_output
-	is set to 'True' and creates a log file for the KMOS simulation
-	-optionally prints all parameters at the current KMOS step when called
+	is set to 'True' and creates a log file for the kmcos simulation
+	-optionally prints all parameters at the current kmcos step when called
 		- if print_all_parameters = 'True' (this is the default)
 	-optionally dumps the configuration
 		- if dump_configuration = 'True', the configuration will be dumped
@@ -58,7 +58,7 @@ import snapshots_globals as sg
 sg.write_output = 'True' or 'False'
 This example would decide whether or not to write the output files.
 
-parameters_of_interest: this is a list of strings corresponding to the KMOS parameter
+parameters_of_interest: this is a list of strings corresponding to the kmcos parameter
 names e.g. ['T'] would print the temperature parameter
 
 simulation_name: This is a string that specifies the simulation name and this

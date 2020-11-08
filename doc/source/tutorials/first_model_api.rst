@@ -21,12 +21,12 @@ Construct the model
 
 We start by making the necessary import statements (in `*python* <http://python.org>`_ or better `*ipython* <http://ipython.org>`_)::
 
-  from kmos.types import *
-  from kmos.io import *
+  from kmcos.types import *
+  from kmcos.io import *
   import numpy as np
 
 which imports all classes that make up a kMC project. The functions
-from `kmos.io` will only be needed at the end to save the project
+from `kmcos.io` will only be needed at the end to save the project
 or to export compilable code.
 
 The example sketched out here leads you to a kMC model for CO adsorption
@@ -159,7 +159,7 @@ rate constant. Written down in code this looks as follows ::
 
 
 
-.. note:: In order to ensure correct functioning of the kmos kMC solver every action should have a corresponding condition for the same coordinate.
+.. note:: In order to ensure correct functioning of the kmcos kMC solver every action should have a corresponding condition for the same coordinate.
 
 Now you might wonder, how come we can simply use m_CO and beta and such.
 Well, that is because the evaluator will to some trickery to resolve such
@@ -176,7 +176,7 @@ Then the desorption process is almost the same, except the reverse::
                  rate_constant='p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
 
 
-To reduce typing, kmos also knows a shorthand notation for processes.
+To reduce typing, kmcos also knows a shorthand notation for processes.
 In order to produce the same process you could also type ::
 
   pt.parse_process('CO_desorption; CO@hollow->empty@hollow ; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
@@ -217,14 +217,14 @@ and you can create the source code and binaries in just one line.
 So on the command line in the same directory as the XML file
 you run ::
 
-  kmos export myfirst_kmc.xml
+  kmcos export myfirst_kmc.xml
 
 or alternatively if you are still on the ipython shell
 and don't like to quit it you can use the API hook
 of the command line interface like ::
 
-  import kmos.cli
-  kmos.cli.main('export myfirst_kmc.xml')
+  import kmcos.cli
+  kmcos.cli.main('export myfirst_kmc.xml')
 
 
 Make sure this finishes gracefully without any line
@@ -232,7 +232,7 @@ containining an error.
 
 If you now `cd` to that folder `myfirst_kmc` and run::
 
-  kmos view
+  kmcos view
 
 ... and dada! Your first running kMC model right there!
 
@@ -245,8 +245,8 @@ lattice setup for extra credit :-).
 Wondering where to go from here? If the work-flow makes
 complete sense, you have a specific model in mind,
 and just need some more idioms to implement it
-I suggest you take a look at the `examples folder <https://github.com/mhoffman/kmos/tree/master/examples>`_.
-for some hints. To learn more about the kmos approach
+I suggest you take a look at the `examples folder <https://github.com/mhoffman/kmcos/tree/master/examples>`_.
+for some hints. To learn more about the kmcos approach
 and methods you should into :ref:`topic guides <topic-guides>`.
 
 Taking it home

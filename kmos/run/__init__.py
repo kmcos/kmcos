@@ -5,7 +5,7 @@ imported in kmc_model.so and all parameters are stored in kmc_settings.py.
 
 The model can be used directly like so::
 
-    from kmos.model import KMC_Model
+    from kmcos.model import KMC_Model
     model = KMC_Model()
 
     model.parameters.T = 500
@@ -23,54 +23,54 @@ the model happens through Queues.
 from __future__ import print_function
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
-#    This file is part of kmos.
+#    This file is part of kmcos.
 #
-#    kmos is free software: you can redistribute it and/or modify
+#    kmcos is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    kmos is distributed in the hope that it will be useful,
+#    kmcos is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
+#    along with kmcos.  If not, see <http://www.gnu.org/licenses/>.
 
 __all__ = ['base', 'lattice', 'proclist', 'KMC_Model']
 
 from ase.atoms import Atoms
 from copy import deepcopy
 from fnmatch import fnmatch
-from kmos import evaluate_rate_expression
-from kmos.utils import OrderedDict
-import kmos.run.acf
-import kmos.utils.progressbar
+from kmcos import evaluate_rate_expression
+from kmcos.utils import OrderedDict
+import kmcos.run.acf
+import kmcos.utils.progressbar
 try:
-    import kmos.run.png
+    import kmcos.run.png
 except:
     # quickly create a mock-class
-    # keeping this here is important for kmos.run autodocs to build
+    # keeping this here is important for kmcos.run autodocs to build
     class Struct:
         def __init__(self, **entries):
             self.__dict__.update(entries)
-    kmos = Struct()
-    kmos.run = Struct()
-    kmos.run.png = None
+    kmcos = Struct()
+    kmcos.run = Struct()
+    kmcos.run.png = None
 
 from math import log
 try:
-    import kmos.run.png
-    # keeping this here is important for kmos.run autodocs to build
+    import kmcos.run.png
+    # keeping this here is important for kmcos.run autodocs to build
 except:
    # quickly create a mock-class
    class Struct:
        def __init__(self, **entries):
            self.__dict__.update(entries)
-   kmos = Struct()
-   kmos.run = Struct()
-   kmos.run.png = None
+   kmcos = Struct()
+   kmcos.run = Struct()
+   kmcos.run.png = None
 from multiprocessing import Process
 import numpy as np
 import os
@@ -83,8 +83,8 @@ except Exception as e:
     base = lattice = proclist = None
     print("""Error: %s
     Could not find the kmc module. The kmc implements the actual
-    kmc model. This can be created from a kmos xml file using
-    kmos export <xml-file>
+    kmc model. This can be created from a kmcos xml file using
+    kmcos export <xml-file>
     Hint: are you in a directory containing a compiled kMC model?\n\n
     """ % e)
 
@@ -311,12 +311,12 @@ class KMC_Model(Process):
             self.base.update_integ_rate()
 
         # # for otf backend only
-        # print('kmos.run : Updating proclist_pars!')
+        # print('kmcos.run : Updating proclist_pars!')
         # if hasattr(self.proclist,'recalculate_rates_matrix'):
         #     for key,entry in settings.parameters.items():
-        #         # print('kmos.run key.lower() : %s' % key.lower())
-        #         # print('kmos.run entry[value] : %s' % entry.value)
-        #         # print('kmos.run result : %s' %
+        #         # print('kmcos.run key.lower() : %s' % key.lower())
+        #         # print('kmcos.run entry[value] : %s' % entry.value)
+        #         # print('kmcos.run result : %s' %
         #         #       evaluate_rate_expression(entry['value'],settings.parameters))
 
         #         # setattr(self.proclist,
@@ -409,9 +409,9 @@ class KMC_Model(Process):
         if not progress :
             proclist.do_kmc_steps(n)
         else:
-            import kmos.utils.progressbar
+            import kmcos.utils.progressbar
 
-            progress_bar = kmos.utils.progressbar.ProgressBar()
+            progress_bar = kmcos.utils.progressbar.ProgressBar()
             for i in range(100):
                 proclist.do_kmc_steps(n/100)
                 progress_bar.render(i+1)
@@ -564,7 +564,7 @@ class KMC_Model(Process):
                   #**kwargs)
 
             if suffix == 'png':
-                writer = kmos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
+                writer = kmcos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
             elif suffix == 'pov':
                 rescale = 0.5
                 radii_dict2 = {'Ni':0.9*rescale,
@@ -606,7 +606,7 @@ class KMC_Model(Process):
             elif suffix == 'traj':
                 write(filename, atoms)
             else:
-                writer = kmos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
+                writer = kmcos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
 
             if verbose:
                 print('Wrote {filename}'.format(**locals()))
@@ -621,7 +621,7 @@ class KMC_Model(Process):
 
     def view(self):
         """Start current model in live view mode."""
-        from kmos import view
+        from kmcos import view
         view.main(self)
 
     def get_atoms(self, geometry=True, tag=None, reset_time_overrun=False):
@@ -652,7 +652,7 @@ class KMC_Model(Process):
         """
 
         if geometry:
-            kmos_tags = {}
+            kmcos_tags = {}
             ase = import_ase()
             atoms = ase.atoms.Atoms()
             for i in range(lattice.system_size[0]):
@@ -690,7 +690,7 @@ class KMC_Model(Process):
                                     for atom in range(len(atoms)
                                                       - len(ad_atoms),
                                                       len(atoms)):
-                                        kmos_tags[atom] = \
+                                        kmcos_tags[atom] = \
                                         list(self.species_tags.values())[species]
 
                         if self.lattice_representation:
@@ -704,7 +704,7 @@ class KMC_Model(Process):
             if not hasattr(atoms, 'info'):
                 atoms.info = {}
 
-            atoms.info['kmos_tags'] = kmos_tags
+            atoms.info['kmcos_tags'] = kmcos_tags
         else:
 
             class Expando():
@@ -824,7 +824,7 @@ class KMC_Model(Process):
         step0 = self.base.get_kmc_step()
 
         if show_progress:
-            progress_bar = kmos.utils.progressbar.ProgressBar()
+            progress_bar = kmcos.utils.progressbar.ProgressBar()
 
         # reset sampling starting point
         _ = self.get_atoms(geometry = False, reset_time_overrun = False)
@@ -1428,7 +1428,7 @@ class KMC_Model(Process):
             print('=====================================')
             print('Post-Mortem Error Report')
             print('=====================================')
-            print('  kmos ran %s steps and the next process is "%s"' %
+            print('  kmcos ran %s steps and the next process is "%s"' %
                     (steps, process))
             print('  on site %s,  however this causes oops' % site)
             print('  on site %s because it trys to' % err_site)
@@ -1446,7 +1446,7 @@ class KMC_Model(Process):
                 sorted(settings.rate_constants.keys()))[nprocess - 1]
             site = self.nr2site(nsite)
 
-            res = "kmos ran %s steps and next it will execute\n" % steps
+            res = "kmcos ran %s steps and next it will execute\n" % steps
             res += "process '%s' on site %s." % (process, site)
             print(res)
 
@@ -1648,7 +1648,7 @@ class Model_Rate_Constants(object):
         :param pattern: fname pattern to filter matching parameter name.
         :type pattern: str
         :param model: runtime instance of kMC to extract rate constants from (optional)
-        :type model: kmos Model
+        :type model: kmcos Model
 
         """
         res = ''
@@ -1830,7 +1830,7 @@ class PressureParameter(ModelParameter):
         super(PressureParameter, self).__init__(*args, **kwargs)
 
     def get_grid(self):
-        from kmos.utils import p_grid
+        from kmcos.utils import p_grid
         return p_grid(self.min, self.max, self.steps)
 
 class TemperatureParameter(ModelParameter):
@@ -1845,7 +1845,7 @@ class TemperatureParameter(ModelParameter):
         super(TemperatureParameter, self).__init__(*args, **kwargs)
 
     def get_grid(self):
-        from kmos.utils import T_grid
+        from kmcos.utils import T_grid
         return T_grid(self.min, self.max, self.steps)
 
 class LogParameter(ModelParameter):
@@ -1897,7 +1897,7 @@ to the same filesystem calculated points are blocked
 via <classname>.lock. To redo a calculation <classname>.dat
 and <classname>.lock should be moved out of the way ::
 
-    from kmos.run import ModelRunner, PressureParameter, TemperatureParameter
+    from kmcos.run import ModelRunner, PressureParameter, TemperatureParameter
 
     class ScanKinetics(ModelRunner):
         p_O2gas = PressureParameter(1)

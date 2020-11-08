@@ -4,4 +4,4 @@ Installation
 Introduction
 ^^^^^^^^^^^^
 
-.. automodule:: kmos
+.. automodule:: kmcos

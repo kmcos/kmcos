@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Trouble Shooting &mdash; kmos 0.2.1 documentation</title>
+    <title>Trouble Shooting &mdash; kmcos 0.2.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="kmos 0.2.1 documentation" href="../index.html" />
+    <link rel="top" title="kmcos 0.2.1 documentation" href="../index.html" />
     <link rel="prev" title="Reference" href="../reference/index.html" /> 
   </head>
   <body>
@@ -41,13 +41,13 @@
         <li class="right" >
           <a href="../reference/index.html" title="Reference"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/kmos_logo.png" alt="Logo"/>
+              <img class="logo" src="../_static/kmcos_logo.png" alt="Logo"/>
             </a></p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="../reference/index.html"
@@ -98,7 +98,7 @@ with no claim of completeness :</p>
 Please drop me a line if you find any information
 inaccurate.</p>
 </dd>
-<dt>When I run kmos the GUI way and close it, it seems to hang and I need to use the window manager to kill it.</dt>
+<dt>When I run kmcos the GUI way and close it, it seems to hang and I need to use the window manager to kill it.</dt>
 <dd>This is a bug waiting to be fixed. To avoid it close
 the window showing the atoms object by clicking on its
 close button or Alt-F4 or whichever shortcut your WM uses.</dd>
@@ -119,12 +119,12 @@ reasonable sampling of all involved process may no longer happen.</p>
 </div></blockquote>
 <dl class="docutils">
 <dt>When running a model without GUI evaluation steps seem very slow.</dt>
-<dd>If you have a <cite>kmos.run.KMC_Model</cite> instance and call <cite>model.get_atoms()</cite>
+<dd>If you have a <cite>kmcos.run.KMC_Model</cite> instance and call <cite>model.get_atoms()</cite>
 the generation of the real-space geometry takes the longest time. If you
 only have to evaluate coverages or turn-over frequencies you are
 better off using <cite>model.get_atoms(geometry=False)</cite>, which returns an
 object with all numbers but without the actual geometry.</dd>
-<dt>What units is kmos using ?</dt>
+<dt>What units is kmcos using ?</dt>
 <dd>By default length are measured in angstrom, energies in eV, pressure
 in bar, constants are taken from CODATA 2010. Note that the rate
 expressions though contain explicit conversion factors like <cite>bar</cite>,
@@ -147,7 +147,7 @@ the import bit is that you call</p>
 </dl>
 <p>More to follow.</p>
 <p>Please post issues
-<a class="reference external" href="https://github.com/mhoffman/kmos/issues">here</a>
+<a class="reference external" href="https://github.com/mhoffman/kmcos/issues">here</a>
 or via email mjhoffmann .at. gmail .dot. com
 or via twitter &#64;maxjhoffmann</p>
 <div class="admonition-todo admonition" id="index-0">
@@ -174,7 +174,7 @@ or via twitter &#64;maxjhoffmann</p>
         <li class="right" >
           <a href="../reference/index.html" title="Reference"
              >previous</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -7,7 +7,7 @@
 
 """
 
-from kmos.types import *
+from kmcos.types import *
 
 
 pt = Project()

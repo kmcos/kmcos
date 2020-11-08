@@ -23,9 +23,9 @@ What other kMC codes are there?
   Please drop me a line if you find any information
   inaccurate.
 
-What does kmos stand for anyways?
-  Good question, initially kmos was supposed to stand for
-  `kinetic modeling on steroids` because it feels really fast to model with kmos. But that confused people
+What does kmcos stand for anyways?
+  Good question, initially kmcos was supposed to stand for
+  `kinetic modeling on steroids` because it feels really fast to model with kmcos. But that confused people
   too much since we are not modelling reactions on steroids but on surfaces :-).
   Some other popular variants are
 

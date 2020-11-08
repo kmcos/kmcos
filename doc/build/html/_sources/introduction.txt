@@ -1,7 +1,7 @@
 Introduction
 ============
 
-.. automodule:: kmos
+.. automodule:: kmcos
 
 
 
@@ -9,9 +9,9 @@ Introduction
 Installation
 ============
 
-You can fetch the current version of kmos using *git* ::
+You can fetch the current version of kmcos using *git* ::
 
-    git clone http://www.github.com/mhoffman/kmos
+    git clone http://www.github.com/mhoffman/kmcos
 
 
 and install it using *setuptools* ::
@@ -47,7 +47,7 @@ You enter a new model by filling in
 in roughly this order or open an existing one by opening a kMC XML file.
 
 If you want to see the model run
-`kmos export <xml-file>` and you will get a subfolder with a self-contained
+`kmcos export <xml-file>` and you will get a subfolder with a self-contained
 Fortran90 code, which solves the model. If all necessary dependencies are
-installed you can simply run `kmos view` in the export folder.
+installed you can simply run `kmcos view` in the export folder.
 

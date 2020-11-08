@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tutorials &mdash; kmos 0.2.1 documentation</title>
+    <title>Tutorials &mdash; kmcos 0.2.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,9 +25,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="kmos 0.2.1 documentation" href="../index.html" />
+    <link rel="top" title="kmcos 0.2.1 documentation" href="../index.html" />
     <link rel="next" title="Topic Guides" href="../topic_guides/index.html" />
-    <link rel="prev" title="Welcome to kmos’s documentation!" href="../index.html" /> 
+    <link rel="prev" title="Welcome to kmcos’s documentation!" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -43,21 +43,21 @@
           <a href="../topic_guides/index.html" title="Topic Guides"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Welcome to kmos’s documentation!"
+          <a href="../index.html" title="Welcome to kmcos’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/kmos_logo.png" alt="Logo"/>
+              <img class="logo" src="../_static/kmcos_logo.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Tutorials</a><ul>
 <li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
-<li><a class="reference internal" href="#module-kmos">Introduction</a><ul>
+<li><a class="reference internal" href="#module-kmcos">Introduction</a><ul>
 <li><a class="reference internal" href="#feature-overview">Feature overview</a></li>
 </ul>
 </li>
@@ -92,7 +92,7 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
-                        title="previous chapter">Welcome to kmos&#8217;s documentation!</a></p>
+                        title="previous chapter">Welcome to kmcos&#8217;s documentation!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../topic_guides/index.html"
                         title="next chapter">Topic Guides</a></p>
@@ -126,11 +126,11 @@
 <h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="module-kmos">
-<span id="introduction"></span><h3>Introduction<a class="headerlink" href="#module-kmos" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-kmcos">
+<span id="introduction"></span><h3>Introduction<a class="headerlink" href="#module-kmcos" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="feature-overview">
 <h4>Feature overview<a class="headerlink" href="#feature-overview" title="Permalink to this headline">¶</a></h4>
-<p>With kmos you can:</p>
+<p>With kmcos you can:</p>
 <blockquote>
 <div><ul class="simple">
 <li>easily create and modify kMC models through GUI</li>
@@ -139,18 +139,18 @@
 <li>run kMC models through GUI or python bindings</li>
 </ul>
 </div></blockquote>
-<p>kmos has been developed in the context of first-principles based modelling
+<p>kmcos has been developed in the context of first-principles based modelling
 of surface chemical reactions but might be of help for other types of
 kMC models as well.</p>
-<p>kmos&#8217; goal is to significantly reduce the time you need
+<p>kmcos&#8217; goal is to significantly reduce the time you need
 to implement and run a lattice kmc simulation. However it can not help
 you plan the model.</p>
-<p>kmos can be invoked directly from the command line in one of the following
+<p>kmcos can be invoked directly from the command line in one of the following
 ways:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">kmos</span> <span class="p">[</span><span class="n">help</span><span class="p">]</span> <span class="p">(</span><span class="n">edit</span><span class="o">|</span><span class="n">export</span><span class="o">|</span><span class="n">view</span><span class="p">)</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">kmcos</span> <span class="p">[</span><span class="n">help</span><span class="p">]</span> <span class="p">(</span><span class="n">edit</span><span class="o">|</span><span class="n">export</span><span class="o">|</span><span class="n">view</span><span class="p">)</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>or it may be used as an API via the kmos module.</p>
+<p>or it may be used as an API via the kmcos module.</p>
 <p class="rubric">Footnotes</p>
 <table class="docutils footnote" frame="void" id="code" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -163,15 +163,15 @@ fashion. Python bindings are generated using <a class="reference external" href=
 </div>
 <div class="section" id="installation-on-ubuntu-linux">
 <h3>Installation on Ubuntu Linux<a class="headerlink" href="#installation-on-ubuntu-linux" title="Permalink to this headline">¶</a></h3>
-<p>You can fetch the current version of kmos using <em>git</em></p>
-<div class="highlight-python"><pre>git clone http://www.github.com/mhoffman/kmos</pre>
+<p>You can fetch the current version of kmcos using <em>git</em></p>
+<div class="highlight-python"><pre>git clone http://www.github.com/mhoffman/kmcos</pre>
 </div>
 <p>and install it using <em>setuptools</em></p>
 <div class="highlight-python"><pre>./setup.py install [--user]</pre>
 </div>
 <p>To use the core functionality
 (programmatic model setup, code generation, model execution)
-kmos has a fairly modest depedency foot-print. You will need</p>
+kmcos has a fairly modest depedency foot-print. You will need</p>
 <div class="highlight-python"><pre>python-numpy, a Fortran compiler, python-lxml</pre>
 </div>
 <p>In order to watch the model run on screen you will additionally
@@ -180,7 +180,7 @@ need</p>
 </pre></div>
 </div>
 <p>Finally in order to use all features, in particular the GUI
-model editor of kmos you have to install
+model editor of kmcos you have to install
 a number of dependencies. This should not be very difficult
 on a recent Linux distribution with package management. So
 on Ubuntu it suffices to call:</p>
@@ -203,7 +203,7 @@ minimize it. However one should note these dependencies are only
 required for the model development. Running a model has virtually
 no dependencies except for a Fortran compiler.</p>
 <p>To ease the installation further on Ubuntu one can simply run:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">kmos</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">dependencies</span><span class="o">-</span><span class="n">ubuntu</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">kmcos</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">dependencies</span><span class="o">-</span><span class="n">ubuntu</span>
 </pre></div>
 </div>
 <div class="admonition-todo admonition" id="index-0">
@@ -239,7 +239,7 @@ unzip it and install it with</p>
 </div>
 <div class="section" id="installation-on-windoze-7">
 <h3>Installation on windoze 7<a class="headerlink" href="#installation-on-windoze-7" title="Permalink to this headline">¶</a></h3>
-<p>In order for kmos to work in a recent windoze we need a
+<p>In order for kmcos to work in a recent windoze we need a
 number of programs.</p>
 <ol class="arabic">
 <li><p class="first"><strong>Python</strong>
@@ -289,16 +289,16 @@ editor and find the line saying</p>
 <p>comment out the lines above it and hard-code the current version
 number.</p>
 </li>
-<li><p class="first"><strong>kmos</strong>
+<li><p class="first"><strong>kmcos</strong>
 is finally what we are after, so download the latest version
-from <a class="reference external" href="http://mhoffman.github.com/kmos/">github</a> and install
+from <a class="reference external" href="http://mhoffman.github.com/kmcos/">github</a> and install
 it in the same way as you installed <strong>ASE</strong>.</p>
 </li>
 </ol>
 <p>There are probably a number of small changes you have to make
 which are not described in this document. Please post questions
 and comments in the
-<a class="reference external" href="https://github.com/mhoffman/kmos/issues">issues forum</a> .</p>
+<a class="reference external" href="https://github.com/mhoffman/kmcos/issues">issues forum</a> .</p>
 </div>
 <div class="section" id="installing-janaf-thermochemical-tables">
 <h3>Installing JANAF Thermochemical Tables<a class="headerlink" href="#installing-janaf-thermochemical-tables" title="Permalink to this headline">¶</a></h3>
@@ -378,13 +378,13 @@ with your existing models and make little changes here and there.</p>
 <div class="section" id="construct-the-model">
 <h3>Construct the model<a class="headerlink" href="#construct-the-model" title="Permalink to this headline">¶</a></h3>
 <p>We start by making the necessary import statements (in <em>python</em> or better <em>ipython</em>):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmos.types</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">kmos.io</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmcos.types</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">kmcos.io</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
 <p>which imports all classes that make up a kMC project. The functions
-from <cite>kmos.io</cite> will only be needed at the end to save the project
+from <cite>kmcos.io</cite> will only be needed at the end to save the project
 or to export compilable code.</p>
 <p>The example sketched out here leads you to a kMC model for CO adsorption
 and desorption on Pd(100) including a simple lateral interaction. Granted
@@ -512,7 +512,7 @@ that we need conversion factors of bar and umass.</p>
                <span class="n">rate_constant</span><span class="o">=</span><span class="s">&#39;p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>To reduce typing, kmos also knows a shorthand notation for processes.
+<p>To reduce typing, kmcos also knows a shorthand notation for processes.
 In order to produce the same process you could also type</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">pt</span><span class="o">.</span><span class="n">parse_process</span><span class="p">(</span><span class="s">&#39;CO_desorption; CO@hollow-&gt;empty@hollow ; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)&#39;</span><span class="p">)</span>
 </pre></div>
@@ -549,12 +549,12 @@ This XML file contains the full definition of your model
 and you can create the source code and binaries in just one line.
 So on the command line in the same directory as the XML file
 you run</p>
-<div class="highlight-python"><pre>kmos export myfirst_kmc.xml</pre>
+<div class="highlight-python"><pre>kmcos export myfirst_kmc.xml</pre>
 </div>
 <p>Make sure this finishes gracefully without any line
 containining an error.</p>
 <p>If you now <cite>cd</cite> to that folder <cite>myfirst_kmc</cite> and run:</p>
-<div class="highlight-python"><pre>kmos view</pre>
+<div class="highlight-python"><pre>kmcos view</pre>
 </div>
 <p>... and dada! Your first running kMC model right there!</p>
 <p>If you wonder why the CO molecules are basically just dangling
@@ -608,7 +608,7 @@ and e.g. boundary conditions</p>
 two files: kmc_model.so and kmc_settings.py. These two files
 are really all you need for simulations. So a simple
 way to view the model is the</p>
-<div class="highlight-python"><pre>kmos view</pre>
+<div class="highlight-python"><pre>kmcos view</pre>
 </div>
 <p>command from the command line. For this two work you need to
 be in the same directory as these two file (more precisely
@@ -633,8 +633,8 @@ script. The with-statement is nice because it takes
 care of the correct allocation and deallocation</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 
-<span class="kn">from</span> <span class="nn">kmos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
-<span class="kn">from</span> <span class="nn">kmos.view</span> <span class="kn">import</span> <span class="n">main</span>
+<span class="kn">from</span> <span class="nn">kmcos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
+<span class="kn">from</span> <span class="nn">kmcos.view</span> <span class="kn">import</span> <span class="n">main</span>
 
 
 <span class="k">with</span> <span class="n">KMC_Model</span><span class="p">(</span><span class="n">print_rates</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">banner</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
@@ -660,7 +660,7 @@ will likely be integrated into the runtime API. For starters
 a simple script could look as follows</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 
-<span class="kn">from</span> <span class="nn">kmos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
+<span class="kn">from</span> <span class="nn">kmcos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">KMC_Model</span><span class="p">()</span>
 </pre></div>
@@ -795,8 +795,8 @@ at once using</p>
 <h2>Running models in parallel<a class="headerlink" href="#running-models-in-parallel" title="Permalink to this headline">¶</a></h2>
 <p>Due to the global clock in kMC there seems to be no
 simple and efficient way to parallelize a kMC program.
-kmos certainly cannot parallelize a single system over
-processors. However one can run several kmos instances
+kmcos certainly cannot parallelize a single system over
+processors. However one can run several kmcos instances
 in parallel which might accelerate sampling or efficiently
 check for steady state conditions.</p>
 <p>However in many applications it is still useful to
@@ -808,10 +808,10 @@ since it requires no communication between the runs.</p>
 which is in the Python standard library since version 2.6.
 For older versions this needs to be <cite>downloaded &lt;http://pypi.python.org/pypi/multiprocessing/&gt;</cite>
 and installed manually. The latter is pretty straightforward.</p>
-<p>Then besides <cite>kmos</cite> we need to import <cite>multiprocessing</cite></p>
+<p>Then besides <cite>kmcos</cite> we need to import <cite>multiprocessing</cite></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linspace</span>
-<span class="kn">from</span> <span class="nn">kmos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
+<span class="kn">from</span> <span class="nn">kmcos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
 </pre></div>
 </div>
 <p>and let&#8217;s say you wanted to scan a range of temperature,
@@ -831,7 +831,7 @@ and runs the simulation for each</p>
 </div>
 <p>In order to split our full range of input parameters, we
 can use a utility function</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmos.utils</span> <span class="kn">import</span> <span class="n">split_sequence</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">kmcos.utils</span> <span class="kn">import</span> <span class="n">split_sequence</span>
 </pre></div>
 </div>
 <p>All that is left to do, is to define the input parameters,
@@ -885,9 +885,9 @@ from the top project directory</p>
           <a href="../topic_guides/index.html" title="Topic Guides"
              >next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Welcome to kmos’s documentation!"
+          <a href="../index.html" title="Welcome to kmcos’s documentation!"
              >previous</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

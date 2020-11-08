@@ -4,8 +4,8 @@ Functionality
 - make and base.save_system(<seed_name>)
   TODO: make sure .reloading is more sugar-coated,
   e.g. check for correct size of file and document
-- make sure one can (re)start and stop viewer from ipython ('kmos run')
-- kmos.gui.Editor should be able to process
+- make sure one can (re)start and stop viewer from ipython ('kmcos run')
+- kmcos.gui.Editor should be able to process
   project_tree passed in automatically
   (and save changes directly to it)
   [should be transparent to the user]

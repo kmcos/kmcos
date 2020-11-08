@@ -6,12 +6,12 @@ import glob
 import os
 import shutil
 
-from kmos.types import *
-from kmos.io import *
+from kmcos.types import *
+from kmcos.io import *
 
 # Copy DTD
-import kmos
-shutil.copy(os.path.join(os.path.dirname(kmos.__file__),
+import kmcos
+shutil.copy(os.path.join(os.path.dirname(kmcos.__file__),
                                 'kmc_project_v0.2.dtd'),
             '.')
 
@@ -96,8 +96,8 @@ for backend in ['local_smart', 'lat_int', 'otf']:
     shutil.rmtree(outdir)
 
 with file('cli.rst', 'w') as outfile:
-    from kmos.cli import usage
-    from kmos import cli
+    from kmcos.cli import usage
+    from kmcos import cli
     outfile.write(cli.__doc__)
     outfile.write('List of commands\n^^^^^^^^^^^^^^^^\n\n')
     for i, doc in enumerate(sorted(usage.values())):

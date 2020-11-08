@@ -7,7 +7,7 @@
 
 from test_throttle_case_7 import *
 try:
-    import kmos.throttling as throttling
+    import kmcos.throttling as throttling
 except:
     import throttling
 

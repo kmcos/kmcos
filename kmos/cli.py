@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """Entry point module for the command-line
-   interface. The kmos executable should be
+   interface. The kmcos executable should be
    on the program path, import this modules
    main function and run it.
 
-   To call kmos command as you would from the shell,
+   To call kmcos command as you would from the shell,
    use ::
 
-       kmos.cli.main('...')
+       kmcos.cli.main('...')
 
    Every command can be shortened as long as it is non-ambiguous, e.g. ::
 
 
-    kmos ex <xml-file>
+    kmcos ex <xml-file>
 
    instead of ::
 
-    kmos export <xml-file>
+    kmcos export <xml-file>
 
 
    etc.
@@ -24,20 +24,20 @@
 """
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
-#    This file is part of kmos.
+#    This file is part of kmcos.
 #
-#    kmos is free software: you can redistribute it and/or modify
+#    kmcos is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    kmos is distributed in the hope that it will be useful,
+#    kmcos is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
+#    along with kmcos.  If not, see <http://www.gnu.org/licenses/>.
 
 
 from __future__ import with_statement
@@ -46,15 +46,15 @@ import os
 import shutil
 
 usage = {}
-usage['all'] = """kmos help all
+usage['all'] = """kmcos help all
     Display documentation for all commands.
                 """
-usage['benchmark'] = """kmos benchmark
+usage['benchmark'] = """kmcos benchmark
     Run 1 mio. kMC steps on model in current directory
     and report runtime.
                      """
 
-usage['build'] = """kmos build
+usage['build'] = """kmcos build
     Build kmc_model.%s from *f90 files in the
     current directory.
 
@@ -66,12 +66,12 @@ usage['build'] = """kmos build
             Do not send optimizing flags to compiler.
                  """ % ('pyd' if os.name == 'nt' else 'so')
 
-usage['help'] = """kmos help <command>
+usage['help'] = """kmcos help <command>
     Print usage information for the given command.
                 """
 
-usage['export'] = """kmos export <xml-file> [<export-path>]
-    Take a kmos xml-file and export all generated
+usage['export'] = """kmcos export <xml-file> [<export-path>]
+    Take a kmcos xml-file and export all generated
     source code to the export-path. There try to
     build the kmc_model.%s.
 
@@ -97,21 +97,21 @@ usage['export'] = """kmos export <xml-file> [<export-path>]
             Do not send optimizing flags to compiler.
                     """ % ('pyd' if os.name == 'nt' else 'so')
           
-usage['settings-export'] = """kmos settings-export <xml-file> [<export-path>]
-    Take a kmos xml-file and export kmc_settings.py
+usage['settings-export'] = """kmcos settings-export <xml-file> [<export-path>]
+    Take a kmcos xml-file and export kmc_settings.py
     to the export-path.
                     """
 
-usage['edit'] = """kmos edit <xml-file>
-    Open the kmos xml-file in a GUI to edit
+usage['edit'] = """kmcos edit <xml-file>
+    Open the kmcos xml-file in a GUI to edit
     the model.
                 """
 
-usage['import'] = """kmos import <xml-file>
-    Take a kmos xml-file and open an ipython shell
+usage['import'] = """kmcos import <xml-file>
+    Take a kmcos xml-file and open an ipython shell
     with the project_tree imported as pt.
                   """
-usage['rebuild'] = """kmos rebuild
+usage['rebuild'] = """kmcos rebuild
     Export code and rebuild binary module from XML
     information included in kmc_settings.py in
     current directory.
@@ -121,20 +121,20 @@ usage['rebuild'] = """kmos rebuild
             Turn on assertion statements in F90 code
                     """
 
-usage['shell'] = """kmos shell
+usage['shell'] = """kmcos shell
     Open an interactive shell and create a KMC_Model in it
                run == shell
                """
-usage['run'] = """kmos run
+usage['run'] = """kmcos run
     Open an interactive shell and create a KMC_Model in it
                run == shell
                """
 
-usage['version'] = """kmos version
+usage['version'] = """kmcos version
     Print version number and exit.
                    """
 
-usage['view'] = """kmos view
+usage['view'] = """kmcos view
     Take a kmc_model.%s and kmc_settings.py in the
     same directory and start to simulate the
     model visually.
@@ -145,7 +145,7 @@ usage['view'] = """kmos view
 
                  """ % ('pyd' if os.name == 'nt' else 'so')
 
-usage['xml'] = """kmos xml
+usage['xml'] = """kmcos xml
     Print xml representation of model to stdout
                """
 
@@ -154,13 +154,13 @@ def get_options(args=None, get_parser=False):
     import optparse
     import os
     from glob import glob
-    import kmos
+    import kmcos
 
     parser = optparse.OptionParser(
         'Usage: %prog [help] ('
         + '|'.join(sorted(usage.keys()))
         + ') [options]',
-        version=kmos.__version__)
+        version=kmcos.__version__)
 
     parser.add_option('-s', '--source-only',
                       dest='source_only',
@@ -260,7 +260,7 @@ def main(args=None):
     The optional argument args, can be used to
     directly supply command line argument like
 
-    $ kmos <args>
+    $ kmcos <args>
 
     otherwise args will be taken from STDIN.
 
@@ -280,12 +280,12 @@ def main(args=None):
         path.append(os.path.abspath(os.curdir))
         nsteps = 1000000
         from time import time
-        from kmos.run import KMC_Model
+        from kmcos.run import KMC_Model
         model = KMC_Model(print_rates=False, banner=False)
         time0 = time()
         try:
             model.proclist.do_kmc_steps(nsteps)
-        except:  # kmos < 0.3 had no model.proclist.do_kmc_steps
+        except:  # kmcos < 0.3 had no model.proclist.do_kmc_steps
             model.do_steps(nsteps)
 
         needed_time = time() - time0
@@ -294,15 +294,15 @@ def main(args=None):
         print('Or %.2e steps/s' % (1e6 / needed_time))
         model.deallocate()
     elif args[0] == 'build':
-        from kmos.utils import build
+        from kmcos.utils import build
         build(options)
     elif args[0] == 'edit':
-        from kmos import gui
+        from kmcos import gui
         gui.main()
     elif args[0] == 'settings-export':
-        import kmos.types
-        import kmos.io
-        from kmos.io import ProcListWriter
+        import kmcos.types
+        import kmcos.io
+        from kmcos.io import ProcListWriter
 
         if len(args) < 2:
             parser.error('XML file and export path expected.')
@@ -313,16 +313,16 @@ def main(args=None):
 
         xml_file = args[1]
         export_dir = args[2]
-        project = kmos.types.Project()
+        project = kmcos.types.Project()
         project.import_file(xml_file)
 
         writer = ProcListWriter(project, export_dir)
         writer.write_settings()
 
     elif args[0] == 'export':
-        import kmos.types
-        import kmos.io
-        from kmos.utils import build
+        import kmcos.types
+        import kmcos.io
+        from kmcos.utils import build
         if len(args) < 2:
             parser.error('XML file and export path expected.')
         if len(args) < 3:
@@ -334,12 +334,12 @@ def main(args=None):
         xml_file = args[1]
         export_dir = os.path.join(args[2], 'src')
 
-        project = kmos.types.Project()
+        project = kmcos.types.Project()
         project.import_file(xml_file)
 
         project.shorten_names(max_length=options.variable_length)
 
-        kmos.io.export_source(project,
+        kmcos.io.export_source(project,
                               export_dir,
                               options=options)
 
@@ -366,8 +366,8 @@ def main(args=None):
                     shutil.move(out, '..')
 
     elif args[0] == 'settings-export':
-        import kmos.io
-        pt = kmos.io.import_file(args[1])
+        import kmcos.io
+        pt = kmcos.io.import_file(args[1])
         if len(args) < 3:
             out_dir = os.path.splitext(args[1])[0]
             print('No export path provided. Exporting kmc_settings.py to %s'
@@ -378,7 +378,7 @@ def main(args=None):
             os.mkdir(args[2])
         elif not os.path.isdir(args[2]):
             raise UserWarning("Cannot overwrite %s; Exiting;" % args[2])
-        writer = kmos.io.ProcListWriter(pt, args[2])
+        writer = kmcos.io.ProcListWriter(pt, args[2])
         writer.write_settings()
 
     elif args[0] == 'help':
@@ -394,12 +394,12 @@ def main(args=None):
             print('Usage: %s\n' % usage[arg])
 
     elif args[0] == 'import':
-        import kmos.io
+        import kmcos.io
         if not len(args) >= 2:
             raise UserWarning('XML file name expected.')
-        pt = kmos.io.import_xml_file(args[1])
+        pt = kmcos.io.import_xml_file(args[1])
         if len(args) == 2:
-            sh(banner='Note: pt = kmos.io.import_xml(\'%s\')' % args[1])
+            sh(banner='Note: pt = kmcos.io.import_xml(\'%s\')' % args[1])
         elif len(args) == 3: # if optional 3rd argument is given, store model there and exit
             pt.save(args[2])
 
@@ -419,7 +419,7 @@ def main(args=None):
         if not os.path.exists('kmc_settings.py'):
             raise Exception('No kmc_settings.py found.')
 
-        from kmos.run import KMC_Model
+        from kmcos.run import KMC_Model
 
         model = KMC_Model(print_rates=False, banner=False)
         tempfile = mktemp()
@@ -437,7 +437,7 @@ def main(args=None):
     elif args[0] in ['run', 'shell']:
         from sys import path
         path.append(os.path.abspath(os.curdir))
-        from kmos.run import KMC_Model
+        from kmcos.run import KMC_Model
 
         # useful to have in interactive mode
         import numpy as np
@@ -467,19 +467,19 @@ def main(args=None):
             print("Warning: could not deallocate model. Was is allocated?")
 
     elif args[0] == 'version':
-        from kmos import VERSION
+        from kmcos import VERSION
         print(VERSION)
 
     elif args[0] == 'view':
         from sys import path
         path.append(os.path.abspath(os.curdir))
-        from kmos import view
+        from kmcos import view
         view.main(steps_per_frame=options.steps_per_frame)
 
     elif args[0] == 'xml':
         from sys import path
         path.append(os.path.abspath(os.curdir))
-        from kmos.run import KMC_Model
+        from kmcos.run import KMC_Model
         model = KMC_Model(banner=False, print_rates=False)
         print(model.xml())
 

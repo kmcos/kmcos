@@ -2,7 +2,7 @@
 # tg.FFP_floor set to prevent some fast processes from being throttled.
 
 try:
-    import kmos.throttling_globals as tg
+    import kmcos.throttling_globals as tg
 except:
     import throttling_globals as tg
 

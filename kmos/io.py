@@ -6,20 +6,20 @@ and export is supported to Fortran 90 source code.
 """
 from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
-#    This file is part of kmos.
+#    This file is part of kmcos.
 #
-#    kmos is free software: you can redistribute it and/or modify
+#    kmcos is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    kmos is distributed in the hope that it will be useful,
+#    kmcos is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
+#    along with kmcos.  If not, see <http://www.gnu.org/licenses/>.
 import itertools
 import operator
 import shutil
@@ -33,10 +33,10 @@ import functools
 from pprint import pformat
 
 
-from kmos.types import ConditionAction, SingleLatIntProcess, Coord
-from kmos.config import APP_ABS_PATH
-from kmos.types import cmp_coords
-from kmos.utils import evaluate_template
+from kmcos.types import ConditionAction, SingleLatIntProcess, Coord
+from kmcos.config import APP_ABS_PATH
+from kmcos.types import cmp_coords
+from kmcos.utils import evaluate_template
 
 
 def _casetree_dict(dictionary, indent='', out=None):
@@ -143,7 +143,7 @@ class ProcListWriter():
     def write_template(self, filename, target=None, options=None):
         if target is None:
             target = filename
-        from kmos.utils import evaluate_template
+        from kmcos.utils import evaluate_template
 
         with open(os.path.join(os.path.dirname(__file__),
                                'fortran_src',
@@ -304,7 +304,7 @@ class ProcListWriter():
         self.write_proclist_generic_subroutines(data, out, code_generator=code_generator)
 
     def write_proclist_generic_subroutines(self, data, out, code_generator='local_smart'):
-        from kmos.utils import evaluate_template
+        from kmcos.utils import evaluate_template
 
         with open(os.path.join(os.path.dirname(__file__),
                                'fortran_src',
@@ -318,7 +318,7 @@ class ProcListWriter():
                                     ))
 
     def write_proclist_generic_subroutines_acf(self, data, out, code_generator='local_smart'):
-        from kmos.utils import evaluate_template
+        from kmcos.utils import evaluate_template
 
         with open(os.path.join(os.path.dirname(__file__),
                                'fortran_src',
@@ -1316,7 +1316,7 @@ class ProcListWriter():
         """
         # initialize progress bar
         if os.name == 'posix':
-            from kmos.utils.progressbar import ProgressBar
+            from kmcos.utils.progressbar import ProgressBar
             progress_bar = ProgressBar('blue', width=80)
             progress_bar.render(10, 'generic part')
 
@@ -2061,8 +2061,8 @@ class ProcListWriter():
         import tokenize
         import io
         import itertools
-        from kmos import evaluate_rate_expression
-        from kmos import rate_aliases
+        from kmcos import evaluate_rate_expression
+        from kmcos import rate_aliases
 
         indent = 4
         # First the GPL message
@@ -2095,7 +2095,7 @@ class ProcListWriter():
         out.write('real(kind=rdouble), public, dimension(%s) :: userpar\n' % len(data.parameter_list))
 
         # Next, we need to put into the fortran module a placeholder for each of the
-        # parameters that kmos.evaluate_rate_expression can replace, namely
+        # parameters that kmcos.evaluate_rate_expression can replace, namely
         # mu_* and m_*.
 
         # For the chemical potentials  and masses we need to explore all rate expressions
@@ -2297,7 +2297,7 @@ class ProcListWriter():
     def _otf_get_auxilirary_params(self,data):
         import io
         import tokenize
-        from kmos import units, rate_aliases
+        from kmcos import units, rate_aliases
         units_list = []
         masses_list = []
         chempot_list = []
@@ -2383,7 +2383,7 @@ class ProcListWriter():
         nr_<species>_<flag> encountered
         """
         import io, tokenize
-        from kmos import units, rate_aliases
+        from kmcos import units, rate_aliases
 
         param_names = [param.name for param in data.parameter_list]
 
@@ -2405,7 +2405,7 @@ class ProcListWriter():
             tokenize_input = io.StringIO(expr).readline
             tokens = list(tokenize.generate_tokens(tokenize_input))
         except:
-            raise Exception('kmos.io: Could not tokenize expression: %s' % expr)
+            raise Exception('kmcos.io: Could not tokenize expression: %s' % expr)
         replaced_tokens = []
         split_expression = ''
         currl=0
@@ -2441,7 +2441,7 @@ class ProcListWriter():
         """
         # initialize progress bar
         if os.name == 'posix':
-            from kmos.utils.progressbar import ProgressBar
+            from kmcos.utils.progressbar import ProgressBar
             progress_bar = ProgressBar('blue', width=80)
             progress_bar.render(10, 'generic part')
 
@@ -2882,7 +2882,7 @@ class ProcListWriter():
         modules.
         """
 
-        from kmos import evaluate_rate_expression
+        from kmcos import evaluate_rate_expression
 
         data = self.data
         out = open(os.path.join(self.dir, 'kmc_settings.py'), 'w')
@@ -2993,25 +2993,25 @@ class ProcListWriter():
         """Prints the GPL statement at the top of the source file"""
         data = self.data
         out = ''
-        out += "!  This file was generated by kMOS (kMC modelling on steroids)\n"
+        out += "!  This file was generated by kmcos (kMC modelling on steroids)\n"
         out += "!  written by Max J. Hoffmann mjhoffmann@gmail.com (C) 2009-2013.\n"
         if hasattr(data.meta, 'author'):
             out += '!  The model was written by ' + data.meta.author + '.\n'
         out += """
-!  This file is part of kmos.
+!  This file is part of kmcos.
 !
-!  kmos is free software; you can redistribute it and/or modify
+!  kmcos is free software; you can redistribute it and/or modify
 !  it under the terms of the GNU General Public License as published by
 !  the Free Software Foundation; either version 2 of the License, or
 !  (at your option) any later version.
 !
-!  kmos is distributed in the hope that it will be useful,
+!  kmcos is distributed in the hope that it will be useful,
 !  but WITHOUT ANY WARRANTY; without even the implied warranty of
 !  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !  GNU General Public License for more details.
 !
 !  You should have received a copy of the GNU General Public License
-!  along with kmos; if not, write to the Free Software
+!  along with kmcos; if not, write to the Free Software
 !  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 !  USA
 """
@@ -3019,13 +3019,13 @@ class ProcListWriter():
 
 
 def export_source(project_tree, export_dir=None, code_generator=None, options=None, ):
-    """Export a kmos project into Fortran 90 code that can be readily
+    """Export a kmcos project into Fortran 90 code that can be readily
     compiled using f2py.  The model contained in project_tree
     will be stored under the directory export_dir. export_dir will
     be created if it does not exist. The XML representation of the
     model will be included in the kmc_settings.py module.
 
-    `export_source` is *the* central feature of the `kmos` approach.
+    `export_source` is *the* central feature of the `kmcos` approach.
     In order to generate different *backend* solvers, additional candidates
     of this methods could be implemented.
     """
@@ -3115,8 +3115,8 @@ def import_xml(xml):
 
 def import_xml_file(filename):
     """Imports and returns project from an XML file."""
-    import kmos.types
-    project_tree = kmos.types.Project()
+    import kmcos.types
+    project_tree = kmcos.types.Project()
     project_tree.import_file(filename)
     return project_tree
 

@@ -10,13 +10,13 @@ a simple script could look as follows ::
 
   #!/usr/bin/env python
 
-  from kmos.run import KMC_Model
+  from kmcos.run import KMC_Model
 
   model = KMC_Model()
 
 An alternative way that gets you started fast it to run ::
 
-    kmos shell
+    kmcos shell
 
 and just interact directly with `model`. It is often a good idea to ::
 
@@ -132,7 +132,7 @@ For some kMC applications you simply require a large number of data points
 across a set of external parameters (phase diagrams, microkinetic models).
 For this case there is a convenient class `ModelRunner` to work with ::
 
-    from kmos.run import ModelRunner, PressureParameter, TemperatureParameter
+    from kmcos.run import ModelRunner, PressureParameter, TemperatureParameter
 
     class ScanKinetics(ModelRunner):
         p_O2gas = PressureParameter(1)
@@ -193,8 +193,8 @@ Running models in parallel
 
 Due to the global clock in kMC there seems to be no
 simple and efficient way to parallelize a kMC program.
-kmos certainly cannot parallelize a single system over
-processors. However one can run several kmos instances
+kmcos certainly cannot parallelize a single system over
+processors. However one can run several kmcos instances
 in parallel which might accelerate sampling or efficiently
 check for steady state conditions.
 
@@ -210,11 +210,11 @@ For older versions this needs to be `downloaded <http://pypi.python.org/pypi/mul
 and installed manually. The latter is pretty straightforward.
 
 
-Then besides `kmos` we need to import `multiprocessing` ::
+Then besides `kmcos` we need to import `multiprocessing` ::
 
   from multiprocessing import Process
   from numpy import linspace
-  from kmos.run import KMC_Model
+  from kmcos.run import KMC_Model
 
 and let's say you wanted to scan a range of temperature,
 while keeping all other parameteres constant. You first
@@ -236,7 +236,7 @@ and runs the simulation for each ::
 In order to split our full range of input parameters, we
 can use a utility function ::
 
-  from kmos.utils import split_sequence
+  from kmcos.utils import split_sequence
 
 
 All that is left to do, is to define the input parameters,

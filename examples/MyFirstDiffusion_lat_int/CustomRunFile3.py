@@ -2,12 +2,12 @@
 import os
 import math 
 import pdb
-from kmos.run import KMC_Model
+from kmcos.run import KMC_Model
 from kmc_settings import *
 model = KMC_Model()
 atoms = model.get_atoms(geometry=False)
 
-# represents the full directory path name that the kmos directory is in with directory name last, have to add the _ or we cannot retrieve the last character
+# represents the full directory path name that the kmcos directory is in with directory name last, have to add the _ or we cannot retrieve the last character
 dirpath_name = os.getcwd() + '_'
 
 

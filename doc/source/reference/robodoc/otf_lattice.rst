@@ -1,9 +1,9 @@
-kmos/lattice
+kmcos/lattice
 ----------------------------------------
 
     Implements the mappings between the real space lattice
-    and the 1-D lattice, which kmos/base operates on.
-    Furthermore replicates all geometry specific functions of kmos/base
+    and the 1-D lattice, which kmcos/base operates on.
+    Furthermore replicates all geometry specific functions of kmcos/base
     in terms of lattice coordinates.
     Using this module each site can be addressed with 4-tuple
     ``(i, j, k, n)`` where ``i, j, k`` define the unit cell and
@@ -84,11 +84,11 @@ lattice/system_size
        #!/usr/bin/env python
 
        import kmc_settings
-       import kmos.run
+       import kmcos.run
 
        kmc_settings.simulation_size = 9, 9, 4
 
-       with kmos.run.KMC_Model() as model:
+       with kmcos.run.KMC_Model() as model:
            print(model.lattice.system_size)))`
 
 lattice/unit_cell_size

@@ -1,9 +1,9 @@
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can fetch the current version of kmos using *git* ::
+You can fetch the current version of kmcos using *git* ::
 
-    git clone http://www.github.com/mhoffman/kmos
+    git clone http://www.github.com/mhoffman/kmcos
 
 
 and install it using *setuptools* ::
@@ -13,11 +13,11 @@ and install it using *setuptools* ::
 
 or if you have `pip <http://www.pip-installer.org/en/latest/installing.html>`_ run ::
 
-    pip install python-kmos --upgrade [--user]
+    pip install python-kmcos --upgrade [--user]
 
 To use the core functionality
 (programmatic model setup, code generation, model execution)
-kmos has a fairly modest depedency foot-print. You will need ::
+kmcos has a fairly modest depedency foot-print. You will need ::
 
   python-numpy, a Fortran compiler, python-lxml
 
@@ -27,7 +27,7 @@ need ::
   python-matplotlib, python-ase
 
 Finally in order to use all features, in particular the GUI
-model editor of kmos you have to install
+model editor of kmcos you have to install
 a number of dependencies. This should not be very difficult
 on a recent Linux distribution with package management. So
 on Ubuntu it suffices to call::
@@ -62,7 +62,7 @@ no dependencies except for a Fortran compiler.
 
 To ease the installation further on Ubuntu one can simply run::
 
- kmos-install-dependencies-ubuntu
+ kmcos-install-dependencies-ubuntu
 
 
 Installation on openSUSE 12.1 Linux
@@ -111,7 +111,7 @@ There is more than one way to get required dependencies. I have tested MacPorts 
     Search for MacPorts online, you'll need to install Xcode in the process
 
 #. Install Python, lxml, numpy, ipython, ASE, gcc48. I assume you are using Python 2.7.
-   kmos has not been thoroughly tested with Python 3.X, yet, but should not be too hard.
+   kmcos has not been thoroughly tested with Python 3.X, yet, but should not be too hard.
     Having MacPorts this can be as simple as ::
 
         sudo port install -v py27-ipython
@@ -131,12 +131,12 @@ There is more than one way to get required dependencies. I have tested MacPorts 
         sudo port select --set pip pip27
 
         pip install python-ase --user
-        pip install python-kmos --user
+        pip install python-kmcos --user
 
 
 Installation on windoze 7
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-In order for kmos to work in a recent windoze we need a
+In order for kmcos to work in a recent windoze we need a
 number of programs.
 
 #. **Python**
@@ -189,16 +189,16 @@ number of programs.
    comment out the lines above it and hard-code the current version
    number.
 
-#. **kmos**
+#. **kmcos**
    is finally what we are after, so download the latest version
-   from `github <http://mhoffman.github.com/kmos/>`_ and install
+   from `github <http://mhoffman.github.com/kmcos/>`_ and install
    it in the same way as you installed **ASE**.
 
 
 There are probably a number of small changes you have to make
 which are not described in this document. Please post questions
 and comments in the
-`issues forum <https://github.com/mhoffman/kmos/issues>`_ .
+`issues forum <https://github.com/mhoffman/kmcos/issues>`_ .
 
 
 

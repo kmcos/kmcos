@@ -1,10 +1,10 @@
 #this file is normally used by "import snapshots_globals as sg"
-import kmos.run
+import kmcos.run
 import kmc_settings
 
 simulation_name = kmc_settings.model_name
 start = 0.0
-model = kmos.run.KMC_Model()
+model = kmcos.run.KMC_Model()
 atoms = model.get_atoms(geometry=False)
 occ_header_string = model.get_occupation_header()
 occ_header_array = occ_header_string.split()

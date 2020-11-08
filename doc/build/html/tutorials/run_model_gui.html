@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Running the Model–the GUI way &mdash; kmos 0.2.1 documentation</title>
+    <title>Running the Model–the GUI way &mdash; kmcos 0.2.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="kmos 0.2.1 documentation" href="../index.html" /> 
+    <link rel="top" title="kmcos 0.2.1 documentation" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,13 +37,13 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/kmos_logo.png" alt="Logo"/>
+              <img class="logo" src="../_static/kmcos_logo.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -83,7 +83,7 @@
 two files: kmc_model.so and kmc_settings.py. These two files
 are really all you need for simulations. So a simple
 way to view the model is the</p>
-<div class="highlight-python"><pre>kmos view</pre>
+<div class="highlight-python"><pre>kmcos view</pre>
 </div>
 <p>command from the command line. For this two work you need to
 be in the same directory as these two file (more precisely
@@ -108,8 +108,8 @@ script. The with-statement is nice because it takes
 care of the correct allocation and deallocation</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 
-<span class="kn">from</span> <span class="nn">kmos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
-<span class="kn">from</span> <span class="nn">kmos.view</span> <span class="kn">import</span> <span class="n">main</span>
+<span class="kn">from</span> <span class="nn">kmcos.run</span> <span class="kn">import</span> <span class="n">KMC_Model</span>
+<span class="kn">from</span> <span class="nn">kmcos.view</span> <span class="kn">import</span> <span class="n">main</span>
 
 
 <span class="k">with</span> <span class="n">KMC_Model</span><span class="p">(</span><span class="n">print_rates</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">banner</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
@@ -141,7 +141,7 @@ care of the correct allocation and deallocation</p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../index.html">kmos 0.2.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">kmcos 0.2.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

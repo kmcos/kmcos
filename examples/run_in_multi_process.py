@@ -14,7 +14,7 @@ from multiprocessing import Pool
 import numpy as np
 
 import kmc_settings
-from kmos.run import KMC_Model
+from kmcos.run import KMC_Model
 
 DATA_FILENAME = 'data.dat'
 INITIAL_STEPS = int(1e5)

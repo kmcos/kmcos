@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Holds all the data models used in kmos.
+"""Holds all the data models used in kmcos.
 """
 from __future__ import print_function
 
@@ -20,9 +20,9 @@ except:
 # Need to pretty print XML
 from xml.dom import minidom
 
-# kmos own modules
-from kmos.utils import CorrectlyNamed
-from kmos.config import APP_ABS_PATH
+# kmcos own modules
+from kmcos.utils import CorrectlyNamed
+from kmcos.config import APP_ABS_PATH
 
 kmcproject_v0_1_dtd = '/kmc_project_v0.1.dtd'
 kmcproject_v0_2_dtd = '/kmc_project_v0.2.dtd'
@@ -596,7 +596,7 @@ class Project(object):
             from ConfigParser import ConfigParser
         except ImportError:
             from configparser import ConfigParser
-        from kmos.utils import evaluate_template
+        from kmcos.utils import evaluate_template
         try:
             from StringIO import StringIO
         except ImportError:
@@ -853,7 +853,7 @@ class Project(object):
                 root = ET.parse(filename, parser=xmlparser).getroot()
             except:
                 raise Exception(('Could not parse file %s. Are you sure this'
-                                 ' is a kmos project file?\n')
+                                 ' is a kmcos project file?\n')
                                 % os.path.abspath(filename))
         else:
             raise IOError('File not found: %s' % os.path.abspath(filename))
@@ -878,7 +878,7 @@ class Project(object):
                 dtd = ET.DTD(APP_ABS_PATH + kmcproject_v0_3_dtd)
             else:
                 raise Exception(
-                    'xml file version not supported. Is your kmos too old?')
+                    'xml file version not supported. Is your kmcos too old?')
             if not dtd.validate(root):
                 print(dtd.error_log.filter_from_errors()[0])
                 return
@@ -1272,9 +1272,9 @@ class Project(object):
         from tempfile import mkdtemp
         import os
         import shutil
-        from kmos.utils import build
-        from kmos.cli import get_options
-        from kmos.io import export_source
+        from kmcos.utils import build
+        from kmcos.cli import get_options
+        from kmcos.io import export_source
         cwd = os.path.abspath(os.curdir)
         dir = mkdtemp()
         export_source(self, dir, code_generator=code_generator)
@@ -1282,7 +1282,7 @@ class Project(object):
 
         options, args = get_options()
         build(options)
-        from kmos.run import KMC_Model
+        from kmcos.run import KMC_Model
         model = KMC_Model(print_rates=False, banner=False)
         os.chdir(cwd)
         shutil.rmtree(dir)
@@ -1427,7 +1427,7 @@ class LayerList(FixedObject, list):
         """FIXME: If there is more than one representation they should be
         sorted by their name!!!"""
         import ase.atoms
-        from kmos.utils import get_ase_constructor
+        from kmcos.utils import get_ase_constructor
 
         if type(images) is list:
             repr = '['
@@ -1446,7 +1446,7 @@ class LayerList(FixedObject, list):
     def __setattr__(self, key, value):
         if key == 'representation':
             if value:
-                from kmos.utils import get_ase_constructor
+                from kmcos.utils import get_ase_constructor
                 from ase.atoms import Atoms
                 value = eval(value)
                 if (not hasattr(self, 'representation') or
@@ -1957,8 +1957,8 @@ class Process(FixedObject):
         return max_d
 
     def evaluate_rate_expression(self, parameters={}):
-        import kmos.evaluate_rate_expression
-        return kmos.evaluate_rate_expression(self.rate_constant, parameters)
+        import kmcos.evaluate_rate_expression
+        return kmcos.evaluate_rate_expression(self.rate_constant, parameters)
 
 
 class SingleLatIntProcess(Process):

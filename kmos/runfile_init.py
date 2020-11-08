@@ -1,9 +1,9 @@
 import export_import_library as eil
 try:
-    import kmos.snapshots_globals as sg
-    import kmos.snapshots as snapshots
-    import kmos.throttling_globals as tg
-    import kmos.throttling as throttling
+    import kmcos.snapshots_globals as sg
+    import kmcos.snapshots as snapshots
+    import kmcos.throttling_globals as tg
+    import kmcos.throttling as throttling
 except:
     import snapshots_globals as sg
     import snapshots

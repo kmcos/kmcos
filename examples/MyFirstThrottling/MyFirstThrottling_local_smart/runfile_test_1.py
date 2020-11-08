@@ -1,11 +1,11 @@
 #THIS IS A FAIRLY BARE-BONES EXAMPLE RUNFILE FOR THE THROTTLING MODULE, INCLUDING HOW TO LOAD A PREVIOUS SIMULATION'S DATA.
 
 try:
-    import kmos.snapshots_globals as sg
-    import kmos.snapshots as snapshots
-    import kmos.throttling_globals as tg
-    import kmos.throttling as throttling
-    import kmos.runfile_init as runfile_init
+    import kmcos.snapshots_globals as sg
+    import kmcos.snapshots as snapshots
+    import kmcos.throttling_globals as tg
+    import kmcos.throttling as throttling
+    import kmcos.runfile_init as runfile_init
 except:
     import snapshots_globals as sg
     import snapshots

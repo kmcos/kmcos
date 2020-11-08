@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from kmos.types import *
-from kmos.io import *
+from kmcos.types import *
+from kmcos.io import *
 from itertools import product
 import numpy as np
 
