@@ -111,6 +111,8 @@ Developers:
 * Sebastian Matera
 * Juan M. Lorenzi
 * Mie Andersen
+* Michal Bajdich
+* Andreas Garhammer
 
 Other:
 
