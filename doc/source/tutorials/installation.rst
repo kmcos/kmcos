@@ -3,7 +3,7 @@ Installation on Ubuntu Linux
 
 You can fetch the current version of kmcos using *git* ::
 
-    git clone http://www.github.com/mhoffman/kmcos
+    git clone http://www.github.com/kmcos/kmcos
 
 
 and install it using *setuptools* ::
