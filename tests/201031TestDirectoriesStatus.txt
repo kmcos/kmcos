@@ -1,19 +1,17 @@
-python "test_cli_generation.py" runs
-
 inside \ini_test\ --> got the tests to work after editing types.py and utils\__init.py . Ini's work. For mini_101.ini, foo.ini, and the ZGB ini, kmcos export followed by benchmark works. 
 
 inside \complex render test\ works now also
 
+inside \test_types\  test_coordinates_list.py  and  test_xml_ini_conversion.py  both run and pass (the 2nd one has 2 tests in it)
+
+inside \MyFirstThrottling\ is a throttling unit test example that works
+
+inside \SQERTSS_unit_tests\ are some SQERTSS (throttling) unit tests that work
+
 inside \test_acf\ is now partially fixed. test_1.py and test_2.py both pass. test_3.py gives "Segmentation Fault (Core Dumped)" yet running acf_test_function.py (which basically runs all three tests in a single loop) passes. I don't understand the reason. It could mean that acf is not yet working correctly with the otf backend. However, a reasonable trajectory is produced by acf_test_function.py, so it seems like acf might actually be working with the otf backend.
-
-inside \export_test\test_build_run.py runs but test_import_export.py does not run to completion. I have separated test_import_export.py into test_1.py through test_8.py.  Only a small number are passing.  It is possible that some of the failing ones are actually operating correctly, but I have not investigated as taht is not a priority. I believe that the case statements are being exported correctly but in a different order, but that may not be the only issue.
-
-inside \test_cli_generated_model\   no python file, but typing "kmcos benchmark" does not work. Says no model dimension.
 
 inside \test_run\  --> upgraded to UnitTesterSG. Now test_1.py and test_2.py both pass. test_3.py fails, does not create the final ".so" file, and displays an error that can be traced, so it seems the otf backend is not completely working yet. However, running test_3.py provides an opportunity to debug the otf backend creation.
 
-inside \test_types\  test_coordinates_list.py  and  test_xml_ini_conversion.py  both run and pass (the 2nd one has 2 tests in it)
+inside \export_test\test_build_run.py runs but test_import_export.py does not run to completion. I have separated test_import_export.py into test_1.py through test_8.py.  Only a small number are passing.  It is possible that some of the failing ones are actually operating correctly, but I have not investigated as taht is not a priority. I believe that the case statements are being exported correctly but in a different order, but that may not be the only issue.
 
-inside \MyFirstThrottling\ is a throttling unit test example
-
-inside \SQERTSS_unit_tests\ are some SQERTSS (throttling) unit tests
+python "test_cli_generation.py" runs and updates the files inside \test_cli_generated_model\   Gonig inside and typing "kmcos benchmark" does not work. Says no model dimension. However, there is an old xml file in the directory. Pulling the xml 'code' out of the newly generated kmc_settings.py and putting it into a file called test_cli_generated_model_Nov2020.xml shows that there are a few differences (a diff comparison between the two xmls is useful). The most notable of the differences is the lattice_cell_size showing extra zeros in the new xml.
