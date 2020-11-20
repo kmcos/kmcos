@@ -1624,8 +1624,8 @@ class ProcListWriter():
             out.write('contains\n')
             fname = 'nli_%s' % lat_int_group
             if data.meta.debug > 0:
-                out.write('function nli_%s (cell)\n'
-                          % (fname))
+                out.write('function %s(cell)\n'
+                          % (fname))  #why the "nli" is not needed in this line is not obvious to Ashi, but he has verified that %s(cell) gives the right behaviour for test_2.py in test_run while nli_%s(cell) does not.
             else:
                 # DEBUGGING
                 #out.write('function nli_%s(cell)\n'
