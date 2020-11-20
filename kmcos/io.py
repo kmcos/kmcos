@@ -1624,7 +1624,7 @@ class ProcListWriter():
             out.write('contains\n')
             fname = 'nli_%s' % lat_int_group
             if data.meta.debug > 0:
-                out.write('function %(cell)\n'
+                out.write('function nli_%s (cell)\n'
                           % (fname))
             else:
                 # DEBUGGING
