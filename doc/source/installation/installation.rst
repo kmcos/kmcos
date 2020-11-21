@@ -1,19 +1,19 @@
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can fetch the current version of kmcos using *git* ::
+The first time you install, you will need to clone kmcos using *git* ::
 
     git clone http://www.github.com/kmcos/kmcos
 
 
-and install it using *setuptools* ::
+Then install it using the setup.py file ::
 
-    ./setup.py install [--user]
+    cd kmcos
+    pyhton setup.py install --user
 
+For upgrades, you will be able to use `pip <http://www.pip-installer.org/en/latest/installing.html>`_ run ::
 
-or if you have `pip <http://www.pip-installer.org/en/latest/installing.html>`_ run ::
-
-    pip install python-kmcos --upgrade [--user]
+    pip install python-kmcos --upgrade --user
 
 To use the core functionality
 (programmatic model setup, code generation, model execution)
