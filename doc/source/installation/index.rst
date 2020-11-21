@@ -1,0 +1,5 @@
+=========
+Tutorials
+=========
+
+.. include:: installation.rst
