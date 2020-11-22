@@ -1,17 +1,23 @@
+
+It is recommended to install kmcos on Ubuntu Linux with Anaconda.
+If you plan to use a windows computer, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_
+Then get Ubuntu. Here are some `Example Instructions <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_
+Optionally (recommended) download and install `Anaconda <https://www.anaconda.com/products/individual>`_ 
+
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The first time you install, you will need to clone kmcos using *git* ::
+The first time you install kmcos, you will need to use the full package from github ::
 
     git clone http://www.github.com/kmcos/kmcos
 
-
-Then install it using the setup.py file ::
+Then go into the package directory and install using the setup.py file ::
 
     cd kmcos
-    pyhton setup.py install --user
+    python setup.py install --user
 
-For upgrades, you will be able to use `pip <http://www.pip-installer.org/en/latest/installing.html>`_ run ::
+If the second command above does not work, try using 'python3' instead of 'python'.
+For upgrades, you will be able to use `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
 
     pip install python-kmcos --upgrade --user
 
