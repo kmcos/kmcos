@@ -122,6 +122,7 @@ setup(
       packages=packages,
       platforms=platforms,
       #requires=requires,
+      extras_require=EXTRAS,
       scripts=scripts,
       url=url,
       version=version,
