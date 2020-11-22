@@ -35,6 +35,7 @@ Next, you will complete the installation::
     pip install kmcos[MINIMAL] --upgrade --user
 
 Now try the the following::
+
     cd examples
     python MyFirstSnapshots.py
     kmcos export MyFirstSnapshots.xml
@@ -49,7 +50,6 @@ For upgrades, you will not need to use git again. For upgrades, you can just use
 
 
 If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
-
     sudo apt-get update
     sudo apt-get install gfortran
     sudo apt-get install python-ase
