@@ -23,12 +23,14 @@ There are some non-python dependencies which should be installed with the follow
     kmcos-install-dependencies-ubuntu
 
 If the above command fails, then you will need to use the following commands individually ::
+
     sudo apt-get update
     sudo apt-get install python-ase
     sudo apt-get install python3-gi
     pip install ase --user
     
 Now try the the following::
+
     kmcos worktest
     
 If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.)
