@@ -7,14 +7,14 @@ It is recommended that you download and install `Anaconda <https://www.anaconda.
 Making a Virtual Python Environment (Optional) 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is recommended to use a virtual python environent. First, make a directory for where you will be doing your work and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
+It is recommended to use a virtual python environent. First, make a directory for where you will be doing your work, such as kmcWork and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
 
     pip install virtualenv
-    virtualenv kmcosNew
+    virtualenv kmcosEnv
 
 If using one a virtual environment, it must be activated::
 
-    source kmcosNew/bin/activate
+    source kmcosEnv/bin/activate
 
 Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
 You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
