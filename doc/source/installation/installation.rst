@@ -3,20 +3,27 @@ If you plan to use a windows computer, it is recommended to first get `VirtualBo
 Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
 It is recommended that you download and install `Anaconda <https://www.anaconda.com/products/individual>`_ inside your Ubuntu operating system.
 
-Installation on Ubuntu Linux
+
+(Optional) Making a Virtual Environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
-(Optional) First, make a directory for where you will be doing your work and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
+First, make a directory for where you will be doing your work and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
 
     pip install virtualenv
     virtualenv kmcosNew
 
-(Optional continued) If using one a virtual environment, it must be activated::
+If using one a virtual environment, it must be activated::
 
     source kmcosNew/bin/activate
 
-(Optional continued) Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
+Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
+You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
+
+
+Installation on Ubuntu Linux
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
 
 
 The first time you install kmcos, you will need to fetch the full package from github ::
