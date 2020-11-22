@@ -6,6 +6,15 @@ It is recommended that you download and install `Anaconda <https://www.anaconda.
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+First install some non-python dependencies ::
+
+    sudo apt-get update
+    sudo apt-get gfortran
+    sudo apt-get install python-ase
+    sudo apt-get install python3-gi
+    pip install ase --user
+
 The first time you install kmcos, you will need to fetch the full package from github ::
 
     git clone http://www.github.com/kmcos/kmcos
@@ -21,16 +30,6 @@ Next, you will complete the installation using `pip <http://www.pip-installer.or
 
     pip install kmcos[COMPLETE] --upgrade --user
 
-There are some non-python dependencies which should be installed with the following command ::
-
-    kmcos-install-dependencies-ubuntu
-
-If the above command fails, then you will need to use the following commands individually ::
-
-    sudo apt-get update
-    sudo apt-get install python-ase
-    sudo apt-get install python3-gi
-    pip install ase --user
     
 Now try the the following::
 
