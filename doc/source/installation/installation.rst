@@ -7,39 +7,58 @@ Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-First install some non-python dependencies ::
+(Optional) First, make a directory for where you will be doing your work. Make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
 
-    sudo apt-get update
-    sudo apt-get gfortran
-    sudo apt-get install python-ase
-    sudo apt-get install python3-gi
-    pip install ase --user
+    pip install virtualenv
+    virtualenv kmcosNew
+
+    Activate this new virtual enviornment ::
+
+    source kmcosNew/bin/activate
+
+    Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
+
 
 The first time you install kmcos, you will need to fetch the full package from github ::
 
     git clone http://www.github.com/kmcos/kmcos
 
-Next, go into the package directory and install using the setup.py file ::
+Go into the package directory and install using the setup.py file ::
 
     cd kmcos
     python setup.py install --user
 
 If the second command above does not work, try using 'python3' instead of 'python'.
 
-Next, you will complete the installation using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
+Next, you will complete the installation::
 
-    pip install kmcos[COMPLETE] --upgrade --user
+    pip install kmcos[MINIMAL] --upgrade --user
 
     
 Now try the the following::
+    cd examples
+    python MyFirstSnapshots.py
+    kmcos export MyFirstSnapshots.xml
+    cd MyFirstSnapshots_local_smart
+    kmcos benchmark
 
-    kmcos worktest
-    
 If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.)
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
+    pip install kmcos[MINIMAL] --upgrade --user
+
+
+If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
+
+    sudo apt-get update
+    sudo apt-get install gfortran
+    sudo apt-get install python-ase
+    sudo apt-get install python3-gi
+    pip install ase --user
     pip install kmcos[COMPLETE] --upgrade --user
+
+If the last command of 'pip install kmcos[COMPLETE] --upgrade --user' gives an error, try to run it again.
 
 
 THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.
