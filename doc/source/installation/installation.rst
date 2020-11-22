@@ -1,4 +1,3 @@
-
 It is recommended to install kmcos on Ubuntu Linux with Anaconda.
 If you plan to use a windows computer, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ .
 Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
@@ -165,20 +164,35 @@ There is more than one way to get required dependencies. I have tested MacPorts 
         pip install python-kmcos --user
 
 
-Installation on windoze 7 (Deprecated Instructions)
+Installation on windows
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-In order for kmcos to work in a recent windoze we need a
-number of programs.
+In order for kmcos to work in a recent windows it is best to get Anaconda.
+
+Download anaconda and open an anaconda terminal.
+
+The first time you install kmcos, you will need to fetch the full package from github ::
+
+    git clone http://www.github.com/kmcos/kmcos
+
+Next, go into the package directory and install using the setup.py file ::
+
+    cd kmcos
+    python setup.py install
+    
+Note that on windows it is recommended to not use the --user command, otherwise the command line interface (typing 'kmcos' from the command line) will not work. Next, install the MINIMAL dependencies.
+
+    pip install kmcos[MINIMAL] --upgrade --user
+    
+Note: pip install kmcos[COMPLETE] won't work. to install pycairo and use the visual aspects, Microsoft Visual C++ 14.0 is required. Get it with "Microsoft Visual C++ Build Tools": https://visualstudio.microsoft.com/downloads/
+
+BELOW ARE DEPRECATED INSTRUCTIONS
 
 #. **Python**
-   If you have no python previously installed you should try
-   `Enthought Python Distribution`_ (EPD) in its free version since it
+   If you have no python previously installed you should get `Anaconda`
+   with python 3.
+   or `Enthought Python Distribution`_ (EPD) in its free version since it
    already comes with a number of useful libraries such a numpy, scipy,
    ipython and matplotlib.
-
-   Otherwise you can simply download Python from `python.org`_ and
-   this installation has been successfully tested using python 2.7.
-
 
 #. **numpy**
    Fetch it for `your version` of python from
@@ -212,7 +226,7 @@ number of programs.
     python setup.py install
 
    in there. Note that there is currently a slight glitch in the
-   `setup.py` script on windoze, so open `setup.py` in a text
+   `setup.py` script on windows, so open `setup.py` in a text
    editor and find the line saying ::
 
      version = ...
@@ -229,7 +243,7 @@ number of programs.
 There are probably a number of small changes you have to make
 which are not described in this document. Please post questions
 and comments in the
-`issues forum <https://github.com/mhoffman/kmcos/issues>`_ .
+`issues area <https://github.com/mhoffman/kmcos/issues>`_ .
 
 
 
