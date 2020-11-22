@@ -18,6 +18,10 @@ Next, go into the package directory and install using the setup.py file ::
 
 If the second command above does not work, try using 'python3' instead of 'python'.
 
+Next, you will complete the installation using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
+
+    pip install kmcos[COMPLETE] --upgrade --user
+
 There are some non-python dependencies which should be installed with the following command ::
 
     kmcos-install-dependencies-ubuntu
@@ -35,9 +39,9 @@ Now try the the following::
     
 If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.)
 
-For upgrades, you will not need to use git again. For upgrades, you can just use `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
+For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
-    pip install kmcos --upgrade --user
+    pip install kmcos[COMPLETE] --upgrade --user
 
 
 THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.
