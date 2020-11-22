@@ -1,11 +1,11 @@
 numpy
 lxml
 ase
-kiwi-gtk
-pycairo==1.11.1
+#kiwi-gtk
+#pycairo==1.11.1
 #pygobject==3.30
 #goocanvas  part of pygobject now, I think.
-kiwi
+#kiwi
 matplotlib
 UnitTesterSG
 CiteSoft
