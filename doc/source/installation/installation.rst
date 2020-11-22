@@ -19,7 +19,7 @@ Then go into the package directory and install using the setup.py file ::
 If the second command above does not work, try using 'python3' instead of 'python'.
 For upgrades, you will be able to use `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
 
-    pip install python-kmcos --upgrade --user
+    pip install kmcos --upgrade --user
 
 To use the core functionality
 (programmatic model setup, code generation, model execution)
