@@ -7,16 +7,16 @@ Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-(Optional) First, make a directory for where you will be doing your work. Make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
+(Optional) First, make a directory for where you will be doing your work and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
 
     pip install virtualenv
     virtualenv kmcosNew
 
-If using one a virtual environment, it must be activated::
+(Optional continued) If using one a virtual environment, it must be activated::
 
     source kmcosNew/bin/activate
 
-Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
+(Optional continued) Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
 
 
 The first time you install kmcos, you will need to fetch the full package from github ::
