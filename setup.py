@@ -34,17 +34,17 @@ classifiers = [
               ]
 requires = [
                     'ase',
-                    'pycairo==1.11.1',
-                    #'pygobject==3.30',
                     #'goocanvas', #part of pygobject now, I think.
-                    'kiwi',
-                    'kiwi-gtk',
                     'lxml',
                     'matplotlib',
-                    'UnitTesterSG',
-                    'CiteSoft'
 #                    'pygtk', #This is only for windows so should be under extras.
                    ]
+                   
+EXTRAS = {
+    'COMPLETE': ['scipy', 'numpy', 'kiwi-gtk', 'dill', 'pycairo==1.11.1', 'pygobject==3.30', 'UnitTesterSG', 'CiteSoft']# 'uncertainties': ['uncertainties'], #pymc...
+}
+
+                   
 packages = [
            'kmcos',
            'kmcos.utils',
