@@ -12,18 +12,17 @@ It is recommended to use a virtual python environent. First, make a directory fo
     pip install virtualenv
     virtualenv kmcosEnv
 
-If using one a virtual environment, it must be activated::
+The virtualenvr must be activated::
 
     source kmcosEnv/bin/activate
 
-Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
-You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
+If installing kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
 
 
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Make a directory that will be used for installation, such as kmcosScratch. Open a terminal window in this directory. The first time you install kmcos, you will need to fetch the full package from github ::
+Whether installing directly or inside a virtualenv, you will make a directory that will be used for installation: kmcosInstallation. Open a terminal window in this directory. The first time you install kmcos, you will need to fetch the full package from github ::
 
     git clone http://www.github.com/kmcos/kmcos
 
@@ -46,7 +45,7 @@ Now try the the following::
     cd MyFirstSnapshots_local_smart
     kmcos benchmark
 
-If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosScratch directory: although the files in the kmcosScratch were used during installation, they are no longer needed.
+If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosInstallation directory: although the files in the kmcosInstallation were used during installation, they are no longer needed and have been copied to other directories in your computer, such as bin or site-packages directories.
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
