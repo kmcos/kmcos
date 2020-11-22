@@ -12,11 +12,11 @@ Installation on Ubuntu Linux
     pip install virtualenv
     virtualenv kmcosNew
 
-    Activate this new virtual enviornment ::
+If using one a virtual environment, it must be activated::
 
     source kmcosNew/bin/activate
 
-    Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
+Note: to exit this virtualenv you will type 'deactivate'.  In the future, before running new kmcos models, you will need to activate each time.
 
 
 The first time you install kmcos, you will need to fetch the full package from github ::
@@ -34,7 +34,6 @@ Next, you will complete the installation::
 
     pip install kmcos[MINIMAL] --upgrade --user
 
-    
 Now try the the following::
     cd examples
     python MyFirstSnapshots.py
