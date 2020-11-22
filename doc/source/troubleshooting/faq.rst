@@ -19,18 +19,7 @@ What other kMC codes are there?
   - `Spparks <http://spparks.sandia.gov/doc/Manual.html>`_ (S. Plimpton)
   - `Zacros <http://zacros.org/>`_ (M. Stamatakis)
 
-  Though The Google might find you some more.
-  Please drop me a line if you find any information
-  inaccurate.
-
-What does kmcos stand for anyways?
-  Good question, initially kmcos was supposed to stand for
-  `kinetic modeling on steroids` because it feels really fast to model with kmcos. But that confused people
-  too much since we are not modelling reactions on steroids but on surfaces :-).
-  Some other popular variants are
-
-    - kMC Modeling Of Surfaces
-    - kMC modeling offering source
-    - kMC models on screen
-
-  I am open for suggestions.
+What is the relation between kmcos and kmos?
+  Initially, the code was named kmos for
+  `kinetic modeling on steroids`. However, during the 2020 revitalization and migration to python3, the code's name was changed kmcos with intention of greater emphasis of the generality of the code.
+    

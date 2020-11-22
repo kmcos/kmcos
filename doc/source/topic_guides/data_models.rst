@@ -9,7 +9,7 @@ The different functions and front-ends of
 kmcos all interact in some way or another
 with instances of the Project class. A
 Project instance is a representation of
-a kmc model. If you fire up 'kmcos edit' with
+a kmc model. If you fire up 'kmcos edit' (deprecated) with
 an xml file, kmcos validates the XML file and
 stores the content in a Project instance.
 If you export source code, kmcos runs over the
