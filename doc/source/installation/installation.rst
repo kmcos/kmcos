@@ -3,43 +3,64 @@ If you plan to use a windows computer, it is recommended to first get `VirtualBo
 Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
 It is recommended that you download and install `Anaconda <https://www.anaconda.com/products/individual>`_ inside your Ubuntu operating system.
 
+
+Making a Virtual Python Environment (Optional) 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It is recommended to use a virtual python environent. First, make a directory for where you will be doing your work, such as kmcWork and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
+
+    pip install virtualenv
+    virtualenv kmcosEnv
+
+The virtualenvr must be activated::
+
+    source kmcosEnv/bin/activate
+
+If installing kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
+
+
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
-First install some non-python dependencies ::
-
-    sudo apt-get update
-    sudo apt-get gfortran
-    sudo apt-get install python-ase
-    sudo apt-get install python3-gi
-    pip install ase --user
-
-The first time you install kmcos, you will need to fetch the full package from github ::
+Whether installing directly or inside a virtualenv, you will make a directory that will be used for installation: kmcosInstallation. Open a terminal window in this directory. The first time you install kmcos, you will need to fetch the full package from github ::
 
     git clone http://www.github.com/kmcos/kmcos
 
-Next, go into the package directory and install using the setup.py file ::
+Go into the package directory and install using the setup.py file ::
 
     cd kmcos
     python setup.py install --user
 
-If the second command above does not work, try using 'python3' instead of 'python'.
+If the second command above does not work, try using 'python3' instead of 'python'.  If there is an error related to "--user" then you may omit that part of the command.
 
-Next, you will complete the installation using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
+Next, you will complete the installation::
 
-    pip install kmcos[COMPLETE] --upgrade --user
+    pip install kmcos[MINIMAL] --upgrade --user
 
-    
 Now try the the following::
 
-    kmcos worktest
-    
-If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.)
+    cd examples
+    python MyFirstSnapshots.py
+    kmcos export MyFirstSnapshots.xml
+    cd MyFirstSnapshots_local_smart
+    kmcos benchmark
+
+If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosInstallation directory: although the files in the kmcosInstallation were used during installation, they are no longer needed. Any needed files have already been copied to other directories in your computer, such as bin or site-packages directories.
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
+    pip install kmcos[MINIMAL] --upgrade --user
+
+
+(Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
+    sudo apt-get update
+    sudo apt-get install gfortran
+    sudo apt-get install python-ase
+    sudo apt-get install python3-gi
+    pip install ase --user
     pip install kmcos[COMPLETE] --upgrade --user
+
+If the last command of 'pip install kmcos[COMPLETE] --upgrade --user' gives an error, try to run it again.
 
 
 THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.
