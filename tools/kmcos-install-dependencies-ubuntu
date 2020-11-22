@@ -1,33 +1,19 @@
 #!/bin/bash -eu
 
-# The kmcos dependency list is horribly wrong
-# and right now even depends on a repository
-# which is outside the Ubuntu repositories
-# let's hope that this changes soon
-# and let's see how we can cut down on this
-# list. 
-# The goal will be to reduce this list to
 
-# python-dev gfortran python-numpy python-pygoocanvas
+# These have been removed from the below list.       python-dev \     python-glade2 \ gazpacho \    python-kiwi \                       python-pygoocanvas \                      python-lxml \                     python-matplotlib \                      python-lxml \               python-matplotlib \
 
-# or something like that
+
+# sudo add-apt-repository ppa:campos-dev/campos
 
 print "Simple wrapping script that resolves"
 print "dependency within the APT system"
 
 
-
-sudo add-apt-repository ppa:campos-dev/campos
 sudo apt-get update
-
 sudo apt-get install\
-                     gazpacho \
                      gfortran \
                      python-ase \
-                     python-dev \
-                     python-glade2 \
-                     python-kiwi \
-                     python-lxml \
-                     python-matplotlib \
-                     python-numpy \
-                     python-pygoocanvas
+                     python3-gi \
+
+pip install ase --user
