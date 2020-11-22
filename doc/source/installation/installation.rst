@@ -4,10 +4,10 @@ Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://
 It is recommended that you download and install `Anaconda <https://www.anaconda.com/products/individual>`_ inside your Ubuntu operating system.
 
 
-(Optional) Making a Virtual Environment
+Making a Virtual Python Environment (Optional) 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-First, make a directory for where you will be doing your work and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
+It is recommended to use a virtual python environent. First, make a directory for where you will be doing your work and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
 
     pip install virtualenv
     virtualenv kmcosNew
@@ -23,10 +23,7 @@ You can find more information on virtualenv at https://www.youtube.com/watch?v=N
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
-
-
-The first time you install kmcos, you will need to fetch the full package from github ::
+Make a directory that will be used for installation, such as kmcosScratch. Open a terminal window in this directory. The first time you install kmcos, you will need to fetch the full package from github ::
 
     git clone http://www.github.com/kmcos/kmcos
 
@@ -49,7 +46,7 @@ Now try the the following::
     cd MyFirstSnapshots_local_smart
     kmcos benchmark
 
-If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.)
+If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosScratch directory: although the files in the kmcosScratch were used during installation, they are no longer needed.
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
