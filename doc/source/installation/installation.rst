@@ -17,9 +17,28 @@ Then go into the package directory and install using the setup.py file ::
     python setup.py install --user
 
 If the second command above does not work, try using 'python3' instead of 'python'.
-For upgrades, you will be able to use `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
+
+There are some non-python dependencies which should be installed with the following command:
+
+    kmcos-install-dependencies-ubuntu
+
+If the above command fails, then you will need to use the following commands individually:
+    sudo apt-get update
+    sudo apt-get install python-ase
+    sudo apt-get install python3-gi
+    pip install ase --user
+    
+Now try the the following:
+    kmcos worktest
+    
+If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.)
+
+After your first installation, for upgrades, you will be able to use `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
 
     pip install kmcos --upgrade --user
+
+
+BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED 
 
 To use the core functionality
 (programmatic model setup, code generation, model execution)
@@ -71,7 +90,7 @@ To ease the installation further on Ubuntu one can simply run::
  kmcos-install-dependencies-ubuntu
 
 
-Installation on openSUSE 12.1 Linux
+Installation on openSUSE 12.1 Linux (Deprecated Instructions)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 On a recent openSUSE some dependencies are distributed a little
@@ -102,13 +121,13 @@ unzip it and install it with ::
 
 
 
-Installation on openSUSE 13.1 Linux
+Installation on openSUSE 13.1 Linux (Deprecated Instructions)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to use the editor GUI you will want to install python-kiwi (not KIWI)
 and right now you can find a recent build `here <https://build.opensuse.org/package/show/home:leopinheiro/python-kiwi>`_ .
 
-Installation on Mac OS X 10.10 or above
+Installation on Mac OS X 10.10 or above (Deprecated Instructions)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There is more than one way to get required dependencies. I have tested MacPorts and worked quite well.
@@ -140,7 +159,7 @@ There is more than one way to get required dependencies. I have tested MacPorts 
         pip install python-kmcos --user
 
 
-Installation on windoze 7
+Installation on windoze 7 (Deprecated Instructions)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 In order for kmcos to work in a recent windoze we need a
 number of programs.
