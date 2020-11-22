@@ -31,7 +31,7 @@ Go into the package directory and install using the setup.py file ::
     cd kmcos
     python setup.py install --user
 
-If the second command above does not work, try using 'python3' instead of 'python'.
+If the second command above does not work, try using 'python3' instead of 'python'.  If there is an error related to "--user" then you may omit that part of the command.
 
 Next, you will complete the installation::
 
@@ -45,14 +45,14 @@ Now try the the following::
     cd MyFirstSnapshots_local_smart
     kmcos benchmark
 
-If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosInstallation directory: although the files in the kmcosInstallation were used during installation, they are no longer needed and have been copied to other directories in your computer, such as bin or site-packages directories.
+If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosInstallation directory: although the files in the kmcosInstallation were used during installation, they are no longer needed. Any needed files have already been copied to other directories in your computer, such as bin or site-packages directories.
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
     pip install kmcos[MINIMAL] --upgrade --user
 
 
-If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
+(Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
     sudo apt-get update
     sudo apt-get install gfortran
     sudo apt-get install python-ase
