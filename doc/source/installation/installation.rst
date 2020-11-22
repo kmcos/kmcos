@@ -1,44 +1,44 @@
 
 It is recommended to install kmcos on Ubuntu Linux with Anaconda.
-If you plan to use a windows computer, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_
-Then get Ubuntu. Here are some `Example Instructions <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_
-Optionally (recommended) download and install `Anaconda <https://www.anaconda.com/products/individual>`_ 
+If you plan to use a windows computer, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ .
+Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
+It is recommended that you download and install `Anaconda <https://www.anaconda.com/products/individual>`_ inside your Ubuntu operating system.
 
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The first time you install kmcos, you will need to use the full package from github ::
+The first time you install kmcos, you will need to fetch the full package from github ::
 
     git clone http://www.github.com/kmcos/kmcos
 
-Then go into the package directory and install using the setup.py file ::
+Next, go into the package directory and install using the setup.py file ::
 
     cd kmcos
     python setup.py install --user
 
 If the second command above does not work, try using 'python3' instead of 'python'.
 
-There are some non-python dependencies which should be installed with the following command:
+There are some non-python dependencies which should be installed with the following command ::
 
     kmcos-install-dependencies-ubuntu
 
-If the above command fails, then you will need to use the following commands individually:
+If the above command fails, then you will need to use the following commands individually ::
     sudo apt-get update
     sudo apt-get install python-ase
     sudo apt-get install python3-gi
     pip install ase --user
     
-Now try the the following:
+Now try the the following::
     kmcos worktest
     
 If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.)
 
-After your first installation, for upgrades, you will be able to use `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
+For upgrades, you will not need to use git again. For upgrades, you can just use `pip <http://www.pip-installer.org/en/latest/installing.html>`_  ::
 
     pip install kmcos --upgrade --user
 
 
-BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED 
+THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.
 
 To use the core functionality
 (programmatic model setup, code generation, model execution)
