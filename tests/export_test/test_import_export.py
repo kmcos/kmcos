@@ -4,7 +4,15 @@ import os, sys
 import os.path, shutil
 import filecmp
 from glob import glob
-import gazpacho.loader.loader
+import difflib
+
+def get_diff(file1, file2):
+    return '\n'.join(list(
+            difflib.unified_diff(
+                open(file1).readlines(),
+                open(file2).readlines()
+                )
+            ))
 
 def test_import_export():
 
@@ -106,9 +114,18 @@ def test_import_export_pdopd_local_smart():
 
     pt = kmcos.types.Project()
     pt.import_xml_file('pdopd.xml')
+    print("PROJECT")
+    print(pt)
     kmcos.io.export_source(pt, TEST_DIR, code_generator='local_smart')
     for filename in ['base', 'lattice', 'proclist']:
         print(filename)
+        diff = get_diff(
+                "{REFERENCE_DIR}/{filename}.f90".format(**locals()),
+                "{TEST_DIR}/{filename}.f90".format(**locals())
+                )
+        if diff:
+            print("DIFF BETWEEN {REFERENCE_DIR}/{filename}.f90 and {TEST_DIR}/{filename}.f90".format(**locals()))
+            print(diff)
         assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
                           os.path.join(TEST_DIR, '%s.f90' % filename)),\
              '%s changed.' % filename
@@ -132,12 +149,21 @@ def test_import_export_pdopd_lat_int():
     print(kmcos.__file__)
     pt = kmcos.types.Project()
     pt.import_xml_file('pdopd.xml')
+    print("PROJECT")
+    print(pt)
     kmcos.io.export_source(pt, TEST_DIR, code_generator='lat_int')
     for filename in ['base', 'lattice', 'proclist', 'proclist_constants'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'nli*.f90'))]:
 
         print(filename)
+        diff = get_diff(
+                "{REFERENCE_DIR}/{filename}.f90".format(**locals()),
+                "{TEST_DIR}/{filename}.f90".format(**locals())
+                )
+        if diff:
+            print("DIFF BETWEEN {REFERENCE_DIR}/{filename}.f90 and {TEST_DIR}/{filename}.f90".format(**locals()))
+            print(diff)
         assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
                           os.path.join(TEST_DIR, '%s.f90' % filename)),\
              '%s changed.' % filename
