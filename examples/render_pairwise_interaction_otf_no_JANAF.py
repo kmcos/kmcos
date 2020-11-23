@@ -65,7 +65,7 @@ conditions = [Condition(species='CO',coord=center)]
 actions = [Action(species='empty',coord=center)]
 
 # define the rate at ZCL
-rate_constant = 'p_COgas*A*bar/sqrt(2*m_CO*umass/beta)*exp(beta*(E_CO-mu_COgas)*eV)'
+rate_constant = 'p_COgas*A*bar/sqrt(2*m_CO*umass/beta)' #rate_constant = 'p_COgas*A*bar/sqrt(2*m_CO*umass/beta)*exp(beta*(E_CO-mu_COgas)*eV)'
 # and the otf rate expression
 otf_rate = 'base_rate*exp(beta*nr_CO_1nn*E_CO_nn*eV)'
 
@@ -77,5 +77,5 @@ proc = Process(name='CO_desorption',
                 otf_rate=otf_rate)
 pt.add_process(proc)
 
-pt.filename = 'pairwise_interaction_otf_fixed.xml'
+pt.filename = 'pairwise_interaction_otf_fixed_no_JANAF.xml'
 pt.save()
