@@ -400,7 +400,7 @@ def build(options):
     extra_libs = ''
     ccompiler = ''
     if os.name == 'nt':
-        ccompiler = '--compiler=mingw32'
+        ccompiler = '--compiler=mingw64'#'--compiler=mingw32'
         if sys.version_info < (2, 7):
             extra_libs = ' -lmsvcr71 '
         else:
