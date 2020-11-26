@@ -56,7 +56,7 @@ VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):
     import tokenize
-    import StringIO
+    import io
     import math
     from kmos import units
 
@@ -80,7 +80,7 @@ def evaluate_param_expression(param, parameters={}):
     except:
         try:
             replaced_tokens=[]
-            input = StringIO.StringIO(parameter_str).readline
+            input = io.StringIO(parameter_str).readline
             tokens = list(tokenize.generate_tokens(input))
         except:
             raise Exception('Could not tokenize expression: %s' % input)
@@ -127,7 +127,7 @@ def evaluate_param_expression(param, parameters={}):
                 except:
                     try:
                         replaced_tokens2=[]
-                        input = StringIO.StringIO(energy).readline
+                        input = io.StringIO(energy).readline
                         tokens2 = list(tokenize.generate_tokens(input))
                     except:
                         raise Exception('Could not tokenize expression: %s' % input)
@@ -139,7 +139,7 @@ def evaluate_param_expression(param, parameters={}):
                                 replaced_tokens2.append((j, parameter_str2))
                             except:
                                 try:
-                                    input = StringIO.StringIO(parameter_str2).readline
+                                    input = io.StringIO(parameter_str2).readline
                                     tokens3 = list(tokenize.generate_tokens(input))
                                 except:
                                     raise Exception('Could not tokenize expression: %s' % input)
@@ -200,7 +200,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
         replaced_tokens = []
 
         # replace some aliases
-        for old, new in rate_aliases.items():
+        for old, new in list(rate_aliases.items()):
             rate_expr = rate_expr.replace(old, new)
         try:
             input = io.StringIO(rate_expr).readline
@@ -284,7 +284,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                 except:
                     try:
                         replaced_tokens2=[]
-                        input = StringIO.StringIO(energy).readline
+                        input = io.StringIO(energy).readline
                         tokens2 = list(tokenize.generate_tokens(input))
                     except:
                         raise Exception('Could not tokenize expression: %s' % input)
@@ -296,7 +296,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                                 replaced_tokens2.append((j, parameter_str))
                             except:
                                 try:
-                                    input = StringIO.StringIO(parameter_str).readline
+                                    input = io.StringIO(parameter_str).readline
                                     tokens3 = list(tokenize.generate_tokens(input))
                                 except:
                                     raise Exception('Could not tokenize expression: %s' % input)
@@ -332,7 +332,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                 except:
                     try:
                         replaced_tokens2=[]
-                        input = StringIO.StringIO(parameter_str).readline
+                        input = io.StringIO(parameter_str).readline
                         tokens2 = list(tokenize.generate_tokens(input))
                     except:
                         raise Exception('Could not tokenize expression: %s' % input)
@@ -379,7 +379,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                             except:
                                 try:
                                     replaced_tokens3=[]
-                                    input = StringIO.StringIO(energy).readline
+                                    input = io.StringIO(energy).readline
                                     tokens3 = list(tokenize.generate_tokens(input))
                                 except:
                                     raise Exception('Could not tokenize expression: %s' % input)
@@ -391,7 +391,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                                             replaced_tokens3.append((j, parameter_str))
                                         except:
                                             try:
-                                                input = StringIO.StringIO(parameter_str).readline
+                                                input = io.StringIO(parameter_str).readline
                                                 tokens4 = list(tokenize.generate_tokens(input))
                                             except:
                                                 raise Exception('Could not tokenize expression: %s' % input)
