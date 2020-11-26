@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
+
+from __future__ import print_function
 from ase.structure import molecule
 from ase.thermochemistry import IdealGasThermo
 from ase.thermochemistry import HarmonicThermo
-
 """Very simple module that keeps several species
 commonly needed to model heterogeneous catalyst kinetics
 """
-from __future__ import print_function
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmcos.
 
