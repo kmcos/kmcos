@@ -194,19 +194,19 @@ class KMC_Model(Process):
         if self.can_accelerate:
             if buffer_parameter is not None:
                 settings.buffer_parameter = buffer_parameter
-                print 'buffer_parameter set to: ',settings.buffer_parameter
+                print('buffer_parameter set to: ', settings.buffer_parameter)
             if threshold_parameter is not None:
                 settings.threshold_parameter = threshold_parameter
-                print 'threshold_parameter set to: ',settings.threshold_parameter
+                print('threshold_parameter set to: ', settings.threshold_parameter)
             if sampling_steps is not None:
                 settings.sampling_steps = sampling_steps
-                print 'sampling_steps set to: ',settings.sampling_steps
+                print('sampling_steps set to: ', settings.sampling_steps)
             if execution_steps is not None:
                 settings.execution_steps = execution_steps
-                print 'execution_steps set to: ',settings.execution_steps
+                print('execution_steps set to: ', settings.execution_steps)
             if save_limit is not None:
                 settings.save_limit = save_limit
-                print 'save_limit set to: ',settings.save_limit
+                print('save_limit set to: ', settings.save_limit)
 
         if random_seed is not None:
             settings.random_seed = random_seed
@@ -312,7 +312,7 @@ class KMC_Model(Process):
         self.tof_matrix = np.zeros((len(tofs), proclist.nr_of_proc))
         for process, tof_count in sorted(settings.tof_count.items()):
             process_nr = getattr(self.proclist, process.lower())
-            for tof, tof_factor in tof_count.items():
+            for tof, tof_factor in list(tof_count.items()):
                 self.tof_matrix[tofs.index(tof), process_nr - 1] += tof_factor
 
         # prepare procstat
@@ -447,7 +447,7 @@ class KMC_Model(Process):
         Useful for the header line of an ASCII output.
         """
         tofs = []
-        for _, value in settings.tof_count.items():
+        for _, value in list(settings.tof_count.items()):
             for name in value:
                 if name not in tofs:
                     tofs.append(name)
@@ -2105,7 +2105,7 @@ class Model_Rate_Constants_OTF(Model_Rate_Constants):
                           ).split()
         if nr_vars:
             input_array = np.zeros([len(nr_vars)],int)
-            for nr_var, value in kwargs.items():
+            for nr_var, value in list(kwargs.items()):
                 if nr_var in nr_vars:
                     input_array[nr_vars.index(nr_var)] = int(value)
 
@@ -2620,7 +2620,7 @@ def set_rate_constants(parameters=None, print_rates=None, can_accelerate=False):
     # FIXME
     # update chemical potentials (works for otf backend only)
     if hasattr(proclist,'update_user_parameter'):
-         for name,entry in settings.parameters.items():
+         for name,entry in list(settings.parameters.items()):
              proclist.update_user_parameter(
                  getattr(proclist,name.lower()),
                  evaluate_rate_expression(
@@ -2651,7 +2651,7 @@ def import_ase():
 def get_tof_names():
     """Return names turn-over-frequencies (TOF) previously defined in model."""
     tofs = []
-    for process, tof_count in settings.tof_count.items():
+    for process, tof_count in list(settings.tof_count.items()):
         for tof in tof_count:
             if tof not in tofs:
                 tofs.append(tof)
