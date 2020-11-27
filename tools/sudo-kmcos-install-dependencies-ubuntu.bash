@@ -1,8 +1,8 @@
 #!/bin/bash -eu
 
 
-print "Simple wrapping script that resolves"
-print "dependency within the APT system"
+echo "Simple wrapping script that resolves"
+echo "dependency within the APT system"
 
 cd ~
 mkdir kmcosInstallation
@@ -20,6 +20,7 @@ python3 MyFirstModel_AB.py
 kmcos export MyFirstModel_AB.ini
 cd MyFirstModel_AB_local_smart
 kmcos benchmark
-print "if the kmcos benchmark test worked, your installation is complete!"
+echo "if the kmcos benchmark test worked, your installation is complete!"
+cd ..
 cd ..
 rm sudo-kmcos-install-dependencies-ubuntu.bash
