@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from __future__ import print_function
-from ase.structure import molecule
+from ase.build import molecule
 from ase.thermochemistry import IdealGasThermo
 from ase.thermochemistry import HarmonicThermo
 """Very simple module that keeps several species
