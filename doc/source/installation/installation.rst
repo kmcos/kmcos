@@ -56,7 +56,7 @@ If the second command above does not work, try using 'python3' instead of 'pytho
 
 Next, you will complete the minimal installation with pip::
 
-    pip install kmcos[MINIMAL] --upgrade --user
+    pip3 install kmcos[MINIMAL] --upgrade --user
 
 Now try the the following::
 
@@ -208,7 +208,7 @@ There is more than one way to get required dependencies. I have tested MacPorts 
 Installation on windows
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Direct installation on windows is currently not supported. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions. 
+Direct installation on windows is currently not supported. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions. You may need to adjust the resolution to work effectively.
 For direct installin on windows, partial instructions have been written below. In the future, an "Ubuntu on Windows 10 via Windows Subsystem" set of instructions will be provided (and would be welcomed as a contribution).
 
 ***
