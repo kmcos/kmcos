@@ -7,7 +7,20 @@ It is recommended that you download and install `Anaconda <https://www.anaconda.
 Making a Virtual Python Environment (Optional) 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is recommended to use a virtual python environent. First, make a directory for where you will be doing your work, such as kmcWork and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
+It is recommended to use a virtual python environment for both installation and for simulations. This avoid software conflicts.
+
+OPTION 1:
+
+    sudo apt-get install python3
+    sudo apt-get install python3-venv
+    python3 -m venv ~/VENV/kmcos
+    source ~/VENV/kmcos/bin/activate
+
+If installing kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. 
+
+
+OPTION 2:
+ First, make a directory for where you will be doing your work, such as kmcWork and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
 
     pip install virtualenv
     virtualenv kmcosEnv
@@ -22,27 +35,31 @@ If installing kmcos in a virtualenv, to use kmcos after installation, you will n
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Whether installing directly or inside a virtualenv, you will make a directory that will be used for installation: kmcosInstallation. Open a terminal window in this directory. The first time you install kmcos, you will need to fetch the full package from github ::
+Whether installing directly or inside a virtualenv, you will make a directory that will be used for installation: kmcosInstallation. Open a terminal window in this directory. The first time you install kmcos, you will need to install some dependencies and fetch the full package from github ::
 
+    sudo apt-get install gfortran
+    sudo apt-get install git
+    sudo apt-get install python3
+    sudo apt-get install python-pip3
     git clone http://www.github.com/kmcos/kmcos
 
-Go into the package directory and install using the setup.py file ::
+After cloning, go into the package directory and install using the setup.py file ::
 
     cd kmcos
     python setup.py install --user
 
 If the second command above does not work, try using 'python3' instead of 'python'.  If there is an error related to "--user" then you may omit that part of the command.
 
-Next, you will complete the installation::
+Next, you will complete the minimal installation with pip::
 
     pip install kmcos[MINIMAL] --upgrade --user
 
 Now try the the following::
 
     cd examples
-    python MyFirstSnapshots.py
-    kmcos export MyFirstSnapshots.xml
-    cd MyFirstSnapshots_local_smart
+    python3 MyFirstModel_AB.py
+    kmcos export MyFirstModel_AB.ini
+    cd MyFirstModel_AB_local_smart
     kmcos benchmark
 
 If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosInstallation directory: although the files in the kmcosInstallation were used during installation, they are no longer needed. Any needed files have already been copied to other directories in your computer, such as bin or site-packages directories.
