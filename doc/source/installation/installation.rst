@@ -11,6 +11,7 @@ It is recommended to use a virtual python environment for both installation and 
 
 OPTION 1:
 
+    cd ~
     sudo apt-get install python3
     sudo apt-get install python3-venv
     python3 -m venv ~/VENV/kmcos
@@ -35,8 +36,11 @@ If installing kmcos in a virtualenv, to use kmcos after installation, you will n
 Installation on Ubuntu Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Whether installing directly or inside a virtualenv, you will make a directory that will be used for installation: kmcosInstallation. Open a terminal window in this directory. The first time you install kmcos, you will need to install some dependencies and fetch the full package from github ::
+Whether installing directly or inside a virtualenv, you will make a directory that will be used for installation, such as kmcosInstallation. Open a terminal window in this directory (you can right click in file explorer for the option to open a terminal). The first time you install kmcos, use the following commands to install some dependencies and fetch the full package from github ::
 
+    cd ~
+    mkdir kmcosInstallation
+    cd kmcosInstallation
     sudo apt-get install gfortran
     sudo apt-get install git
     sudo apt-get install python3
@@ -203,6 +207,12 @@ There is more than one way to get required dependencies. I have tested MacPorts 
 
 Installation on windows
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Direct installation on windows is currently not supported. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions. 
+For direct installin on windows, partial instructions have been written below. In the future, an "Ubuntu on Windows 10 via Windows Subsystem" set of instructions will be provided (and would be welcomed as a contribution).
+
+***
+
 In order for kmcos to work in a recent windows it is best to get Anaconda.
 
 Download anaconda and open an anaconda terminal.
