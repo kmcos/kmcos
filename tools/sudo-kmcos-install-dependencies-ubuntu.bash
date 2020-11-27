@@ -10,7 +10,7 @@ cd kmcosInstallation
 sudo apt-get install gfortran
 sudo apt-get install git
 sudo apt-get install python3
-sudo apt-get install python-pip3
+sudo apt-get install python3-pip
 git clone http://www.github.com/kmcos/kmcos
 cd kmcos
 python3 setup.py install --user
