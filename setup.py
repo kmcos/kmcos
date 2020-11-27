@@ -33,7 +33,8 @@ classifiers = [
         'Topic :: Scientific/Engineering :: Visualization',
               ]
 requires = [
-                    'ase',
+                    'numpy',
+                    'ipython',
                     #'goocanvas', #part of pygobject now, I think.
                     'lxml',
                     'matplotlib',
@@ -41,9 +42,9 @@ requires = [
                    ]
                    
 EXTRAS = {
-    'MINIMAL': ['numpy', 'lxml', 'ase', 'UnitTesterSG', 'CiteSoft'],# 'uncertainties': ['uncertainties'], #pymc...
-    'WINDOWS': ['numpy', 'lxml', 'ase', 'UnitTesterSG', 'CiteSoft', 'windows-curses'],# 'uncertainties': ['uncertainties'], #pymc...
-    'COMPLETE': ['numpy', 'lxml', 'ase', 'kiwi-gtk', 'dill', 'pycairo==1.11.1', 'pygobject==3.30', 'UnitTesterSG', 'CiteSoft']# 'uncertainties': ['uncertainties'], #pymc...
+    'MINIMAL': ['ipython', 'numpy', 'lxml', 'ase', 'UnitTesterSG', 'CiteSoft'],# 'uncertainties': ['uncertainties'], #pymc...
+    'WINDOWS': ['ipython', 'numpy', 'lxml', 'ase', 'UnitTesterSG', 'CiteSoft', 'windows-curses'],# 'uncertainties': ['uncertainties'], #pymc...
+    'COMPLETE': ['ipython', 'numpy', 'lxml', 'ase', 'kiwi-gtk', 'dill', 'pycairo==1.11.1', 'pygobject==3.30', 'UnitTesterSG', 'CiteSoft']# 'uncertainties': ['uncertainties'], #pymc...
 }
 
                    
