@@ -44,7 +44,7 @@ Whether installing directly or inside a virtualenv, you will make a directory th
     sudo apt-get install gfortran
     sudo apt-get install git
     sudo apt-get install python3
-    sudo apt-get install python-pip3
+    sudo apt-get install python3-pip
     git clone http://www.github.com/kmcos/kmcos
 
 After cloning, go into the package directory and install using the setup.py file ::
