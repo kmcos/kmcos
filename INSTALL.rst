@@ -1,7 +1,12 @@
 INSTALL
 #######
 
-For core functionality and tutorials you can simply install via ::
+
+Please refer to the
+`Manual <http://kmcos.readthedocs.org>`_ for installation
+instructions.
+
+Though not recommended, for core functionality you can simply install via ::
 
     python setup.py install
 
@@ -9,9 +14,7 @@ or ::
 
     python setup.py install --user
 
-in order to install without admin rights. Please refer to the
-`Manual <http://kmcos.readthedocs.org>`_ for further
-instructions.
+in order to install without admin rights. 
 
 
 DEPENDENCIES
