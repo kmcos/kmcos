@@ -12,7 +12,7 @@ Making a Virtual Python Environment for kmcos
 
 It is recommended to use a virtual python environment for both installation and for simulations. This avoids python software conflicts.
 
-OPTION 1 (python3-venv):
+OPTION 1 (python3-venv)::
 
     cd ~
     sudo apt-get update
@@ -23,7 +23,7 @@ OPTION 1 (python3-venv):
 
 If installing kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. 
 
-OPTION 2 (virtualenv):
+OPTION 2 (virtualenv)::
 
     cd ~
     sudo apt-get update
@@ -34,7 +34,7 @@ OPTION 2 (virtualenv):
 
 If you install kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
 
-OPTION 3 (anaconda):
+OPTION 3 (anaconda)::
     
     If you will be installing kmcos in an anaconda environment, you can make a new environment named 'kmcos' from anaconda navigator. See for example 
     `this link <https://medium.com/cluj-school-of-ai/python-environments-management-in-anaconda-navigator-ad2f0741eba7>`_ . 
