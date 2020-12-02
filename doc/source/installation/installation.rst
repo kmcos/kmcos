@@ -27,7 +27,7 @@ OPTION 2 (virtualenv)::
     sudo apt-get update
     sudo apt-get install python3-pip
     sudo apt-get install virtualenv
-    virtualenv -p /usr/bin/python3 kmcos3venv  #If the virtualenv command gives you an error, then try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
+    virtualenv -p /usr/bin/python3 kmcos3venv  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
     source ~/kmcos3venv/bin/activate
 
 If you install kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
@@ -38,9 +38,9 @@ OPTION 3 (anaconda)::
     `this link <https://medium.com/cluj-school-of-ai/python-environments-management-in-anaconda-navigator-ad2f0741eba7>`_ . 
 
 
-Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation.
+Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation. So the "--user" tags are commented out in most of our instructions.
 
-Installing kmcos on Ubuntu Linux
+Installing kmcos on Ubuntu Linux (typically inside a virtual environment)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The easiest way to install kmcos is to use the automatic installers ::
@@ -48,22 +48,22 @@ The easiest way to install kmcos is to use the automatic installers ::
     cd ~
     git clone https://github.com/kmcos/kmcos-installers
     cd kmcos-installers
-    bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a virtual environment.
+    bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv
     
-If the above simple way does not work for you, you will need to go through the commands one at a time for `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed, so you can remove the kmcosInstallation directory. Alternatively, you can navigate into that directory and go through the examples. 
+If the above simple way does not work for you, you will need to go through the commands manually one at a time from `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed, so you can remove the kmcosInstallation directory. Alternatively, you can navigate into that directory and go through the examples. 
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
-    pip install kmcos[MINIMAL] --upgrade --user
+    pip install kmcos[MINIMAL] --upgrade #--user
 
 (Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
 
     sudo apt-get install python-ase
     sudo apt-get install python3-gi
-    pip install ase --user
-    pip install kmcos[COMPLETE] --upgrade --user
+    pip install ase #--user
+    pip install kmcos[COMPLETE] --upgrade #--user
 
-If the last command of 'pip install kmcos[COMPLETE] --upgrade --user' gives an error, try to run it again.
+If the last command of 'pip install kmcos[COMPLETE] --upgrade #--user' gives an error, try to run it again.
 
 
 
