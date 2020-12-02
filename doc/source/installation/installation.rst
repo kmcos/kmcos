@@ -1,5 +1,5 @@
 Kmcos has some non-python dependencies so cannot be installed with only pip. It is recommended to install kmcos on Ubuntu within a python virtual environment, and our instructions are written accordingly.
-If you plan to use a windows os, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ .
+If you plan to use a windows machine, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ 
 and to `make an Ubuntu virtualmachine <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
 
 Making a Python Virtual Environment for kmcos within Ubuntu
