@@ -32,10 +32,8 @@ OPTION 2 (virtualenv)::
 
 If you install kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
 
-OPTION 3 (anaconda)::
-    
-    If you will be installing kmcos in an anaconda environment, you can make a new environment named 'kmcos' from anaconda navigator. See for example 
-    `this link <https://medium.com/cluj-school-of-ai/python-environments-management-in-anaconda-navigator-ad2f0741eba7>`_ . 
+OPTION 3 (anaconda): 
+If you will be installing kmcos in an anaconda environment, you can make a new environment named 'kmcos' from anaconda navigator. See for example `this link <https://medium.com/cluj-school-of-ai/python-environments-management-in-anaconda-navigator-ad2f0741eba7>`_ . 
 
 
 Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation. So the "--user" tags are commented out in most of our instructions.
