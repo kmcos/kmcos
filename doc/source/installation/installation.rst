@@ -46,9 +46,9 @@ The easiest way to install kmcos is to use one of the automatic installers (from
     cd kmcos-installers
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv
     
-If the above simple way does not work for you, you will need to go through the commands manually one at a time from `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed, so you can remove the kmcosInstallation directory. Alternatively, you can navigate into that directory and go through the examples. 
+If the above simple way does not work for you, you will need to go through the commands manually one at a time from `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed after installation, so you can remove the kmcosInstallation directory using 'rm -r directoryname'. Alternatively, you can navigate into that directory and go through the examples. 
 
-For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
+When doing kmcos upgrades, you will not need to use git again. For kmcos upgrades, you can just use the earlier pip command ::
 
     pip3 install kmcos[MINIMAL] --upgrade #--user
 
@@ -59,7 +59,7 @@ For upgrades, you will not need to use git again. For upgrades, you can just use
     pip3 install ase #--user
     pip3 install kmcos[COMPLETE] --upgrade #--user
 
-If the last command of 'pip3 install kmcos[COMPLETE] --upgrade #--user' gives an error, try to run it again.
+If the last command of 'pip3 install kmcos[COMPLETE] --upgrade #--user' gives an error before finishing, try the command a second time.
 
 
 Installation on openSUSE 12.1 Linux (Deprecated Instructions)
