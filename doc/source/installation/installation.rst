@@ -1,5 +1,3 @@
-
-
 Kmcos has some non-python dependencies (including gfortran) so cannot be installed with only pip. It is recommended to install kmcos on a Linux operating system (such as Ubuntu). Additionally, based on current best practices for Python programs, it is recommended to create a virtual environment, so our instructions begin with how to create a virtual environment.
 If you plan to use a windows os, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ .
 Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
@@ -67,57 +65,6 @@ For upgrades, you will not need to use git again. For upgrades, you can just use
 
 If the last command of 'pip install kmcos[COMPLETE] --upgrade --user' gives an error, try to run it again.
 
-
-<bold>THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.</bold>
-
-To use the core functionality
-(programmatic model setup, code generation, model execution)
-kmcos has a fairly modest depedency foot-print. You will need ::
-
-  python-numpy, a Fortran compiler, python-lxml
-
-In order to watch the model run on screen you will additionally
-need ::
-
-  python-matplotlib, python-ase
-
-Finally in order to use all features, in particular the GUI
-model editor of kmcos you have to install
-a number of dependencies. This should not be very difficult
-on a recent Linux distribution with package management. So
-on Ubuntu it suffices to call::
-
-  sudo apt-get install gazpacho gfortran python-dev \
-                       python-glade2 python-kiwi python-lxml \
-                       python-matplotlib python-numpy \
-                       python-pygoocanvas
-
-
-and if you haven't already installed it, one way to fetch the
-atomic simulation environment (ASE) is currently to ::
-
-  sudo add-apt-repository ppa:campos-dev/campos
-  sudo apt-get update
-  sudo apt-get install python-ase
-
-Or go to their `website <https://gitlab.com/ase/ase/repository/archive.zip?ref=master>`_
-to fetch the latest version.
-
-Unfortunately Debian/Ubuntu have discontinued maintaining the gazpacho package which I find very unfortunate since it eased gtk GUI building a lot and I haven't found a simple transition path (simple as in one reliable conversion script and two changed import lines) towards gtkbuilder. Therefore for the moment I can only suggest to fetch the latest old package from e.g. `here <https://gist.github.com/mhoffman/d2a9466c22f33a9e046b/raw/4c73c5029f3c01e656f161c7459f720aff331705/gazpacho_0.7.2-3_all.deb>`_ and install it manually with ::
-
-    sudo dpkg -i gazpacho_*.deb
-
-
-
-If you think this dependency list hurts. Yes, it does!
-And I am happy about any suggestions how to
-minimize it. However one should note these dependencies are only
-required for the model development. Running a model has virtually
-no dependencies except for a Fortran compiler.
-
-To ease the installation further on Ubuntu one can simply run::
-
- kmcos-install-dependencies-ubuntu
 
 
 Installation on openSUSE 12.1 Linux (Deprecated Instructions)
