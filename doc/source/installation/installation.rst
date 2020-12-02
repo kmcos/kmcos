@@ -1,14 +1,11 @@
-Kmcos has some non-python dependencies (including gfortran) so cannot be installed with only pip. It is recommended to install kmcos on a Linux operating system (such as Ubuntu). Additionally, based on current best practices for Python programs, it is recommended to create a virtual environment, so our instructions begin with how to create a virtual environment.
+Kmcos has some non-python dependencies so cannot be installed with only pip. It is recommended to install kmcos on Ubuntu within a python virtual environment, and our instructions are written accordingly.
 If you plan to use a windows os, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ .
-Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
+and to `make an Ubuntu virtualmachine <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
 
-In the future, instructions for other system configurations may be provided.
-
-
-Making a Virtual Python Environment for kmcos
+Making a Python Virtual Environment for kmcos within Ubuntu
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is recommended to use a virtual python environment for both installation and for simulations. This avoids python software conflicts.
+Using a virtual python environment for both installation and for simulations avoids python software conflicts. Here are instructions for installing a python virtual environment.
 
 OPTION 1 (python3-venv)::
 
@@ -19,7 +16,7 @@ OPTION 1 (python3-venv)::
     python3 -m venv ~/VENV/kmcos
     source ~/VENV/kmcos/bin/activate
 
-If installing kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. 
+To use kmcos after this installation, you will need to use that source activation command from the terminal each time.  When finished, you can exit this virtualenv by typing 'deactivate'. 
 
 OPTION 2 (virtualenv)::
 
@@ -27,21 +24,21 @@ OPTION 2 (virtualenv)::
     sudo apt-get update
     sudo apt-get install python3-pip
     sudo apt-get install virtualenv
-    virtualenv -p /usr/bin/python3 kmcos3venv  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
-    source ~/kmcos3venv/bin/activate
+    virtualenv -p /usr/bin/python3 kmcosvenv  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
+    source ~/kmcosvenv/bin/activate
 
-If you install kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
+To use kmcos after this installation, you will need to use that source activation command from the terminal each time.  When finished, you can exit this virtualenv by typing 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
 
 OPTION 3 (anaconda): 
 If you will be installing kmcos in an anaconda environment, you can make a new environment named 'kmcos' from anaconda navigator. See for example `this link <https://medium.com/cluj-school-of-ai/python-environments-management-in-anaconda-navigator-ad2f0741eba7>`_ . 
 
 
-Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation. So the "--user" tags are commented out in most of our instructions.
+Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation. Accordingly, the "--user" tags are commented out in our further instructions.
 
 Installing kmcos on Ubuntu Linux (typically inside a virtual environment)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The easiest way to install kmcos is to use the automatic installers ::
+The easiest way to install kmcos is to use one of the automatic installers (from within a python virtual environment) ::
 
     cd ~
     sudo apt-get install git
@@ -53,17 +50,16 @@ If the above simple way does not work for you, you will need to go through the c
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
-    pip install kmcos[MINIMAL] --upgrade #--user
+    pip3 install kmcos[MINIMAL] --upgrade #--user
 
 (Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
 
     sudo apt-get install python-ase
     sudo apt-get install python3-gi
-    pip install ase #--user
-    pip install kmcos[COMPLETE] --upgrade #--user
+    pip3 install ase #--user
+    pip3 install kmcos[COMPLETE] --upgrade #--user
 
-If the last command of 'pip install kmcos[COMPLETE] --upgrade #--user' gives an error, try to run it again.
-
+If the last command of 'pip3 install kmcos[COMPLETE] --upgrade #--user' gives an error, try to run it again.
 
 
 Installation on openSUSE 12.1 Linux (Deprecated Instructions)
