@@ -23,7 +23,6 @@ OPTION 2 (virtualenv)::
     cd ~
     sudo apt-get update
     sudo apt-get install python3
-    sudo apt-get install python3-pip
     sudo apt-get install virtualenv
     virtualenv -p /usr/bin/python3 kmcosvenv  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
     source ~/kmcosvenv/bin/activate
