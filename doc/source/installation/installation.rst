@@ -52,7 +52,7 @@ The easiest way to install kmcos is to use the automatic installers ::
     cd kmcos-installers
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a virtual environment.
     
-If the above simple way does not work for you, you will need to go through the commands one at a time for `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ 
+If the above simple way does not work for you, you will need to go through the commands one at a time for `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ 
 
 A kmcosInstallation directory is created during this process. Although the files in the kmcosInstallation were used during installation, they are no longer needed. Any needed files have already been copied to other directories in your computer, such as bin or site-packages directories. Now you can go through the examples. 
 
