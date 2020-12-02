@@ -27,7 +27,7 @@ OPTION 2 (virtualenv)::
     virtualenv -p /usr/bin/python3 kmcosvenv  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
     source ~/kmcosvenv/bin/activate
 
-To use kmcos after this installation, you will need to use that source activation command from the terminal each time.  When finished, you can exit this virtualenv by typing 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
+To use kmcos after this installation, you will need to use that source activation command from the terminal each time.  When finished, you can exit this virtualenv by typing 'deactivate'. Though you should not need it, you can find more information on virtualenv at `this video <https://www.youtube.com/watch?v=N5vscPTWKOk>`_  and `the official website <https://virtualenv.pypa.io/en/latest/>`_   
 
 OPTION 3 (anaconda): 
 If you will be installing kmcos in an anaconda environment, you can make a new environment named 'kmcos' from anaconda navigator. See for example `this link <https://medium.com/cluj-school-of-ai/python-environments-management-in-anaconda-navigator-ad2f0741eba7>`_ . 
