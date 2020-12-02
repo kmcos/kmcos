@@ -52,14 +52,14 @@ The easiest way to install kmcos is to use the automatic installers ::
     cd kmcos-installers
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a virtual environment.
     
-If the above simple way does not work for you, you will need to go through the commands one at a time for `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ 
-
-A kmcosInstallation directory is created during this process. Although the files in the kmcosInstallation were used during installation, they are no longer needed. Any needed files have already been copied to other directories in your computer, such as bin or site-packages directories. Now you can go through the examples. 
+If the above simple way does not work for you, you will need to go through the commands one at a time for `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed, so you can remove the kmcosInstallation directory. Alternatively, you can navigate into that directory and go through the examples. 
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
+
     pip install kmcos[MINIMAL] --upgrade --user
 
 (Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
+
     sudo apt-get install python-ase
     sudo apt-get install python3-gi
     pip install ase --user
@@ -68,7 +68,7 @@ For upgrades, you will not need to use git again. For upgrades, you can just use
 If the last command of 'pip install kmcos[COMPLETE] --upgrade --user' gives an error, try to run it again.
 
 
-THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.::
+<bold>THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.</bold>
 
 To use the core functionality
 (programmatic model setup, code generation, model execution)
