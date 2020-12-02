@@ -1,118 +1,69 @@
-It is recommended to install kmcos on Ubuntu Linux with Anaconda.
-If you plan to use a windows computer, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ .
+Kmcos has some non-python dependencies (including gfortran) so cannot be installed with only pip. It is recommended to install kmcos on a Linux operating system (such as Ubuntu). Additionally, based on current best practices for Python programs, it is recommended to create a virtual environment, so our instructions begin with how to create a virtual environment.
+If you plan to use a windows os, it is recommended to first get `VirtualBox <https://www.virtualbox.org/wiki/Downloads>`_ .
 Then get Ubuntu. Here are some `Example Instructions to install Ubuntu <https://www.freecodecamp.org/news/how-to-install-ubuntu-with-oracle-virtualbox/>`_ .
-It is recommended that you download and install `Anaconda <https://www.anaconda.com/products/individual>`_ inside your Ubuntu operating system.
+
+In the future, instructions for other system configurations may be provided.
 
 
-Making a Virtual Python Environment (Optional) 
+Making a Virtual Python Environment for kmcos
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is recommended to use a virtual python environent. First, make a directory for where you will be doing your work, such as kmcWork and open a terminal window in this directory. Now, you will make a python virtual environment (using `pip <http://www.pip-installer.org/en/latest/installing.html>`_  to get this ability) so that you do not break any other software on your computer ::
+It is recommended to use a virtual python environment for both installation and for simulations. This avoids python software conflicts.
 
-    pip install virtualenv
-    virtualenv kmcosEnv
+OPTION 1 (python3-venv)::
 
-The virtualenvr must be activated::
+    cd ~
+    sudo apt-get update
+    sudo apt-get install python3
+    sudo apt-get install python3-venv
+    python3 -m venv ~/VENV/kmcos
+    source ~/VENV/kmcos/bin/activate
 
-    source kmcosEnv/bin/activate
+If installing kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. 
 
-If installing kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
+OPTION 2 (virtualenv)::
+
+    cd ~
+    sudo apt-get update
+    sudo apt-get install python3-pip
+    sudo apt-get install virtualenv
+    virtualenv -p /usr/bin/python3 kmcos3venv  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
+    source ~/kmcos3venv/bin/activate
+
+If you install kmcos in a virtualenv, to use kmcos after installation, you will need to activate from the terminal each time, since kmcos will only be installed in the virtualenv. To exit this virtualenv you will type 'deactivate'. You can find more information on virtualenv at https://www.youtube.com/watch?v=N5vscPTWKOk and https://virtualenv.pypa.io/en/latest/
+
+OPTION 3 (anaconda): 
+If you will be installing kmcos in an anaconda environment, you can make a new environment named 'kmcos' from anaconda navigator. See for example `this link <https://medium.com/cluj-school-of-ai/python-environments-management-in-anaconda-navigator-ad2f0741eba7>`_ . 
 
 
-Installation on Ubuntu Linux
+Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation. So the "--user" tags are commented out in most of our instructions.
+
+Installing kmcos on Ubuntu Linux (typically inside a virtual environment)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Whether installing directly or inside a virtualenv, you will make a directory that will be used for installation: kmcosInstallation. Open a terminal window in this directory. The first time you install kmcos, you will need to fetch the full package from github ::
+The easiest way to install kmcos is to use the automatic installers ::
 
-    git clone http://www.github.com/kmcos/kmcos
-
-Go into the package directory and install using the setup.py file ::
-
-    cd kmcos
-    python setup.py install --user
-
-If the second command above does not work, try using 'python3' instead of 'python'.  If there is an error related to "--user" then you may omit that part of the command.
-
-Next, you will complete the installation::
-
-    pip install kmcos[MINIMAL] --upgrade --user
-
-Now try the the following::
-
-    cd examples
-    python MyFirstSnapshots.py
-    kmcos export MyFirstSnapshots.xml
-    cd MyFirstSnapshots_local_smart
-    kmcos benchmark
-
-If you don't see an error, kmcos is working! (note: As of Nov 2020, kmcos worktest has not been implemented yet, but it will be.).  Now you can go through the examples. Once you are finished, you may delete the kmcosInstallation directory: although the files in the kmcosInstallation were used during installation, they are no longer needed. Any needed files have already been copied to other directories in your computer, such as bin or site-packages directories.
+    cd ~
+    sudo apt-get install git
+    git clone https://github.com/kmcos/kmcos-installers
+    cd kmcos-installers
+    bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv
+    
+If the above simple way does not work for you, you will need to go through the commands manually one at a time from `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed, so you can remove the kmcosInstallation directory. Alternatively, you can navigate into that directory and go through the examples. 
 
 For upgrades, you will not need to use git again. For upgrades, you can just use the earlier pip command ::
 
-    pip install kmcos[MINIMAL] --upgrade --user
-
+    pip install kmcos[MINIMAL] --upgrade #--user
 
 (Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
-    sudo apt-get update
-    sudo apt-get install gfortran
+
     sudo apt-get install python-ase
     sudo apt-get install python3-gi
-    pip install ase --user
-    pip install kmcos[COMPLETE] --upgrade --user
+    pip install ase #--user
+    pip install kmcos[COMPLETE] --upgrade #--user
 
-If the last command of 'pip install kmcos[COMPLETE] --upgrade --user' gives an error, try to run it again.
+If the last command of 'pip install kmcos[COMPLETE] --upgrade #--user' gives an error, try to run it again.
 
-
-THE ABOVE INSTRUCTIONS SHOULD ALSO WORK ON MOST LINUX PLATFORMS. BELOW IS ADDITOINAL INFO FOR UBUNTU INSTALLATION THAT IS CONSIDERED DEPRECATED, FOLLOWED BY OTHER DEPRECATED INSTRUCTIONS.  UPDATED INSTRUCTIONS WILL BE PLACED ON THIS SITE IF PROVIDED.
-
-To use the core functionality
-(programmatic model setup, code generation, model execution)
-kmcos has a fairly modest depedency foot-print. You will need ::
-
-  python-numpy, a Fortran compiler, python-lxml
-
-In order to watch the model run on screen you will additionally
-need ::
-
-  python-matplotlib, python-ase
-
-Finally in order to use all features, in particular the GUI
-model editor of kmcos you have to install
-a number of dependencies. This should not be very difficult
-on a recent Linux distribution with package management. So
-on Ubuntu it suffices to call::
-
-  sudo apt-get install gazpacho gfortran python-dev \
-                       python-glade2 python-kiwi python-lxml \
-                       python-matplotlib python-numpy \
-                       python-pygoocanvas
-
-
-and if you haven't already installed it, one way to fetch the
-atomic simulation environment (ASE) is currently to ::
-
-  sudo add-apt-repository ppa:campos-dev/campos
-  sudo apt-get update
-  sudo apt-get install python-ase
-
-Or go to their `website <https://gitlab.com/ase/ase/repository/archive.zip?ref=master>`_
-to fetch the latest version.
-
-Unfortunately Debian/Ubuntu have discontinued maintaining the gazpacho package which I find very unfortunate since it eased gtk GUI building a lot and I haven't found a simple transition path (simple as in one reliable conversion script and two changed import lines) towards gtkbuilder. Therefore for the moment I can only suggest to fetch the latest old package from e.g. `here <https://gist.github.com/mhoffman/d2a9466c22f33a9e046b/raw/4c73c5029f3c01e656f161c7459f720aff331705/gazpacho_0.7.2-3_all.deb>`_ and install it manually with ::
-
-    sudo dpkg -i gazpacho_*.deb
-
-
-
-If you think this dependency list hurts. Yes, it does!
-And I am happy about any suggestions how to
-minimize it. However one should note these dependencies are only
-required for the model development. Running a model has virtually
-no dependencies except for a Fortran compiler.
-
-To ease the installation further on Ubuntu one can simply run::
-
- kmcos-install-dependencies-ubuntu
 
 
 Installation on openSUSE 12.1 Linux (Deprecated Instructions)
@@ -186,6 +137,12 @@ There is more than one way to get required dependencies. I have tested MacPorts 
 
 Installation on windows
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Direct installation on windows is currently not supported. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions. You may need to adjust the resolution to work effectively.
+For direct installin on windows, partial instructions have been written below. In the future, an "Ubuntu on Windows 10 via Windows Subsystem" set of instructions will be provided (and would be welcomed as a contribution).
+
+***
+
 In order for kmcos to work in a recent windows it is best to get Anaconda.
 
 Download anaconda and open an anaconda terminal.

@@ -444,10 +444,13 @@ def build(options):
         f2py.main()  # Doesn't work according to Alberdi, but works in Erwin's.
     except:
         from subprocess import call
-        command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
+        #'python3' is assumed to be the default command, but it could be 'python'. So we use "sys.executable" to avoid getting the wrong one.
+        command = [sys.executable, '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
                    module_name, '-c'] + src_files
         print(' '.join(command))
         call(command)
+
+            
     sys.argv = true_argv
 
 

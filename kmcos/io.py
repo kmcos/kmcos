@@ -3079,7 +3079,7 @@ def export_source(project_tree, export_dir=None, code_generator=None, options=No
 
     for filename in exec_files:
         shutil.copy(os.path.join(APP_ABS_PATH, filename), export_dir)
-        os.chmod(os.path.join(export_dir, filename), 0o755)
+        os.chmod(os.path.join(export_dir, filename), 0o755) #https://riptutorial.com/python/example/4989/octal-constants
 
     # SECOND
     # produce those source files that are written on the fly
