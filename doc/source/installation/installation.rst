@@ -46,6 +46,7 @@ Installing kmcos on Ubuntu Linux (typically inside a virtual environment)
 The easiest way to install kmcos is to use the automatic installers ::
 
     cd ~
+    sudo apt-get install git
     git clone https://github.com/kmcos/kmcos-installers
     cd kmcos-installers
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv
