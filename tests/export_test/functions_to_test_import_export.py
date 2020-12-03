@@ -88,7 +88,7 @@ def test_import_export_otf():
     pt.import_xml_file('default.xml')
     pt.shorten_names(max_length = 35)
     kmcos.io.export_source(pt, TEST_DIR, code_generator='otf')
-    for filename in ['base', 'lattice', 'proclist', 'proclist_pars', 'proclist_constants'] \
+    for filename in ['base', 'lattice',  'proclist_pars', 'proclist_constants', 'proclist'] \ #original order was 'base', 'lattice', 'proclist', 'proclist_pars','proclist_constants'
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
         testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
@@ -145,7 +145,7 @@ def test_import_export_pdopd_lat_int():
     pt = kmcos.types.Project()
     pt.import_xml_file('pdopd.xml')
     kmcos.io.export_source(pt, TEST_DIR, code_generator='lat_int')
-    for filename in ['base', 'lattice', 'proclist_constants', 'proclist'] \
+    for filename in ['base', 'lattice', 'proclist_constants', 'proclist'] \ #original order was 'base', 'lattice', 'proclist', 'proclist_constants'
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'nli*.f90'))]:
 
@@ -178,7 +178,7 @@ def test_import_export_intZGB_otf():
     pt = kmcos.types.Project()
     pt.import_xml_file('intZGB_otf.xml')
     kmcos.io.export_source(pt, TEST_DIR, code_generator='otf')
-    for filename in ['base', 'lattice', 'proclist_pars','proclist_constants', 'proclist'] \
+    for filename in ['base', 'lattice', 'proclist_pars','proclist_constants', 'proclist'] \ #original order was 'base', 'lattice', 'proclist', 'proclist_pars','proclist_constants'
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
         testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
