@@ -58,7 +58,7 @@ This section will outline different ways of using kmcos:
   source from there or inspect XML file with one
   of the next methods below.
 
-- *the GUI editor*
+- *kmcos edit, the model GUI editor (deprecated)*
 
   Open an existing project \*.xml file with ::
 

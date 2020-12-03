@@ -33,18 +33,21 @@ classifiers = [
         'Topic :: Scientific/Engineering :: Visualization',
               ]
 requires = [
-                    'ase',
-                    'pycairo==1.11.1',
-                    #'pygobject==3.30',
+                    'numpy',
+                    'ipython',
                     #'goocanvas', #part of pygobject now, I think.
-                    'kiwi',
-                    'kiwi-gtk',
                     'lxml',
                     'matplotlib',
-                    'UnitTesterSG',
-                    'CiteSoft'
 #                    'pygtk', #This is only for windows so should be under extras.
                    ]
+                   
+EXTRAS = {
+    'MINIMAL': ['ipython', 'numpy', 'lxml', 'ase', 'UnitTesterSG', 'CiteSoft'],# 'uncertainties': ['uncertainties'], #pymc...
+    'WINDOWS': ['ipython', 'numpy', 'lxml', 'ase', 'UnitTesterSG', 'CiteSoft', 'windows-curses'],# 'uncertainties': ['uncertainties'], #pymc...
+    'COMPLETE': ['ipython', 'numpy', 'lxml', 'ase', 'kiwi-gtk', 'dill', 'pycairo==1.11.1', 'pygobject==3.30', 'UnitTesterSG', 'CiteSoft', 'pytest']# 'uncertainties': ['uncertainties'], #pymc...
+}
+
+                   
 packages = [
            'kmcos',
            'kmcos.utils',
@@ -122,6 +125,7 @@ setup(
       packages=packages,
       platforms=platforms,
       #requires=requires,
+      extras_require=EXTRAS,
       scripts=scripts,
       url=url,
       version=version,

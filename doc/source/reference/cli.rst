@@ -42,7 +42,7 @@ List of commands
             Do not send optimizing flags to compiler.
 
 
-``kmcos edit <xml-file>``
+``kmcos edit <xml-file> (deprecated)``
     Open the kmcos xml-file in a GUI to edit
     the model.
 
