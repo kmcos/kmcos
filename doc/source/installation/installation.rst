@@ -24,8 +24,8 @@ OPTION 2 (virtualenv)::
     sudo apt-get update
     sudo apt-get install python3
     sudo apt-get install virtualenv
-    virtualenv -p /usr/bin/python3 kmcosvenv  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
-    source ~/kmcosvenv/bin/activate
+    virtualenv -p /usr/bin/python3 ~/VENV/kmcos  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
+    source ~~/VENV/kmcos/bin/activate
 
 To use kmcos after this installation, you will need to use that source activation command from the terminal each time.  When finished, you can exit this virtualenv by typing 'deactivate'. Though you should not need it, you can find more information on virtualenv at `this video <https://www.youtube.com/watch?v=N5vscPTWKOk>`_  and `the official website <https://virtualenv.pypa.io/en/latest/>`_   
 
