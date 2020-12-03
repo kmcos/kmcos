@@ -76,11 +76,36 @@ public :: add_proc, &
   save_system, &
   set_rate_const, &
   set_null_species, &
+  set_debug_level, &
   get_null_species, &
+  unscale_reactions, &
+  scale_reactions, &
+  set_original_rate_const, &
+  initialize_proc_pair_index, &
+  initialize_reverse_index, &
+  set_buffer_parameter, &
+  get_buffer_parameter, &
+  set_threshold_parameter, &
+  get_threshold_parameter, &
+  get_execution_steps, &
+  get_scaling_factor, &
   update_accum_rate, &
   update_integ_rate, &
   update_clocks, &
-  update_rates_matrix
+  update_rates_matrix, &
+  update_sum_sf, &
+  update_eq_proc, &
+  save_execution, &
+  reset_saved_execution_data, &
+  initialize_pair_is_eq, &
+  initialize_is_diff_proc, &
+  check_proc_eq, &
+  get_ave_scaling_factor, &
+  get_saved_execution, &
+  get_save_limit, &
+  get_saved_scaling_factor, &
+  get_last_set_scaling_factor, &
+  update_integ_rate_sb
 
 
 ! Public constants
@@ -144,6 +169,16 @@ real(kind=rdouble), dimension(:), allocatable :: integ_rates
 !
 !******
 !------ S. Matera 09/18/2012------
+real(kind=rdouble), dimension(:), allocatable :: integ_counter
+!****v* base/integ_counter
+! FUNCTION
+!   Stores the time-integrated counts (non-normalized to surface area) of
+!   the configurations necessary to execute a process for all processes.
+!   It is used to gather statistics about single-species probabilities
+!   (coverages) and pair-probabilities.
+!
+!******
+
 integer(kind=iint), dimension(:), allocatable :: nr_of_sites
 !****v* base/nr_of_sites
 ! FUNCTION
@@ -214,9 +249,557 @@ character(len=200) :: system_name
 !   have in a filename either, i.e. only [A-Za-z0-9\_-].
 !******
 
+! **** NEW: TODO: fix formating
+integer(kind=iint), dimension(:), allocatable :: proc_pair_indices
+!****v* base/proc_pair_indices
+! FUNCTION
+!   Stores the index of each proc in the lists that hold information
+!   about the pair processes in the temporal acceleration scheme.
+!   The sign of the index is positive for forward reactions and negative
+!   for reverse reactions.
+!******
+integer(kind=iint), dimension(:), allocatable :: procstat_eq
+!****v* base/procstat_eq
+! FUNCTION
+!   Out of the last :math:`\mathbf{n}_e` executions of either
+!   the forward or the reverse of a proc, this array stores
+!   the number of executions separately for the forward and the
+!   reverse of each pair in the temporal acceleration scheme.
+!   The sum of the number of forward and reverse executions
+!   of each proc pair should always be smaller then or equal
+!   to :math:`\mathbf{n}_e`.
+!******
+logical, dimension(:), allocatable :: pair_is_eq
+!****v* base/pair_is_eq
+! FUNCTION
+!   Stores a logical for each proc pair that is true if proc pair 
+!   is equilibrated and false if proc pair is non-equilibrated 
+!   in the temporal acceleration scheme.
+!******
+logical, dimension(:), allocatable :: pair_is_loc_eq
+!****v* base/pair_is_loc_eq
+! FUNCTION
+!   Stores a logical for each proc pair that is true if proc pair 
+!   is locally equilibrated (at least :math:`\mathbf{n}_e` executions
+!   have occured within the current superbsin) and false if proc pair 
+!   is not locally equilibrated in the temporal acceleration scheme.
+!******
+logical, dimension(:), allocatable :: is_diff_proc
+!****v* base/is_diff_proc
+! FUNCTION
+!   Stores a logical for each proc that is True if the process is a
+!   diffusion process and otherwise False.
+!******
+real(kind=rdouble), dimension(:), allocatable :: scaling_factors
+!****v* base/scaling_factors
+! FUNCTION
+!   Stores the scaling factors for each proc pair in the
+!   temporal acceleration scheme.
+!******
+real(kind=rdouble), dimension(:), allocatable :: last_set_scaling_factors
+!****v* base/last_set_scaling_factors
+! FUNCTION
+!   Stores the value of the scaling factor that was last set during the 
+!   scale_reaction subroutine (=0 if never set) for each proc pair in the
+!   temporal acceleration scheme.
+!******
+real(kind=rdouble), dimension(:), allocatable :: sum_sf
+!****v* base/sum_sf
+! FUNCTION
+!   Stores the accumulated scaling factors, that is, for each kmc step and
+!   for each process the scaling factor used during that step is added to the
+!   value. This array gets updated every time the scaling factors change, that 
+!   is, every time scale_reactions or unscale_reactions is called in the
+!   temporal acceleration scheme.
+!******
+integer(kind=ibyte), dimension(:,:), allocatable :: proc_pair_exec
+!****v* base/proc_pair_exec
+! FUNCTION
+!   For each proc pair this array stores a list with integers
+!   keeping track of the sequence of forward and reverse
+!   executions within the last :math:`\mathbf{n}_e` executions 
+!   of either the forward or the reverse of a proc.
+!   Initially it is filled with zeros and the pointer stored in
+!   pointers_exec points to the first value of the list.
+!   Everytime a forward (reverse) of proc proc_nr is executed 
+!   the value at the position of the pointer in the list 
+!   corresponding to the proc_nr is replaced with 1 (-1) and the 
+!   pointer is moved one step forward.
+!   If the pointer reaches the end of the list it is moved to the
+!   beginning of the list in a cyclic fashion.
+!   One is added to the corresponding number of forward (reverse) 
+!   executions in procstat_eq.
+!   If the replaced value is zero no further book-keeping is done.
+!   If the replaced value is 1 (-1) one is subtracted from the 
+!   corresponding number of forward (reverse) executions in 
+!   procstat_eq.
+!******
+integer(kind=iint), dimension(:), allocatable :: pointers_exec
+!****v* base/pointers_exec
+! FUNCTION
+!   Stores the index for each proc pair that points to the next
+!   element to be replaced (the oldest executed step) in 
+!   proc_pair_exec.
+!******
+integer(kind=ilong), dimension(:), allocatable :: proc_pair_exec_sb
+!****v* base/proc_pair_exec_sb
+! FUNCTION
+!   For each proc pair this array stores the number of executions 
+!   within the current superbasin. It is reset to zeros every time
+!   a non-equilibrated reaction occurs (in the unscale_reactions 
+!   subroutine).
+!******
+integer(kind=iint), dimension(:), allocatable :: saved_executions
+!****v* base/saved_executions
+! FUNCTION
+!   Used to store executed processes after a target process
+!******
+real(kind=rdouble), dimension(:), allocatable :: saved_scaling_factors
+!****v* base/saved_scaling_factors
+! FUNCTION
+!   Used to store scaling factors of executed processes after a target process
+!******
+integer(kind=iint), dimension(:), allocatable :: reverse_indices
+!****v* base/reverse_indices
+! FUNCTION
+!   For each process index, proc, this array stores the index of the
+!   reverse process in proclist.
+!******
+integer(kind=iint) :: execution_steps
+!****v* base/execution_steps
+! FUNCTION
+!   Used for the temporal acceleration scheme.
+!******
+real(kind=rdouble) :: threshold_parameter
+!****v* base/threshold_parameter
+! FUNCTION
+!   Used for the temporal acceleration scheme.
+!******
+integer(kind=ishort) :: debug
+!****v* base/debug
+! FUNCTION
+!   If > 0, prints information 
+!******
+real(kind=rdouble), dimension(:), allocatable :: integ_rates_sb
+!****v* base/integ_rates_sb
+! FUNCTION
+!   Stores the time-integrated rates (non-normalized to surface area)
+!   evaluated within the current superbasin.
+!   integ_rates_sb is reset to zeros whenever the system exits the
+!   current superbasin as a consequence of the execution of an 
+!   irreversible process.
+!   integ_rates_sb is calculated using the non-scaled (original) rates.
+!   It is used to determine the appropriate scaling factors for each
+!   proc at the end of each sampling period in the temporal acceleration 
+!   scheme.
+!******
+real(kind=rdouble) :: buffer_parameter
+!****v* base/buffer_parameter
+! FUNCTION
+!   Used for the temporal acceleration scheme.
+!******
+integer(kind=iint) :: save_limit
+!****v* base/save_limit
+! FUNCTION
+!   Used for the temporal acceleration scheme.
+!******
+
+
+
+! TODO: certainly has to be changed...
+real(kind=rdouble), dimension(:), allocatable :: original_rates
+!****v* base/original_rates
+! FUNCTION
+!   Stores the original (unmodified) rate constants for each process 
+!   in s^-1 in the temporal acceleration scheme.
+!******
+
 !****************
 contains
 !****************
+
+subroutine update_eq_proc(proc)
+    !****f* base/update_eq_proc
+    ! FUNCTION
+    !    update_eq_proc updates the book-keeping regarding which reaction pairs
+    !    are equilibrated. 
+    !
+    ! ARGUMENTS
+    !
+    !    * ``proc`` positive integer that states the process that has just been
+    !    executed
+    !******
+    integer(kind=iint), intent(in) :: proc
+    integer(kind=iint) :: pair_index, r_proc, pointer_index
+    logical :: forward_proc
+
+    ! Make sure proc_nr is in the right range
+    ASSERT(proc.gt.0,"update_eq_proc: proc has to be positive")
+    ASSERT(proc.le.nr_of_proc,"update_eq_proc: proc has to be less or equal nr_of_proc.")
+
+    !get index of process pair
+    pair_index = abs(proc_pair_indices(proc))
+
+    ! *** This part only to be done for non-diff processes ***
+    if (is_diff_proc(proc) .eqv. .false.) then
+        !Add 1 to process executions for proc in procstat_eq
+        procstat_eq(proc) = procstat_eq(proc) + 1
+
+        !get index of of reverse process
+        r_proc = reverse_indices(proc)
+
+        !determine if proc is a forward process.
+        !Note that forward processes per definition have positive indices in proc_pair_indices.
+        if (proc_pair_indices(proc).gt.0) then
+            forward_proc = .true.
+        else
+            forward_proc = .false.
+        endif
+
+        !get the element that is currently pointed to in pointers_exec
+        pointer_index = pointers_exec(pair_index)
+
+        !For debugging
+        if (debug > 2) then
+            print *,"BASE/UPDATE_EQ_PROC/PAIR_INDEX:", pair_index
+            print *,"BASE/UPDATE_EQ_PROC/PROC:", proc
+            print *,"BASE/UPDATE_EQ_PROC/R_PROC:", r_proc
+            print *,"BASE/UPDATE_EQ_PROC/FORWARD_PROC:", forward_proc
+            print *,"BASE/UPDATE_EQ_PROC/POINTER_INDEX:", pointer_index
+        endif
+    
+        !If proc pair has not yet reached :math:`\mathbf{n}_e` executions, 
+        !just the proc_pair_exec should be updated.
+        if (proc_pair_exec(pair_index,pointer_index).eq.0 .and. forward_proc) then
+            proc_pair_exec(pair_index,pointer_index) = 1
+        else if (proc_pair_exec(pair_index,pointer_index).eq.0 .and. .not. forward_proc) then
+            proc_pair_exec(pair_index,pointer_index) = -1
+        !If the oldest executed step was a forward reaction (a 1 in proc_pair_exec),
+        !then 1 should be subtracted from the forward process in procstat_eq.
+        else if (proc_pair_exec(pair_index,pointer_index).eq.1 .and. forward_proc) then
+            procstat_eq(proc) = procstat_eq(proc) - 1
+            proc_pair_exec(pair_index,pointer_index) = 1 
+        else if (proc_pair_exec(pair_index,pointer_index).eq.1 .and. .not. forward_proc) then
+            procstat_eq(r_proc) = procstat_eq(r_proc) - 1
+            proc_pair_exec(pair_index,pointer_index) = -1
+        !If the oldest executed step was a reverse reaction (a -1 in proc_pair_exec),
+        !then 1 should be subtracted from the reverse process in procstat_eq.
+        else if (proc_pair_exec(pair_index,pointer_index).eq.-1 .and. .not. forward_proc) then
+            procstat_eq(proc) = procstat_eq(proc) - 1
+            proc_pair_exec(pair_index,pointer_index) = -1
+        else if (proc_pair_exec(pair_index,pointer_index).eq.-1 .and. forward_proc) then
+            procstat_eq(r_proc) = procstat_eq(r_proc) - 1
+            proc_pair_exec(pair_index,pointer_index) = 1
+        else
+            print *,"Could not update procstat_eq"
+            print *,"BASE/UPDATE_EQ_PROC/PROC_PAIR_EXEC(PAIR_INDEX,POINTER_INDEX):", proc_pair_exec(pair_index,pointer_index)
+            print *,"BASE/UPDATE_EQ_PROC/FORWARD_PROC:", forward_proc
+            stop
+        endif
+
+        !For debugging
+        if (debug > 2) then
+            print *,"BASE/UPDATE_EQ_PROC/PROCSTAT_EQ(PROC):", procstat_eq(proc)
+            print *,"BASE/UPDATE_EQ_PROC/PROCSTAT_EQ(R_PROC):", procstat_eq(r_proc)
+            print *,"BASE/UPDATE_EQ_PROC/PROC_PAIR_EXEC(PAIR_INDEX,POINTER_INDEX):", proc_pair_exec(pair_index,pointer_index)
+            print *,"BASE/UPDATE_EQ_PROC/EQ_ASSESSMENT:", (abs(procstat_eq(proc)-procstat_eq(r_proc))/real(execution_steps))
+            print *,"BASE/UPDATE_EQ_PROC/THRESHOLD_PARAMETER:", threshold_parameter
+        endif
+
+        !Update pointers_exec
+        if (pointer_index.eq.execution_steps) then
+            pointers_exec(pair_index) = 1
+        else
+            pointers_exec(pair_index) = pointers_exec(pair_index) + 1
+        endif
+
+        !Do a check on procstat_eq
+        ASSERT((procstat_eq(proc)+procstat_eq(r_proc)).le.execution_steps,"update_eq_proc: Execution steps exceeded.")
+
+        !Determine if pair is equilibrated.
+        if ((procstat_eq(proc)+procstat_eq(r_proc)).eq.execution_steps .and.  abs(procstat_eq(proc)-procstat_eq(r_proc)).lt.(threshold_parameter*execution_steps)) then
+            !For debugging
+            if (debug > 0) then
+                if (pair_is_eq(pair_index) .eqv. .false.) then
+                    print *,""
+                    print *,"BASE/UPDATE_EQ_PROC/PROC BECAME EQ.:",proc
+                    print *,"BASE/UPDATE_EQ_PROC/EQ_ASSESSMENT:", (abs(procstat_eq(proc)-procstat_eq(r_proc))/real(execution_steps))
+                    print *,"BASE/UPDATE_EQ_PROC/THRESHOLD_PARAMETER:", threshold_parameter
+                    print *,""
+
+                endif
+            endif
+            pair_is_eq(pair_index) = .true.
+        else
+            !For debugging
+            if (debug > 0) then
+                if (pair_is_eq(pair_index) .eqv. .true.) then
+                    print *,""
+                    print *,"BASE/UPDATE_EQ_PROC/PROC BECAME NON-EQ.:",proc
+                    print *,"BASE/UPDATE_EQ_PROC/EQ_ASSESSMENT:", (abs(procstat_eq(proc)-procstat_eq(r_proc))/real(execution_steps))
+                    print *,"BASE/UPDATE_EQ_PROC/THRESHOLD_PARAMETER:", threshold_parameter
+                    print *,""
+                endif
+            endif
+            pair_is_eq(pair_index) = .false.
+        endif
+    endif
+
+    ! *** This part to be done for every process ***
+    !Add 1 to process executions in local superbasin for proc pair.
+    proc_pair_exec_sb(pair_index) = proc_pair_exec_sb(pair_index) + 1
+
+    !Determine if pair is locally equilibrated.
+    if (pair_is_eq(pair_index) .eqv. .true.) then
+        if (proc_pair_exec_sb(pair_index).ge.execution_steps) then
+            !For debugging
+            if (debug > 1) then
+                if (pair_is_loc_eq(pair_index) .eqv. .false.) then
+                    print *,"BASE/UPDATE_EQ_PROC/PROC BECAME LOC. EQ.:",proc
+                endif
+            endif
+            pair_is_loc_eq(pair_index) = .true.
+        endif
+    else
+        pair_is_loc_eq(pair_index) = .false.
+    endif
+
+    !For debugging
+    if (debug > 2) then
+        print *,"BASE/UPDATE_EQ_PROC/PROC_PAIR_EXEC_SB(PAIR_INDEX):", proc_pair_exec_sb(pair_index)
+        print *,"BASE/UPDATE_EQ_PROC/PAIR_IS_EQ(PAIR_INDEX):", pair_is_eq(pair_index)
+        print *,"BASE/UPDATE_EQ_PROC/PAIR_IS_LOC_EQ(PAIR_INDEX):", pair_is_loc_eq(pair_index)
+    endif
+end subroutine update_eq_proc
+
+
+subroutine check_proc_eq(proc, is_eq)
+    !****f* base/check_proc_eq
+    ! FUNCTION
+    !    Check if the just executed process is equilibrated.
+    !
+    ! ARGUMENTS
+    !    * ``proc`` positive integer that states the process
+    !    * ``is_eq`` Return logical that is true if process
+    !    is equilibrated.
+    !
+    !******
+
+    integer(kind=iint), intent(in) :: proc
+    logical, intent(out) :: is_eq
+
+    ! Make sure proc_nr is in the right range
+    ASSERT(proc.gt.0,"add_proc: proc has to be positive")
+    ASSERT(proc.le.nr_of_proc,"add_proc: proc has to be less or equal nr_of_proc.")
+
+    is_eq = pair_is_eq(abs(proc_pair_indices(proc)))
+end subroutine check_proc_eq
+
+subroutine scale_reactions
+    !****f* base/scale_reactions
+    ! FUNCTION
+    !    Scale the rate constants of all locally equilibrated reactions, that is,
+    !    reactions that have been executed at least :math:`\mathbf{n}_e` times
+    !    within the current superbasin.
+    !    The scaling factor is calculated from the estimated escape rate of the 
+    !    current superbasin and the buffer parameter.
+    !******
+
+    real(kind=rdouble) :: escape_rate
+    integer(kind=iint) :: i, pair_index, r_proc
+
+    escape_rate = 0.
+    do i = 1, nr_of_proc
+    pair_index = abs(proc_pair_indices(i))
+    if (.not. pair_is_loc_eq(pair_index)) then
+        escape_rate = escape_rate + integ_rates_sb(i)
+    endif
+    enddo
+
+    do i = 1, nr_of_proc
+    pair_index = abs(proc_pair_indices(i))
+    r_proc = reverse_indices(i)
+    if (proc_pair_indices(i).gt.0.) then
+        if (pair_is_loc_eq(pair_index)) then
+            scaling_factors(pair_index) = min(buffer_parameter*2*escape_rate &
+                 /(integ_rates_sb(i)+integ_rates_sb(r_proc)),1.)
+            ! TODO: do we really need this?
+            last_set_scaling_factors(pair_index) = scaling_factors(pair_index)
+            !For debugging
+            if (debug > 2) then
+                print *,"BASE/SCALE_REACTIONS/ESCAPE_RATE:", escape_rate
+                print *,"BASE/SCALE_REACTIONS/PROC:", i
+                print *,"BASE/SCALE_REACTIONS/R_PROC:", r_proc
+                print *,"BASE/SCALE_REACTIONS/PAIR_INDEX:", pair_index
+                print *,"BASE/SCALE_REACTIONS/BUFFER_PARAMETER:", buffer_parameter
+                print *,"BASE/SCALE_REACTIONS/PAIR_RATE:", integ_rates_sb(i)+integ_rates_sb(r_proc)
+                print *,"BASE/SCALE_REACTIONS/SCALING_ASSESSMENT:", (integ_rates_sb(i)+ &
+                integ_rates_sb(r_proc))/(2*escape_rate)
+                print *,"BASE/SCALE_REACTIONS/SCALING_FACTORS(PAIR_INDEX):", scaling_factors(pair_index)
+                print *,""
+            endif
+        else
+            if (scaling_factors(pair_index).ne.1) then
+                scaling_factors(pair_index) = 1
+            endif
+        endif
+    endif
+    enddo
+end subroutine scale_reactions
+
+subroutine unscale_reactions
+    !****f* base/unscale_reactions
+    ! FUNCTION
+    !    Reset the scaling factors for all processes to zero.
+    !    This function gets called everytime a non-equilibrated 
+    !    process has been executed to make sure that the change 
+    !    in system dynamics resulting from the execution of the 
+    !    non-equilibrated process will be accurately captured.
+    !******
+
+    integer(kind=iint) :: i, pair_index, r_proc
+
+
+    do i = 1, nr_of_proc
+    integ_rates_sb(i) = 0
+    pair_index = abs(proc_pair_indices(i))
+    r_proc = reverse_indices(i)
+    if (proc_pair_indices(i).gt.0.) then
+        if (debug > 3) then
+            print *,"BASE/UNSCALE_REACTIONS/PROC:", i
+            print *,"BASE/UNSCALE_REACTIONS/R_PROC:", r_proc
+            print *,"BASE/UNSCALE_REACTIONS/PAIR_INDEX:", pair_index
+            print *,"BASE/UNSCALE_REACTIONS/SCALING_FACTORS(PAIR_INDEX):", scaling_factors(pair_index)
+            print *,""
+        endif
+        scaling_factors(pair_index) = 1
+        proc_pair_exec_sb(pair_index) = 0
+        pair_is_loc_eq(pair_index) = .false.
+    endif
+    enddo
+end subroutine unscale_reactions
+
+subroutine update_sum_sf(counter_sp)
+    !****f* base/update_sum_sf
+    ! FUNCTION
+    !    Update sum_sf based on the current value of the scaling
+    !    factors and the number of kmc steps that have been run
+    !    with these scaling factors.
+    !******
+    ! ARGUMENTS
+    !    * ``k`` the number of run kmc steps
+    !
+    !******
+
+    integer(kind=iint), intent(in) :: counter_sp
+    integer(kind=iint) :: i
+    
+    do i = 1, nr_of_proc/2
+    sum_sf(i) = sum_sf(i) + scaling_factors(i) * counter_sp
+    enddo
+end subroutine update_sum_sf
+ 
+subroutine initialize_proc_pair_index(proc,ppi)
+    !****f* base/initialize_proc_pair_index
+    ! FUNCTION
+    !    initialize_proc_pair_index initializes the process pair index of
+    !    the process proc in proc_pair_indices.
+    !    It is called for every process every time a model is reset.
+    !
+    ! ARGUMENTS
+    !
+    !    * ``proc`` positive integer that states the process
+    !    * ``ppi`` integer that states the process pair index, which is
+    !    positive for forward and negative for reverse reactions.
+    !******
+    integer(kind=iint), intent(in) :: proc, ppi
+
+    proc_pair_indices(proc) = ppi
+end subroutine initialize_proc_pair_index
+
+subroutine initialize_reverse_index(proc,rev)
+    !****f* base/initialize_reverse_index
+    ! FUNCTION
+    !    initialize_reverse_index initializes the index of the reverse process 
+    !    of process, proc, in reverse_indices
+    !    It is called for every process every time a model is reset.
+    !
+    ! ARGUMENTS
+    !
+    !    * ``proc`` positive integer that states the process
+    !    * ``rev`` positive integer that states the index of the reverse process
+    !******
+    integer(kind=iint), intent(in) :: proc, rev
+
+    reverse_indices(proc) = rev
+end subroutine initialize_reverse_index
+
+subroutine initialize_is_diff_proc(proc,is_diff)
+    !****f* base/initialize_is_diff_proc
+    ! FUNCTION
+    !    initialize_is_diff_proc initializes is_diff_proc.
+    !    It is called for every process every time a model is reset.
+    !
+    ! ARGUMENTS
+    !
+    !    * ``proc`` positive integer that states the process
+    !    * ``is_diff`` logical that states whether the process is a diffusion process.
+    !******
+    integer(kind=iint), intent(in) :: proc
+    logical, intent(in) :: is_diff
+
+    is_diff_proc(proc) = is_diff
+end subroutine initialize_is_diff_proc
+
+subroutine initialize_pair_is_eq(ppi,is_diff)
+    !****f* base/initialize_pair_is_eq
+    ! FUNCTION
+    !    initialize_pair_is_eq sets pair_is_eq to True for all
+    !    diffusion processes.
+    !    It is called for every process every time a model is reset.
+    !
+    ! ARGUMENTS
+    !
+    !    * ``ppi`` positive integer that states the index of the process pair.
+    !    * ``is_diff`` logical that states whether the process pair is a diffusion process.
+    !******
+    integer(kind=iint), intent(in) :: ppi
+    logical, intent(in) :: is_diff
+
+    pair_is_eq(ppi) = is_diff
+end subroutine initialize_pair_is_eq
+
+subroutine save_execution(proc, save_counter)
+    !****f* base/save_execution
+    ! FUNCTION
+    !    save_execution saves information about executed process.
+    !
+    ! ARGUMENTS
+    !
+    !    * ``proc`` positive integer that states the process that was executed
+    !    * ``save_counter`` positive integer that states the position in the arrays
+    !******
+    integer(kind=iint), intent(in) :: proc, save_counter
+    integer(kind=iint) :: pair_index
+
+    saved_executions(save_counter) = proc
+    pair_index = abs(proc_pair_indices(proc))
+    saved_scaling_factors(save_counter) = scaling_factors(pair_index)
+
+end subroutine save_execution
+
+subroutine reset_saved_execution_data()
+    !****f* base/reset_saved_execution_data
+    ! FUNCTION
+    !    Resets saved_executions and saved_scaling_factors to 0.
+    !******
+    integer(kind=iint) :: i
+    do i = 1, save_limit
+    saved_executions(i) = 0
+    saved_scaling_factors(i) = 0
+    enddo
+end subroutine reset_saved_execution_data
+
 
 subroutine del_proc(proc, site)
   !****f* base/del_proc
@@ -526,7 +1109,7 @@ subroutine reload_system(input_system_name, reloaded)
     endif
 
 
-    call allocate_system(nr_of_proc, volume, system_name)
+    call allocate_system(nr_of_proc, volume, system_name, buffer_parameter, threshold_parameter, execution_steps, save_limit)
 
     ! Second loop: parse the "meat" of data
     rewind(filehandler)
@@ -684,6 +1267,28 @@ subroutine set_rate_const(proc_nr, rate)
 
 end subroutine set_rate_const
 
+subroutine set_original_rate_const(proc_nr, rate)
+  !****f* base/set_original_rate_const
+  ! FUNCTION
+  !  Allows to set the original rate constant of the process with the number proc_nr.
+  !
+  ! ARGUMENTS
+  !
+  !  * ``proc_n`` The process number as defined in the corresponding proclist\_ module.
+  !  * ``rate`` the rate in :math:`s^{-1}`
+  !******
+  integer(kind=iint), intent(in) :: proc_nr
+  real(kind=rdouble), intent(in) :: rate
+
+  ! Make sure proc_nr is in the right range
+  ASSERT(proc_nr.gt.0,"base/set_rate_const: proc_nr has to be positive")
+  !   * the field within the process, but the meaning differs as explained
+  !     under 'switch'
+  ASSERT(proc_nr.le.nr_of_proc,"base/set_rate_const: proc_nr less or equal nr_of_proc.")
+  original_rates(proc_nr) = rate
+
+end subroutine set_original_rate_const
+
 subroutine update_accum_rate()
   !****f* base/update_accum_rate
   ! FUNCTION
@@ -698,17 +1303,35 @@ subroutine update_accum_rate()
 
   accum_rates(1) = 0.0
   rates_matrix(1,volume+1) = 0.0
+  rates_matrix(1,volume+2) = 0.0
+
   do j = 1, nr_of_sites(1)
      rates_matrix(1,volume+1) = rates_matrix(1,volume+1) + rates_matrix(1,j)
   enddo
-  accum_rates(1)=rates_matrix(1,volume+1)
+  rates_matrix(1,volume+2) = rates_matrix(1,volume+1) * scaling_factors(abs(proc_pair_indices(1)))
+
+  ! the accum rate is then determined by the scaled channel rate
+  accum_rates(1)=rates_matrix(1,volume+2)
+
   do i = 2, nr_of_proc
      rates_matrix(i,volume+1) = 0.0
+     rates_matrix(i,volume+2) = 0.0
      do j = 1, nr_of_sites(i)
         rates_matrix(i,volume+1) = rates_matrix(i,volume+1) + rates_matrix(i,j)
      enddo
-     accum_rates(i)=accum_rates(i-1)+rates_matrix(i,volume+1)
+     rates_matrix(i, volume+2) = rates_matrix(i, volume+1) * scaling_factors(abs(proc_pair_indices(i)))
+     accum_rates(i)=accum_rates(i-1)+rates_matrix(i,volume+2)
   enddo
+
+  ! print *, "----------------- update accum rate"
+  ! print *, "proc pair index", proc_pair_indices(1)
+  ! print *, "process rate", "------ scaled process rate"
+  ! print *, rates_matrix(1, volume+1), rates_matrix(1, volume+2)
+  ! print *, rates_matrix(2, volume+1), rates_matrix(2, volume+2)
+  ! print *, "--"
+  ! print *, "Scaling", scaling_factors
+  ! print *, "Accum rates", accum_rates
+  ! print *, "END----------------- update accum rate"
 
   ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found &
     accum_rates(nr_of_proc)=0, so no process is available at all")
@@ -730,7 +1353,7 @@ subroutine update_integ_rate()
 
 
     do i = 1, nr_of_proc
-        integ_rates(i)=integ_rates(i)+rates_matrix(i,volume+1)*kmc_time_step
+        integ_rates(i)=integ_rates(i)+rates_matrix(i,volume+2)*kmc_time_step
     enddo
 
     ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found"// &
@@ -739,7 +1362,30 @@ subroutine update_integ_rate()
 end subroutine update_integ_rate
 !------ S. Matera 09/18/2012------
 
-subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name)
+!
+subroutine update_integ_rate_sb()
+    !****f* base/update_integ_rate
+    ! FUNCTION
+    !    Updates the vector of integ_rates_sb.
+    !
+    ! ARGUMENTS
+    !
+    !    ``none``
+    !******
+
+    integer(kind=iint) :: i
+
+
+    do i = 1, nr_of_proc
+        integ_rates_sb(i)=integ_rates_sb(i)+rates_matrix(i,volume+1)*kmc_time_step
+    enddo
+
+    ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found" // &
+        "accum_rates(nr_of_proc)=0, so no process is available at all")
+
+end subroutine update_integ_rate_sb
+
+subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name, input_buffer_parameter, input_threshold_parameter, input_execution_steps, input_save_limit)
   !****f* base/allocate_system
   ! FUNCTION
   !   Allocates all book-keeping structures and stores
@@ -749,18 +1395,23 @@ subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name)
   !   * ``systen_name`` identifier of this simulation, used as name of punch file
   !   * ``volume`` the total number of sites
   !   * ``nr_of_proc`` the total number of processes
+  !    * ``buffer_parameter`` used for temporal acc. scheme.
+  !    * ``threshold_parameter`` used for temporal acc. scheme.
+  !    * ``execution_steps`` used for temporal acc. scheme.
+  !    * ``save_limit`` used for temporal acc. scheme.
   !******
   !---------------I/O variables---------------
   character(len=200), intent(in) :: input_system_name
-  integer(kind=iint), intent(in) :: input_volume, input_nr_of_proc
+  integer(kind=iint), intent(in) :: input_volume, input_nr_of_proc, input_execution_steps, input_save_limit
+  real(kind=rdouble), intent(in) :: input_threshold_parameter, input_buffer_parameter
   logical :: system_allocated
 
   system_allocated = .false.
 
   ! Make sure we have at least one process
   if(input_nr_of_proc.le.0)then
-    print *,"kmcos/base/allocate_system: there needs to be at least one process in a kMC system"
-    stop
+     print *,"kmcos/base/allocate_system: there needs to be at least one process in a kMC system"
+     stop
   endif
 
   ! Make sure we have at least one site
@@ -769,51 +1420,143 @@ subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name)
     stop
   endif
 
+  ! Do some checks on the temporal acceleration parameters
+  if(input_buffer_parameter.lt.0)then
+     print *,"kmcos/base/allocate_system: buffer_parameter cannot be smaller than 0"
+     print *,"Current value is: ", buffer_parameter
+     stop
+  endif
+  if(input_execution_steps.lt.1)then
+     print *,"kmcos/base/allocate_system: execution_steps cannot be smaller than 1"
+     stop
+  endif
+  if(input_threshold_parameter.lt.0)then
+     print *,"kmcos/base/allocate_system: threshold_parameter cannot be smaller than 0"
+     stop
+  endif
+  if(input_save_limit.lt.1)then
+     print *,"kmcos/base/allocate_system: save_limit cannot be smaller than 1"
+     stop
+  endif
+  
   ! Make sure we don't try to allocate twice
   if(allocated(avail_sites))then
-    print *,"kmcos/base/allocate_system: Tried to allocate avail_sites twice, please deallocate first"
-    system_allocated = .true.
+     print *,"kmcos/base/allocate_system: Tried to allocate avail_sites twice, please deallocate first"
+     system_allocated = .true.
   endif
   if(allocated(lattice))then
-    print *,"kmcos/base/allocate_system: Tried to allocate lattice twice, please deallocate first"
-    system_allocated = .true.
+     print *,"kmcos/base/allocate_system: Tried to allocate lattice twice, please deallocate first"
+     system_allocated = .true.
   endif
   if(allocated(nr_of_sites))then
-    print *,"kmcos/base/allocate_system: Tried to allocate nr_of_sites twice, please deallocate first"
-    system_allocated = .true.
+     print *,"kmcos/base/allocate_system: Tried to allocate nr_of_sites twice, please deallocate first"
+     system_allocated = .true.
   endif
   if(allocated(rates_matrix))then
-    print *,"kmcos/base/allocate_system: Tried to allocate rates_matrix twice, please deallocate first"
-    system_allocated = .true.
+     print *,"kmcos/base/allocate_system: Tried to allocate rates_matrix twice, please deallocate first"
+     system_allocated = .true.
   endif
   if(allocated(rates))then
-    print *,"kmcos/base/allocate_system: Tried to allocate rates twice, please deallocate first"
-    system_allocated = .true.
+     print *,"kmcos/base/allocate_system: Tried to allocate rates twice, please deallocate first"
+     system_allocated = .true.
   endif
   if(allocated(accum_rates))then
-    print *,"kmcos/base/allocate_system: Tried to allocate accum_rates twice, please deallocate first"
-    system_allocated = .true.
+     print *,"kmcos/base/allocate_system: Tried to allocate accum_rates twice, please deallocate first"
+     system_allocated = .true.
   endif
   if(allocated(accum_rates_proc))then
-    print *,"kmcos/base/allocate_system: Tried to allocate accum_rates_proc twice, please deallocate first"
-    system_allocated = .true.
+     print *,"kmcos/base/allocate_system: Tried to allocate accum_rates_proc twice, please deallocate first"
+     system_allocated = .true.
   endif
-!------ S. Matera 09/18/2012------
-    if(allocated(integ_rates))then
-        print *,"kmcos/base/allocate_system: Tried to allocate integ_rates twice, please deallocate first"
-        system_allocated = .true.
-    endif
-!------ S. Matera 09/18/2012------
+  !------ S. Matera 09/18/2012------
+  if(allocated(integ_rates))then
+     print *,"kmcos/base/allocate_system: Tried to allocate integ_rates twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  !------ S. Matera 09/18/2012------
+  if(allocated(integ_counter))then
+     print *,"kmcos/base/allocate_system: Tried to allocate integ_counter twice, please deallocate first"
+     system_allocated = .true.
+  endif
   if(allocated(procstat))then
     print *,"kmcos/base/allocate_system: Tried to allocate procstat twice, please deallocate first"
     system_allocated = .true.
+  endif
+  if(allocated(proc_pair_indices))then
+     print *,"kmcos/base/allocate_system: Tried to allocate proc_pair_indices twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(reverse_indices))then
+     print *,"kmcos/base/allocate_system: Tried to allocate reverse_indices twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(original_rates))then
+     print *,"kmcos/base/allocate_system: Tried to allocate original_rates twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(integ_rates_sb))then
+     print *,"kmcos/base/allocate_system: Tried to allocate integ_rates_sb twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(procstat_eq))then
+     print *,"kmcos/base/allocate_system: Tried to allocate procstat_eq twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(pair_is_eq))then
+     print *,"kmcos/base/allocate_system: Tried to allocate pair_is_eq twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(pair_is_loc_eq))then
+     print *,"kmcos/base/allocate_system: Tried to allocate pair_is_loc_eq twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(is_diff_proc))then
+     print *,"kmcos/base/allocate_system: Tried to allocate is_diff_proc_eq twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(scaling_factors))then
+     print *,"kmcos/base/allocate_system: Tried to allocate scaling_factors twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(last_set_scaling_factors))then
+     print *,"kmcos/base/allocate_system: Tried to allocate last_set_scaling_factors twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(sum_sf))then
+     print *,"kmcos/base/allocate_system: Tried to allocate sum_sf twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(proc_pair_exec))then
+     print *,"kmcos/base/allocate_system: Tried to allocate proc_pair_exec twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(pointers_exec))then
+     print *,"kmcos/base/allocate_system: Tried to allocate pointers_exec twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(proc_pair_exec_sb))then
+     print *,"kmcos/base/allocate_system: Tried to allocate proc_pair_exec_sb twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(saved_executions))then
+     print *,"kmcos/base/allocate_system: Tried to allocate saved_executions twice, please deallocate first"
+     system_allocated = .true.
+  endif
+  if(allocated(saved_scaling_factors))then
+     print *,"kmcos/base/allocate_system: Tried to allocate saved_scaling_factors twice, please deallocate first"
+     system_allocated = .true.
   endif
 
   if(.not. system_allocated)then
     ! copy arguments to module variables
     nr_of_proc = input_nr_of_proc
+    ASSERT(MOD(nr_of_proc,2).eq.0,"base/allocate_system: nr_of_proc must be even")
     volume = input_volume
     system_name = input_system_name
+    buffer_parameter = input_buffer_parameter
+    threshold_parameter = input_threshold_parameter
+    execution_steps = input_execution_steps
+    save_limit = input_save_limit
 
     ! Set clocks and step counter to 0
     kmc_time = 0.
@@ -834,7 +1577,7 @@ subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name)
     nr_of_sites = 0
     ! print *, "BASE/ALLOCATE_SYSTEM : Allocated nr_of_sites"
 
-    allocate(rates_matrix(nr_of_proc,volume+1))
+    allocate(rates_matrix(nr_of_proc,volume+2))
     rates_matrix = 0
     ! print *, "BASE/ALLOCATE_SYSTEM : Allocated rates_matrix"
 
@@ -849,17 +1592,66 @@ subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name)
     allocate(accum_rates_proc(volume))
     accum_rates_proc = 0
     ! print *, "BASE/ALLOCATE_SYSTEM : Allocated accum_rates_proc"
-
-!------ S. Matera 09/18/2012------
-        allocate(integ_rates(nr_of_proc))
-        integ_rates = 0
-!------ S. Matera 09/18/2012------
+    !------ S. Matera 09/18/2012------
+    allocate(integ_rates(nr_of_proc))
+    integ_rates = 0
+    !------ S. Matera 09/18/2012------
     ! print *, "BASE/ALLOCATE_SYSTEM : Allocated integ_rates"
+
+    allocate(integ_counter(nr_of_proc))
+    integ_counter = 0
 
     allocate(procstat(nr_of_proc))
     procstat = 0
     ! print *, "BASE/ALLOCATE_SYSTEM : Allocated procstat"
 
+    allocate(proc_pair_indices(nr_of_proc))
+    proc_pair_indices = 0
+
+    allocate(reverse_indices(nr_of_proc))
+    reverse_indices = 0
+
+    allocate(original_rates(nr_of_proc))
+    original_rates = 0
+
+    allocate(integ_rates_sb(nr_of_proc))
+    integ_rates_sb = 0
+
+    allocate(procstat_eq(nr_of_proc))
+    procstat_eq = 0
+
+    allocate(pair_is_eq(nr_of_proc/2))
+    pair_is_eq = .false.
+
+    allocate(is_diff_proc(nr_of_proc))
+    is_diff_proc = .false.
+
+    allocate(pair_is_loc_eq(nr_of_proc/2))
+    pair_is_loc_eq = .false.
+
+    allocate(scaling_factors(nr_of_proc/2))
+    scaling_factors = 1
+
+    allocate(last_set_scaling_factors(nr_of_proc/2))
+    last_set_scaling_factors = 0
+
+    allocate(sum_sf(nr_of_proc/2))
+    sum_sf = 0
+
+    allocate(proc_pair_exec(nr_of_proc/2,execution_steps))
+    proc_pair_exec = 0
+
+    allocate(pointers_exec(nr_of_proc/2))
+    pointers_exec = 1
+
+    allocate(proc_pair_exec_sb(nr_of_proc/2))
+    proc_pair_exec_sb = 0
+
+    allocate(saved_executions(save_limit))
+    saved_executions = 0
+
+    allocate(saved_scaling_factors(save_limit))
+    saved_scaling_factors = 0
   endif
 
 
@@ -883,51 +1675,136 @@ subroutine deallocate_system()
   !    ``none``
   !******
   if(allocated(avail_sites))then
-    deallocate(avail_sites)
+     deallocate(avail_sites)
   else
-    print *,"Warning: avail_sites was not allocated, tried to deallocate."
+     print *,"Warning: avail_sites was not allocated, tried to deallocate."
   endif
   if(allocated(lattice))then
-    deallocate(lattice)
+     deallocate(lattice)
   else
-    print *,"Warning: lattice was not allocated, tried to deallocate."
+     print *,"Warning: lattice was not allocated, tried to deallocate."
   endif
   if(allocated(nr_of_sites))then
-    deallocate(nr_of_sites)
+     deallocate(nr_of_sites)
   else
-    print *,"Warning: nr_of_sites was not allocated, tried to deallocate."
+     print *,"Warning: nr_of_sites was not allocated, tried to deallocate."
   endif
   if(allocated(rates_matrix))then
-    deallocate(rates_matrix)
+     deallocate(rates_matrix)
   else
-    print *,"Warning: rates_matrix was not allocated, tried to deallocate."
+     print *,"Warning: rates_matrix was not allocated, tried to deallocate."
   endif
   if(allocated(rates))then
-    deallocate(rates)
+     deallocate(rates)
   else
-    print *,"Warning: rates was not allocated, tried to deallocate."
+     print *,"Warning: rates was not allocated, tried to deallocate."
   endif
   if(allocated(accum_rates))then
-    deallocate(accum_rates)
+     deallocate(accum_rates)
   else
-    print *,"Warning: accum_rates was not allocated, tried to deallocate."
+     print *,"Warning: accum_rates was not allocated, tried to deallocate."
   endif
   if(allocated(accum_rates_proc))then
-    deallocate(accum_rates_proc)
+     deallocate(accum_rates_proc)
   else
-    print *,"Warning: accum_rates_proc was not allocated, tried to deallocate."
+     print *,"Warning: accum_rates_proc was not allocated, tried to deallocate."
   endif
-!------ S. Matera 09/18/2012------
-    if(allocated(integ_rates))then
-        deallocate(integ_rates)
-    else
-        print *,"Warning: integ_rates was not allocated, tried to deallocate."
-    endif
-!------ S. Matera 09/18/2012------
+  !------ S. Matera 09/18/2012------
+  if(allocated(integ_rates))then
+     deallocate(integ_rates)
+  else
+     print *,"Warning: integ_rates was not allocated, tried to deallocate."
+  endif
+  !------ S. Matera 09/18/2012------
+  if(allocated(integ_counter))then
+     deallocate(integ_counter)
+  else
+     print *,"Warning: integ_counter was not allocated, tried to deallocate."
+  endif
   if(allocated(procstat))then
     deallocate(procstat)
   else
     print *,"Warning: rates was not procstat, tried to deallocate."
+  endif
+  if(allocated(proc_pair_indices))then
+     deallocate(proc_pair_indices)
+  else
+     print *,"Warning: proc_pair_indices was not allocated, tried to deallocate."
+  endif
+  if(allocated(reverse_indices))then
+     deallocate(reverse_indices)
+  else
+     print *,"Warning: reverse_indices was not allocated, tried to deallocate."
+  endif
+  if(allocated(original_rates))then
+     deallocate(original_rates)
+  else
+     print *,"Warning: original_rates was not allocated, tried to deallocate."
+  endif
+  if(allocated(integ_rates_sb))then
+     deallocate(integ_rates_sb)
+  else
+     print *,"Warning: integ_rates_sb was not allocated, tried to deallocate."
+  endif
+  if(allocated(procstat_eq))then
+     deallocate(procstat_eq)
+  else
+     print *,"Warning: procstat_eq was not allocated, tried to deallocate."
+  endif
+  if(allocated(pair_is_eq))then
+     deallocate(pair_is_eq)
+  else
+     print *,"Warning: pair_is_eq was not allocated, tried to deallocate."
+  endif
+  if(allocated(is_diff_proc))then
+     deallocate(is_diff_proc)
+  else
+     print *,"Warning: is_diff_proc was not allocated, tried to deallocate."
+  endif
+  if(allocated(pair_is_loc_eq))then
+     deallocate(pair_is_loc_eq)
+  else
+     print *,"Warning: pair_is_loc_eq was not allocated, tried to deallocate."
+  endif
+  if(allocated(scaling_factors))then
+     deallocate(scaling_factors)
+  else
+     print *,"Warning: scaling_factors was not allocated, tried to deallocate."
+  endif
+  if(allocated(last_set_scaling_factors))then
+     deallocate(last_set_scaling_factors)
+  else
+     print *,"Warning: last_set_scaling_factors was not allocated, tried to deallocate."
+  endif
+  if(allocated(sum_sf))then
+     deallocate(sum_sf)
+  else
+     print *,"Warning: sum_sf was not allocated, tried to deallocate."
+  endif
+  if(allocated(proc_pair_exec))then
+     deallocate(proc_pair_exec)
+  else
+     print *,"Warning: proc_pair_exec was not allocated, tried to deallocate."
+  endif
+  if(allocated(pointers_exec))then
+     deallocate(pointers_exec)
+  else
+     print *,"Warning: pointers_exec was not allocated, tried to deallocate."
+  endif
+  if(allocated(proc_pair_exec_sb))then
+     deallocate(proc_pair_exec_sb)
+  else
+     print *,"Warning: proc_pair_exec_sb was not allocated, tried to deallocate."
+  endif
+  if(allocated(saved_executions))then
+     deallocate(saved_executions)
+  else
+     print *,"Warning: saved_executions was not allocated, tried to deallocate."
+  endif
+  if(allocated(saved_scaling_factors))then
+     deallocate(saved_scaling_factors)
+  else
+     print *,"Warning: saved_scaling_factors was not allocated, tried to deallocate."
   endif
 
 end subroutine deallocate_system
@@ -1249,6 +2126,10 @@ subroutine determine_procsite(ran_proc, ran_site, proc, site)
   ! once the process is selected, we need to build the corresponding accum rate
   ! this is most likely the CPU criticall part of this backend
   ! optimization work should be conducted here
+  ! TODO: introduce process rate scaling later here
+  ! could be something like:
+  ! if rates_matrix(proc,i) > x:
+  !     accum_rates_proc += scaling_factor * rates_matrix(proc,i)
   accum_rates_proc(1)=rates_matrix(proc,1)
   do i = 2, nr_of_sites(proc)
      accum_rates_proc(i) = accum_rates_proc(i-1) + rates_matrix(proc,i)
@@ -1527,5 +2408,91 @@ subroutine get_null_species(output_null_species)
     output_null_species = null_species
 
 end subroutine get_null_species
+subroutine set_buffer_parameter(input_buffer_parameter)
+    real(kind=rdouble), intent(in) :: input_buffer_parameter
+
+    buffer_parameter = input_buffer_parameter
+
+end subroutine set_buffer_parameter
+
+subroutine get_buffer_parameter(output_buffer_parameter)
+    real(kind=rdouble), intent(out) :: output_buffer_parameter
+
+    output_buffer_parameter = buffer_parameter
+
+end subroutine get_buffer_parameter
+
+subroutine set_threshold_parameter(input_threshold_parameter)
+    real(kind=rdouble), intent(in) :: input_threshold_parameter
+
+    threshold_parameter = input_threshold_parameter
+
+end subroutine set_threshold_parameter
+
+subroutine get_threshold_parameter(output_threshold_parameter)
+    real(kind=rdouble), intent(out) :: output_threshold_parameter
+
+    output_threshold_parameter = threshold_parameter
+
+end subroutine get_threshold_parameter
+
+subroutine get_execution_steps(output_execution_steps)
+    integer(kind=iint), intent(out) :: output_execution_steps
+
+    output_execution_steps = execution_steps
+
+end subroutine get_execution_steps
+
+subroutine get_save_limit(output_save_limit)
+    integer(kind=iint), intent(out) :: output_save_limit
+
+    output_save_limit = save_limit
+
+end subroutine get_save_limit
+
+subroutine get_scaling_factor(pair_index,output_scaling_factor)
+    integer(kind=iint), intent(in) :: pair_index
+    real(kind=rdouble), intent(out) :: output_scaling_factor
+
+    output_scaling_factor = scaling_factors(pair_index)
+
+end subroutine get_scaling_factor
+
+subroutine get_ave_scaling_factor(pair_index,output_ave_scaling_factor)
+    integer(kind=iint), intent(in) :: pair_index
+    real(kind=rdouble), intent(out) :: output_ave_scaling_factor
+
+    output_ave_scaling_factor = sum_sf(pair_index) / kmc_step
+
+end subroutine get_ave_scaling_factor
+
+subroutine get_last_set_scaling_factor(pair_index,output_last_set_scaling_factor)
+    integer(kind=iint), intent(in) :: pair_index
+    real(kind=rdouble), intent(out) :: output_last_set_scaling_factor
+
+    output_last_set_scaling_factor = last_set_scaling_factors(pair_index)
+
+end subroutine get_last_set_scaling_factor
+
+subroutine get_saved_execution(i,output_proc)
+    integer(kind=iint), intent(in) :: i
+    integer(kind=iint), intent(out) :: output_proc
+
+    output_proc = saved_executions(i) 
+
+end subroutine get_saved_execution
+
+subroutine get_saved_scaling_factor(i,output_sf)
+    integer(kind=iint), intent(in) :: i
+    real(kind=rdouble), intent(out) :: output_sf
+
+    output_sf = saved_scaling_factors(i) 
+
+end subroutine get_saved_scaling_factor
+
+subroutine set_debug_level(debug_level)
+    integer(kind=ishort), intent(in) :: debug_level
+    debug = debug_level
+end subroutine set_debug_level
 
 end module base
