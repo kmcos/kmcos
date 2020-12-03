@@ -51,7 +51,7 @@ from __future__ import print_function
 #import kmcos.types
 #import kmcos.io
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
 VERSION = __version__
 
 
