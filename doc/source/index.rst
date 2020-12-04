@@ -20,6 +20,7 @@ Not sure how to begin? Start with the :ref:`API tutorial <api-tutorial>`.
 .. toctree::
    :maxdepth: 0
 
+   installation/index 
    tutorials/index
    topic_guides/index
    reference/index

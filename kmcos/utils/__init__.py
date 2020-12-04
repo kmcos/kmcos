@@ -400,7 +400,7 @@ def build(options):
     extra_libs = ''
     ccompiler = ''
     if os.name == 'nt':
-        ccompiler = '--compiler=mingw32'
+        ccompiler = '--compiler=mingw64'#'--compiler=mingw32'
         if sys.version_info < (2, 7):
             extra_libs = ' -lmsvcr71 '
         else:
@@ -444,10 +444,13 @@ def build(options):
         f2py.main()  # Doesn't work according to Alberdi, but works in Erwin's.
     except:
         from subprocess import call
-        command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
+        #'python3' is assumed to be the default command, but it could be 'python'. So we use "sys.executable" to avoid getting the wrong one.
+        command = [sys.executable, '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
                    module_name, '-c'] + src_files
         print(' '.join(command))
         call(command)
+
+            
     sys.argv = true_argv
 
 
