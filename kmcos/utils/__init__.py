@@ -444,7 +444,7 @@ def build(options):
         f2py.main()  # Doesn't work according to Alberdi, but works in Erwin's.
     except:
         from subprocess import call
-        command = ['python3', '-m', 'numpy.f2py', '--verbose', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
+        command = ['python', '-m', 'numpy.f2py', '--fcompiler=' + options.fcompiler, '--f90flags=' + extra_flags, '-m',
                    module_name, '-c'] + src_files
         print(' '.join(command))
         call(command)

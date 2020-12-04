@@ -549,14 +549,14 @@ class Project(object):
                 long_name = process.name
                 stub = process.name[:max_length - digits]
                 short_number = len(stub_map.get(stub, []))
-                short_name = '{}{:04d}'.format(stub, short_number)
+                short_name = '{stub}{short_number:04d}'
                 stub_map.setdefault(stub, []).append((short_name, long_name))
                 abbreviation_map[short_name] = long_name
                 fullform_map[long_name] = short_name
 
                 process.name = short_name
 
-        with open('abbreviations_{}.dat'.format(self.meta.model_name), 'w') as outfile:
+        with open('abbreviations_{self.meta.model_name}.dat', 'w') as outfile:
             outfile.write(pprint.pformat(stub_map))
 
     def save(self, filename=None, validate=True):
