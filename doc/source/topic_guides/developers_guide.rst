@@ -19,6 +19,9 @@ will ease your way into kmcos' codebase, but it may contain errors. In
 the end only the interpretation of the code itself can really let you
 effectively add functionality to kmcos.
 
+For developers of the project, branch management will follow
+`this flowchart <https://github.com/kmcos/kmcos/tree/master/doc/source/topic_guides/GithubGuideKmcos.pptx>`__
+
 Some nomenclature.
 ------------------
 
