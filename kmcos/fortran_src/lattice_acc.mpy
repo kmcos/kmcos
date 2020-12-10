@@ -1,9 +1,9 @@
 gpl = self._gpl_message()
-#@ {gpl}!****h* kmos/lattice
+#@ {gpl}!****h* kmcos/lattice
 #@ ! FUNCTION
 #@ !    Implements the mappings between the real space lattice
-#@ !    and the 1-D lattice, which kmos/base operates on.
-#@ !    Furthermore replicates all geometry specific functions of kmos/base
+#@ !    and the 1-D lattice, which kmcos/base operates on.
+#@ !    Furthermore replicates all geometry specific functions of kmcos/base
 #@ !    in terms of lattice coordinates.
 #@ !    Using this module each site can be addressed with 4-tuple
 #@ !    ``(i, j, k, n)`` where ``i, j, k`` define the unit cell and
