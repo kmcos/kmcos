@@ -2982,9 +2982,6 @@ class ProcListWriter():
                             proc_pair_indices[n] = k
                             proc_pair_indices[m] = -k
                             k += 1
-            for i, v in enumerate(proc_pair_indices):
-                if not v:
-                    print('No reverse reaction match for %s' % data.process_list[i].name)
             assert (k - 1 == len(data.process_list)/2), 'not all processes could be paired'
             out.write('proc_pair_indices = %s\n' %proc_pair_indices)
             out.write('\n')
