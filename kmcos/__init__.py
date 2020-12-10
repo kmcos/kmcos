@@ -58,7 +58,7 @@ def evaluate_param_expression(param, parameters={}):
     import tokenize
     import StringIO
     import math
-    from kmos import units
+    from kmcos import units
 
     # convert parameters to dict if passed as list of Parameters()
     if type(parameters) is list:
@@ -91,7 +91,7 @@ def evaluate_param_expression(param, parameters={}):
                 #evaluate gas phase gibbs free energy using ase thermochemistry module,
                 #experimental data from NIST CCCBDB, the electronic energy 
                 #and current temperature and partial pressure
-                from kmos import species
+                from kmcos import species
                 species_name = '_'.join(token.split('_')[1:])
                 if species_name in dir(species):
                     if not 'T' in parameters:
@@ -117,7 +117,7 @@ def evaluate_param_expression(param, parameters={}):
             elif token.startswith('GibbsAds_'):
                 #evaluate gibbs free energy of adsorbate using ase thermochemistry module,
                 #calculated frequencies and electronic energy and current temperature
-                from kmos import species
+                from kmcos import species
                 species_name = '_'.join(token.split('_')[1:])
                 if not 'T' in parameters:
                     raise Exception('Need "T" in parameters to evaluate adsorbate gibbs free energy.')
@@ -248,7 +248,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                 #evaluate gas phase gibbs free energy using ase thermochemistry module,
                 #experimental data from NIST CCCBDB, the electronic energy 
                 #and current temperature and partial pressure
-                from kmos import species
+                from kmcos import species
                 species_name = '_'.join(token.split('_')[1:])
                 if species_name in dir(species):
                     if not 'T' in parameters:
@@ -274,7 +274,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
             elif token.startswith('GibbsAds_'):
                 #evaluate gibbs free energy of adsorbate using ase thermochemistry module,
                 #calculated frequencies and electronic energy and current temperature
-                from kmos import species
+                from kmcos import species
                 species_name = '_'.join(token.split('_')[1:])
                 if not 'T' in parameters:
                     raise Exception('Need "T" in parameters to evaluate adsorbate gibbs free energy.')
@@ -343,7 +343,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                             #evaluate gas phase gibbs free energy using ase thermochemistry module,
                             #experimental data from NIST CCCBDB, the electronic energy 
                             #and current temperature and partial pressure
-                            from kmos import species
+                            from kmcos import species
                             species_name = '_'.join(token2.split('_')[1:])
                             if species_name in dir(species):
                                 if not 'T' in parameters:
@@ -369,7 +369,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                         elif token2.startswith('GibbsAds_'):
                             #evaluate gibbs free energy of adsorbate using ase thermochemistry module,
                             #calculated frequencies and electronic energy and current temperature
-                            from kmos import species
+                            from kmcos import species
                             species_name = '_'.join(token2.split('_')[1:])
                             if not 'T' in parameters:
                                 raise Exception('Need "T" in parameters to evaluate adsorbate gibbs free energy.')
