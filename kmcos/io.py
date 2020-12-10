@@ -4,7 +4,7 @@ Features front-end import/export functions for kMC Projects.
 Currently import and export is supported to XML
 and export is supported to Fortran 90 source code.
 """
-from __future__ import print_function
+
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmcos.
 #
@@ -67,7 +67,7 @@ def _casetree_dict(dictionary, indent='', out=None):
 def _print_dict(dictionary, indent = ''):
     """ Recursively prints nested dictionaries."""
 
-    for key, value in dictionary.items():
+    for key, value in list(dictionary.items()):
         if isinstance(value, dict):
             print('%s%s:' % (indent, key) )
             _print_dict(value, indent+'    ')
@@ -1284,7 +1284,7 @@ class ProcListWriter():
         ################################################################
         lat_int_groups = {}
         for process in process_list:
-            for lat_int_group, processes in lat_int_groups.items():
+            for lat_int_group, processes in list(lat_int_groups.items()):
                 p0 = processes[0]
                 same = True
                 # check if conditions are identical
@@ -1447,7 +1447,7 @@ class ProcListWriter():
             out.write('    print *, "  PROCLIST/RUN_PROC_NR/NR_CELL", nr_cell\n')
             out.write('    print *, "  PROCLIST/RUN_PROC_NR/CELL", cell\n')
         out.write('    select case(proc)\n')
-        for lat_int_group, processes in lat_int_groups.items():
+        for lat_int_group, processes in list(lat_int_groups.items()):
             proc_names = ', '.join([proc.name for proc in processes])
             out.write('    case(%s)\n' % _chop_line(proc_names, line_length=60))
             out.write('        call run_proc_%s(cell)\n' % lat_int_group)
@@ -1479,7 +1479,7 @@ class ProcListWriter():
         out.write('        endif\n')
         out.write('    end do\n\n')
 
-        for lat_int_group, process in lat_int_groups.items():
+        for lat_int_group, process in list(lat_int_groups.items()):
             out.write('    call add_proc(nli_%s(cell), site)\n' % (lat_int_group))
         out.write('end subroutine touchup_cell\n\n')
 
@@ -1516,7 +1516,7 @@ class ProcListWriter():
             # add "another process" to the processes to be modified/updated.
             for action in process0.action_list:
                 self._db_print('    ACTION: %s' % action)
-                for _, other_processes in lat_int_groups.items():
+                for _, other_processes in list(lat_int_groups.items()):
                     other_process = other_processes[0]
                     self._db_print('      OTHER PROCESS %s' % (pformat(other_process, indent=12)))
                     other_conditions = other_process.condition_list + other_process.bystanders
@@ -2199,7 +2199,7 @@ class ProcListWriter():
                         specs_dict[flg] = copy.deepcopy(byst.allowed_species)
                     flags.append(flg)
             flags = sorted(list(set(flags)))
-            for flg,spclist in specs_dict.items():
+            for flg,spclist in list(specs_dict.items()):
                 specs_dict[flg] = sorted(spclist)
 
 
@@ -2335,7 +2335,7 @@ class ProcListWriter():
             if process.otf_rate:
                 exprs.append(process.otf_rate)
             for expr in exprs:
-                for old, new in rate_aliases.items():
+                for old, new in list(rate_aliases.items()):
                     expr=expr.replace(old, new)
                 try:
                     tokenize_input = io.StringIO(expr).readline
@@ -2426,7 +2426,7 @@ class ProcListWriter():
         expr = expr.replace('otf_rate','gr_{}'.format(procname))
 
         # And all aliases need to be replaced
-        for old, new in rate_aliases.items():
+        for old, new in list(rate_aliases.items()):
             expr = expr.replace(old,new)
 
         # Then time to tokenize:
