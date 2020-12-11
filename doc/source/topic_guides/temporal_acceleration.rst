@@ -12,7 +12,7 @@ Eric Christopher Dybeck, Craig Plaisance and Matthew Neurock,
 Journal of Chemical Theory and Computation, 13, 1525 (2017),
 http://pubs.acs.org/doi/abs/10.1021/acs.jctc.6b00859
 
-The implementation in kmos is published in:
+The implementation in kmcos is published in:
 Mie Andersen, Craig Plaisance and Karsten Reuter
 Journal of Chemical Physics, 147, 152705 (2017),
 http://aip.scitation.org/doi/full/10.1063/1.4989511
@@ -24,9 +24,9 @@ conditions of the reverse process and vice versa.
 See the example model `render_co_oxidation_ruo2_processes_paired.py` from
 the examples folder for an example.
 
-To enable acceleration, compile with the command: `kmos export model.xml -t`.
-or if using the backend for lateral interactions: `kmos export model.xml -b 
-lat_int -t`. Use `kmos export model.xml -b otf -t` for the on the fly backend.
+To enable acceleration, compile with the command: `kmcos export model.xml -t` 
+or if using the backend for lateral interactions: `kmcos export model.xml -b 
+lat_int -t`.
 
 The model has four adjustable parameters (c.f. article):
 
