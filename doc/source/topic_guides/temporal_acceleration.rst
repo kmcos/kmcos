@@ -26,7 +26,7 @@ the examples folder for an example.
 
 To enable acceleration, compile with the command: `kmcos export model.xml -t` 
 or if using the backend for lateral interactions: `kmcos export model.xml -b 
-lat_int -t`.
+lat_int -t`.  Use syntax `kmos export model.xml -b otf -t` for the on the fly backend.
 
 The model has four adjustable parameters (c.f. article):
 
