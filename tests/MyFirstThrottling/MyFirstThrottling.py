@@ -6,8 +6,8 @@ from itertools import product
 import numpy as np
 #from math import exp
 #from math import sqrt
-
-model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
+import os
+model_name = os.path.basename(__file__)[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
 pt = Project()
 pt.set_meta(author='Thomas Danielson',
             email='thomasd1@vt.edu',
