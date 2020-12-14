@@ -1,6 +1,20 @@
-#!/usr/bin/env python
+##First will change directory. Need kmc_settings before below imports.##
+import os
+ModelName = "throttling_test_reaction"
+backend = 'local_smart'
+os.chdir(ModelName+"_"+backend)
+#need to add current (changed) directory to python path, otherwise can't access kmc_settings.
+import sys
+sys.path.insert(0, os.path.abspath('.'))
 
-try:
+# modulesToReload = ['eil', 'kmcos', 'kmc_settings','kmcos.snapshots', 'kmcos.snapshots_globals', 'kmcos.throttling_globals', 'kmcos.throttling', 'snapshots_globals', 'snapshots', 'throttling_globals', 'throttling']
+# import UnitTesterSG as ut
+# for moduleName in modulesToReload:
+    # if moduleName in globals():#only need to cleanLoad the ones that are already loaded.
+        # exec('ut.cleanLoad('+moduleName+')')
+        
+
+try:   
     import kmcos.snapshots_globals as sg
     import kmcos.snapshots as snapshots
     import kmcos.throttling_globals as tg
@@ -186,8 +200,8 @@ import UnitTesterSG as ut
 
 all_ExpectedResults = []
 all_ActualResults = []
-for case_number in [ut.returnDigitFromFilename(__file__)]: 
-    print(case_number)
+for case_number in [ut.returnDigitFromFilename(os.path.basename(__file__)[+0:-3])]: 
+    print("case number", case_number)
     tg.FFP_roof = None
     # File names for loading/saving parameters
     tg_load_file = 'test_throttle_case_' + str(case_number) + '_params.txt'
@@ -235,8 +249,8 @@ for case_number in [ut.returnDigitFromFilename(__file__)]:
 
 
     """We set our tolerances. There can be some rounding when the tolerances get checked, so they are not exact."""
-    relativeTolerance = 1.0E-5
-    absoluteTolerance = 1.0E-8
+    relativeTolerance = 1.0E-3
+    absoluteTolerance = 1.0E-5
 
     ut.set_expected_result(expectedResult,expected_result_str=str(expectedResult), prefix=prefix,suffix=suffix) #This is the typical syntax if you want to force an analytical result for your test.
     
@@ -246,10 +260,17 @@ for case_number in [ut.returnDigitFromFilename(__file__)]:
     
     #this is so that pytest can do UnitTesterSG tests.
     def test_pytest(): #note that it cannot have any required arguments for pytest to use it, and that it is using variables that are defined above in the module.
+        try:
+            os.chdir(ModelName+"_"+backend) #I do not understand why this was needed, but somehow it fixed a problem that pytest was not in the right directory, despite the chdir at top of file.
+        except:
+            pass
         ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = False, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
         
     """#For any individual test, after finishing getting it working, set allowOverwrite to False in the line below calling doTest if you want to skip UnitTesterSG from stopping to notify user when results match but result strings don't. """        
     if __name__ == "__main__":
        #pass #*****TURNING OFF FOR DEBUGGING PURPOSES**************
        #This is the normal way of using the UnitTesterSG module, and will be run by UnitTesterSG or by running this test file by itself.
-       ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = True, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
+       ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = False, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
+       
+##now will change directory back to where it started##
+os.chdir('..')
