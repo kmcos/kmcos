@@ -39,6 +39,27 @@ from kmcos.types import cmp_coords
 from kmcos.utils import evaluate_template
 import collections
 
+def clear_model(ModelName, backend="local_smart"):
+    #this deletes an existing model so that a directory is ready for exporting a new model.
+    #the model name should be a string.
+    #Remove any xmls or inis of the model name.
+    os.system("del "+ ModelName +".xml") #for windows systems
+    os.system("rm " + ModelName +".xml") #for linux systems
+    os.system("del "+ ModelName +".ini") #for windows systems
+    os.system("rm " + ModelName +".ini") #for linux systems
+    os.chdir(ModelName+"_"+backend)
+    listOfDirectoriesAndFiles = os.listdir(".")
+    os.system("del "+ "*.so") #for windows systems
+    os.system("rm " + "*.so") #for linux systems
+    os.system("del "+ "kmc_settings.py") #for windows systems
+    os.system("rm " + "kmc_settings.py") #for linux systems
+    if 'src' in listOfDirectoriesAndFiles:
+        os.chdir('src')
+        os.system("del "+ "*.*") #for windows systems
+        os.system("rm " + "*.*") #for linux systems
+        os.chdir('..')
+    os.chdir('..')
+    sys.stdout.flush()
 
 def _casetree_dict(dictionary, indent='', out=None):
     """ Recursively prints nested dictionaries."""

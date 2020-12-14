@@ -7,12 +7,23 @@ Just name your file test_N where N is an integer.
 """
 #import the functions from UnitTesterSG
 import UnitTesterSG as ut
-
 #The below lines are typical code. There is no need to modify them.
 #get the suffix argument for check_results
 suffix = ut.returnDigitFromFilename(__file__)
 #prefix. Make this '' if you do not want any prefix.
 prefix = ''
+
+
+####in this file, we are going to delete the xml and freshly export a model and change directories before doing anything####
+import os
+ModelName = "MyFirstThrottling"
+backend = 'local_smart'
+import kmcos.io
+kmcos.io.clear_model(ModelName, backend=backend)
+exec('import ' +ModelName) #This will create the xml. Like import MyFirstThrottling.py
+import kmcos.cli
+kmcos.cli.main('export '+ModelName+ '.xml '+ ' -o -b '+ backend)  #this will export the model with the standard backend.
+os.chdir('..') #need to go back since export moves into src directory
 
 
 """
@@ -29,6 +40,9 @@ ut.set_expected_result(expectedResult,expected_result_str=str(expectedResult), p
 """
 #Calculate our function outputs (actual results). We can functions from another module in this section.
 """
+#need to add current directory to python path, otherwise can't access test functions.
+import sys
+sys.path.insert(0, os.path.abspath('.'))
 import runfile_test_1
 import numpy as np
 MyFirstThrottling_EFs_and_Coverages = np.genfromtxt("MyFirstThrottling_TOFs_and_Coverages.csv", skip_header=1, dtype='float', delimiter=",")
@@ -58,3 +72,5 @@ def test_pytest(): #note that it cannot have any required arguments for pytest t
 if __name__ == "__main__":
    #This is the normal way of using the UnitTesterSG module, and will be run by UnitTesterSG or by running this test file by itself.
    ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = True, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
+   
+os.system("cd ..")
