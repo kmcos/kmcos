@@ -226,7 +226,7 @@ class ProcListWriter():
                 separate_files = self.separate_proclist_pars)
             parameters_out.close()
 
-            self.write_proclist_otf(data, out, accelerated=accelerated)
+            self.write_proclist_otf(data,out)
             self.write_proclist_end(out)
 
         else:
@@ -2485,7 +2485,7 @@ class ProcListWriter():
                 currl=len(toadd)
         return split_expression, list(set(nr_vars))
 
-    def write_proclist_otf(self, data, out, separate_files = True, debug=False, accelerated=False):
+    def write_proclist_otf(self, data, out, separate_files = True, debug=False):
         """
         Writes the proclist.f90 file for the otf backend
         """
@@ -2499,7 +2499,6 @@ class ProcListWriter():
                   'use kind_values\n'
                   'use base, only: &\n'
                   '    update_accum_rate, &\n'
-                  '    update_eq_proc, &\n'
                   '    update_integ_rate, &\n'
                   '    reaccumulate_rates_matrix, &\n'
                   '    determine_procsite, &\n'
@@ -2509,20 +2508,8 @@ class ProcListWriter():
             out.write('    null_species, &\n')
         else:
             out.write('    set_null_species, &\n')
-        if not accelerated:
-            out.write('    increment_procstat\n\n')
-        else:
-            out.write(('    increment_procstat, &\n'
-                      '    update_integ_rate_sb, &\n'
-                      '    update_eq_proc, &\n'
-                      '    check_proc_eq, &\n'
-                      '    unscale_reactions, &\n'
-                      '    scale_reactions, &\n'
-                      '    update_sum_sf, &\n'
-                      '    get_save_limit, &\n'
-                      '    save_execution, &\n'
-                      '    reset_saved_execution_data\n\n'))
-        out.write('use lattice, only: &\n')
+        out.write('    increment_procstat\n\n'
+                  'use lattice, only: &\n')
         site_params = []
         for layer in data.layer_list:
             out.write('    %s, &\n' % layer.name)
@@ -2569,16 +2556,13 @@ class ProcListWriter():
         out.write('integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed\n')
         out.write('\n\ninteger(kind=iint), parameter, public :: nr_of_proc = %s\n'\
             % (len(data.process_list)))
-        if accelerated:
-            out.write('\ninteger(kind=iint), public :: counter_sp\n'
-                      'integer(kind=iint), public :: counter_ini\n'
-                      'integer(kind=ishort), public :: debug\n')
+
         code_generator='otf'
         out.write('\ncharacter(len=%s), parameter, public :: backend = "%s"\n'
                       % (len(code_generator), code_generator))
         out.write('\ncontains\n\n')
 
-        self.write_proclist_generic_subroutines(data, out, code_generator='otf', accelerated=accelerated)
+        self.write_proclist_generic_subroutines(data, out, code_generator='otf')
         self.write_proclist_touchup_otf(data,out)
         self.write_proclist_run_proc_nr_otf(data,out)
         self.write_proclist_run_proc_name_otf(data,out,separate_files=separate_files)
@@ -3003,9 +2987,6 @@ class ProcListWriter():
                             proc_pair_indices[n] = k
                             proc_pair_indices[m] = -k
                             k += 1
-            for i, v in enumerate(proc_pair_indices):
-                if not v:
-                    print('No reverse reaction match for %s' % data.process_list[i].name)
             assert (k - 1 == len(data.process_list)/2), 'not all processes could be paired'
             out.write('proc_pair_indices = %s\n' %proc_pair_indices)
             out.write('\n')
@@ -3181,18 +3162,11 @@ def export_source(project_tree, export_dir=None, code_generator=None, options=No
                         (os.path.join('fortran_src', 'main.f90'), 'main.f90'),
                         ]
     elif code_generator == 'otf':
-        if accelerated:
-            cp_files = [(os.path.join('fortran_src', 'assert.ppc'), 'assert.ppc'),
-                        (os.path.join('fortran_src', 'base_otf.f90'), 'base.f90'),
-                        (os.path.join('fortran_src', 'kind_values.f90'), 'kind_values.f90'),
-                        (os.path.join('fortran_src', 'main.f90'), 'main.f90'),
-                        ]
-        else:
-            cp_files = [(os.path.join('fortran_src', 'assert.ppc'), 'assert.ppc'),
-                        (os.path.join('fortran_src', 'base_otf.f90'), 'base.f90'),
-                        (os.path.join('fortran_src', 'kind_values.f90'), 'kind_values.f90'),
-                        (os.path.join('fortran_src', 'main.f90'), 'main.f90'),
-                        ]
+        cp_files = [(os.path.join('fortran_src', 'assert.ppc'), 'assert.ppc'),
+                    (os.path.join('fortran_src', 'base_otf.f90'), 'base.f90'),
+                    (os.path.join('fortran_src', 'kind_values.f90'), 'kind_values.f90'),
+                    (os.path.join('fortran_src', 'main.f90'), 'main.f90'),
+                    ]
     else:
         raise UserWarning("Don't know this backend")
 
