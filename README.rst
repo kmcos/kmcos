@@ -110,7 +110,7 @@ Developers:
 * Andreas Garhammer
 
 Other:
-
+* Martin Deimel
 * Thomas Danielson
 * Jonathan Sutton
 * Joseba Alberdi

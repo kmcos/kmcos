@@ -1,3 +1,0 @@
-import UnitTesterSG
-
-UnitTesterSG.pytestDriver()
