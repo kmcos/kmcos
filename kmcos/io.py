@@ -2637,9 +2637,10 @@ class ProcListWriter():
             out.write('    case(%s)\n' % process.name)
 
             if data.meta.debug > 0:
-                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME","%s"\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/LSITE",lsite\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/SITE",nr_site\n')
+                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME","%s"\n')
+                          # FIXME
+                          # 'print *,"PROCLIST/RUN_PROC_NR/LSITE",lsite\n'
+                          # 'print *,"PROCLIST/RUN_PROC_NR/SITE",site\n')
                            % process.name)
             out.write('        call run_proc_%s(cell)\n' % process.name)
 
@@ -2865,7 +2866,8 @@ class ProcListWriter():
                 out.write('%scall del_proc(%s, %s)\n' % (' ' * indent, item[1][0], rel_site))
 
         # and only keep those that have conditions
-        items = list(filter(lambda x: len(x[0]) > 1, items)) #like [x for x in items if x[0]]
+        # items = list(filter(lambda x: len(x[0]) > 1, items)) #like [x for x in items if x[0]]
+        items = [x for x in items if x[0]]
         if not items:
             return
 
