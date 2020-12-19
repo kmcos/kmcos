@@ -89,6 +89,7 @@ class Project(object):
         self.species_list = SpeciesList()
         self.process_list = ProcessList()
         self.output_list = OutputList()
+        self.backend = "local_smart" #this is just the default.
 
         # Quick'n'dirty define access functions
         # needed in context with GTKProject
@@ -559,6 +560,10 @@ class Project(object):
         with open('abbreviations_{}.dat'.format(self.meta.model_name), 'w') as outfile:
             outfile.write(pprint.pformat(stub_map))
 
+    def clear_model(model_name, backend="local_smart"):
+        import kmcos.io
+        kmcos.io.clear_model(model_name, backend=backend)
+    
     def save(self, filename=None, validate=True):
         if filename is None:
             filename = self.filename
