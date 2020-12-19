@@ -435,3 +435,42 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                 % (rate_expr, e))
 
     return rate_const
+
+#kmcos can be invoked directly from the command line in one of the following ways::
+#    kmcos [help] (all|benchmark|build|edit|export|help|import|rebuild|run|settings-export|shell|version|view|xml) [options]
+#defining small wrapper functions to call cli if person types kmcos.export("MyFirstModel.xml") etc. Probably should have made an "@" decorator, but that's okay.
+def build(argumentsString):
+    import kmcos.cli as cli
+    cli.main('build' +' ' + argumentsString)
+def edit(argumentsString):
+    import kmcos.cli as cli
+    cli.main('edit'+' ' + argumentsString)
+def export(argumentsString):
+    import kmcos.cli as cli
+    cli.main('export'+' ' + argumentsString)
+def help(argumentsString):
+    import kmcos.cli as cli
+    cli.main('help' +' '+ argumentsString)
+def rebuild(argumentsString):
+    import kmcos.cli as cli
+    cli.main('rebuild'+' ' + argumentsString)
+def run(argumentsString):
+    import kmcos.cli as cli
+    cli.main('run'+' ' + argumentsString)
+def settings_export(argumentsString):
+    import kmcos.cli as cli
+    cli.main('settings-export'+' ' + argumentsString)
+def shell(argumentsString):
+    import kmcos.cli as cli
+    cli.main('shell'+' ' + argumentsString)    
+def version(argumentsString):
+    import kmcos.cli as cli
+    cli.main('version'+' ' + argumentsString)    
+def view(argumentsString):
+    import kmcos.cli as cli
+    cli.main('view'+' ' + argumentsString)    
+def xml(argumentsString):
+    import kmcos.cli as cli
+    cli.main('xml'+' ' + argumentsString)    
+
+from kmcos.io import clear_model

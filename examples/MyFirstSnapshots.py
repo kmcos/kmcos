@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import kmcos
 from kmcos.types import *
 from kmcos.io import *
 from itertools import product
@@ -43,5 +43,9 @@ pt.add_process(name='CO_desorption',
                rate_constant='p_COgas*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(-deltaG*eV)',
                tof_count={'CO_desorption':1}) 
 
+###It's good to simply copy and paste the below lines between model creation files.
 pt.filename = model_name + ".xml"
+pt.backend = 'local_smart' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
+pt.clear_model(model_name, backend=pt.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
 pt.save()
+kmcos.export(pt.filename + ' -b ' + pt.backend) #alternatively, one can use: kmcos.cli.main('export '+  pt.filename + ' -b' + pt.backend)
