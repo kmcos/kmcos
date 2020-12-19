@@ -560,7 +560,8 @@ class Project(object):
         with open('abbreviations_{}.dat'.format(self.meta.model_name), 'w') as outfile:
             outfile.write(pprint.pformat(stub_map))
 
-    def clear_model(model_name, backend="local_smart"):
+    def clear_model(self, model_name, backend=''):
+        if backend=='': backend = self.backend
         import kmcos.io
         kmcos.io.clear_model(model_name, backend=backend)
     
