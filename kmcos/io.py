@@ -3069,8 +3069,8 @@ class ProcListWriter():
         
         #benchmark if run directly.
         out.write('if __name__ == "__main__":\n')
-        out.write('    from kmcos import cli')
-        out.write('    cli.main("benchmark")')
+        out.write('    from kmcos import cli\n')
+        out.write('    cli.main("benchmark")\n')
         out.close()
 
     def _get_site_params(self):
