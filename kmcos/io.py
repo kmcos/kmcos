@@ -3067,10 +3067,15 @@ class ProcListWriter():
         # XML
         out.write('xml = """%s"""\n' % data)
         
-        #benchmark if run directly.
+        #benchmark if run directly, else cli.
         out.write('if __name__ == "__main__":\n')
-        out.write('    from kmcos import cli\n')
-        out.write('    cli.main("benchmark")\n')
+        out.write('    import sys\n')
+        out.write('    if len(sys.argv) == 1:\n')
+        out.write('        from kmcos import cli\n')
+        out.write('        cli.main("benchmark")\n')
+        out.write('    if len(sys.argv) == 2:\n')
+        out.write('        from kmcos import cli\n')
+        out.write('        cli.main(sys.argv[1])\n')
         out.close()
 
     def _get_site_params(self):

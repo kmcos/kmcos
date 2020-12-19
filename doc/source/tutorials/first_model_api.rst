@@ -235,14 +235,15 @@ containining an error.
 
 If you now `cd` to that folder `myfirst_kmc_local_smart` and run::
 
-  python3 kmc_settings.py  
+  python3 kmc_settings.py benchmark 
 
 You should see that the model was able to run!
 Next, let's try seeing how it looks visually with:
   
-  kmcos view
+  python3 kmc_settings.py view
 
 ... and dada! Your first running kMC model right there!
+For some installations, one can type `kmcos benchmark` and `kmcos view`.
 
 If you wonder why the CO molecules are basically just dangling
 there in mid-air that is because you have no background setup, yet.
