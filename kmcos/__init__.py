@@ -466,7 +466,7 @@ def shell(argumentsString):
 def version(argumentsString):
     import kmcos.cli as cli
     cli.main('version'+' ' + argumentsString)    
-def viewer(argumentsString): #TODO: should changet the .py file to viewer also.
+def viewer(argumentsString): #TODO: should change the view.py file to viewer, and change this to view.
     import kmcos.cli as cli
     cli.main('view'+' ' + argumentsString)    
 def xml(argumentsString):
