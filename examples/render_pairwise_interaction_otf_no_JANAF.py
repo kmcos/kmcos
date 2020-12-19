@@ -4,10 +4,13 @@ from kmcos.types import *
 from itertools import product
 import numpy as np
 
+
+model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
+
 pt = Project()
 pt.set_meta(author='Juan M. Lorenzi',
             email='jmlorenzi@gmail.com',
-            model_name='dummy_pairwise_interaction_otf',
+            model_name=model_name,
             model_dimension=2)
 
 layer = pt.add_layer(name='simplecubic_2d')
@@ -77,5 +80,9 @@ proc = Process(name='CO_desorption',
                 otf_rate=otf_rate)
 pt.add_process(proc)
 
-pt.filename = 'pairwise_interaction_otf_fixed_no_JANAF.xml'
+###It's good to simply copy and paste the below lines between model creation files.
+pt.filename = model_name + ".xml"
+pt.backend = 'otf' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
+pt.clear_model(model_name, backend=pt.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
 pt.save()
+kmcos.export(pt.filename + ' -b ' + pt.backend) #alternatively, one can use: kmcos.cli.main('export '+  pt.filename + ' -b' + pt.backend)
