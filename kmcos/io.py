@@ -3066,7 +3066,11 @@ class ProcListWriter():
 
         # XML
         out.write('xml = """%s"""\n' % data)
-
+        
+        #benchmark if run directly.
+        out.write('if __name__ == "__main__":\n')
+        out.write('    from kmcos import cli')
+        out.write('    cli.main("benchmark")')
         out.close()
 
     def _get_site_params(self):
