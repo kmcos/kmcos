@@ -213,7 +213,7 @@ Next, it's a good idea to save your work ::
   pt.save()
 
 This creates an XML file with the full definition of your model.
-Finally, you will export the the model to compiled code.
+Finally, you will export the the model to compiled code. ::
 
   import kmcos.cli
   kmcos.cli.main('export myfirst_kmc.xml')
@@ -223,22 +223,20 @@ directory you should see a `myfirst_kmc.xml`.
 You will also see a directory ending with _local_smart,
 this directory includes your compiled model.
 
-You can also skip the model exporting and do it later.
-You can use a separate python file later, or from the command line 
-in the same directory as the XML file you can run ::
-
-  kmcos export myfirst_kmc.xml
+You can also skip the model exporting and do it later:
+you can use a separate python file later, or from the command line 
+can run `kmcos export myfirst_kmc.xml` in the same directory as the XML.
 
 During troubleshooting, exporting separately can be useful to make sure 
 the compiling occurs gracefully without any line
 containining an error.
 
-If you now `cd` to that folder `myfirst_kmc_local_smart` and run::
+If you now `cd` to that folder `myfirst_kmc_local_smart` and run ::
 
   python3 kmc_settings.py benchmark 
 
 You should see that the model was able to run!
-Next, let's try seeing how it looks visually with:
+Next, let's try seeing how it looks visually with ::
   
   python3 kmc_settings.py view
 
