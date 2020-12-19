@@ -39,15 +39,15 @@ from kmcos.types import cmp_coords
 from kmcos.utils import evaluate_template
 import collections
 
-def clear_model(ModelName, backend="local_smart"):
+def clear_model(model_name, backend="local_smart"):
     #this deletes an existing model so that a directory is ready for exporting a new model.
     #the model name should be a string.
     #Remove any xmls or inis of the model name.
-    os.system("del "+ ModelName +".xml") #for windows systems
-    os.system("rm " + ModelName +".xml") #for linux systems
-    os.system("del "+ ModelName +".ini") #for windows systems
-    os.system("rm " + ModelName +".ini") #for linux systems
-    os.chdir(ModelName+"_"+backend)
+    os.system("del "+ model_name +".xml") #for windows systems
+    os.system("rm " + model_name +".xml") #for linux systems
+    os.system("del "+ model_name +".ini") #for windows systems
+    os.system("rm " + model_name +".ini") #for linux systems
+    os.chdir(model_name+"_"+backend)
     listOfDirectoriesAndFiles = os.listdir(".")
     os.system("del "+ "*.so") #for windows systems
     os.system("rm " + "*.so") #for linux systems
@@ -3066,7 +3066,11 @@ class ProcListWriter():
 
         # XML
         out.write('xml = """%s"""\n' % data)
-
+        
+        #benchmark if run directly.
+        out.write('if __name__ == "__main__":\n')
+        out.write('    from kmcos import cli\n')
+        out.write('    cli.main("benchmark")\n')
         out.close()
 
     def _get_site_params(self):
