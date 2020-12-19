@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import kmcos
 from kmcos.types import *
 from itertools import product
 import numpy as np
