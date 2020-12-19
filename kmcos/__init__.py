@@ -51,7 +51,7 @@ from __future__ import print_function
 #import kmcos.types
 #import kmcos.io
 
-__version__ = "0.0.17"
+__version__ = "0.0.18"
 VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):
@@ -466,7 +466,7 @@ def shell(argumentsString):
 def version(argumentsString):
     import kmcos.cli as cli
     cli.main('version'+' ' + argumentsString)    
-def view(argumentsString):
+def viewer(argumentsString): #TODO: should changet the .py file to viewer also.
     import kmcos.cli as cli
     cli.main('view'+' ' + argumentsString)    
 def xml(argumentsString):
