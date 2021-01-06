@@ -39,15 +39,15 @@ from kmcos.types import cmp_coords
 from kmcos.utils import evaluate_template
 import collections
 
-def clear_model(ModelName, backend="local_smart"):
+def clear_model(model_name, backend="local_smart"):
     #this deletes an existing model so that a directory is ready for exporting a new model.
     #the model name should be a string.
     #Remove any xmls or inis of the model name.
-    os.system("del "+ ModelName +".xml") #for windows systems
-    os.system("rm " + ModelName +".xml") #for linux systems
-    os.system("del "+ ModelName +".ini") #for windows systems
-    os.system("rm " + ModelName +".ini") #for linux systems
-    os.chdir(ModelName+"_"+backend)
+    os.system("del "+ model_name +".xml") #for windows systems
+    os.system("rm " + model_name +".xml") #for linux systems
+    os.system("del "+ model_name +".ini") #for windows systems
+    os.system("rm " + model_name +".ini") #for linux systems
+    os.chdir(model_name+"_"+backend)
     listOfDirectoriesAndFiles = os.listdir(".")
     os.system("del "+ "*.so") #for windows systems
     os.system("rm " + "*.so") #for linux systems
@@ -2637,9 +2637,10 @@ class ProcListWriter():
             out.write('    case(%s)\n' % process.name)
 
             if data.meta.debug > 0:
-                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME","%s"\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/LSITE",lsite\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/SITE",nr_site\n')
+                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME","%s"\n')
+                          # FIXME
+                          # 'print *,"PROCLIST/RUN_PROC_NR/LSITE",lsite\n'
+                          # 'print *,"PROCLIST/RUN_PROC_NR/SITE",site\n')
                            % process.name)
             out.write('        call run_proc_%s(cell)\n' % process.name)
 
@@ -2865,7 +2866,8 @@ class ProcListWriter():
                 out.write('%scall del_proc(%s, %s)\n' % (' ' * indent, item[1][0], rel_site))
 
         # and only keep those that have conditions
-        items = list(filter(lambda x: len(x[0]) > 1, items)) #like [x for x in items if x[0]]
+        # items = list(filter(lambda x: len(x[0]) > 1, items)) #like [x for x in items if x[0]]
+        items = [x for x in items if x[0]]
         if not items:
             return
 
@@ -3064,7 +3066,16 @@ class ProcListWriter():
 
         # XML
         out.write('xml = """%s"""\n' % data)
-
+        
+        #benchmark if run directly, else cli.
+        out.write('if __name__ == "__main__":\n')
+        out.write('    import sys\n')
+        out.write('    if len(sys.argv) == 1:\n')
+        out.write('        from kmcos import cli\n')
+        out.write('        cli.main("benchmark")\n')
+        out.write('    if len(sys.argv) == 2:\n')
+        out.write('        from kmcos import cli\n')
+        out.write('        cli.main(sys.argv[1])\n')
         out.close()
 
     def _get_site_params(self):

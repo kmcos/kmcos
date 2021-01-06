@@ -1,11 +1,13 @@
 #!/usr/bin/env python
-
+import kmcos
 from kmcos.types import *
-from kmcos.io import *
 from itertools import product
 import numpy as np
+import kmcos.cli #not needed.
 
 model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
+
+
 pt = Project()
 pt.set_meta(author='Zachary Coin',
             email='coinzc@ornl.gov',
@@ -62,6 +64,9 @@ pt.add_process(name='CO_desorption3',
                rate_constant='p_COgas*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
 
 
-
+###It's good to simply copy and paste the below lines between model creation files.
 pt.filename = model_name + ".xml"
+pt.backend = 'local_smart' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
+pt.clear_model(model_name, backend=pt.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
 pt.save()
+kmcos.export(pt.filename + ' -b ' + pt.backend) #alternatively, one can use: kmcos.cli.main('export '+  pt.filename + ' -b' + pt.backend)

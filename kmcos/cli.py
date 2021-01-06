@@ -18,9 +18,10 @@
 
     kmcos export <xml-file>
 
-
    etc.
 
+   You may also use syntax kmcos.export("...") for any cli command.
+   
 """
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)

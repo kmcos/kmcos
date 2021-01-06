@@ -15,12 +15,14 @@ do this will also pay-off especially if you starting tinkering
 with your existing models and make little changes here and there.
 
 
-
 Construct the model
 ^^^^^^^^^^^^^^^^^^^
 
+You may also look at MyFirstDiffusion.py in the examples directory.
+
 We start by making the necessary import statements (in `*python* <http://python.org>`_ or better `*ipython* <http://ipython.org>`_)::
 
+  import kmcos
   from kmcos.types import *
   from kmcos.io import *
   import numpy as np
@@ -210,32 +212,36 @@ Next, it's a good idea to save your work ::
   pt.filename = 'myfirst_kmc.xml'
   pt.save()
 
-Now is the time to leave the python shell. In the current
-directory you should see a `myfirst_kmc.xml`.
-This XML file contains the full definition of your model
-and you can create the source code and binaries in just one line.
-So on the command line in the same directory as the XML file
-you run ::
-
-  kmcos export myfirst_kmc.xml
-
-or alternatively if you are still on the ipython shell
-and don't like to quit it you can use the API hook
-of the command line interface like ::
+This creates an XML file with the full definition of your model.
+Finally, you will export the the model to compiled code. ::
 
   import kmcos.cli
   kmcos.cli.main('export myfirst_kmc.xml')
 
+Now is the time to leave the python shell. In the current
+directory you should see a `myfirst_kmc.xml`.
+You will also see a directory ending with _local_smart,
+this directory includes your compiled model.
 
-Make sure this finishes gracefully without any line
+You can also skip the model exporting and do it later:
+you can use a separate python file later, or from the command line 
+can run `kmcos export myfirst_kmc.xml` in the same directory as the XML.
+
+During troubleshooting, exporting separately can be useful to make sure 
+the compiling occurs gracefully without any line
 containining an error.
 
-If you now `cd` to that folder `myfirst_kmc` and run::
+If you now `cd` to that folder `myfirst_kmc_local_smart` and run ::
 
-  kmcos view
+  python3 kmc_settings.py benchmark 
+
+You should see that the model was able to run!
+Next, let's try seeing how it looks visually with ::
+  
+  python3 kmc_settings.py view
 
 ... and dada! Your first running kMC model right there!
-
+For some installations, one can type `kmcos benchmark` and `kmcos view`.
 
 If you wonder why the CO molecules are basically just dangling
 there in mid-air that is because you have no background setup, yet.
