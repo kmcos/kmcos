@@ -161,7 +161,7 @@ def write_snapshot_data():
 
 # This function will perform a KMC_snapshot and writes the output to the .csv
 # file created in the function create_headers.
-def do_snapshots(n_snapshots, sps, tps=None):
+def do_snapshots(n_snapshots, sps, tps=None, acc=False):
 
     # sg.last_snapshot_outputs will be used to write all info (simulation name,
     # parameters of interest (user defined), atoms.tof_data, atoms.tof_integ,
@@ -173,18 +173,26 @@ def do_snapshots(n_snapshots, sps, tps=None):
         if snapshot <= n_snapshots:
             sg.steps_before_snapshot = sg.steps_so_far
             if tps is None:
-                sg.model.do_steps(sps)
+                if not acc:
+                    sg.model.do_steps(sps)
+                else:
+                    sg.model.do_acc_steps(sps)
             else:
                 try:
                     # If TPS is specified, try to match it with the appropriate
                     # routine
+                    # Simultanoeus use of TPS and temporal acceleration is currently
+                    # not supported
                     sps_actual = sg.model.do_steps_time(tps, sps)
                 except:
                     # Something went wrong, probably because we don't have this
                     # custom add-on to kmcos, so just fall back to the default
                     # routine.
                     print('WARNING: TPS specified but this version of kmcos does not support time-based snapshots. Using fixed-step snapshots instead.')
-                    sg.model.do_steps(sps)
+                    if not acc:
+                        sg.model.do_steps(sps)
+                    else:
+                        sg.model.do_acc_steps(sps)
             sg.atoms = sg.model.get_atoms(geometry=False)
             sg.steps_so_far = sg.atoms.kmc_step
             sg.sps_actual = sg.steps_so_far - sg.steps_before_snapshot
