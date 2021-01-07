@@ -1,0 +1,9 @@
+To run the test I use a model for CO oxidation including the JANAF dependency.
+From previous work I know that for certain T,pCO,pO2 parameters the expected speedup from the acceleration algorithm is about a factor of 10.
+The three different .py files all implement this same model. The only difference is the model name, which, when the model is exported, becomes the name of the folder where each of 3 different tests are carried out.
+The three tests seem to work as expected.
+To run the tests I used the snapshots module with the implementation allowing to run acc steps.
+The runfiles and output CSV files can be found in each folder.
+First, I ran the model without the acceleration backend. Here I needed 3E6 steps in each of the 10 snapshots in order to get a sufficient sampling of the TOF in each snapshot (otherwise some snapshots gave 0 TOF)
+Then I ran the model with the acceleration backend, but using do_steps. As expected, the output is identical to before.
+Finally, I ran the model using the acceleration backend and do_acc_steps. Here I could get away with 3E5 steps in each snapshot. The output looks rather similar, but is of course not completely identical.
