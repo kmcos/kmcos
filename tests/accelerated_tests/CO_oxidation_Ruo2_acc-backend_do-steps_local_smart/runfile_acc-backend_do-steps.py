@@ -1,6 +1,9 @@
-from kmcos.snapshots import *
+import sys
+sys.path.insert(0,'../..') #This is for the janaf_data directory.
 import kmcos.snapshots_globals as sg
+from kmcos.snapshots import *
 import os
+
 
 #Below sets up some "options" for running the snapshots.
 sg.parameters_of_interest = ['T','p_COgas','p_O2gas'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.

@@ -1,5 +1,7 @@
-from kmcos.snapshots import *
+import sys
+sys.path.insert(0,'../..') #This is for the janaf_data directory.
 import kmcos.snapshots_globals as sg
+from kmcos.snapshots import *
 import os
 
 #Below sets up some "options" for running the snapshots.

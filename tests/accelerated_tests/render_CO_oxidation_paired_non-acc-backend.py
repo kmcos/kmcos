@@ -6,6 +6,9 @@
 from kmcos.types import *
 from kmcos.io import *
 import numpy as np
+import sys
+sys.path.insert(0,'..') #This is for the janaf_data directory.
+
 
 name = 'CO_oxidation_Ruo2_non-acc-backend'
 
@@ -432,3 +435,12 @@ pt.add_process(name='Ads_bridge_left',
 
 pt.export_xml_file(name+'.xml')
 pt.print_statistics()
+
+model_name = name
+import kmcos
+###It's good to simply copy and paste the below lines between model creation files.
+pt.filename = model_name + ".xml"
+pt.backend = 'local_smart' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
+pt.clear_model(model_name, backend=pt.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
+pt.save()
+kmcos.export(pt.filename + ' -b ' + pt.backend) #alternatively, one can use: kmcos.cli.main('export '+  pt.filename + ' -b' + pt.backend)
