@@ -7,7 +7,7 @@ import os
 #Below sets up some "options" for running the snapshots.
 sg.parameters_of_interest = ['T','p_COgas','p_O2gas'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
 sps = 3000000 # <-- this is just an example
-n_snapshots = 10 # <-- this is just an example
+n_snapshots = 5 # <-- this is just an example
 
 #Set parameters
 sg.model.parameters.p_COgas = 1E-7
@@ -24,6 +24,10 @@ create_headers()
 #If you need to change a parameter after each snapshot, only do 1 snapshot at a time with n_snapshots=1.
 do_snapshots(n_snapshots, sps)
 
+#now will do one larger snapshot.
+sps = 3000000*5 
+n_snapshots = 1 
+do_snapshots(n_snapshots, sps)
 #do_snapshots(500, 2) <-- here is another example of how to use the syntax.
 
 #If you want to dump a configuration between snapshots, you may want to do something

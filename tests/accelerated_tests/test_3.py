@@ -34,7 +34,7 @@ os.chdir('..') #need to go back since export moves into src directory
 #We must make a single results object: we will put lists with those values inside. Recognize that we are expecting array objects, but we can define our analytical result as a list. This is part of why UnitTesterSG was developed, since it compares what is inside, not just the objects.
 """
 
-expectedResult = [3.4E-7]
+expectedResult = [4.2E-7]
 
 ut.set_expected_result(expectedResult,expected_result_str=str(expectedResult), prefix=prefix,suffix=suffix) #This is the typical syntax if you want to force an analytical result for your test.
 
