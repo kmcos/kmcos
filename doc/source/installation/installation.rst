@@ -139,6 +139,29 @@ For direct installin on windows, partial instructions have been written below. I
 
 ***
 
+If a virtual ubuntu machine is used, the below instructions may be useful for allowing sharing of files and copy and paste between the virtual machine and windows.
+
+Open the virtual machine, and use the file menu at the top of the window.
+
+1) Devices --> Shared Folders  --> + icon on right --> Folder Path (navigate to shared folder) --> auto mount --> Make permanent
+2) Devices --> Insert Guest Additions CD Image --> Run
+
+Now the folder shows up.
+
+Now add your user account to the group of vboxsf, otherwise won't have folder access permissions:
+
+sudo usermod -a -G vboxsf "$USER"
+
+Then restart virtual machine (from inside machine).
+
+Now can access shared folder.
+
+Devices --> Shared Clipboard --> Bidirectional
+Devices --> Shared Drag and Drop --> Bidrectional (only works for dragging to/from shared folder)
+
+
+***
+
 In order for kmcos to work in a recent windows it is best to get Anaconda.
 
 Download anaconda and open an anaconda terminal.
