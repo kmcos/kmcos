@@ -1,7 +1,0 @@
-total number of snapshots = 10
-total number of steps = 30000000
-total simulation time = 609625.6157876924
-simulation run time (wall clock time) = 26.807389497756958
-T = 350
-p_COgas = 1e-07
-p_O2gas = 1e-10

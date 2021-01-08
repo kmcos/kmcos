@@ -1,3 +1,5 @@
+The accelerated feature **requires** paired reactions: for each reaction added, the next reaction is the 'opposite' reaction.  
+
 To run the test I use a model for CO oxidation including the JANAF dependency.
 From previous work I know that for certain T,pCO,pO2 parameters the expected speedup from the acceleration algorithm is about a factor of 10.
 The three different .py files all implement this same model. The only difference is the model name, which, when the model is exported, becomes the name of the folder where each of 3 different tests are carried out.
