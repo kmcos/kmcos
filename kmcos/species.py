@@ -95,7 +95,7 @@ class Species(object):
         if self.gas and self.janaf_file and janaf_data is not None:
             self._prepare_G_p0(
                 os.path.abspath(os.path.join(
-                janaf_data.__path__[0],
+                list(janaf_data.__path__)[0],
                 self.janaf_file)))
 
     def __repr__(self):
