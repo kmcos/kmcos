@@ -14,12 +14,12 @@ Finally, I ran the model using the acceleration backend and do_acc_steps. Here I
 Example non accelerated output (around 1 minute of running)
 
 ['CO_ruo2_bridge', 'CO_ruo2_cus', 'O_ruo2_bridge', 'O_ruo2_cus', 'empty_ruo2_bridge', 'empty_ruo2_cus']
-[3.219305938747368e-07]
+[5.213017043523873e-07]
 [[1.0, 0.9975], [0.0, 0.0], [0.0, 0.0025]]
 
 Example non accelerated output after compiling with acc backend (around 1 minute of running)
 ['CO_ruo2_bridge', 'CO_ruo2_cus', 'O_ruo2_bridge', 'O_ruo2_cus', 'empty_ruo2_bridge', 'empty_ruo2_cus']
-[3.219305938747368e-07]
+[5.213017043523873e-07]
 [[1.0, 0.9975], [0.0, 0.0], [0.0, 0.0025]]
 
 
