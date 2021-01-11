@@ -71,6 +71,10 @@ def GibbsAds(energy, frequencies, T):
     for i in range(len(vib_energies)):
         vib_energies[i]=vib_energies[i]*cm_to_eV
     thermo_ads=HarmonicThermo(vib_energies=vib_energies, potentialenergy=energy)
+    #In older versions of ASE the Helmholtz energy was called the Gibbs free energy.
+    #However, nothing has changed in what is actually calculated.
+    #The two different free energies are approximately equal since their difference (the pV term) is small.
+    #This pV term was always neglected.
     val=thermo_ads.get_helmholtz_energy(temperature=T,verbose=False)
     return val
 
