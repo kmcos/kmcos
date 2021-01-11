@@ -2,6 +2,9 @@ from kmcos.types import *
 from kmcos.io import *
 import numpy as np
 
+# This is a KMC model for methanation published in:
+# The Journal of Chemical Physics 147, 152705 (2017); doi: 10.1063/1.4989511
+
 pt = Project()
 pt.set_meta(author = 'Mie Andersen',
             email = 'mie.andersen@ch.tum.de',
