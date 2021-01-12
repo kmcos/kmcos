@@ -28,3 +28,5 @@ python "test_cli_generation.py" runs and updates the files inside \test_cli_gene
 
 
 inside \accelerated_tests\  added and works on Jan. 8th 2021
+
+inside scaling_thermochemistry_tests\ added and works on Jan 11 2021
