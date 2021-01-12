@@ -13,3 +13,5 @@ The frequencies for all species are also read from the file.
 The model can also be run using the temporal acceleration algorithm.
 
 All three things are tested simultaneously in the test run. 
+
+The last two snapshots are longer in length to ensure steady state, and then the output is tested.
