@@ -8,7 +8,7 @@ inside \MyFirstThrottling\ is a throttling unit test example that works  #Dec 3r
 
 inside \SQERTSS_unit_tests\ are some SQERTSS (throttling) unit tests that work #Dec 3rd 2020: Currently needs kmcos export to be run each time from commnand line first, and/or test_0.py needs to be run first. test_0.py needs to be fixed to remove the old files and then do the export when run.
 
-inside \test_acf\  As of April 1st 2021, test_1.py and test_2.py and test_3.py all run. However, they do not actually pass.  It needs to be checked why that is. I think it is just because the trajectory is different due to different random number seeds or something like that. Should look at the traj's that are exported inside the directories beginning with _ (as ref_traj_otf.log etc) and then make a better test.
+inside \test_acf\  As of April 1st 2021, test_1.py and test_2.py and test_3.py all run and pass. Stored trajectories are used for comparison. Should work even with different random seeds on different computers.
 
 inside \test_run\  --> upgraded to UnitTesterSG. Now test_1.py and test_2.py both pass. test_3.py fails, does not create the final ".so" file, and displays an error that can be traced, so it seems the otf backend is not completely working yet. However, running test_3.py provides an opportunity to debug the otf backend creation.  Using "pytest" in this directory mysteriously allows all 3 tests to pass even though test_3.py should not pass.
 
