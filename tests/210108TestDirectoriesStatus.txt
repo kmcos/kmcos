@@ -19,4 +19,4 @@ python "test_cli_generation.py" runs and updates the files inside \test_cli_gene
 
 inside \accelerated_tests\  added and works on Jan. 8th 2021.
 
-inside scaling_thermochemistry_tests\ added and works on Jan 11 2021. Takes a couple of minutes to run. On April 1st 2021 it gives a failure if running with pytest. Running test_1.py by itself and looking closely at what is printed out, the expected and calculated results do not match so need to check why.
+inside scaling_thermochemistry_tests\ added and works on Jan 11 2021.  Updated on April 1st 2021 to have more long snapshots at the end for better steady state convergence. This test takes around 5 minutes to run.
