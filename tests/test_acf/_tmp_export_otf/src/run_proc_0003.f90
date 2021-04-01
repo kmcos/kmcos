@@ -41,17 +41,17 @@ subroutine run_proc_a_1_b_2(cell)
 
     call add_proc(b_2_a_1, cell + (/ 0, 0, 0, 1/), gr_b_2_a_1(cell + (/ 0, 0, 0, 0/)))
     select case(get_species(cell + (/0, 0, 0, default_a_2/)))
-    case(ion)
-        call add_proc(a_2_a_1, cell + (/ 0, 0, 0, 1/), gr_a_2_a_1(cell + (/ 0, 0, 0, 0/)))
     case(empty)
         call add_proc(b_2_a_2, cell + (/ 0, 0, 0, 1/), gr_b_2_a_2(cell + (/ 0, 0, 0, 0/)))
+    case(ion)
+        call add_proc(a_2_a_1, cell + (/ 0, 0, 0, 1/), gr_a_2_a_1(cell + (/ 0, 0, 0, 0/)))
     end select
 
     select case(get_species(cell + (/0, 0, 0, default_b_1/)))
-    case(ion)
-        call add_proc(b_1_a_1, cell + (/ 0, 0, 0, 1/), gr_b_1_a_1(cell + (/ 0, 0, 0, 0/)))
     case(empty)
         call add_proc(b_2_b_1, cell + (/ 0, 0, 0, 1/), gr_b_2_b_1(cell + (/ 0, 0, 0, 0/)))
+    case(ion)
+        call add_proc(b_1_a_1, cell + (/ 0, 0, 0, 1/), gr_b_1_a_1(cell + (/ 0, 0, 0, 0/)))
     end select
 
 
