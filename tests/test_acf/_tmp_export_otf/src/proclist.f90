@@ -207,25 +207,25 @@ subroutine init(input_system_size, system_name, layer, seed_in, no_banner)
         print *, "|                                                            |"
         print *, "|     Andreas Garhammer (andreas-garhammer@t-online.de)      |"
         print *, "|                                                            |"
-        print *, "| and implemented with the help of kmcos,                     |"
+        print *, "| and implemented with the help of kmcos,                    |"
         print *, "| which is distributed under GNU/GPL Version 3               |"
         print *, "| (C) Max J. Hoffmann mjhoffmann@gmail.com                   |"
         print *, "|                                                            |"
-        print *, "| kmcos is distributed in the hope that it will be useful     |"
-        print *, "| but WIHTOUT ANY WARRANTY; without even the implied         |"
-        print *, "| waranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR     |"
+        print *, "| kmcos is distributed in the hope that it will be useful    |"
+        print *, "| but WITHOUT ANY WARRANTY; without even the implied         |"
+        print *, "| warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR    |"
         print *, "| PURPOSE. See the GNU General Public License for more       |"
         print *, "| details.                                                   |"
         print *, "|                                                            |"
-        print *, "| If using kmcos for a publication, attribution is            |"
+        print *, "| If using kmcos for a publication, attribution is           |"
         print *, "| greatly appreciated.                                       |"
         print *, "| Hoffmann, M. J., Matera, S., & Reuter, K. (2014).          |"
-        print *, "| kmcos: A lattice kinetic Monte Carlo framework.             |"
+        print *, "| kmos: A lattice kinetic Monte Carlo framework.             |"
         print *, "| Computer Physics Communications, 185(7), 2138-2150.        |"
         print *, "|                                                            |"
-        print *, "| Development http://mhoffman.github.org/kmcos                |"
-        print *, "| Documentation http://kmcos.readthedocs.org                  |"
-        print *, "| Reference http://dx.doi.org/10.1016/j.cpc.2014.04.003      |"
+        print *, "| Development https://github.com/kmcos/kmcos                 |"
+        print *, "| Documentation https://kmcos.readthedocs.io                 |"
+        print *, "| Reference https://dx.doi.org/10.1016/j.cpc.2014.04.003     |"
         print *, "|                                                            |"
         print *, "+------------------------------------------------------------+"
         print *, ""
@@ -427,17 +427,77 @@ subroutine touchup_cell(cell)
 
     select case(get_species(cell + (/0, 0, 0, default_a_1/)))
     case(ion)
+        select case(get_species(cell + (/0, 0, 0, default_a_2/)))
+        case(empty)
+            call add_proc(a_1_a_2, cell + (/ 0, 0, 0, 1/), gr_a_1_a_2(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 0, 0, default_b_1/)))
+        case(empty)
+            call add_proc(a_1_b_1, cell + (/ 0, 0, 0, 1/), gr_a_1_b_1(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 0, 0, default_b_2/)))
+        case(empty)
+            call add_proc(a_1_b_2, cell + (/ 0, 0, 0, 1/), gr_a_1_b_2(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     case(empty)
+        select case(get_species(cell + (/0, 0, 0, default_a_2/)))
+        case(ion)
+            call add_proc(a_2_a_1, cell + (/ 0, 0, 0, 1/), gr_a_2_a_1(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 0, 0, default_b_1/)))
+        case(ion)
+            call add_proc(b_1_a_1, cell + (/ 0, 0, 0, 1/), gr_b_1_a_1(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 0, 0, default_b_2/)))
+        case(ion)
+            call add_proc(b_2_a_1, cell + (/ 0, 0, 0, 1/), gr_b_2_a_1(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     end select
 
     select case(get_species(cell + (/0, 0, 0, default_a_2/)))
     case(ion)
+        select case(get_species(cell + (/0, 0, 0, default_b_1/)))
+        case(empty)
+            call add_proc(a_2_b_1, cell + (/ 0, 0, 0, 1/), gr_a_2_b_1(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 0, 0, default_b_2/)))
+        case(empty)
+            call add_proc(a_2_b_2, cell + (/ 0, 0, 0, 1/), gr_a_2_b_2(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     case(empty)
+        select case(get_species(cell + (/0, 0, 0, default_b_1/)))
+        case(ion)
+            call add_proc(b_1_a_2, cell + (/ 0, 0, 0, 1/), gr_b_1_a_2(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 0, 0, default_b_2/)))
+        case(ion)
+            call add_proc(b_2_a_2, cell + (/ 0, 0, 0, 1/), gr_b_2_a_2(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     end select
 
     select case(get_species(cell + (/0, 0, 0, default_b_1/)))
     case(ion)
+        select case(get_species(cell + (/0, 0, 0, default_b_2/)))
+        case(empty)
+            call add_proc(b_1_b_2, cell + (/ 0, 0, 0, 1/), gr_b_1_b_2(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     case(empty)
+        select case(get_species(cell + (/0, 0, 0, default_b_2/)))
+        case(ion)
+            call add_proc(b_2_b_1, cell + (/ 0, 0, 0, 1/), gr_b_2_b_1(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     end select
 
 
