@@ -49,8 +49,10 @@ import acf_test_function
 actualResult = acf_test_function.test_build_model(indexOfBackendToTest=indexOfBackendToTest)
 
 """We put our actual result into the resultObj variable."""
-#put this in the resultObject
-resultObj = actualResult
+#put this in the resultObject, and only take the first few and first last entries.
+import numpy as np
+resultObj = np.array(actualResult).flatten()
+resultObj = (resultObj[:3], resultObj[-3:])
 
 #String must be provided provided. Make it '' if you do not want to use a result string.
 resultStr = str(resultObj)
@@ -68,4 +70,4 @@ def test_pytest(): #note that it cannot have any required arguments for pytest t
 """#For any individual test, after finishing getting it working, set allowOverwrite to False in the line below calling doTest if you want to skip UnitTesterSG from stopping to notify user when results match but result strings don't. """        
 if __name__ == "__main__":
    #This is the normal way of using the UnitTesterSG module, and will be run by UnitTesterSG or by running this test file by itself.
-   ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = True, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
+   ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = True, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance, interactiveTesting=True)

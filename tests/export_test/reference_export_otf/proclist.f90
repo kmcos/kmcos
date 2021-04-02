@@ -68,7 +68,7 @@ use run_proc_0036
 
 implicit none
 integer(kind=iint), parameter, public :: representation_length = 0
-integer(kind=iint), public :: seed_size = 12
+integer(kind=iint), public :: seed_size = 33
 integer(kind=iint), public :: seed ! random seed
 integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed
 
@@ -229,25 +229,25 @@ subroutine init(input_system_size, system_name, layer, seed_in, no_banner)
         print *, "|                                                            |"
         print *, "|           Max J. Hoffmann (mjhoffmann@gmail.com)           |"
         print *, "|                                                            |"
-        print *, "| and implemented with the help of kmcos,                     |"
+        print *, "| and implemented with the help of kmcos,                    |"
         print *, "| which is distributed under GNU/GPL Version 3               |"
         print *, "| (C) Max J. Hoffmann mjhoffmann@gmail.com                   |"
         print *, "|                                                            |"
-        print *, "| kmcos is distributed in the hope that it will be useful     |"
-        print *, "| but WIHTOUT ANY WARRANTY; without even the implied         |"
-        print *, "| waranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR     |"
+        print *, "| kmcos is distributed in the hope that it will be useful    |"
+        print *, "| but WITHOUT ANY WARRANTY; without even the implied         |"
+        print *, "| warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR    |"
         print *, "| PURPOSE. See the GNU General Public License for more       |"
         print *, "| details.                                                   |"
         print *, "|                                                            |"
-        print *, "| If using kmcos for a publication, attribution is            |"
+        print *, "| If using kmcos for a publication, attribution is           |"
         print *, "| greatly appreciated.                                       |"
         print *, "| Hoffmann, M. J., Matera, S., & Reuter, K. (2014).          |"
-        print *, "| kmcos: A lattice kinetic Monte Carlo framework.             |"
+        print *, "| kmos: A lattice kinetic Monte Carlo framework.             |"
         print *, "| Computer Physics Communications, 185(7), 2138-2150.        |"
         print *, "|                                                            |"
-        print *, "| Development http://mhoffman.github.org/kmcos                |"
-        print *, "| Documentation http://kmcos.readthedocs.org                  |"
-        print *, "| Reference http://dx.doi.org/10.1016/j.cpc.2014.04.003      |"
+        print *, "| Development https://github.com/kmcos/kmcos                 |"
+        print *, "| Documentation https://kmcos.readthedocs.io                 |"
+        print *, "| Reference https://dx.doi.org/10.1016/j.cpc.2014.04.003     |"
         print *, "|                                                            |"
         print *, "+------------------------------------------------------------+"
         print *, ""
@@ -275,7 +275,7 @@ subroutine initialize_state(layer, seed_in)
     allocate(seed_arr(seed_size))
     seed = seed_in
     seed_arr = seed
-    call random_seed(seed_size)
+    call random_seed(size=seed_size)
     call random_seed(put=seed_arr)
     deallocate(seed_arr)
     do k = 0, system_size(3)-1
@@ -686,13 +686,69 @@ subroutine touchup_cell(cell)
     end do
 
     select case(get_species(cell + (/0, 0, 0, ruo2_bridge/)))
+    case(empty)
+        call add_proc(co_adsorption_bridge, cell + (/ 0, 0, 0, 1/), gr_co_adsorption_bridge(cell + (/ 0, 0, 0, 0/)))
+        select case(get_species(cell + (/0, 0, 0, ruo2_cus/)))
+        case(empty)
+            call add_proc(oxygen_adsorption_bridge_cus_ri0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_bridge_cus_ri0000(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(co_diffusion_cus_bridge_left, cell + (/ 0, 0, 0, 1/), gr_co_diffusion_cus_bridge_left(cell + (/ 0, 0, 0, 0/)))
+        case(oxygen)
+            call add_proc(oxygen_diffusion_cus_bridge_lef0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_bridge_lef0000(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 1, 0, ruo2_bridge/)))
+        case(empty)
+            call add_proc(oxygen_adsorption_bridge_bridge, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_bridge_bridge(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/-1, 0, 0, ruo2_cus/)))
+        case(empty)
+            call add_proc(oxygen_adsorption_bridge_cus_le0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_bridge_cus_le0000(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+    case(oxygen)
+        select case(get_species(cell + (/0, 1, 0, ruo2_bridge/)))
+        case(empty)
+            call add_proc(oxygen_diffusion_bridge_bridge_0001, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_bridge_0001(cell + (/ 0, 0, 0, 0/)))
+        case(oxygen)
+            call add_proc(oxygen_desorption_bridge_bridge, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_bridge_bridge(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(reaction_oxygen_bridge_co_bridg0001, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_bridg0001(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/-1, 0, 0, ruo2_cus/)))
+        case(empty)
+            call add_proc(oxygen_diffusion_bridge_cus_lef0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_cus_lef0000(cell + (/ 0, 0, 0, 0/)))
+        case(oxygen)
+            call add_proc(oxygen_desorption_bridge_cus_le0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_bridge_cus_le0000(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(reaction_oxygen_bridge_co_cus_l0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_cus_l0000(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 0, 0, ruo2_cus/)))
+        case(empty)
+            call add_proc(oxygen_diffusion_bridge_cus_rig0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_cus_rig0000(cell + (/ 0, 0, 0, 0/)))
+        case(oxygen)
+            call add_proc(oxygen_desorption_bridge_cus_ri0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_bridge_cus_ri0000(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(reaction_oxygen_bridge_co_cus_r0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_cus_r0000(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, -1, 0, ruo2_bridge/)))
+        case(empty)
+            call add_proc(oxygen_diffusion_bridge_bridge_0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_bridge_0000(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(reaction_oxygen_bridge_co_bridg0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_bridg0000(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     case(co)
         call add_proc(co_desorption_bridge, cell + (/ 0, 0, 0, 1/), gr_co_desorption_bridge(cell + (/ 0, 0, 0, 0/)))
         select case(get_species(cell + (/0, 0, 0, ruo2_cus/)))
-        case(oxygen)
-            call add_proc(reaction_oxygen_cus_co_bridge_l0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_bridge_l0000(cell + (/ 0, 0, 0, 0/)))
         case(empty)
             call add_proc(co_diffusion_bridge_cus_right, cell + (/ 0, 0, 0, 1/), gr_co_diffusion_bridge_cus_right(cell + (/ 0, 0, 0, 0/)))
+        case(oxygen)
+            call add_proc(reaction_oxygen_cus_co_bridge_l0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_bridge_l0000(cell + (/ 0, 0, 0, 0/)))
         end select
 
         select case(get_species(cell + (/0, -1, 0, ruo2_bridge/)))
@@ -710,65 +766,40 @@ subroutine touchup_cell(cell)
             call add_proc(co_diffusion_bridge_cus_left, cell + (/ 0, 0, 0, 1/), gr_co_diffusion_bridge_cus_left(cell + (/ 0, 0, 0, 0/)))
         end select
 
-    case(oxygen)
-        select case(get_species(cell + (/0, 1, 0, ruo2_bridge/)))
-        case(co)
-            call add_proc(reaction_oxygen_bridge_co_bridg0001, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_bridg0001(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_diffusion_bridge_bridge_0001, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_bridge_0001(cell + (/ 0, 0, 0, 0/)))
-        case(oxygen)
-            call add_proc(oxygen_desorption_bridge_bridge, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_bridge_bridge(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/-1, 0, 0, ruo2_cus/)))
-        case(co)
-            call add_proc(reaction_oxygen_bridge_co_cus_l0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_cus_l0000(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_diffusion_bridge_cus_lef0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_cus_lef0000(cell + (/ 0, 0, 0, 0/)))
-        case(oxygen)
-            call add_proc(oxygen_desorption_bridge_cus_le0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_bridge_cus_le0000(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/0, 0, 0, ruo2_cus/)))
-        case(co)
-            call add_proc(reaction_oxygen_bridge_co_cus_r0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_cus_r0000(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_diffusion_bridge_cus_rig0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_cus_rig0000(cell + (/ 0, 0, 0, 0/)))
-        case(oxygen)
-            call add_proc(oxygen_desorption_bridge_cus_ri0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_bridge_cus_ri0000(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/0, -1, 0, ruo2_bridge/)))
-        case(co)
-            call add_proc(reaction_oxygen_bridge_co_bridg0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_bridge_co_bridg0000(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_diffusion_bridge_bridge_0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_bridge_bridge_0000(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-    case(empty)
-        call add_proc(co_adsorption_bridge, cell + (/ 0, 0, 0, 1/), gr_co_adsorption_bridge(cell + (/ 0, 0, 0, 0/)))
-        select case(get_species(cell + (/0, 0, 0, ruo2_cus/)))
-        case(co)
-            call add_proc(co_diffusion_cus_bridge_left, cell + (/ 0, 0, 0, 1/), gr_co_diffusion_cus_bridge_left(cell + (/ 0, 0, 0, 0/)))
-        case(oxygen)
-            call add_proc(oxygen_diffusion_cus_bridge_lef0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_bridge_lef0000(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_adsorption_bridge_cus_ri0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_bridge_cus_ri0000(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/0, 1, 0, ruo2_bridge/)))
-        case(empty)
-            call add_proc(oxygen_adsorption_bridge_bridge, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_bridge_bridge(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/-1, 0, 0, ruo2_cus/)))
-        case(empty)
-            call add_proc(oxygen_adsorption_bridge_cus_le0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_bridge_cus_le0000(cell + (/ 0, 0, 0, 0/)))
-        end select
-
     end select
 
     select case(get_species(cell + (/0, 0, 0, ruo2_cus/)))
+    case(empty)
+        call add_proc(co_adsorption_cus, cell + (/ 0, 0, 0, 1/), gr_co_adsorption_cus(cell + (/ 0, 0, 0, 0/)))
+        select case(get_species(cell + (/0, 1, 0, ruo2_cus/)))
+        case(empty)
+            call add_proc(oxygen_adsorption_cus_cus, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_cus_cus(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+    case(oxygen)
+        select case(get_species(cell + (/0, 1, 0, ruo2_cus/)))
+        case(empty)
+            call add_proc(oxygen_diffusion_cus_cus_up, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_cus_up(cell + (/ 0, 0, 0, 0/)))
+        case(oxygen)
+            call add_proc(oxygen_desorption_cus_cus, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_cus_cus(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(reaction_oxygen_cus_co_cus_up, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_cus_up(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/1, 0, 0, ruo2_bridge/)))
+        case(empty)
+            call add_proc(oxygen_diffusion_cus_bridge_rig0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_bridge_rig0000(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(reaction_oxygen_cus_co_bridge_r0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_bridge_r0000(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, -1, 0, ruo2_cus/)))
+        case(empty)
+            call add_proc(oxygen_diffusion_cus_cus_down, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_cus_down(cell + (/ 0, 0, 0, 0/)))
+        case(co)
+            call add_proc(reaction_oxygen_cus_co_cus_down, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_cus_down(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     case(co)
         call add_proc(co_desorption_cus, cell + (/ 0, 0, 0, 1/), gr_co_desorption_cus(cell + (/ 0, 0, 0, 0/)))
         select case(get_species(cell + (/1, 0, 0, ruo2_bridge/)))
@@ -784,37 +815,6 @@ subroutine touchup_cell(cell)
         select case(get_species(cell + (/0, 1, 0, ruo2_cus/)))
         case(empty)
             call add_proc(co_diffusion_cus_cus_up, cell + (/ 0, 0, 0, 1/), gr_co_diffusion_cus_cus_up(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-    case(oxygen)
-        select case(get_species(cell + (/0, 1, 0, ruo2_cus/)))
-        case(co)
-            call add_proc(reaction_oxygen_cus_co_cus_up, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_cus_up(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_diffusion_cus_cus_up, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_cus_up(cell + (/ 0, 0, 0, 0/)))
-        case(oxygen)
-            call add_proc(oxygen_desorption_cus_cus, cell + (/ 0, 0, 0, 1/), gr_oxygen_desorption_cus_cus(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/1, 0, 0, ruo2_bridge/)))
-        case(co)
-            call add_proc(reaction_oxygen_cus_co_bridge_r0000, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_bridge_r0000(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_diffusion_cus_bridge_rig0000, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_bridge_rig0000(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/0, -1, 0, ruo2_cus/)))
-        case(co)
-            call add_proc(reaction_oxygen_cus_co_cus_down, cell + (/ 0, 0, 0, 1/), gr_reaction_oxygen_cus_co_cus_down(cell + (/ 0, 0, 0, 0/)))
-        case(empty)
-            call add_proc(oxygen_diffusion_cus_cus_down, cell + (/ 0, 0, 0, 1/), gr_oxygen_diffusion_cus_cus_down(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-    case(empty)
-        call add_proc(co_adsorption_cus, cell + (/ 0, 0, 0, 1/), gr_co_adsorption_cus(cell + (/ 0, 0, 0, 0/)))
-        select case(get_species(cell + (/0, 1, 0, ruo2_cus/)))
-        case(empty)
-            call add_proc(oxygen_adsorption_cus_cus, cell + (/ 0, 0, 0, 1/), gr_oxygen_adsorption_cus_cus(cell + (/ 0, 0, 0, 0/)))
         end select
 
     end select

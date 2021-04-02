@@ -52,6 +52,7 @@ def test_build_model(indexOfBackendToTest='all'):
 
             acf.do_kmc_steps_displacement(model,nr_of_steps,True)
             traj = acf.get_trajectory(model)
+            print("line 54", traj)
 
         #check if the sources are equal.
         #The ref_src directories were created by copying a 'successful' src directory and renaming it to ref_src.
