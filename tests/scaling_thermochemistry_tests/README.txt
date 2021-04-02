@@ -14,4 +14,8 @@ The model can also be run using the temporal acceleration algorithm.
 
 All three things are tested simultaneously in the test run. 
 
-The last two snapshots are longer in length to ensure steady state, and then the output is tested.
+The last 5 snapshots are longer in length to ensure steady state, and then the output is tested.
+
+The test takes around 5 minutes to run.
+
+Note: For a quicker test, we could do 2 snapshots at the end rather than 5, which will reduce the test to around 2 minutes.  Then, we would test only index 0 of the TOF_data since the CH4 TOF_data seems to converge sooner than the H2O TOF_data.

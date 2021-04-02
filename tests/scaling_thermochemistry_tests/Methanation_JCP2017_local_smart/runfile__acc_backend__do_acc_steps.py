@@ -29,7 +29,7 @@ do_snapshots(n_snapshots, sps, acc=True) #Set acceleration to True
 
 #now do more snapshots that are longer.
 sps = 10000000 # <-- this is just an example
-n_snapshots = 2 # <-- this is just an example
+n_snapshots = 5 # <-- this is just an example
 do_snapshots(n_snapshots, sps, acc=True)
 
 #do_snapshots(500, 2) <-- here is another example of how to use the syntax.

@@ -43,7 +43,7 @@ real(kind=rdouble), public, dimension(5) :: userpar
 ! Species masses
 character(len=18), parameter, public :: byst_CO_ads = "nr_CO_1nn &
     &nr_O_1nn"
-character(len=0), parameter, public :: byst_CO_des = ""
+character(len=1), parameter, public :: byst_CO_des = ""
 character(len=39), parameter, public :: byst_CO_oxidation_00 = "nr_CO_COnn &
     &nr_O_COnn &
     &nr_CO_Onn &
@@ -60,8 +60,8 @@ character(len=39), parameter, public :: byst_CO_oxidation_03 = "nr_CO_COnn &
     &nr_O_COnn &
     &nr_CO_Onn &
     &nr_O_Onn"
-character(len=0), parameter, public :: byst_O2_des_right = ""
-character(len=0), parameter, public :: byst_O2_des_up = ""
+character(len=1), parameter, public :: byst_O2_des_right = ""
+character(len=1), parameter, public :: byst_O2_des_up = ""
 character(len=18), parameter, public :: byst_O_ads_00 = "nr_CO_1nn &
     &nr_O_1nn"
 character(len=18), parameter, public :: byst_O_ads_01 = "nr_CO_1nn &

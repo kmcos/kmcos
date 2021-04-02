@@ -41,7 +41,7 @@ use run_proc_0010
 
 implicit none
 integer(kind=iint), parameter, public :: representation_length = 23
-integer(kind=iint), public :: seed_size = 12
+integer(kind=iint), public :: seed_size = 33
 integer(kind=iint), public :: seed ! random seed
 integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed
 
@@ -77,11 +77,17 @@ subroutine do_kmc_steps(n)
     call random_number(ran_time)
     call random_number(ran_proc)
     call random_number(ran_site)
+print *, "PROCLIST/DO_KMC_STEP"
+print *,"    PROCLIST/DO_KMC_STEP/RAN_TIME",ran_time
+print *,"    PROCLIST/DO_KMC_STEP/RAN_PROC",ran_proc
+print *,"    PROCLIST/DO_KMC_STEP/RAN_site",ran_site
     call update_accum_rate
     call update_clocks(ran_time)
 
     call update_integ_rate
     call determine_procsite(ran_proc, ran_site, proc_nr, nr_site)
+print *,"PROCLIST/DO_KMC_STEP/PROC_NR", proc_nr
+print *,"PROCLIST/DO_KMC_STEP/SITE", nr_site
     call run_proc_nr(proc_nr, nr_site)
     enddo
 
@@ -106,11 +112,17 @@ subroutine do_kmc_step()
     call random_number(ran_time)
     call random_number(ran_proc)
     call random_number(ran_site)
+print *, "PROCLIST/DO_KMC_STEP"
+print *,"    PROCLIST/DO_KMC_STEP/RAN_TIME",ran_time
+print *,"    PROCLIST/DO_KMC_STEP/RAN_PROC",ran_proc
+print *,"    PROCLIST/DO_KMC_STEP/RAN_site",ran_site
     call update_accum_rate
     call update_clocks(ran_time)
 
     call update_integ_rate
     call determine_procsite(ran_proc, ran_site, proc_nr, nr_site)
+print *,"PROCLIST/DO_KMC_STEP/PROC_NR", proc_nr
+print *,"PROCLIST/DO_KMC_STEP/SITE", nr_site
     call run_proc_nr(proc_nr, nr_site)
 end subroutine do_kmc_step
 
@@ -130,9 +142,13 @@ subroutine get_next_kmc_step(proc_nr, nr_site)
     call random_number(ran_time)
     call random_number(ran_proc)
     call random_number(ran_site)
+print *,"PROCLIST/GET_KMC_STEP/RAN_TIME",ran_time
+print *,"PROCLIST/GET_KMC_STEP/RAN_PROC",ran_proc
+print *,"PROCLIST/GET_KMC_STEP/RAN_site",ran_site
     call update_accum_rate
     call determine_procsite(ran_proc, ran_time, proc_nr, nr_site)
 
+print *,"PROCLIST/GET_KMC_STEP/PROC_NR", proc_nr
 end subroutine get_next_kmc_step
 
 subroutine get_occupation(occupation)
@@ -202,32 +218,36 @@ subroutine init(input_system_size, system_name, layer, seed_in, no_banner)
         print *, "|                                                            |"
         print *, "|           Juan M. Lorenzi (jmlorenzi@gmail.com)            |"
         print *, "|                                                            |"
-        print *, "| and implemented with the help of kmcos,                     |"
+        print *, "| and implemented with the help of kmcos,                    |"
         print *, "| which is distributed under GNU/GPL Version 3               |"
         print *, "| (C) Max J. Hoffmann mjhoffmann@gmail.com                   |"
         print *, "|                                                            |"
-        print *, "| kmcos is distributed in the hope that it will be useful     |"
-        print *, "| but WIHTOUT ANY WARRANTY; without even the implied         |"
-        print *, "| waranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR     |"
+        print *, "| kmcos is distributed in the hope that it will be useful    |"
+        print *, "| but WITHOUT ANY WARRANTY; without even the implied         |"
+        print *, "| warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR    |"
         print *, "| PURPOSE. See the GNU General Public License for more       |"
         print *, "| details.                                                   |"
         print *, "|                                                            |"
-        print *, "| If using kmcos for a publication, attribution is            |"
+        print *, "| If using kmcos for a publication, attribution is           |"
         print *, "| greatly appreciated.                                       |"
         print *, "| Hoffmann, M. J., Matera, S., & Reuter, K. (2014).          |"
-        print *, "| kmcos: A lattice kinetic Monte Carlo framework.             |"
+        print *, "| kmos: A lattice kinetic Monte Carlo framework.             |"
         print *, "| Computer Physics Communications, 185(7), 2138-2150.        |"
         print *, "|                                                            |"
-        print *, "| Development http://mhoffman.github.org/kmcos                |"
-        print *, "| Documentation http://kmcos.readthedocs.org                  |"
-        print *, "| Reference http://dx.doi.org/10.1016/j.cpc.2014.04.003      |"
+        print *, "| Development https://github.com/kmcos/kmcos                 |"
+        print *, "| Documentation https://kmcos.readthedocs.io                 |"
+        print *, "| Reference https://dx.doi.org/10.1016/j.cpc.2014.04.003     |"
         print *, "|                                                            |"
         print *, "+------------------------------------------------------------+"
         print *, ""
         print *, ""
     endif
+print *,"PROCLIST/INIT"
+print *,"    PROCLIST/INIT/SYSTEM_SIZE",input_system_size
     call allocate_system(nr_of_proc, input_system_size, system_name)
+print *,"    PROCLIST/INIT/ALLOCATED_LATTICE"
     call initialize_state(layer, seed_in)
+print *,"    PROCLIST/INIT/INITIALIZED_STATE"
 end subroutine init
 
 subroutine initialize_state(layer, seed_in)
@@ -244,13 +264,15 @@ subroutine initialize_state(layer, seed_in)
     integer(kind=iint), intent(in) :: layer, seed_in
 
     integer(kind=iint) :: i, j, k, nr
+print *,"PROCLIST/INITIALIZE_STATE"
     ! initialize random number generator
     allocate(seed_arr(seed_size))
     seed = seed_in
     seed_arr = seed
-    call random_seed(seed_size)
+    call random_seed(size=seed_size)
     call random_seed(put=seed_arr)
     deallocate(seed_arr)
+print *, "    PROCLIST/INITALIZE_STATE/INITIALIZED_RNG"
     do k = 0, system_size(3)-1
         do j = 0, system_size(2)-1
             do i = 0, system_size(1)-1
@@ -265,14 +287,17 @@ subroutine initialize_state(layer, seed_in)
         end do
     end do
 
+print *, "    PROCLIST/INITALIZE_STATE/INITIALIZED_DEFAULT_SPECIES"
     do k = 0, system_size(3)-1
         do j = 0, system_size(2)-1
             do i = 0, system_size(1)-1
+print *, "    PROCLIST/INITIALIZE_STATE/TOUCHUP_CELL", i, j, k
                 call touchup_cell((/i, j, k, 0/))
             end do
         end do
     end do
 
+print *, "    PROCLIST/INITALIZE_STATE/INITIALIZED_AVAIL_SITES"
 
 end subroutine initialize_state
 
@@ -398,6 +423,18 @@ subroutine touchup_cell(cell)
     end do
 
     select case(get_species(cell + (/0, 0, 0, square_default/)))
+    case(empty)
+        call add_proc(CO_ads, cell + (/ 0, 0, 0, 1/), gr_CO_ads(cell + (/ 0, 0, 0, 0/)))
+        select case(get_species(cell + (/1, 0, 0, square_default/)))
+        case(empty)
+            call add_proc(O_ads_00, cell + (/ 0, 0, 0, 1/), gr_O_ads_00(cell + (/ 0, 0, 0, 0/)))
+        end select
+
+        select case(get_species(cell + (/0, 1, 0, square_default/)))
+        case(empty)
+            call add_proc(O_ads_01, cell + (/ 0, 0, 0, 1/), gr_O_ads_01(cell + (/ 0, 0, 0, 0/)))
+        end select
+
     case(CO)
         call add_proc(CO_des, cell + (/ 0, 0, 0, 1/), gr_CO_des(cell + (/ 0, 0, 0, 0/)))
         select case(get_species(cell + (/1, 0, 0, square_default/)))
@@ -431,18 +468,6 @@ subroutine touchup_cell(cell)
             call add_proc(O2_des_up, cell + (/ 0, 0, 0, 1/), gr_O2_des_up(cell + (/ 0, 0, 0, 0/)))
         end select
 
-    case(empty)
-        call add_proc(CO_ads, cell + (/ 0, 0, 0, 1/), gr_CO_ads(cell + (/ 0, 0, 0, 0/)))
-        select case(get_species(cell + (/1, 0, 0, square_default/)))
-        case(empty)
-            call add_proc(O_ads_00, cell + (/ 0, 0, 0, 1/), gr_O_ads_00(cell + (/ 0, 0, 0, 0/)))
-        end select
-
-        select case(get_species(cell + (/0, 1, 0, square_default/)))
-        case(empty)
-            call add_proc(O_ads_01, cell + (/ 0, 0, 0, 1/), gr_O_ads_01(cell + (/ 0, 0, 0, 0/)))
-        end select
-
     end select
 
 
@@ -470,33 +495,43 @@ subroutine run_proc_nr(proc, nr_cell)
 
     select case(proc)
     case(CO_ads)
+print *,"PROCLIST/RUN_PROC_NR/NAME","CO_ads"
         call run_proc_CO_ads(cell)
 
     case(CO_des)
+print *,"PROCLIST/RUN_PROC_NR/NAME","CO_des"
         call run_proc_CO_des(cell)
 
     case(CO_oxidation_00)
+print *,"PROCLIST/RUN_PROC_NR/NAME","CO_oxidation_00"
         call run_proc_CO_oxidation_00(cell)
 
     case(CO_oxidation_01)
+print *,"PROCLIST/RUN_PROC_NR/NAME","CO_oxidation_01"
         call run_proc_CO_oxidation_01(cell)
 
     case(CO_oxidation_02)
+print *,"PROCLIST/RUN_PROC_NR/NAME","CO_oxidation_02"
         call run_proc_CO_oxidation_02(cell)
 
     case(CO_oxidation_03)
+print *,"PROCLIST/RUN_PROC_NR/NAME","CO_oxidation_03"
         call run_proc_CO_oxidation_03(cell)
 
     case(O2_des_right)
+print *,"PROCLIST/RUN_PROC_NR/NAME","O2_des_right"
         call run_proc_O2_des_right(cell)
 
     case(O2_des_up)
+print *,"PROCLIST/RUN_PROC_NR/NAME","O2_des_up"
         call run_proc_O2_des_up(cell)
 
     case(O_ads_00)
+print *,"PROCLIST/RUN_PROC_NR/NAME","O_ads_00"
         call run_proc_O_ads_00(cell)
 
     case(O_ads_01)
+print *,"PROCLIST/RUN_PROC_NR/NAME","O_ads_01"
         call run_proc_O_ads_01(cell)
 
     end select

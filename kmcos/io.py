@@ -2254,7 +2254,7 @@ class ProcListWriter():
             nr_vars_print = ' &\n    &'.join(nr_vars)
 
             out2.write('character(len={0}), parameter, public :: byst_{1} = "{2}"\n'.format(
-                nr_vars_str_len,
+                np.max((nr_vars_str_len,1)),
                 process.name,
                 nr_vars_print))
 
