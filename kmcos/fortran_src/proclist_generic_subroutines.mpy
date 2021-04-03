@@ -328,30 +328,30 @@ if data.meta.debug > 0:
 #@ !    used to generate additional integers for seeding the production random
 #@ !    number generator (input)
 #@ !******
-#@ use iso_fortran_env, only: int64
-#@ integer, intent(in) :: sd
-#@ integer(int64) :: sarr(12)
-#@ integer :: i
+#@     use iso_fortran_env, only: int64
+#@     integer, intent(in) :: sd
+#@     integer(int64) :: sarr(12)
+#@     integer :: i
 #@
 #@ !Generate the state array with a simple linear congruential generator. The
 #@ !parameters for this generator are taken from the gfortran documentation on
 #@ !random_seed().
 #@
 #@ !Initialize the generator
-#@ if (sd == 0) then
-#@   s = 104729
-#@ else
-#@   s = mod(sd, 4294967296_int64)
-#@ end if
+#@     if (sd == 0) then
+#@       s = 104729
+#@     else
+#@       s = mod(sd, 4294967296_int64)
+#@     end if
 #@
 #@ !Get values for the seed array
-#@ do i =1, size(sarr)
-#@   s = mod(s * 279470273_int64, 4294967291_int64)
-#@   sarr(i) = int(mod(s, int(huge(0), int64)), kind(0))
-#@   s = mod(s, 4294967296_int64)
-#@ end do
+#@     do i =1, size(sarr)
+#@       s = mod(s * 279470273_int64, 4294967291_int64)
+#@       sarr(i) = int(mod(s, int(huge(0), int64)), kind(0))
+#@       s = mod(s, 4294967296_int64)
+#@     end do
 #@
-#@end function seed_gen
+#@ end function seed_gen
 # End addition 2016/04/14
 #        
 # initialize the system with the default layer and the default species
