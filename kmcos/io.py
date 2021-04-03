@@ -1359,23 +1359,23 @@ class ProcListWriter():
         # lateral interaction groups
         lat_int_groups = self._get_lat_int_groups()
 
-        out.write('module proclist\n'
+        out.write(('module proclist\n'
                   'use kind_values\n'
                   'use base, only: &\n'
                   '    update_accum_rate, &\n'
                   '    update_integ_rate, &\n'
                   '    determine_procsite, &\n'
                   '    update_clocks, &\n'
-                  '    avail_sites, &\n')
+                  '    avail_sites, &\n'))
         if len(data.layer_list) == 1 : # multi-lattice mode
             out.write('    null_species, &\n')
         else:
             out.write('    set_null_species, &\n')
         if not accelerated:
-            out.write('    increment_procstat, &\n'
-                      '    get_accum_rate\n\n')
+            out.write(('    increment_procstat, &\n'
+                      '    get_accum_rate\n\n'))
         else:
-            out.write('    increment_procstat, &\n'
+            out.write(('    increment_procstat, &\n'
                       '    update_integ_rate_sb, &\n'
                       '    update_eq_proc, &\n'
                       '    check_proc_eq, &\n'
@@ -1384,7 +1384,7 @@ class ProcListWriter():
                       '    update_sum_sf, &\n'
                       '    get_save_limit, &\n'
                       '    save_execution, &\n'
-                      '    reset_saved_execution_data\n\n')
+                      '    reset_saved_execution_data\n\n'))
         out.write('use lattice, only: &\n')
         site_params = []
         for layer in data.layer_list:
