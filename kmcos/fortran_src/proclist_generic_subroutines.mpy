@@ -369,6 +369,7 @@ if data.meta.debug > 0:
 #@ !    * ``layer`` integer representing layer
 #@ !******
 #@     integer(kind=iint), intent(in) :: layer, seed_in
+#@
 #@     integer(kind=iint) :: i, j, k, nr
 if data.meta.debug > 0:
     #@ print *,"PROCLIST/INITIALIZE_STATE"
