@@ -44,6 +44,61 @@ if data.meta.debug > 0:
 #@ end subroutine do_kmc_steps
 #@
 
+
+#Addition by J.E. Sutton (ORNL) 2016/04/27 for propagating the model
+#according to simulation time, rather than KMC steps.
+#@ subroutine do_kmc_steps_time(t, num_iter)
+#@ !****f* proclist/do_kmc_steps_time
+#@ ! FUNCTION
+#@ !    Performs a variable number of KMC steps to try to match the requested
+#@ !    simulation time as closely as possible without going over. This routine
+#@ !    always performs at least one KMC step before terminating.
+#@ !    * Determine the time step for the next process
+#@ !    * If the time limit is not exceeded, update clocks, rates, execute process,
+#@ !      etc.; otherwise, abort.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    ``t`` : Requested simulation time increment (input)
+#@ !    ``num_iter`` : the number of executed iterations (output)
+#@ !******
+#@     real(kind=rdouble), intent(in) :: t
+#@     integer(kind=ilong), intent(out) :: num_iter
+#@
+#@     real(kind=rsingle) :: ran_proc, ran_time, ran_site
+#@     integer(kind=iint) :: nr_site, proc_nr
+#@     integer(kind=iint) :: state(seed_size)
+#@     real(kind=rdouble) :: time_step, loop_kmc_time, accum_rate
+#@
+#@     loop_kmc_time = 0
+#@     num_iter = 0
+#@     do
+#@
+#@       call random_seed(get=state)
+#@       call random_number(ran_time)
+#@       call random_number(ran_proc)
+#@       call random_number(ran_site)
+#@       call update_accum_rate
+#@       call get_accum_rate(0, accum_rate)
+#@       time_step = -log(ran_time)/accum_rate
+#@       if ((loop_kmc_time + time_step > t) .and. (num_iter > 0)) then
+#@         call random_seed(put=state)
+#@         exit
+#@       else
+#@         call update_clocks(ran_time)
+#@         call update_integ_rate
+#@         call determine_procsite(ran_proc, ran_site, proc_nr, nr_site)
+#@         call run_proc_nr(proc_nr, nr_site)
+#@         loop_kmc_time = loop_kmc_time + time_step
+#@         num_iter = num_iter + 1
+#@       end if
+#@
+#@     end do
+#@
+#@ end subroutine do_kmc_steps_time
+#@
+#End addition 2016/04/27
+
 #@ subroutine do_kmc_step()
 #@
 #@ !****f* proclist/do_kmc_step
@@ -229,7 +284,76 @@ if data.meta.debug > 0:
     #@ print *,"    PROCLIST/INIT/INITIALIZED_STATE"
 #@ end subroutine init
 #@
-
+# Additions by J.E. Sutton (ORNL), 2016/04/14 
+# and A.Savara, 2021/04/03 for manipulating the state
+# of the random number generator
+#@ function get_seed() result(state)
+#@ !****f* proclist/get_seed
+#@ ! FUNCTION
+#@ !   Function to retrieve the state of the random number generator to
+#@ !    permit reproducible restart trajectories.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    * None
+#@ !******
+#@     integer :: state(12)
+#@     call random_seed(get=state)
+#@ end function get_seed
+#@
+#@ subroutine put_seed(state)
+#@ !****f* proclist/put_seed
+#@ ! FUNCTION
+#@ !    Subroutine to set the state of the random number generator to
+#@ !    permit reproducible restart trajectories.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    * ``state`` an array of integers with the state of the random number
+#@ !    generator (input)
+#@ !******  
+#@     integer, intent(in) :: state(12)
+#@     call random_seed(put=state)
+#@ end subroutine put_seed 
+#@
+#@ function seed_gen(sd) result(sarr)
+#@ !****f* proclist/seed_gen
+#@ ! FUNCTION
+#@ !    Function to transform a single number into a full set of integers
+#@ !    required for initializing the random number generator.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    * ``sd`` an integer used to seed a simple random number generator
+#@ !    used to generate additional integers for seeding the production random
+#@ !    number generator (input)
+#@ !******
+#@ use iso_fortran_env, only: int64
+#@ integer, intent(in) :: sd
+#@ integer(int64) :: sarr(12)
+#@ integer :: i
+#@
+#@ !Generate the state array with a simple linear congruential generator. The
+#@ !parameters for this generator are taken from the gfortran documentation on
+#@ !random_seed().
+#@
+#@ !Initialize the generator
+#@ if (sd == 0) then
+#@   s = 104729
+#@ else
+#@   s = mod(sd, 4294967296_int64)
+#@ end if
+#@
+#@ !Get values for the seed array
+#@ do i =1, size(sarr)
+#@   s = mod(s * 279470273_int64, 4294967291_int64)
+#@   sarr(i) = int(mod(s, int(huge(0), int64)), kind(0))
+#@   s = mod(s, 4294967296_int64)
+#@ end do
+#@
+#@end function seed_gen
+# End addition 2016/04/14
+#        
 # initialize the system with the default layer and the default species
 # initialize all book-keeping databases
 # and representation strings for ASE representation
@@ -245,14 +369,13 @@ if data.meta.debug > 0:
 #@ !    * ``layer`` integer representing layer
 #@ !******
 #@     integer(kind=iint), intent(in) :: layer, seed_in
-#@
 #@     integer(kind=iint) :: i, j, k, nr
 if data.meta.debug > 0:
     #@ print *,"PROCLIST/INITIALIZE_STATE"
 #@     ! initialize random number generator
 #@     allocate(seed_arr(seed_size))
 #@     seed = seed_in
-#@     seed_arr = seed
+#@     seed_arr = seed_gen(seed)
 #@     call random_seed(size=seed_size)
 #@     call random_seed(put=seed_arr)
 #@     deallocate(seed_arr)
