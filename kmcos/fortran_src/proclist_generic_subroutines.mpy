@@ -334,6 +334,7 @@ if data.meta.debug > 0:
 #@     integer(int64) :: s
 #@     integer(int64) :: sarr(33)
 #@     integer :: i
+#@
 #@ !Generate the state array with a simple linear congruential generator. The
 #@ !parameters for this generator are taken from the gfortran documentation on
 #@ !random_seed().
