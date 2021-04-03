@@ -332,6 +332,7 @@ if data.meta.debug > 0:
 #@     integer, intent(in) :: sd
 #@     integer(int64) :: sarr(12)
 #@     integer :: i
+#@     integer(kind=ilong) :: s
 #@
 #@ !Generate the state array with a simple linear congruential generator. The
 #@ !parameters for this generator are taken from the gfortran documentation on
@@ -339,16 +340,16 @@ if data.meta.debug > 0:
 #@
 #@ !Initialize the generator
 #@     if (sd == 0) then
-#@       s = 104729
+#@       sd = 104729
 #@     else
-#@       s = mod(sd, 4294967296_int64)
+#@       sd = mod(sd, 4294967296_int64)
 #@     end if
 #@
 #@ !Get values for the seed array
 #@     do i =1, size(sarr)
-#@       s = mod(s * 279470273_int64, 4294967291_int64)
-#@       sarr(i) = int(mod(s, int(huge(0), int64)), kind(0))
-#@       s = mod(s, 4294967296_int64)
+#@       sd = mod(sd * 279470273_int64, 4294967291_int64)
+#@       sarr(i) = int(mod(sd, int(huge(0), int64)), kind(0))
+#@       sd = mod(sd, 4294967296_int64)
 #@     end do
 #@
 #@ end function seed_gen
