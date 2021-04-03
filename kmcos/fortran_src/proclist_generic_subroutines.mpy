@@ -297,7 +297,7 @@ if data.meta.debug > 0:
 #@ !
 #@ !    * None
 #@ !******
-#@     integer :: state(12)
+#@     integer :: state(33)
 #@     call random_seed(get=state)
 #@ end function get_seed
 #@
@@ -312,7 +312,7 @@ if data.meta.debug > 0:
 #@ !    * ``state`` an array of integers with the state of the random number
 #@ !    generator (input)
 #@ !******  
-#@     integer, intent(in) :: state(12)
+#@     integer, intent(in) :: state(33)
 #@     call random_seed(put=state)
 #@ end subroutine put_seed 
 #@
@@ -330,9 +330,9 @@ if data.meta.debug > 0:
 #@ !******
 #@     use iso_fortran_env, only: int64
 #@     integer, intent(in) :: sd
-#@     integer(int64) :: sarr(12)
+#@     integer(int64) :: s
+#@     integer(int64) :: sarr(33)
 #@     integer :: i
-#@
 #@ !Generate the state array with a simple linear congruential generator. The
 #@ !parameters for this generator are taken from the gfortran documentation on
 #@ !random_seed().
