@@ -329,6 +329,7 @@ if data.meta.debug > 0:
 #@ !    number generator (input)
 #@ !******
 #@     use iso_fortran_env, only: int64
+#@
 #@     integer, intent(in) :: sd
 #@     integer(int64) :: s
 #@     integer(int64) :: sarr(33)
