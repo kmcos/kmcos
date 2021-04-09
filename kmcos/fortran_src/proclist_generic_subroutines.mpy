@@ -44,6 +44,7 @@ if data.meta.debug > 0:
 #@ end subroutine do_kmc_steps
 #@
 
+
 #@ subroutine do_kmc_step()
 #@
 #@ !****f* proclist/do_kmc_step
@@ -229,7 +230,78 @@ if data.meta.debug > 0:
     #@ print *,"    PROCLIST/INIT/INITIALIZED_STATE"
 #@ end subroutine init
 #@
-
+# Additions by J.E. Sutton (ORNL), 2016/04/14 
+# and A.Savara, 2021/04/03 for manipulating the state
+# of the random number generator
+#@ function get_seed() result(state)
+#@ !****f* proclist/get_seed
+#@ ! FUNCTION
+#@ !   Function to retrieve the state of the random number generator to
+#@ !    permit reproducible restart trajectories.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    * None
+#@ !******
+#@     integer :: state(33)
+#@     call random_seed(get=state)
+#@ end function get_seed
+#@
+#@ subroutine put_seed(state)
+#@ !****f* proclist/put_seed
+#@ ! FUNCTION
+#@ !    Subroutine to set the state of the random number generator to
+#@ !    permit reproducible restart trajectories.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    * ``state`` an array of integers with the state of the random number
+#@ !    generator (input)
+#@ !******  
+#@     integer, intent(in) :: state(33)
+#@     call random_seed(put=state)
+#@ end subroutine put_seed 
+#@
+#@ function seed_gen(sd) result(sarr)
+#@ !****f* proclist/seed_gen
+#@ ! FUNCTION
+#@ !    Function to transform a single number into a full set of integers
+#@ !    required for initializing the random number generator.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    * ``sd`` an integer used to seed a simple random number generator
+#@ !    used to generate additional integers for seeding the production random
+#@ !    number generator (input)
+#@ !******
+#@ 
+#@
+#@     integer, intent(in) :: sd
+#@     integer(kind=ilong) :: s
+#@     integer(kind=ilong) :: sarr(33)
+#@     integer :: i
+#@
+#@ !Generate the state array with a simple linear congruential generator. The
+#@ !parameters for this generator are taken from the gfortran documentation on
+#@ !random_seed().
+#@
+#@ !Initialize the generator
+#@     if (sd == 0) then
+#@       s = 104729
+#@     else
+#@       s = mod(sd, 4294967296_ilong)
+#@     end if
+#@
+#@ !Get values for the seed array
+#@     do i =1, size(sarr)
+#@       s = mod(s * 279470273_ilong, 4294967291_ilong)
+#@       sarr(i) = int(mod(s, int(huge(0), ilong)), kind(0))
+#@       s = mod(s, 4294967296_ilong)
+#@     end do
+#@
+#@ end function seed_gen
+# End addition 2016/04/14
+#        
 # initialize the system with the default layer and the default species
 # initialize all book-keeping databases
 # and representation strings for ASE representation
@@ -252,7 +324,7 @@ if data.meta.debug > 0:
 #@     ! initialize random number generator
 #@     allocate(seed_arr(seed_size))
 #@     seed = seed_in
-#@     seed_arr = seed
+#@     seed_arr = seed_gen(seed)
 #@     call random_seed(size=seed_size)
 #@     call random_seed(put=seed_arr)
 #@     deallocate(seed_arr)

@@ -1372,7 +1372,8 @@ class ProcListWriter():
         else:
             out.write('    set_null_species, &\n')
         if not accelerated:
-            out.write('    increment_procstat\n\n')
+            out.write(('    increment_procstat, &\n'
+                      '    get_accum_rate\n\n'))
         else:
             out.write(('    increment_procstat, &\n'
                       '    update_integ_rate_sb, &\n'
