@@ -328,11 +328,11 @@ if data.meta.debug > 0:
 #@ !    used to generate additional integers for seeding the production random
 #@ !    number generator (input)
 #@ !******
-#@     use iso_fortran_env, only: int64
+#@ 
 #@
 #@     integer, intent(in) :: sd
-#@     integer(int64) :: s
-#@     integer(int64) :: sarr(33)
+#@     integer(kind=ilong) :: s
+#@     integer(kind=ilong) :: sarr(33)
 #@     integer :: i
 #@
 #@ !Generate the state array with a simple linear congruential generator. The
@@ -343,14 +343,14 @@ if data.meta.debug > 0:
 #@     if (sd == 0) then
 #@       s = 104729
 #@     else
-#@       s = mod(sd, 4294967296_int64)
+#@       s = mod(sd, 4294967296_ilong)
 #@     end if
 #@
 #@ !Get values for the seed array
 #@     do i =1, size(sarr)
-#@       s = mod(s * 279470273_int64, 4294967291_int64)
-#@       sarr(i) = int(mod(s, int(huge(0), int64)), kind(0))
-#@       s = mod(s, 4294967296_int64)
+#@       s = mod(s * 279470273_ilong, 4294967291_ilong)
+#@       sarr(i) = int(mod(s, int(huge(0), ilong)), kind(0))
+#@       s = mod(s, 4294967296_ilong)
 #@     end do
 #@
 #@ end function seed_gen
