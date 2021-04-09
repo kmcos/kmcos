@@ -2,7 +2,7 @@
 
 #Summary: This program creates a TPD simulation using a previously created model. It #updates the #temperature using how much time has passed and beta. The time is determined #by kmc_time. #Also, the program exports information after each set of steps is executed, #such as site #coverage, temperature, time, etc. 
 
-from kmos.run import KMC_Model
+from kmcos.run import KMC_Model
 from ase import Atoms
 from ase.io import write
 from ase.visualize import view
