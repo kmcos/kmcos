@@ -45,6 +45,60 @@ if data.meta.debug > 0:
 #@
 
 
+#Addition by J.E. Sutton (ORNL) 2016/04/27 for propagating the model
+#according to simulation time, rather than KMC steps.
+#@ subroutine do_kmc_steps_time(t, num_iter)
+#@ !****f* proclist/do_kmc_steps_time
+#@ ! FUNCTION
+#@ !    Performs a variable number of KMC steps to try to match the requested
+#@ !    simulation time as closely as possible without going over. This routine
+#@ !    always performs at least one KMC step before terminating.
+#@ !    * Determine the time step for the next process
+#@ !    * If the time limit is not exceeded, update clocks, rates, execute process,
+#@ !      etc.; otherwise, abort.
+#@ !
+#@ ! ARGUMENTS
+#@ !
+#@ !    ``t`` : Requested simulation time increment (input)
+#@ !    ``num_iter`` : the number of executed iterations (output)
+#@ !******
+#@     real(kind=rdouble), intent(in) :: t
+#@     integer(kind=ilong), intent(out) :: num_iter
+#@
+#@     real(kind=rsingle) :: ran_proc, ran_time, ran_site
+#@     integer(kind=iint) :: nr_site, proc_nr
+#@     integer(kind=iint) :: state(seed_size)
+#@     real(kind=rdouble) :: time_step, loop_kmc_time, accum_rate
+#@
+#@     loop_kmc_time = 0
+#@     num_iter = 0
+#@     do
+#@
+#@       call random_seed(get=state)
+#@       call random_number(ran_time)
+#@       call random_number(ran_proc)
+#@       call random_number(ran_site)
+#@       call update_accum_rate
+#@       call get_accum_rate(0, accum_rate)
+#@       time_step = -log(ran_time)/accum_rate
+#@       if ((loop_kmc_time + time_step > t) .and. (num_iter > 0)) then
+#@         call random_seed(put=state)
+#@         exit
+#@       else
+#@         call update_clocks(ran_time)
+#@         call update_integ_rate
+#@         call determine_procsite(ran_proc, ran_site, proc_nr, nr_site)
+#@         call run_proc_nr(proc_nr, nr_site)
+#@         loop_kmc_time = loop_kmc_time + time_step
+#@         num_iter = num_iter + 1
+#@       end if
+#@
+#@     end do
+#@
+#@ end subroutine do_kmc_steps_time
+#@
+#End addition 2016/04/27
+
 #@ subroutine do_kmc_step()
 #@
 #@ !****f* proclist/do_kmc_step
