@@ -56,18 +56,20 @@ if data.meta.debug > 0:
 #@ !    * Determine the time step for the next process
 #@ !    * If the time limit is not exceeded, update clocks, rates, execute process,
 #@ !      etc.; otherwise, abort.
+#@ !    Ideally we would use state(seed_size) but that was not working, so hardcoded size.
 #@ !
 #@ ! ARGUMENTS
 #@ !
 #@ !    ``t`` : Requested simulation time increment (input)
 #@ !    ``num_iter`` : the number of executed iterations (output)
 #@ !******
+#@     use base, only: get_accum_rate
 #@     real(kind=rdouble), intent(in) :: t
 #@     integer(kind=ilong), intent(out) :: num_iter
 #@
 #@     real(kind=rsingle) :: ran_proc, ran_time, ran_site
 #@     integer(kind=iint) :: nr_site, proc_nr
-#@     integer(kind=iint) :: state(seed_size)
+#@     integer(kind=iint) :: state(33)
 #@     real(kind=rdouble) :: time_step, loop_kmc_time, accum_rate
 #@
 #@     loop_kmc_time = 0
