@@ -54,7 +54,7 @@ resultObj = actualResult
 
 #String must be provided provided. Make it '' if you do not want to use a result string.
 resultStr = str(resultObj)
-
+print("Warning: for test_0.py of SQERTSS_unit_tests a failure has been observed due to the different systems exporting the xml differently. So test_0.py can fail due to this reason. If the other tests are passing, you should not worry about it.  However, you can replace throttling_test_reaction_expected_xml.xml with the calculated result string txt to return the test to passing.")
 
 """We set our tolerances. There can be some rounding when the tolerances get checked, so they are not exact."""
 relativeTolerance = 0.20 #The relative tolerances have to be quite large this time due to statistical fluctuations. It would probably pass most of the time with 0.10, but 0.20 is more safe and is still very distinct for what comes out with this algorithm.
