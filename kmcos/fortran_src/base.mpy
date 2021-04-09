@@ -55,6 +55,7 @@
 #@     get_integ_rate, &
 #@     get_avail_site, &
 #@     get_kmc_step, &
+#@     set_kmc_step, &
 #@     get_kmc_time, &
 #@     set_kmc_time, &
 #@     set_system_name, &
@@ -868,6 +869,26 @@
 #@ 
 #@ end subroutine get_kmc_time
 #@ 
+#@
+#@ !Added by J.E. Sutton, ORNL, 2016/08/15 to permit setting the number of KMC
+#@ !steps from the Python runtime code.
+#@ subroutine set_kmc_step(new_kmc_step)
+#@     !****f* base/set_kmc_step
+#@     ! FUNCTION
+#@     !    Sets the current kmc_step
+#@     !
+#@     ! ARGUMENTS
+#@     !
+#@     !    * ``kmc_step`` Writeable integer
+#@     !******
+#@     !---------------I/O variables---------------
+#@     integer(kind=ilong), intent(in) :: new_kmc_step
+#@ 
+#@     kmc_step = new_kmc_step
+#@ 
+#@ end subroutine set_kmc_step
+#@
+#@
 #@ 
 #@ subroutine get_kmc_time_step(return_kmc_time_step)
 #@     !****f* base/get_kmc_time_step
