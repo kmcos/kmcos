@@ -1,0 +1,17 @@
+<bound method KMC_Model.__repr__ of # kMC model parameters (7, fixed 4)
+# --------------------
+# A = (3.5*angstrom)**2
+# A_CO_des = 1e+13
+# E_act_des = 500000
+# R = 8.3145
+# T = 1000  # *
+# deltaG = -0.5  # *
+# p_COgas = 0.2  # *
+# --------------------
+# * adjustable parameters
+# kMC rate constants (2)
+# ------------------
+# CO_desorption: A_CO_des*exp(-E_act_des/(R*T)) = 7.64e-14 s^{-1}
+# Do_nothing: 0 = 0.00e+00 s^{-1}
+# ------------------
+>
