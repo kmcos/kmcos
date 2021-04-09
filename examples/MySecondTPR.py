@@ -2,6 +2,7 @@
 
 #DISCLAIMER: this is hacked down really quickly
 #BEWARE OF BUGS
+#Made from modifying render_co_oxidation_ruO2.py
 
 from kmcos.types import *
 from kmcos.io import *
@@ -11,7 +12,7 @@ pt = Project()
 
 pt.set_meta(author='Max J. Hoffmann',
             email='mjhoffmann@gmail.com',
-            model_name='CO_oxidation_Ruo2',
+            model_name='MySecondTPR',
             model_dimension=2)
 
 # Species
@@ -366,6 +367,6 @@ pt.add_process(name='React_bridge_left',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Obridge_COcus*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.save('CO_oxidation.ini')
-pt.save('CO_oxidation.xml')
+pt.save('MySecondTPR.ini')
+pt.save('MySecondTPR.xml')
 pt.print_statistics()
