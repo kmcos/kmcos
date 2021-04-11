@@ -23,7 +23,7 @@ class module_export_import:
         with open(self.save_filename, 'wt') as f:
             for module_var in module_vars:
                 module_var_val = getattr(self.module, module_var)
-                if type(module_var_val) is str or type(module_var_val) is unicode:
+                if type(module_var_val) is str or type(module_var_val) is str:
                     # We need to make sure string values get printed as string
                     # values or they won't be read properly on reload
                     f.write(module_var + " = '" + str(module_var_val) + "'\n")
