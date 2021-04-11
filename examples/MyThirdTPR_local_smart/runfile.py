@@ -198,7 +198,7 @@ first_snapshot = tg.current_snapshot * 1
 if first_snapshot >= total_snapshots:
     print('No more snapshots to run. Please increase total_snapshots.')
 for i in range(first_snapshot, total_snapshots, Nsnapshots):
-    throttling.do_throttled_snapshots(Nsnapshots, sps, tps, module_objects_to_save=[tg_module, sg_module])
+    throttling.do_throttled_snapshots(Nsnapshots, sps, tps, eic_module_objects=[tg_module, sg_module])
 
     # Update parameters
     kmc_time_old = kmc_time
