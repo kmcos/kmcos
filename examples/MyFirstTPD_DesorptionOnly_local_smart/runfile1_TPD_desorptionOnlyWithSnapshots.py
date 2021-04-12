@@ -9,7 +9,7 @@ import os
 
 
 #Below sets up some "options" for running the snapshots.
-sg.parameters_of_interest = 'None'#['T','R'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
+sg.parameters_of_interest = None #['T','R'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
 sps = 10 # <-- this is just an example
 n_snapshots = 1 # <-- this is just an example
  
@@ -29,14 +29,14 @@ create_headers()
 #If you need to change a parameter after each snapshot, only do 1 snapshot at a time with n_snapshots=1.
 T = Ti
 prev_T = T
-while T < Tfinal and ndesorbed < nadsorbed and curr_cov > cov_final:
+while T < Tf:
     #Set the 'previous' Temperature and time variables before running any steps.
     prev_T = T
-    prev_t = atoms.kmc_time
+    prev_t = sg.atoms.kmc_time
     #Run some steps as snapshots.
     do_snapshots(sps, n_snapshots)
     #update the time and temperature for after the snaphsot is over.
-    t = atoms.kmc_time
+    t = sg.atoms.kmc_time
     Tincr = beta*(t-prev_t)	# calculate the value to increment the temperature by
     T_incremented = T + Tincr
     
