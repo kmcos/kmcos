@@ -84,7 +84,7 @@ else:
 
 #Here is the TPD/TPR loop.
 prev_T = T
-while T < Tf:
+while T < 310: #THIS RUNFILE WILL INTENTIONALLY STOP THE SIMULATION  AT 310K.
     #Set the 'previous' Temperature and time variables before running any steps.
     prev_T = T
     prev_t = sg.atoms.kmc_time
@@ -95,7 +95,10 @@ while T < Tf:
     Tincr = beta*(t-prev_t)	# calculate the value to increment the temperature by
     T = T + Tincr
     sg.model.parameters.T = T
-    
+
+#sg.model.dump_config(sg.simulation_name + '_lattice_config'
+sg_module.save_params()
+tg_module.save_params()
     
 
 #do_snapshots(500, 2) <-- here is another example of how to use the syntax.

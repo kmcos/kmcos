@@ -1,7 +1,0 @@
-A = (3.5*angstrom)**2
-A_CO_des = 14500000000000.0
-E_act_des = 84000
-R = 8.314
-T = 600
-deltaG = -0.5
-p_COgas = 0.2

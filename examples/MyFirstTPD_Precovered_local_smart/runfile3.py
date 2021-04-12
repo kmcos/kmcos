@@ -5,6 +5,7 @@ import kmcos.throttling_globals as tg
 import kmcos.throttling as throttling
 import os
 import export_import_library as eil
+import numpy as np
 # Random seed
 random_seed = -731543673
 
@@ -40,7 +41,7 @@ sg_module = eil.module_export_import(sg_save_file, sg_load_file, sg)
 if load_simulation_state:
     # Load modules
     sg_module.load_params()
-    tg_module.load_params()
+    #tg_module.load_params()
 
     # Reset number of steps and time
     sg.model.base.set_kmc_time(sg.kmc_time)
@@ -58,7 +59,7 @@ if load_simulation_state:
     tg.current_snapshot += 1
 
     # Update the cutoff time
-    tg.cutoff_time = cutoff_time
+    #tg.cutoff_time = cutoff_time
 
     # The following assignment (and similar assignments elsewhere) is *magical*.
     # It invokes a hidden __setattr__ method of the Model_Parameters class that
@@ -68,7 +69,7 @@ if load_simulation_state:
     # rate constants in the Fortran module will result in wrong results!*
     T = Ti + beta * (sg.kmc_time)
     sg.model.parameters.T = T
-    sys.stdout.write("Restarting from old simulation. Current temperature is " +
+    print("Restarting from old simulation. Current temperature is " +
         str(T) + " K. Current time is " + str(sg.kmc_time) + " s.\n")
 else:
     snapshots.seed_PRNG(restart=False, state=random_seed)
