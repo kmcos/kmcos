@@ -23,7 +23,7 @@ n_snapshots = 1 # <-- this is just an example
 Ti = 300 #initial temperature
 Tf = 325 #final temperature
 beta = 5 #beta, heating rate in Kelvin per second.
-load_simulation_state = False
+load_simulation_state = True
 
 
 # File names for loading/saving parameters
