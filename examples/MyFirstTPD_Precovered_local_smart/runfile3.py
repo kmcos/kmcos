@@ -82,13 +82,21 @@ else:
     #If you want to start writing again, set sg.write_output = 'True' before running
     #more snapshots.
     
+prev_T = 308.9144016881365    
+with open("BetweenLoopsRunfile3.txt", "w" ) as fileToWriteTo:
+	fileToWriteTo.write(str(T)+ "\n")
+	fileToWriteTo.write(str(sg.kmc_time)+ "\n")
+	fileToWriteTo.write(str(sg.kmc_time)+ "\n")
+	fileToWriteTo.write(str(prev_T)+ "\n")
+	fileToWriteTo.write(str(sg.PRNG_state)+ "\n")
+
 
 #Here is the TPD/TPR loop.
-prev_T = T
+prev_T = 308.9144016881365
 while T < Tf:
     #Set the 'previous' Temperature and time variables before running any steps.
     prev_T = T
-    prev_t = sg.atoms.kmc_time
+    prev_t = sg.kmc_time
     #Run some steps as snapshots.
     do_snapshots(sps=sps, n_snapshots=n_snapshots)
     #update the time and temperature for after the snaphsot is over.

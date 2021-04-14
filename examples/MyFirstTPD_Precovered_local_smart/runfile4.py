@@ -140,12 +140,19 @@ if load_simulation_state:
         str(T) + " K. Current time is " + str(sg.kmc_time) + " s.\n")
     
 
+with open("BetweenLoopsRunfile4.txt", "w" ) as fileToWriteTo:
+	fileToWriteTo.write(str(T)+ "\n")
+	fileToWriteTo.write(str(sg.kmc_time)+ "\n")
+	fileToWriteTo.write(str(sg.atoms.kmc_time)+ "\n")
+	fileToWriteTo.write(str(prev_T)+ "\n")
+	fileToWriteTo.write(str(sg.PRNG_state)+ "\n")
+
 #Here is the TPD/TPR loop.
 prev_T = T
 while T < Tf:
     #Set the 'previous' Temperature and time variables before running any steps.
     prev_T = T
-    prev_t = sg.atoms.kmc_time
+    prev_t = sg.kmc_time
     #Run some steps as snapshots.
     do_snapshots(sps=sps, n_snapshots=n_snapshots)
     #update the time and temperature for after the snaphsot is over.
