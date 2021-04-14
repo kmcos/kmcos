@@ -183,7 +183,7 @@ def do_snapshots(n_snapshots, sps, tps=None, acc=False):
                     # routine
                     # Simultanoeus use of TPS and temporal acceleration is currently
                     # not supported
-                    sps_actual = sg.model.do_steps_time(tps, sps)
+                    sps_actual = sg.model.do_steps_time(tps)
                 except:
                     # Something went wrong, probably because we don't have this
                     # custom add-on to kmcos, so just fall back to the default
