@@ -1372,7 +1372,8 @@ class ProcListWriter():
         else:
             out.write('    set_null_species, &\n')
         if not accelerated:
-            out.write('    increment_procstat\n\n')
+            out.write(('    increment_procstat, &\n'
+                      '    get_accum_rate\n\n'))
         else:
             out.write(('    increment_procstat, &\n'
                       '    update_integ_rate_sb, &\n'
@@ -1417,7 +1418,7 @@ class ProcListWriter():
         elif os.name == 'nt':
             out.write('integer(kind=iint), public :: seed_size = 33\n')
         else:
-            out.write('integer(kind=iint), public :: seed_size = 8\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         out.write('integer(kind=iint), public :: seed ! random seed\n')
         out.write('integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed\n')
         out.write('\n\ninteger(kind=iint), parameter, public :: nr_of_proc = %s\n'\
@@ -2551,7 +2552,7 @@ class ProcListWriter():
         elif os.name == 'nt':
             out.write('integer(kind=iint), public :: seed_size = 33\n')
         else:
-            out.write('integer(kind=iint), public :: seed_size = 8\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         out.write('integer(kind=iint), public :: seed ! random seed\n')
         out.write('integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed\n')
         out.write('\n\ninteger(kind=iint), parameter, public :: nr_of_proc = %s\n'\

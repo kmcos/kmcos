@@ -1929,7 +1929,8 @@ class Process(FixedObject):
         self.bystander_list = kwargs.get('bystander_list', [])
         self.tof_count = kwargs.get('tof_count', None)
         self.enabled = kwargs.get('enabled', True)
-
+    
+    #TODO: Change "Rate" below to Transition_Frequency if doing so does not break anything.
     def __repr__(self):
         repr_str = ('[PROCESS] Name:%s\n'
                     '     Rate: %s\n'
