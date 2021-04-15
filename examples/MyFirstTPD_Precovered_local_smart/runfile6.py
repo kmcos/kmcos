@@ -17,7 +17,7 @@ random_seed = -731543673
 
 #Below sets up some "options" for running the snapshots.
 sg.parameters_of_interest = ['T'] #['T','R'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
-sps = 1000 # <-- this is just an example
+sps = 20 # <-- this is just an example
 n_snapshots = 1 # <-- this is just an example
 #If you need to change a parameter after each snapshot, only do 1 snapshot at a time with n_snapshots=1. 
  
