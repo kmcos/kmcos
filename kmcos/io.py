@@ -1418,7 +1418,7 @@ class ProcListWriter():
         elif os.name == 'nt':
             out.write('integer(kind=iint), public :: seed_size = 33\n')
         else:
-            out.write('integer(kind=iint), public :: seed_size = 8\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         out.write('integer(kind=iint), public :: seed ! random seed\n')
         out.write('integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed\n')
         out.write('\n\ninteger(kind=iint), parameter, public :: nr_of_proc = %s\n'\
@@ -2552,7 +2552,7 @@ class ProcListWriter():
         elif os.name == 'nt':
             out.write('integer(kind=iint), public :: seed_size = 33\n')
         else:
-            out.write('integer(kind=iint), public :: seed_size = 8\n')
+            out.write('integer(kind=iint), public :: seed_size = 33\n')
         out.write('integer(kind=iint), public :: seed ! random seed\n')
         out.write('integer(kind=iint), public, dimension(:), allocatable :: seed_arr ! random seed\n')
         out.write('\n\ninteger(kind=iint), parameter, public :: nr_of_proc = %s\n'\

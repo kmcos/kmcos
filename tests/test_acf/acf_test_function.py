@@ -60,7 +60,7 @@ def test_build_model(indexOfBackendToTest='all'):
             fileCompare = filecmp.cmp('src/'+src_filename+'.f90',
                'ref_src/'+src_filename+'.f90')
             if fileCompare == False:
-                print("Warning: f90 file comparison failed for " + src_filename, " but this is typical if the file was run on different systems or after dependency updates.) 
+                print("Warning: f90 file comparison failed for " + src_filename, "but this is typical if the file was run on different systems or after dependency updates.") 
             assert True
 
 

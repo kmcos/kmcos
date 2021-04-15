@@ -1,0 +1,6 @@
+Starting temperature = 1000 
+Final temperature = 6000 
+Heating rate = 5
+Initial coverage = 1 of CO
+Pseudo-random generator seed = 389
+Initial number of CO atoms = 400 (total of 400 sites)

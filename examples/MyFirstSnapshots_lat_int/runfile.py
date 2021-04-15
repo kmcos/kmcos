@@ -9,7 +9,7 @@ import os
 
 
 #Below sets up some "options" for running the snapshots.
-sg.parameters_of_interest = 'None'#['T','R'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
+sg.parameters_of_interest = None #['T','R'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
 sps = 10 # <-- this is just an example
 n_snapshots = 10 # <-- this is just an example
 
