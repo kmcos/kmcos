@@ -707,7 +707,7 @@ class KMC_Model(Process):
                 progress_bar.render(i+1)
             progress_bar.clear()
 
-    def do_steps_time(self, t=1.0):
+    def do_steps_time(self, t=1.0, n=10000):
      """Propagate the model `t` s.
 
      :param t: Length of time (s) to run (Default: 1)
@@ -716,7 +716,7 @@ class KMC_Model(Process):
      Returns the number of iterations executed.
 
      """
-     num_iter = proclist.do_kmc_steps_time(t)
+     num_iter = proclist.do_kmc_steps_time(t,n)
      return num_iter
 
     def do_acc_steps(self, n=10000, stats=True, save_exe=False, save_proc=0):

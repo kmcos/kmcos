@@ -47,7 +47,7 @@ if data.meta.debug > 0:
 
 #Addition by J.E. Sutton (ORNL) 2016/04/27 for propagating the model
 #according to simulation time, rather than KMC steps.
-#@ subroutine do_kmc_steps_time(t, num_iter)
+#@ subroutine do_kmc_steps_time(t, n, num_iter)
 #@ !****f* proclist/do_kmc_steps_time
 #@ ! FUNCTION
 #@ !    Performs a variable number of KMC steps to try to match the requested
@@ -61,10 +61,12 @@ if data.meta.debug > 0:
 #@ ! ARGUMENTS
 #@ !
 #@ !    ``t`` : Requested simulation time increment (input)
+#@ !    ``n`` : Maximum number of steps to run (input)
 #@ !    ``num_iter`` : the number of executed iterations (output)
 #@ !******
 #@     use base, only: get_accum_rate
 #@     real(kind=rdouble), intent(in) :: t
+#@     integer(kind=ilong), intent(in) :: n
 #@     integer(kind=ilong), intent(out) :: num_iter
 #@
 #@     real(kind=rsingle) :: ran_proc, ran_time, ran_site
