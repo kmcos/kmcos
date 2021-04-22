@@ -9,9 +9,9 @@ If you do not have that directory, but have kmcos installed, go to https://githu
 
 Inside /examples/, run the following command:
 
-  python3 MyFirstSnapshots.py
-  cd MyFirstSnapshots_local_smart
-  python3 runfile.py
+    python3 MyFirstSnapshots.py
+    cd MyFirstSnapshots_local_smart
+    python3 runfile.py
 
 The first command uses a python file to create a chemical model (process definitions) and a KMC modeling executable as well.
 The "local_smart" is the default backend (default "KMC Engine", kmcos has several).
