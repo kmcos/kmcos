@@ -20,6 +20,9 @@ ModelName = "throttling_test_reaction"
 backend = 'local_smart'
 import kmcos.io
 kmcos.io.clear_model(ModelName, backend=backend)
+#Change to:
+#import importlib
+#importlib.__import__(ModelName)
 exec('import ' +ModelName) #This will create the xml. Like import MyFirstThrottling.py
 import kmcos.cli
 kmcos.cli.main('export '+ModelName+ '.xml '+ ' -o -b '+ backend)  #this will export the model with the standard backend.

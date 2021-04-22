@@ -276,3 +276,69 @@ the workflow.
                          syntax and the
                          :ref:`topic guide <coord_mini_language>`
                          explains how that works.
+
+
+An alternative way using .ini files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Presently, a full description of the .ini capability is not being provided because this way is not the standard way of using kmcos. However, it is available.  This method is an alternative to making an xml file, and can be used instead of kmcos export.
+
+Prepare a minimal input file with the following content and save it as ``mini_101.ini`` ::
+
+    [Meta]
+    author = Your Name
+    email = you@server.com
+    model_dimension = 2
+    model_name = fcc_100
+
+    [Species empty]
+    color = #FFFFFF
+
+    [Species CO]
+    representation = Atoms("CO", [[0, 0, 0], [0, 0, 1.17]])
+    color = #FF0000
+
+    [Lattice]
+    cell_size = 3.5 3.5 10.0
+
+    [Layer simple_cubic]
+    site hollow = (0.5, 0.5, 0.5)
+    color = #FFFFFF
+
+    [Parameter k_CO_ads]
+    value = 100
+    adjustable = True
+    min = 1
+    max = 1e13
+    scale = log
+
+    [Parameter k_CO_des]
+    value = 100
+    adjustable = True
+    min = 1
+    max = 1e13
+    scale = log
+
+    [Process CO_ads]
+    rate_constant = k_CO_ads
+    conditions = empty@hollow
+    actions = CO@hollow
+    tof_count = {'adsorption':1}
+
+    [Process CO_des]
+    rate_constant = k_CO_des
+    conditions = CO@hollow
+    actions = empty@hollow
+    tof_count = {'desorption':1}
+
+In the same directory run ``kmcos export mini_101.ini``. You should now have a folder ``mini_101_local_smart``
+in the same directory. ``cd`` into it and run ``kmcos benchmark``. If everything went well you should see something
+like ::
+
+    Using the [local_smart] backend.
+    1000000 steps took 1.51 seconds
+    Or 6.62e+05 steps/s
+
+In the same directory try running ``kmcos view`` to watch the model run or fire up ``kmcos shell``
+to interact with the model interactively. Explore more commands with ``kmcos help`` and please
+refer to the documentation how to build complex model and evaluate them systematically. To test all bells and whistles try ``kmcos edit mini_101.ini`` and inspect the model visually.
