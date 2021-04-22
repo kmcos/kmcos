@@ -7,7 +7,7 @@ If you have already followed the kmcos installation instructions and still have 
 
 If you do not have that directory, but have kmcos installed, go to https://github.com/kmcos/kmcos Click on the green button and download zip, to get the examples.
 
-Inside /examples/, run the following command:
+Inside /examples/, run the following commands ::
 
     python3 MyFirstSnapshots.py
     cd MyFirstSnapshots_local_smart
