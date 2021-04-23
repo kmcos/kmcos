@@ -1,6 +1,8 @@
 """
 Feature overview
 ================
+This paragraph is from __init__.py
+
 With kmcos you can:
 
     * easily create and modify kMC models through GUI
@@ -16,13 +18,15 @@ kmcos' goal is to significantly reduce the time you need
 to implement and run a lattice kmc simulation. However it can not help
 you plan the model.
 
+Typical users will run kmcos entirely from python code by following the examples.
 
-kmcos can be invoked directly from the command line in one of the following
+In technical terms, kmcos is run  an API via the kmcos python module.
+
+Additionally, though now discouraged, kmcos can be invoked directly from the command line in one of the following
 ways::
 
     kmcos [help] (all|benchmark|build|edit|export|help|import|rebuild|run|settings-export|shell|version|view|xml) [options]
 
-or it may be used as an API via the *kmcos* module.
 
 .. rubric:: Footnotes
 
