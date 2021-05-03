@@ -65,6 +65,32 @@ When doing kmcos upgrades, you will not need to use git again. For kmcos upgrade
 If the last command of 'pip3 install kmcos[COMPLETE] --upgrade #--user' gives an error before finishing, try the command a second time.
 
 
+
+Installing kmcos on Fedora Linux (typically inside a virtual environment)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Install developement tools gcc and fortran.
+
+For fedora 32+::
+    sudo dnf groupinstall "Development Tools" "Development Libraries"
+    sudo dnf install gcc-gfortran
+
+For fedora below 32::
+    sudo dnf groupinstall @development-tools @development-libraries
+    sudo dnf install gcc-gfortran
+
+Make a virtual environment for the kmcos and activate it::
+    python3 -m venv ~/VENV/kmcos
+    source ~/VENV/kmcos/bin/activate
+
+Clone the kmcos github repository in a folder you want and change to the kmcos directory::
+    git clone https://github.com/kmcos/kmcos.git
+    cd kmcos
+
+Install the python package requirements and finally the kmcos package::
+    pip3 install numpy lxml ase matplotlib UnitTesterSG CiteSoft IPython
+    python3 setup.py install
+
 Installation on openSUSE 12.1 Linux (Deprecated Instructions)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
