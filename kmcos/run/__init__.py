@@ -1469,11 +1469,12 @@ class KMC_Model(Process):
             EX: {"CO" : "carbon"}
         '''
         config = self._get_configuration().tolist()
+        species = self.species_tags
         coords = []
         for i in range(len(config)):
             for j in range(len(config[0])):
                 coords.append([i,j])
-        return coords
+        return coords, species
             
     @staticmethod  
     def get_species_coordinates(config, species):
@@ -1486,8 +1487,8 @@ class KMC_Model(Process):
                         species_coords[k].append([i,j])  
         return species_coords
 
-    @staticmethod
-    def create_plot(coords, plot_settings={}, showFigure=True, directory=''):
+    @staticmethod 
+    def create_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
         import matplotlib.pyplot as plt
         exportFigure = True #This variable should be moved to an argument or something in plot_settings.
         #First put some defaults in if not already defined.
@@ -1499,6 +1500,8 @@ class KMC_Model(Process):
         if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration'
         if 'dpi' not in plot_settings: plot_settings['dpi'] = 220
         if 'speciesName' not in plot_settings: plot_settings['speciesName'] = False
+        if 'num_x_ticks' not in plot_settings: plot_settings['num_x_ticks'] = 7
+        if 'num_y_ticks' not in plot_settings: plot_settings['num_y_ticks'] = 7
         
         fig0, ax0 = plt.subplots()
         if 'fontdict' in plot_settings: 
@@ -1513,7 +1516,6 @@ class KMC_Model(Process):
         ax0.set_ylabel(plot_settings['y_label'], fontdict=fontdict) #TODO: THis is not yet generalized (will be a function)
         #The error linewidth is going to be set to a thick value if we have a small number of points.
         
-        species = sg.model.species_tags
 
         for (i, key) in zip(range(len(coords)), species.items()):
             x, y = zip(*coords[i])
@@ -1530,6 +1532,24 @@ class KMC_Model(Process):
             with open(plot_settings['figure_name'] + "Legend.txt", 'w') as f:
                 for key, value in species.items():
                     f.write('%s\n' % (key))
+                    
+        if str(plot_settings['num_x_ticks']) != 'auto':
+            plot_settings['num_x_ticks'] = int(plot_settings['num_x_ticks'])
+            from matplotlib.ticker import MaxNLocator
+            ax0.xaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_x_ticks']))
+        
+        if str(plot_settings['num_y_ticks']) != 'auto':
+            plot_settings['num_y_ticks'] = int(plot_settings['num_y_ticks'])
+            from matplotlib.ticker import MaxNLocator
+            ax0.yaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_y_ticks']))
+
+        if 'x_ticks' in plot_settings:
+            if str(plot_settings['x_ticks']).lower != 'auto':
+                ax0.set_xticks(plot_settings['x_ticks'])
+
+        if 'y_ticks' in plot_settings:
+            if str(plot_settings['y_ticks']).lower != 'auto':
+                ax0.set_yticks(plot_settings['y_ticks'])
 
         fig0.tight_layout()
         if exportFigure==True:
@@ -1542,7 +1562,7 @@ class KMC_Model(Process):
         config = self._get_configuration().tolist()
         species = self.species_tags
         species_coordinates = self.get_species_coordinates(config, species)
-        self.create_plot(species_coordinates)
+        self.create_plot(species_coordinates, species)
         
     def _put(self, site, new_species, reduce=False):
         """
