@@ -62,12 +62,6 @@ d = {
     "dpi": 220,
     "speciesName": False
     }
-
-def plot_configuration(plot_settings={}):
-    config = sg.model._get_configuration().tolist()
-    species = sg.model.species_tags
-    species_coordinates = runfile_plot.get_species_coordinates(config, species, plot_settings)
-    runfile_plot.create_plot(species_coordinates, d)
-    
+   
 sg.model.plot_configuration()
 sg.model.plot_configuration(d)
