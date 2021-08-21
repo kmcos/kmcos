@@ -1462,12 +1462,12 @@ class KMC_Model(Process):
             return res
             
     def get_coords(self):
-        '''
+        """
         Config is expected to be a nested array that contains the species's coordinates
             EX: [[[[0]], [[1]], [[1]], [[0]]]]
         Species is exptected to be a dictionary that contains the names of the species
             EX: {"CO" : "carbon"}
-        '''
+        """
         config = self._get_configuration().tolist()
         species = self.species_tags
         coords = []
@@ -1499,7 +1499,7 @@ class KMC_Model(Process):
         if "legend" not in plot_settings: plot_settings['legend'] = True
         if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration'
         if 'dpi' not in plot_settings: plot_settings['dpi'] = 220
-        if 'speciesName' not in plot_settings: plot_settings['speciesName'] = True
+        if 'speciesName' not in plot_settings: plot_settings['speciesName'] = False
         if 'num_x_ticks' not in plot_settings: plot_settings['num_x_ticks'] = 7
         if 'num_y_ticks' not in plot_settings: plot_settings['num_y_ticks'] = 7
         
@@ -1526,7 +1526,10 @@ class KMC_Model(Process):
                         ax0.scatter(x,y,label=key)
             
             if plot_settings['legend'] == True:
-                ax0.legend(bbox_to_anchor=(1.05,1.0), loc="upper left")
+                if 'legendLabel' in plot_settings:
+                    ax0.legend(title = plot_settings['legendLabel'], bbox_to_anchor=(1.05,1.0), loc="upper left")
+                else:
+                    ax0.legend(bbox_to_anchor=(1.05,1.0), loc="upper left")
 
         if plot_settings['legendExport'] == True:
             with open(plot_settings['figure_name'] + "Legend.txt", 'w') as f:
@@ -1558,11 +1561,23 @@ class KMC_Model(Process):
             plt.close(fig0)
         return fig0, ax0
         
-    def plot_configuration(self):
+    def plot_configuration(self, plot_settings = {}):
+        """
+        plot_settings is a dictionary that allows for the plot to change given the arguements
+        EX:
+            "y_label": "test",
+            "x_label": "test",
+            "legendLabel": "Species",
+            "legendExport": False,
+            "legend": True,
+            "figure_name": "Plot",
+            "dpi": 220,
+            "speciesName": False
+        """
         config = self._get_configuration().tolist()
         species = self.species_tags
         species_coordinates = self.get_species_coordinates(config, species)
-        self.create_plot(species_coordinates, species)
+        self.create_plot(species_coordinates, species, plot_settings)
         
     def _put(self, site, new_species, reduce=False):
         """
