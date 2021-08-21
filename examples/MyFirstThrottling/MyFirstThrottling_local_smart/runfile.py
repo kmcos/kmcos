@@ -13,6 +13,7 @@ except:
     import throttling
     import runfile_init #This is optional.
 import export_import_library as eil #optional, but useful.
+import runfile_plot
 
 # Initialize variables
 # File names for loading/saving parameters (optional, but useful).
@@ -50,3 +51,23 @@ throttling.do_throttled_snapshots(Nsnapshots, sps=sps, tps=tps, eic_module_objec
 
 # Write summary/diagnostic data (this is after running simulation)
 snapshots.create_log()
+
+d = {
+    "y_label": "test",
+    "x_label": "test",
+    "legendLabel": "Species",
+    "legendExport": False,
+    "legend": True,
+    "figure_name": "Plot",
+    "dpi": 220,
+    "speciesName": False
+    }
+
+def plot_configuration(plot_settings={}):
+    config = sg.model._get_configuration().tolist()
+    species = sg.model.species_tags
+    species_coordinates = runfile_plot.get_species_coordinates(config, species, plot_settings)
+    runfile_plot.create_plot(species_coordinates, d)
+    
+sg.model.plot_configuration()
+sg.model.plot_configuration(d)
