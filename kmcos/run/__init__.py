@@ -1499,7 +1499,7 @@ class KMC_Model(Process):
         if "legend" not in plot_settings: plot_settings['legend'] = True
         if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration'
         if 'dpi' not in plot_settings: plot_settings['dpi'] = 220
-        if 'speciesName' not in plot_settings: plot_settings['speciesName'] = False
+        if 'speciesName' not in plot_settings: plot_settings['speciesName'] = True
         if 'num_x_ticks' not in plot_settings: plot_settings['num_x_ticks'] = 7
         if 'num_y_ticks' not in plot_settings: plot_settings['num_y_ticks'] = 7
         
@@ -1517,7 +1517,7 @@ class KMC_Model(Process):
         #The error linewidth is going to be set to a thick value if we have a small number of points.
         
 
-        for (i, key) in zip(range(len(coords)), species.items()):
+        for (i, key) in zip(range(len(coords)), species.keys()):
             x, y = zip(*coords[i])
             if plot_settings['legend'] == True:
                     if plot_settings['speciesName'] == False:
