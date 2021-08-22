@@ -1460,7 +1460,124 @@ class KMC_Model(Process):
             print(res)
         else:
             return res
+            
+    def get_coords(self):
+        """
+        Config is expected to be a nested array that contains the species's coordinates
+            EX: [[[[0]], [[1]], [[1]], [[0]]]]
+        Species is exptected to be a dictionary that contains the names of the species
+            EX: {"CO" : "carbon"}
+        """
+        config = self._get_configuration().tolist()
+        species = self.species_tags
+        coords = []
+        for i in range(len(config)):
+            for j in range(len(config[0])):
+                coords.append([i,j])
+        return coords, species
+            
+    @staticmethod  
+    def get_species_coordinates(config, species):
+        species_coords = []
+        for k in range(len(species)):
+            species_coords.append([])
+            for i in range(len(config)):
+                for j in range(len(config[0])):
+                    if (config[i][j][0][0] == k):
+                        species_coords[k].append([i,j])  
+        return species_coords
 
+    @staticmethod 
+    def create_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
+        import matplotlib.pyplot as plt
+        exportFigure = True #This variable should be moved to an argument or something in plot_settings.
+        #First put some defaults in if not already defined.
+        if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
+        if 'y_label' not in plot_settings: plot_settings['y_label'] = ''
+        if 'legendLabels' not in plot_settings: plot_settings['legendLabels'] = ''
+        if "legendExport" not in plot_settings: plot_settings['legendExport'] = True
+        if "legend" not in plot_settings: plot_settings['legend'] = True
+        if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration'
+        if 'dpi' not in plot_settings: plot_settings['dpi'] = 220
+        if 'speciesName' not in plot_settings: plot_settings['speciesName'] = False
+        if 'num_x_ticks' not in plot_settings: plot_settings['num_x_ticks'] = 7
+        if 'num_y_ticks' not in plot_settings: plot_settings['num_y_ticks'] = 7
+        
+        fig0, ax0 = plt.subplots()
+        if 'fontdict' in plot_settings: 
+            #There are various things that could be added to this fontdict. #https://www.tutorialexample.com/understand-matplotlib-fontdict-a-beginner-guide-matplotlib-tutorial/
+            fontdict = plot_settings['fontdict']
+            if 'size' in fontdict:
+                ax0.tick_params(axis='x', labelsize=fontdict['size'])
+                ax0.tick_params(axis='y', labelsize=fontdict['size'])
+        else:
+            fontdict = None #initializing with the matplotlib default
+        ax0.set_xlabel(plot_settings['x_label'], fontdict=fontdict)
+        ax0.set_ylabel(plot_settings['y_label'], fontdict=fontdict) #TODO: THis is not yet generalized (will be a function)
+        
+        for (i, key) in zip(range(len(coords)), species.keys()):
+            x, y = zip(*coords[i])
+            if plot_settings['legend'] == True:
+                    if plot_settings['speciesName'] == False:
+                        ax0.scatter(x,y,label="Species "+str(i+1))
+                    else:
+                        ax0.scatter(x,y,label=key)
+            
+            if plot_settings['legend'] == True:
+                if 'legendLabel' in plot_settings:
+                    ax0.legend(title = plot_settings['legendLabel'], bbox_to_anchor=(1.05,1.0), loc="upper left")
+                else:
+                    ax0.legend(bbox_to_anchor=(1.05,1.0), loc="upper left")
+
+        if plot_settings['legendExport'] == True:
+            with open(plot_settings['figure_name'] + "Legend.txt", 'w') as f:
+                for key, value in species.items():
+                    f.write('%s\n' % (key))
+                    
+        if str(plot_settings['num_x_ticks']) != 'auto':
+            plot_settings['num_x_ticks'] = int(plot_settings['num_x_ticks'])
+            from matplotlib.ticker import MaxNLocator
+            ax0.xaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_x_ticks']))
+        
+        if str(plot_settings['num_y_ticks']) != 'auto':
+            plot_settings['num_y_ticks'] = int(plot_settings['num_y_ticks'])
+            from matplotlib.ticker import MaxNLocator
+            ax0.yaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_y_ticks']))
+
+        if 'x_ticks' in plot_settings:
+            if str(plot_settings['x_ticks']).lower != 'auto':
+                ax0.set_xticks(plot_settings['x_ticks'])
+
+        if 'y_ticks' in plot_settings:
+            if str(plot_settings['y_ticks']).lower != 'auto':
+                ax0.set_yticks(plot_settings['y_ticks'])
+
+        fig0.tight_layout()
+        if exportFigure==True:
+            fig0.savefig(directory + plot_settings['figure_name'] + '.png', dpi=plot_settings['dpi'])
+        if showFigure==False:
+            plt.close(fig0)
+        return fig0, ax0
+        
+    def plot_configuration(self, plot_settings = {}):
+        """
+        plot_settings is a dictionary that allows for the plot to change given the arguements
+        EX:
+            "y_label": "test",
+            "x_label": "test",
+            "legendLabel": "Species",
+            "legendExport": False,
+            "legend": True,
+            "figure_name": "Plot",
+            "dpi": 220,
+            "speciesName": False
+        plot_configuration will make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
+        """
+        config = self._get_configuration().tolist()
+        species = self.species_tags
+        species_coordinates = self.get_species_coordinates(config, species)
+        self.create_plot(species_coordinates, species, plot_settings)
+        
     def _put(self, site, new_species, reduce=False):
         """
         Works exactly like put, but without updating the database of

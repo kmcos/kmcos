@@ -1,6 +1,7 @@
 from kmcos.snapshots import *
 import kmcos.snapshots_globals as sg
 import os
+import runfile_plot
 
 #sg.simulation_name = model_name  #<--- You can change this to whatever you want, but this is the default. All it does is affect the filenames of the exports the format for this type would be MyFirstModel_TOFs_and_Coverages.csv.
 #other common options are:
@@ -41,3 +42,21 @@ do_snapshots(sps, n_snapshots)
 
 #The final command below writes the simulation details to the logfile
 create_log()
+
+#The first plot_configuration will use default arguments to construct the plot and export as "plottedConfiguration.png"
+sg.model.plot_configuration()
+
+plot_settings = {
+    "y_label": "y_direction",
+    "x_label": "x_direction",
+    "legendLabel": "Species",
+    "legendExport": False,
+    "legend": True,
+    "figure_name": "Plot",
+    "dpi": 220,
+    "speciesName": True,
+    "num_x_ticks": 3,
+    "num_y_ticks": 3,
+    }
+#the second plot_configuration here will construct the plot using the above dictionary and export the file as "Plot.png"
+sg.model.plot_configuration(plot_settings)

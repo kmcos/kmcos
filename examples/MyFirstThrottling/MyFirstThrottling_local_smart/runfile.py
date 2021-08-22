@@ -13,6 +13,7 @@ except:
     import throttling
     import runfile_init #This is optional.
 import export_import_library as eil #optional, but useful.
+import runfile_plot
 
 # Initialize variables
 # File names for loading/saving parameters (optional, but useful).
@@ -50,3 +51,21 @@ throttling.do_throttled_snapshots(Nsnapshots, sps=sps, tps=tps, eic_module_objec
 
 # Write summary/diagnostic data (this is after running simulation)
 snapshots.create_log()
+    
+#The first plot_configuration will use default arguments to construct the plot and export as "plottedConfiguration.png"
+sg.model.plot_configuration()
+
+plot_settings = {
+    "y_label": "y_direction",
+    "x_label": "x_direction",
+    "legendLabel": "Species",
+    "legendExport": False,
+    "legend": True,
+    "figure_name": "Plot",
+    "dpi": 220,
+    "speciesName": True,
+    "num_x_ticks": 3,
+    "num_y_ticks": 3,
+    }
+#the second plot_configuration here will construct the plot using the above dictionary and export the file as "Plot.png"
+sg.model.plot_configuration(plot_settings)
