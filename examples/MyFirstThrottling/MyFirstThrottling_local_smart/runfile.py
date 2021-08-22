@@ -13,7 +13,6 @@ except:
     import throttling
     import runfile_init #This is optional.
 import export_import_library as eil #optional, but useful.
-import runfile_plot
 
 # Initialize variables
 # File names for loading/saving parameters (optional, but useful).
