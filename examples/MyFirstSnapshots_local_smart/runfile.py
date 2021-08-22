@@ -44,19 +44,24 @@ do_snapshots(sps, n_snapshots)
 create_log()
 
 
-d = {
-    "y_label": "test",
-    "x_label": "test",
+
+    
+sg.model.plot_configuration()
+
+plot_settings = {
+    "y_label": "y_direction",
+    "x_label": "x_direction",
     "legendLabel": "Species",
     "legendExport": False,
     "legend": True,
     "figure_name": "Plot",
     "dpi": 220,
-    "speciesName": False
+    "speciesName": True,
+    "num_x_ticks": 3,
+    "num_y_ticks": 3,
     }
-    
-sg.model.plot_configuration()
-sg.model.plot_configuration(d)
+#the second plot_configuration here will export the file as Plot.png
+sg.model.plot_configuration(plot_settings)
 
 
 
