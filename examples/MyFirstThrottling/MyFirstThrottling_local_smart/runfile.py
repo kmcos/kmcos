@@ -51,17 +51,21 @@ throttling.do_throttled_snapshots(Nsnapshots, sps=sps, tps=tps, eic_module_objec
 
 # Write summary/diagnostic data (this is after running simulation)
 snapshots.create_log()
+    
+#The first plot_configuration will use default arguments to construct the plot
+sg.model.plot_configuration()
 
-d = {
-    "y_label": "test",
-    "x_label": "test",
+plot_settings = {
+    "y_label": "y_direction",
+    "x_label": "x_direction",
     "legendLabel": "Species",
     "legendExport": False,
     "legend": True,
     "figure_name": "Plot",
     "dpi": 220,
-    "speciesName": False
+    "speciesName": True,
+    "num_x_ticks": 3,
+    "num_y_ticks": 3,
     }
-   
-sg.model.plot_configuration()
-sg.model.plot_configuration(d)
+#the second plot_configuration here will contrust the plot using the above dictionary and export the file as Plot.png
+sg.model.plot_configuration(plot_settings)
