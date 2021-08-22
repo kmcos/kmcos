@@ -52,7 +52,7 @@ throttling.do_throttled_snapshots(Nsnapshots, sps=sps, tps=tps, eic_module_objec
 # Write summary/diagnostic data (this is after running simulation)
 snapshots.create_log()
     
-#The first plot_configuration will use default arguments to construct the plot
+#The first plot_configuration will use default arguments to construct the plot and export as "plottedConfiguration.png"
 sg.model.plot_configuration()
 
 plot_settings = {
@@ -67,5 +67,5 @@ plot_settings = {
     "num_x_ticks": 3,
     "num_y_ticks": 3,
     }
-#the second plot_configuration here will contrust the plot using the above dictionary and export the file as Plot.png
+#the second plot_configuration here will construct the plot using the above dictionary and export the file as "Plot.png"
 sg.model.plot_configuration(plot_settings)
