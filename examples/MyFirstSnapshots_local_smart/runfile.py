@@ -43,9 +43,7 @@ do_snapshots(sps, n_snapshots)
 #The final command below writes the simulation details to the logfile
 create_log()
 
-
-
-    
+#The first plot_configuration will use default arguments to construct the plot
 sg.model.plot_configuration()
 
 plot_settings = {
@@ -60,7 +58,7 @@ plot_settings = {
     "num_x_ticks": 3,
     "num_y_ticks": 3,
     }
-#the second plot_configuration here will export the file as Plot.png
+#the second plot_configuration here will contrust the plot using the above dictionary and export the file as Plot.png
 sg.model.plot_configuration(plot_settings)
 
 
