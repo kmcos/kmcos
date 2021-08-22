@@ -104,6 +104,7 @@ kmcos.run
             null_species,
             parameters,
             post_mortem,
+            plot_configuration,
             print_accum_rate_summation,
             print_adjustable_parameters,
             print_coverages,
