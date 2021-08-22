@@ -1514,9 +1514,7 @@ class KMC_Model(Process):
             fontdict = None #initializing with the matplotlib default
         ax0.set_xlabel(plot_settings['x_label'], fontdict=fontdict)
         ax0.set_ylabel(plot_settings['y_label'], fontdict=fontdict) #TODO: THis is not yet generalized (will be a function)
-        #The error linewidth is going to be set to a thick value if we have a small number of points.
         
-
         for (i, key) in zip(range(len(coords)), species.keys()):
             x, y = zip(*coords[i])
             if plot_settings['legend'] == True:
@@ -1573,6 +1571,7 @@ class KMC_Model(Process):
             "figure_name": "Plot",
             "dpi": 220,
             "speciesName": False
+        plot_configuration will make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
         """
         config = self._get_configuration().tolist()
         species = self.species_tags
