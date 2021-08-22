@@ -52,6 +52,7 @@ Other:
 * Jonathan Sutton
 * Joseba Alberdi
 * Steve Erwin & NB
+* Meelod Waheed
 
 THANKS
 ######
