@@ -78,6 +78,10 @@ kmcos.run
 
 .. autoclass:: kmcos.run.LogParameter
 
+
+kmcos.run.KMC_Model (typical usage model.___)
+^^^^^^^^
+
 .. autoclass:: kmcos.run.KMC_Model
   :members: _adjust_database,
             _get_configuration,
