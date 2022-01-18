@@ -35,10 +35,13 @@ If you will be installing kmcos in an anaconda environment, you can make a new e
 
 Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation. Accordingly, the "--user" tags are commented out in our further instructions.
 
-Installing kmcos on Ubuntu Linux (typically inside a virtual environment)
+Installing kmcos on Ubuntu Linux 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The easiest way to install kmcos is to use one of the automatic installers (from within a python virtual environment) ::
+If you are a typical user, first make sure you are in your virtual environment (after preparation by the above instructions) ::
+    source ~/VENV/kmcos/bin/activate
+
+The easiest way to install kmcos is to use one of the automatic installers ::
 
     cd ~
     sudo apt-get install git
