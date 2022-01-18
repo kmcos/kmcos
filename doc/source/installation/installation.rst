@@ -35,10 +35,14 @@ If you will be installing kmcos in an anaconda environment, you can make a new e
 
 Virtual environment installations do not require the "--user" tag as the python packages are 'sandboxed' during installation. Accordingly, the "--user" tags are commented out in our further instructions.
 
-Installing kmcos on Ubuntu Linux (typically inside a virtual environment)
+Installing kmcos on Ubuntu Linux 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The easiest way to install kmcos is to use one of the automatic installers (from within a python virtual environment) ::
+If you are a typical user, first make sure you are in your virtual environment (after preparation by the above instructions)::
+
+    source ~/VENV/kmcos/bin/activate
+
+The easiest way to install kmcos is to use one of the automatic installers::
 
     cd ~
     sudo apt-get install git
@@ -49,13 +53,13 @@ The easiest way to install kmcos is to use one of the automatic installers (from
     
 #. If everything has gone well, you are done and can leave this Installation page!
     
-If the above simple way does not work for you, you will need to go through the commands manually one at a time from `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed after installation, so you can remove the kmcosInstallation directory using 'rm -r directoryname'. Alternatively, you can navigate into that directory and go through the examples. 
+If the above simple way does not work for you, you will need to go through the commands manually one at a time from `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed after installation, but it has exampples in it.  So you can you can navigate into that directory and go through the examples, or you can remove the kmcosInstallation directory using 'rm -r directoryname'.
 
-When doing kmcos upgrades, you will not need to use git again. For kmcos upgrades, you can just use the earlier pip command ::
+When doing kmcos upgrades, you will not need to use git again. For kmcos upgrades, you can just use the earlier pip command::
 
     pip3 install kmcos[MINIMAL] --upgrade #--user
 
-(Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete ::
+(Optional) If you would like to use the kmcos view capability, you will need to install some non-python dependencies and then kmcos complete::
 
     sudo apt-get install python-ase
     sudo apt-get install python3-gi
@@ -81,17 +85,17 @@ For fedora below 32 ::
     sudo dnf groupinstall @development-tools @development-libraries
     sudo dnf install gcc-gfortran
 
-Make a virtual environment for the kmcos and activate it ::
+Make a virtual environment for the kmcos and activate it::
 
     python3 -m venv ~/VENV/kmcos
     source ~/VENV/kmcos/bin/activate
 
-Clone the kmcos github repository in a folder you want and change to the kmcos directory ::
+Clone the kmcos github repository in a folder you want and change to the kmcos directory::
 
     git clone https://github.com/kmcos/kmcos.git
     cd kmcos
 
-Install the python package requirements and finally the kmcos package ::
+Install the python package requirements and finally the kmcos package::
 
     pip3 install numpy lxml ase matplotlib UnitTesterSG CiteSoft IPython
     python3 setup.py install
@@ -101,7 +105,7 @@ Installation on openSUSE 12.1 Linux (Deprecated Instructions)
 
 On a recent openSUSE some dependencies are distributed a little
 different but nevertheless doable. We start by install some
-package from the repositories ::
+package from the repositories::
 
   sudo zypper install libgfortran46, python-lxml, python-matplotlib, \
                       python-numpy, python-numpy-devel, python-goocanvas,
@@ -115,13 +119,13 @@ openSUSE `build service <https://build.opensuse.org/>`_
 
 
 For each one just download the \*.tar.bz2 files. Unpack them and inside
-run ::
+run::
 
   python setup.py install
 
 In the same vein you can install ASE. Download a recent version
 from the `GitLab website <https://gitlab.com/ase/ase/repository/archive.zip?ref=master>`_
-unzip it and install it with ::
+unzip it and install it with::
 
   python setup.py install
 
@@ -143,7 +147,7 @@ There is more than one way to get required dependencies. I have tested MacPorts 
 
 #. Install Python, lxml, numpy, ipython, ASE, gcc48. I assume you are using Python 2.7.
    kmcos has not been thoroughly tested with Python 3.X, yet, but should not be too hard.
-    Having MacPorts this can be as simple as ::
+    Having MacPorts this can be as simple as::
 
         sudo port install -v py27-ipython
         sudo port select --set ipython py27-ipython
@@ -200,11 +204,11 @@ In order for kmcos to work in a recent windows it is best to get Anaconda.
 
 Download anaconda and open an anaconda terminal.
 
-The first time you install kmcos, you will need to fetch the full package from github ::
+The first time you install kmcos, you will need to fetch the full package from github::
 
     git clone http://www.github.com/kmcos/kmcos
 
-Next, go into the package directory and install using the setup.py file ::
+Next, go into the package directory and install using the setup.py file::
 
     cd kmcos
     python setup.py install
@@ -251,13 +255,13 @@ BELOW ARE DEPRECATED INSTRUCTIONS
    `GitLab website <https://gitlab.com/ase/ase/repository/archive.zip?ref=master>`_
    and install it. This has to be installed using e.g. the powershell.
    So after unpacking it, fire up the powershell, cd to the directory
-   and run ::
+   and run::
 
     python setup.py install
 
    in there. Note that there is currently a slight glitch in the
    `setup.py` script on windows, so open `setup.py` in a text
-   editor and find the line saying ::
+   editor and find the line saying::
 
      version = ...
 
@@ -291,12 +295,12 @@ the terms of distribution do not permit this.
 Fortunately manual installation is easy.
 Just create a directory called `janaf_data`
 anywhere on your python path. To see the directories on your python
-path run ::
+path run::
 
     python -c"import sys; print(sys.path)"
 
 Inside the `janaf_data` directory has to be a file
-named `__init__.py`, so that python recognizes it as a module ::
+named `__init__.py`, so that python recognizes it as a module::
 
     touch __init__.py
 
@@ -313,4 +317,4 @@ at the bottom of that page.
 .. _Enthought Python Distribution: http://www.enthought.com/products/epd_free.php
 .. _python.org: http://www.python.org/download
 .. _lxml 2.2.8: http://pypi.python.org/pypi/lxml/2.2.8
-.. todo :: test installation on other platforms
+.. todo:: test installation on other platforms
