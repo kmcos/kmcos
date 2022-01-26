@@ -20,7 +20,7 @@ a GUI so that the CPU intensive kMC integration can run at
 full throttle without impeding the front-end. Interaction with
 the model happens through Queues.
 """
-from __future__ import print_function
+
 
 #    Copyright 2009-2013 Max J. Hoffmann (mjhoffmann@gmail.com)
 #    This file is part of kmcos.
@@ -1515,8 +1515,8 @@ class KMC_Model(Process):
         ax0.set_xlabel(plot_settings['x_label'], fontdict=fontdict)
         ax0.set_ylabel(plot_settings['y_label'], fontdict=fontdict) #TODO: THis is not yet generalized (will be a function)
         
-        for (i, key) in zip(range(len(coords)), species.keys()):
-            x, y = zip(*coords[i])
+        for (i, key) in zip(list(range(len(coords))), list(species.keys())):
+            x, y = list(zip(*coords[i]))
             if plot_settings['legend'] == True:
                     if plot_settings['speciesName'] == False:
                         ax0.scatter(x,y,label="Species "+str(i+1))
@@ -1531,7 +1531,7 @@ class KMC_Model(Process):
 
         if plot_settings['legendExport'] == True:
             with open(plot_settings['figure_name'] + "Legend.txt", 'w') as f:
-                for key, value in species.items():
+                for key, value in list(species.items()):
                     f.write('%s\n' % (key))
                     
         if str(plot_settings['num_x_ticks']) != 'auto':
@@ -2410,7 +2410,7 @@ and <classname>.lock should be moved out of the way ::
         :type times: datetime timestamp
 
         """
-        fhandle = file(fname, 'a')
+        fhandle = open(fname, 'a')
         try:
             os.utime(fname, times)
         finally:
@@ -2446,12 +2446,12 @@ and <classname>.lock should be moved out of the way ::
             # lockfile mechanism
             #===========================
             self.__touch(lockfile)
-            fdata = file(lockfile)
+            fdata = open(lockfile, 'r')
             readlines = [x.strip() for x in fdata.readlines()]
             fdata.close()
             if input_line in readlines:
                 continue
-            fdata = file(lockfile, 'a')
+            fdata = open(lockfile, 'a')
             fdata.write('%s\n' % input_line)
             fdata.close()
 
@@ -2476,12 +2476,12 @@ and <classname>.lock should be moved out of the way ::
                                               tof_method='integ')
 
             if not os.path.exists(outfile):
-                out = file(outfile, 'a')
+                out = open(outfile, 'a')
                 out.write(model.get_std_header())
                 out.write(str(model.parameters))
                 out.write("""# If one or more parameters change between data lines\n# the set above corresponds to the first line.\n""")
                 out.close()
-            out = file(outfile, 'a')
+            out = open(outfile, 'a')
             out.write(data)
             out.close()
             model.deallocate()
