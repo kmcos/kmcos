@@ -30,23 +30,20 @@ import time
 from ase.gui.images import Images
 import ase
 
+
 try:
-    import gtk
-    import gobject
+    import gi
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gtk as gtk
+    from gi.repository import GObject as GObject
+    from ase.gui.view import View
+    from ase.gui.status import Status
+    from ase.gui.gui import GUI
 except Exception as e:
-    try:
-        import gi
-        gi.require_version('Gtk', '3.0')
-        from gi.repository import Gtk as gtk
-        from gi.repository import GObject as gobject
-        from ase.gui.view import View
-        from ase.gui.status import Status
-        from ase.gui.gui import GUI
-    except Exception as e:
-        View = type('View', (), {})
-        Status = type('Status', (), {})
-        print('Warning: GTK not available. Cannot run graphical front-end')
-        print(e)
+    View = type('View', (), {})
+    Status = type('Status', (), {})
+    print('Warning: GTK not available. Cannot run graphical front-end')
+    print(e)
 try:
     import matplotlib
     gtk_version = 'GTKAgg' #initailizing
@@ -313,9 +310,9 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
             time.sleep(1)
             if not self.image_queue.empty():
                 atoms = self.image_queue.get()
-                gobject.idle_add(self.update_vbox, atoms)
+                GObject.idle_add(self.update_vbox, atoms)
                 if self.live_plot:
-                    gobject.idle_add(self.update_plots, atoms)
+                    GObject.idle_add(self.update_plots, atoms)
 
     def on_key_press(self, _widget, event):
         """Process key press event on view box."""
@@ -481,7 +478,7 @@ def main(model=None, steps_per_frame=50000):
         main() # launch viewer
     """
 
-    gobject.threads_init()
+    GObject.threads_init()
     viewer = KMC_Viewer(model, steps_per_frame=steps_per_frame)
     viewer.model.start()
     viewer.viewbox.start()
