@@ -16,7 +16,7 @@ Please refer to
 
 * Documentation (including installation): http://kmcos.readthedocs.org/
 * Examples https://github.com/kmcos/kmcos/tree/master/examples
-* Tutorial: https://github.com/jmlorenzi/intro2kmos  [Please note that the name of the project is now kmcos]
+* Workshop files: https://github.com/kmcos/intro2kmcos [the later part of the document are for advanced users and may require an instructor]
 
 
 HELP, BUGS, ISSUES, TROUBLE
