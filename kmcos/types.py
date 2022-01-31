@@ -81,8 +81,12 @@ class Project(object):
         - Processes
     """
 
-    def __init__(self):
+    def __init__(self, **name):
         self.meta = Meta()
+        if name:
+            self.model_name = name
+        else:
+            self.model_name = " "
         self.layer_list = LayerList()
         self.lattice = self.layer_list
         self.parameter_list = ParameterList()
@@ -576,6 +580,7 @@ class Project(object):
         else:
             raise UserWarning('Cannot export to file suffix %s' %
                               os.path.splitext(filename)[-1])
+    save_model = save
 
     def export_xml_file(self, filename, validate=True):
         f = open(filename, 'w')
@@ -1316,6 +1321,11 @@ class Project(object):
             self.meta.model_dimension = model_dimension
         if debug is not None:
             self.meta.debug = debug
+
+
+def create_kmc_model():
+    pt = Project()
+    return pt
 
 
 class Meta(object):
