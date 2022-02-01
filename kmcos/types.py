@@ -1314,14 +1314,14 @@ class Project(object):
                  debug=None):
         if type(author) != type(None):
             self.meta.author = str(author)
-        if email is not None:
-            self.meta.email = email
-        if model_name is not None:
-            self.meta.model_name = model_name
-        if model_dimension is not None:
-            self.meta.model_dimension = model_dimension
-        if debug is not None:
-            self.meta.debug = debug
+        if type(email) != type(None):
+            self.meta.email = str(email)
+        if type(model_name) != type(None):
+            self.meta.model_name = str(model_name)
+        if type(model_dimension) != type(None):
+            self.meta.model_dimension = int(model_dimension)
+        if type(debug) != type(None):
+            self.meta.debug = str(debug)
 
 
 def create_kmc_model(model_name=None):
