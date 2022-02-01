@@ -81,18 +81,19 @@ class Project(object):
         - Processes
     """
 
-    def __init__(self, **name):
+    def __init__(self, model_name=None):
         self.meta = Meta()
-        if name:
-            self.model_name = name
+        if type(model_name)==type(None):
+            self.model_name = "UntitledModel"
         else:
-            self.model_name = " "
+            self.model_name = model_name 
         self.layer_list = LayerList()
         self.lattice = self.layer_list
         self.parameter_list = ParameterList()
         self.species_list = SpeciesList()
         self.process_list = ProcessList()
         self.output_list = OutputList()
+        self.filename = self.model_name + ".xml"
         self.backend = "local_smart" #this is just the default.
 
         # Quick'n'dirty define access functions
@@ -1311,8 +1312,8 @@ class Project(object):
                  model_name=None,
                  model_dimension=None,
                  debug=None):
-        if author is not None:
-            self.meta.author = author
+        if type(author) != type(None):
+            self.meta.author = str(author)
         if email is not None:
             self.meta.email = email
         if model_name is not None:
@@ -1323,8 +1324,11 @@ class Project(object):
             self.meta.debug = debug
 
 
-def create_kmc_model():
-    pt = Project()
+def create_kmc_model(model_name=None):
+    if type(model_name) == type(None):
+        pt = Project()
+    else:
+        pt = Project(model_name)
     return pt
 
 

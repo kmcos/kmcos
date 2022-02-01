@@ -440,6 +440,10 @@ def evaluate_rate_expression(rate_expr, parameters={}):
 
     return rate_const
 
+def compile(kmc_model):
+    import kmcos
+    kmcos.export(kmc_model.filename + ' -b' + kmc_model.backend)
+
 #kmcos can be invoked directly from the command line in one of the following ways::
 #    kmcos [help] (all|benchmark|build|edit|export|help|import|rebuild|run|settings-export|shell|version|view|xml) [options]
 #defining small wrapper functions to call cli if person types kmcos.export("MyFirstModel.xml") etc. Probably should have made an "@" decorator, but that's okay.
