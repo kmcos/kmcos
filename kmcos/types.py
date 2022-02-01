@@ -81,14 +81,19 @@ class Project(object):
         - Processes
     """
 
-    def __init__(self):
+    def __init__(self, model_name=None):
         self.meta = Meta()
+        if type(model_name)==type(None):
+            self.model_name = "UntitledModel"
+        else:
+            self.model_name = model_name 
         self.layer_list = LayerList()
         self.lattice = self.layer_list
         self.parameter_list = ParameterList()
         self.species_list = SpeciesList()
         self.process_list = ProcessList()
         self.output_list = OutputList()
+        self.filename = self.model_name + ".xml"
         self.backend = "local_smart" #this is just the default.
 
         # Quick'n'dirty define access functions
@@ -576,6 +581,7 @@ class Project(object):
         else:
             raise UserWarning('Cannot export to file suffix %s' %
                               os.path.splitext(filename)[-1])
+    save_model = save
 
     def export_xml_file(self, filename, validate=True):
         f = open(filename, 'w')
@@ -1306,16 +1312,24 @@ class Project(object):
                  model_name=None,
                  model_dimension=None,
                  debug=None):
-        if author is not None:
-            self.meta.author = author
-        if email is not None:
-            self.meta.email = email
-        if model_name is not None:
-            self.meta.model_name = model_name
-        if model_dimension is not None:
-            self.meta.model_dimension = model_dimension
-        if debug is not None:
-            self.meta.debug = debug
+        if type(author) != type(None):
+            self.meta.author = str(author)
+        if type(email) != type(None):
+            self.meta.email = str(email)
+        if type(model_name) != type(None):
+            self.meta.model_name = str(model_name)
+        if type(model_dimension) != type(None):
+            self.meta.model_dimension = int(model_dimension)
+        if type(debug) != type(None):
+            self.meta.debug = str(debug)
+
+
+def create_kmc_model(model_name=None):
+    if type(model_name) == type(None):
+        pt = Project()
+    else:
+        pt = Project(model_name)
+    return pt
 
 
 class Meta(object):
