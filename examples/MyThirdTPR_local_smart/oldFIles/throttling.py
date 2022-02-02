@@ -786,7 +786,7 @@ def check_scale_compression():
 
 # This function is for getting the aggregate throttling factors for a
 # specified throttling scheme.
-# Algorithm step 2.a, 2.b, 2.c. See Table 3 in the manuscript.
+# Algorithm step 2.a, 2.b, 2.c. See Table 3 in the manuscrikmc_model.
 def find_aggregate_throttling_factors():
 
     # Initialize the aggregate throttling factors and the rate constant list

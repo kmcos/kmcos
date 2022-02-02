@@ -14,150 +14,150 @@ import numpy as np
 #from math import sqrt
 
 model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
-pt = Project()
-pt.set_meta(author='Thomas Danielson',
+kmc_model = kmcos.create_kmc_model(model_name)
+kmc_model.set_meta(author='Thomas Danielson',
 	    email='thomasd1@vt.edu',
 	    model_name=model_name,
 	    model_dimension=2)
 #The species unallowed has been added to keep a parallel data structure and is used in processes where there is a forward, but not a reverse process included (or vice versa).
-pt.add_species(name='unallowed', color='white')
-pt.add_species(name='empty', color='white')
-pt.add_species(name='U1_Ce_4plus', color='blue')
-pt.add_species(name='U2_Ce_3plus', color='blue')
-pt.add_species(name='U3_Vacancy', color = 'black',
+kmc_model.add_species(name='unallowed', color='white')
+kmc_model.add_species(name='empty', color='white')
+kmc_model.add_species(name='U1_Ce_4plus', color='blue')
+kmc_model.add_species(name='U2_Ce_3plus', color='blue')
+kmc_model.add_species(name='U3_Vacancy', color = 'black',
 	       representation="Atoms('H',[[0,0,0]])",
 	       tags='Vacancy')
-pt.add_species(name='U4_H_plus', color='green',
+kmc_model.add_species(name='U4_H_plus', color='green',
 	       representation="Atoms('He',[[0,0,0]])",
 	       tags='Proton')
-pt.add_species(name='U6_H_star', color='green',
+kmc_model.add_species(name='U6_H_star', color='green',
 	       representation="Atoms('He',[[0,0,0]])",
 	       tags='Hydrogen')
-pt.add_species(name='U7_OH_ionic', color='orange',
+kmc_model.add_species(name='U7_OH_ionic', color='orange',
 	       representation="Atoms('OHe',[[0,0,0],[0,0,1.1]])",
 	       tags='OH')
-pt.add_species(name='U18_Methanol_Ce1_O2_p5_p5_p0', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce1_O2_p5_p5_p0', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='CH3OH')
-pt.add_species(name='U18_Methanol_Ce1_O1_p0_p1_p0', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce1_O1_p0_p1_p0', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='CH3OH')
-pt.add_species(name='U18_Methanol_Ce1_O1_p1_p1_p0', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce1_O1_p1_p1_p0', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='CH3OH')
-pt.add_species(name='U18_Methanol_Ce2_O1_p0_p0_p0', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce2_O1_p0_p0_p0', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='CH3OH')
-pt.add_species(name='U18_Methanol_Ce2_O2_p5_p5_p0', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce2_O2_p5_p5_p0', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='CH3OH')
-pt.add_species(name='U18_Methanol_Ce2_O2_n1_p0_p0', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce2_O2_n1_p0_p0', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='CH3OH')
-pt.add_species(name='U18_Methanol_Ce1', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce1', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='Ce')
-pt.add_species(name='U18_Methanol_Ce2', color='red',
+kmc_model.add_species(name='U18_Methanol_Ce2', color='red',
 	       representation="Atoms('CHeHeHeOHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2],[0,1.0,1.9]])",
 	       tags='Ce')
-pt.add_species(name='U19_CH3O_ionic', color='#000000',
+kmc_model.add_species(name='U19_CH3O_ionic', color='#000000',
 	       representation="Atoms('CHeHeHeO',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CH3O')
-pt.add_species(name='U20_CH3O_neutral', color='#000000',
+kmc_model.add_species(name='U20_CH3O_neutral', color='#000000',
 	       representation="Atoms('CHeHeHeO',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CH3O')
-pt.add_species(name='U21_CH3O_neutral_V', color='#000000',
+kmc_model.add_species(name='U21_CH3O_neutral_V', color='#000000',
 	       representation="Atoms('CHeHeHeO',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CH3O')
-pt.add_species(name='U22_CH3O_ionic_V', color='#000000',
+kmc_model.add_species(name='U22_CH3O_ionic_V', color='#000000',
 	       representation="Atoms('CHeHeHeO',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CH3O')
-pt.add_species(name='U23_CHO', color='purple',
+kmc_model.add_species(name='U23_CHO', color='purple',
 	       representation="Atoms('CHeO',[[0,0,0],[0.75,0.75,0.75],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U23_CHO_bridge_V_O', color='purple',
+kmc_model.add_species(name='U23_CHO_bridge_V_O', color='purple',
 	       representation="Atoms('CHeO',[[0,0,0],[0.75,0.75,0.75],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U23_CHO_bridge_O_V', color='purple',
+kmc_model.add_species(name='U23_CHO_bridge_O_V', color='purple',
 	       representation="Atoms('CHeO',[[0,0,0],[0.75,0.75,0.75],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U23_CHO_V', color='purple',
+kmc_model.add_species(name='U23_CHO_V', color='purple',
 	       representation="Atoms('CHeO',[[0,0,0],[0.75,0.75,0.75],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U23_CHO_Ce', color='purple',
+kmc_model.add_species(name='U23_CHO_Ce', color='purple',
 	       representation="Atoms('CHeO',[[0,0,0],[0.75,0.75,0.75],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U23_CHO_bridge_V', color='purple',
+kmc_model.add_species(name='U23_CHO_bridge_V', color='purple',
 	       representation="Atoms('CHeO',[[0,0,0],[0.75,0.75,0.75],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U23_CHO_bridge_CH', color='purple',
+kmc_model.add_species(name='U23_CHO_bridge_CH', color='purple',
 	       representation="Atoms('CHeO',[[0,0,0],[0.75,0.75,0.75],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U24_CH_bridge_neutral', color='purple',
+kmc_model.add_species(name='U24_CH_bridge_neutral', color='purple',
 	       representation="Atoms('CHe',[[0,0,0],[0.75,0.75,0.75]])",
 	       tags='CHO')
-pt.add_species(name='U24_CH_bridge_neutral_O_V', color='purple',
+kmc_model.add_species(name='U24_CH_bridge_neutral_O_V', color='purple',
 	       representation="Atoms('CHe',[[0,0,0],[0.75,0.75,0.75]])",
 	       tags='CHO')
-pt.add_species(name='U24_CH_bridge_neutral_V_O', color='purple',
+kmc_model.add_species(name='U24_CH_bridge_neutral_V_O', color='purple',
 	       representation="Atoms('CHe',[[0,0,0],[0.75,0.75,0.75]])",
 	       tags='CHO')
-pt.add_species(name='U25_CH2O_bridge_V', color='blue',
+kmc_model.add_species(name='U25_CH2O_bridge_V', color='blue',
 	       representation="Atoms('CHeHeO',[[0,0,0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CH2O')
-pt.add_species(name='U25_CH2O_bridge_CH2', color='purple',
+kmc_model.add_species(name='U25_CH2O_bridge_CH2', color='purple',
 	       representation="Atoms('CHeHeO',[[0,0,0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U25_CH2O_bridge_O_V', color='purple',
+kmc_model.add_species(name='U25_CH2O_bridge_O_V', color='purple',
 	       representation="Atoms('CHeHeO',[[0,0,0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U25_CH2O_bridge_V_O', color='purple',
+kmc_model.add_species(name='U25_CH2O_bridge_V_O', color='purple',
 	       representation="Atoms('CHeHeO',[[0,0,0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CHO')
-pt.add_species(name='U26_H2O', color='red',
+kmc_model.add_species(name='U26_H2O', color='red',
 	       representation="Atoms('HeHeO',[[-0.75,0,-1.0],[0.75,0,-1.0],[0,0,1.2]])",
 	       tags='H2O')
-pt.add_species(name='U27_H2O_V', color='red',
+kmc_model.add_species(name='U27_H2O_V', color='red',
 	       representation="Atoms('HeHeO',[[-0.75,0,-1.0],[0.75,0,-1.0],[0,1,1.2]])",
 	       tags='H2O')
-pt.add_species(name='U28_CH2O_Ce4plus', color='blue',
+kmc_model.add_species(name='U28_CH2O_Ce4plus', color='blue',
 	       representation="Atoms('CHeHeO',[[0,0,0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CH2O')
-pt.add_species(name='U29_CH2O_V', color='blue',
+kmc_model.add_species(name='U29_CH2O_V', color='blue',
 	       representation="Atoms('CHeHeO',[[0,0,0],[-0.75,0.75,-1.0],[0,-0.75,-1.0],[0,1,1.2]])",
 	       tags='CH2O')
-pt.add_species(name='U30_CH3_star', color='purple',
+kmc_model.add_species(name='U30_CH3_star', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U31_CO_Ce', color='purple',
+kmc_model.add_species(name='U31_CO_Ce', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U32_CH2O2_V', color='purple',
+kmc_model.add_species(name='U32_CH2O2_V', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U32_CH2O2_bridge_V_V', color='purple',
+kmc_model.add_species(name='U32_CH2O2_bridge_V_V', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U33_CHO2_bridge_V_V', color='purple',
+kmc_model.add_species(name='U33_CHO2_bridge_V_V', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U33_CHO2_V', color='purple',
+kmc_model.add_species(name='U33_CHO2_V', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U34_CO2_V', color='purple',
+kmc_model.add_species(name='U34_CO2_V', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U34_CO2_bridge_V_V', color='purple',
+kmc_model.add_species(name='U34_CO2_bridge_V_V', color='purple',
 	       representation="Atoms('CHeHeHe',[[0,0,0],[0.75,0.75,-1.0],[-0.75,0.75,-1.0],[0,-0.75,-1.0]])",
 	       tags='CHO')
-pt.add_species(name='U50_O', color='green',
+kmc_model.add_species(name='U50_O', color='green',
 	       representation="Atoms('O',[[0,0,0]])",
 	       tags='O')
-pt.add_species(name='ExcitedOxygen', color='white')
+kmc_model.add_species(name='ExcitedOxygen', color='white')
 
 
 #Middle layer Ce atoms
-layer1 = pt.add_layer(name='Ce1')
+layer1 = kmc_model.add_layer(name='Ce1')
 layer1.sites.append(Site(name='atop_Ce1', pos='0.5 0.8337 0.5',
 			 default_species='U1_Ce_4plus'))
 layer1.sites.append(Site(name='atop_Ce2', pos='0 0.3333 0.5',
@@ -181,31 +181,31 @@ layer1.sites.append(Site(name='bridge_O_O_6_p0_p0_p0', pos='0.25 0.75 1',
 layer1.sites.append(Site(name='bridge_O_O_5_p0_p0_p0', pos='0.75 0.75 1',
 			 default_species='empty'))
 
-pt.lattice.cell = np.diag([3.825, 6.626, 2.343])
+kmc_model.lattice.cell = np.diag([3.825, 6.626, 2.343])
 
 T_surface_python = 600
 T_gas_python = T_surface_python
 
-pt.add_parameter(name='T', value=T_surface_python, adjustable=False)
-pt.add_parameter(name='p_CH3OHgas', value=0, adjustable=False)
-pt.add_parameter(name='A', value='(3.825*angstrom*6.626*angstrom)')
-pt.add_parameter(name='mass_CH3OHkgmol', value='0.03204')
-pt.add_parameter(name='R', value=8.3145, adjustable=False)
-pt.add_parameter(name='T_gas', value=T_gas_python, adjustable=False)
-pt.add_parameter(name='k_B', value=1.381e-23, adjustable=False)
-pt.add_parameter(name='alpha', value='1')
-pt.add_parameter(name='N_A', value='6.022e+23')
-pt.add_parameter(name='p_CH2Ogas', value=0, adjustable=False)
-pt.add_parameter(name='mass_CH2Okgmol', value='0.030')
-pt.add_parameter(name='p_H2Ogas', value='0')
-pt.add_parameter(name='mass_H2Okgmol', value='0.018')
-pt.add_parameter(name='Pi', value='3.14159')
-pt.add_parameter(name='p_H2gas', value='0')
-pt.add_parameter(name='mass_H2kgmol', value='0.002')
-pt.add_parameter(name='p_COgas', value='0')
-pt.add_parameter(name='mass_COkgmol', value='0.028')
-pt.add_parameter(name='p_O2gas', value = 0, adjustable=False)
-pt.add_parameter(name='mass_O2kgmol', value = '0.0159')
+kmc_model.add_parameter(name='T', value=T_surface_python, adjustable=False)
+kmc_model.add_parameter(name='p_CH3OHgas', value=0, adjustable=False)
+kmc_model.add_parameter(name='A', value='(3.825*angstrom*6.626*angstrom)')
+kmc_model.add_parameter(name='mass_CH3OHkgmol', value='0.03204')
+kmc_model.add_parameter(name='R', value=8.3145, adjustable=False)
+kmc_model.add_parameter(name='T_gas', value=T_gas_python, adjustable=False)
+kmc_model.add_parameter(name='k_B', value=1.381e-23, adjustable=False)
+kmc_model.add_parameter(name='alpha', value='1')
+kmc_model.add_parameter(name='N_A', value='6.022e+23')
+kmc_model.add_parameter(name='p_CH2Ogas', value=0, adjustable=False)
+kmc_model.add_parameter(name='mass_CH2Okgmol', value='0.030')
+kmc_model.add_parameter(name='p_H2Ogas', value='0')
+kmc_model.add_parameter(name='mass_H2Okgmol', value='0.018')
+kmc_model.add_parameter(name='Pi', value='3.14159')
+kmc_model.add_parameter(name='p_H2gas', value='0')
+kmc_model.add_parameter(name='mass_H2kgmol', value='0.002')
+kmc_model.add_parameter(name='p_COgas', value='0')
+kmc_model.add_parameter(name='mass_COkgmol', value='0.028')
+kmc_model.add_parameter(name='p_O2gas', value = 0, adjustable=False)
+kmc_model.add_parameter(name='mass_O2kgmol', value = '0.0159')
 
 #The following is a dictionary of the initial state energies i.e. the energies of the reactants.  Each reactant species is specified explicitly in the name string.  For adsorption processes we are setting the reactant energy equal to the transition state energy in cases where they are assumed barrierless.
 activation_energies_dict = {
@@ -281,9 +281,9 @@ activation_energies_dict = {
 				'EaR120p0': 0
 			}
 
-#This loop uses the values from the dictionary of activation energies in order to create a string which will serve to add the values from the dictionary as parameters to KMOS.  An example parameter would look like: pt.add_parameter(name='EaF21p5', value=0, adjustable=False)
+#This loop uses the values from the dictionary of activation energies in order to create a string which will serve to add the values from the dictionary as parameters to KMOS.  An example parameter would look like: kmc_model.add_parameter(name='EaF21p5', value=0, adjustable=False)
 for i in range(len(activation_energies_dict)):
-	activation_energies_string = str('pt.add_parameter(name=')  \
+	activation_energies_string = str('kmc_model.add_parameter(name=')  \
 				+ '\'' + str(list(activation_energies_dict.keys())[i]) + '\'' \
 				+ str(', value=') \
 				+ str(list(activation_energies_dict.values())[i])  \
@@ -367,70 +367,70 @@ pre_exponentials_dict = {
 			}
 
 
-#This loop uses the values from the dictionary of pre-exponentials in order to create a string which will serve to add the values from the dictionary as parameters to KMOS.  An example string looks like: pt.add_parameter(name='E_TST_F21p5', value=0, adjustable=False)
+#This loop uses the values from the dictionary of pre-exponentials in order to create a string which will serve to add the values from the dictionary as parameters to KMOS.  An example string looks like: kmc_model.add_parameter(name='E_TST_F21p5', value=0, adjustable=False)
 for i in range(len(pre_exponentials_dict)):
-	preexponentials_string = str('pt.add_parameter(name=')  \
+	preexponentials_string = str('kmc_model.add_parameter(name=')  \
 				+ '\'' + str(list(pre_exponentials_dict.keys())[i]) + '\'' \
 				+ str(', value=') \
 				+ str(list(pre_exponentials_dict.values())[i])  \
 				+ str(', adjustable=False)')
 	exec("%s" %(preexponentials_string))
 	
-Ce_1_p0_p0_p0 = pt.lattice.generate_coord('atop_Ce1.(0,0,0).Ce1')
-Ce_2_p0_p0_p0 = pt.lattice.generate_coord('atop_Ce2.(0,0,0).Ce1')
-O_1_p0_p0_p0 = pt.lattice.generate_coord('atop_O1.(0,0,0).Ce1')
-O_2_p0_p0_p0 = pt.lattice.generate_coord('atop_O2.(0,0,0).Ce1')
+Ce_1_p0_p0_p0 = kmc_model.lattice.generate_coord('atop_Ce1.(0,0,0).Ce1')
+Ce_2_p0_p0_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(0,0,0).Ce1')
+O_1_p0_p0_p0 = kmc_model.lattice.generate_coord('atop_O1.(0,0,0).Ce1')
+O_2_p0_p0_p0 = kmc_model.lattice.generate_coord('atop_O2.(0,0,0).Ce1')
 
-O_2_p1_p0_p0 = pt.lattice.generate_coord('atop_O2.(1,0,0).Ce1')
-O_2_n1_p0_p0 = pt.lattice.generate_coord('atop_O2.(-1,0,0).Ce1')
-O_2_p0_n1_p0 = pt.lattice.generate_coord('atop_O2.(0,-1,0).Ce1')
-O_2_n1_n1_p0 = pt.lattice.generate_coord('atop_O2.(-1,-1,0).Ce1')
-O_2_p1_p1_p0 = pt.lattice.generate_coord('atop_O2.(1,1,0).Ce1')
-O_2_p0_p1_p0 = pt.lattice.generate_coord('atop_O2.(0,1,0).Ce1')
-O_2_n1_p1_p0 = pt.lattice.generate_coord('atop_O2.(-1,1,0).Ce1')
-O_2_n2_p0_p0 = pt.lattice.generate_coord('atop_O2.(-2,0,0).Ce1')
+O_2_p1_p0_p0 = kmc_model.lattice.generate_coord('atop_O2.(1,0,0).Ce1')
+O_2_n1_p0_p0 = kmc_model.lattice.generate_coord('atop_O2.(-1,0,0).Ce1')
+O_2_p0_n1_p0 = kmc_model.lattice.generate_coord('atop_O2.(0,-1,0).Ce1')
+O_2_n1_n1_p0 = kmc_model.lattice.generate_coord('atop_O2.(-1,-1,0).Ce1')
+O_2_p1_p1_p0 = kmc_model.lattice.generate_coord('atop_O2.(1,1,0).Ce1')
+O_2_p0_p1_p0 = kmc_model.lattice.generate_coord('atop_O2.(0,1,0).Ce1')
+O_2_n1_p1_p0 = kmc_model.lattice.generate_coord('atop_O2.(-1,1,0).Ce1')
+O_2_n2_p0_p0 = kmc_model.lattice.generate_coord('atop_O2.(-2,0,0).Ce1')
 
-O_1_p0_p1_p0 = pt.lattice.generate_coord('atop_O1.(0,1,0).Ce1')
-O_1_p1_p1_p0 = pt.lattice.generate_coord('atop_O1.(1,1,0).Ce1')
-O_1_n1_p0_p0 = pt.lattice.generate_coord('atop_O1.(-1,0,0).Ce1')
-O_1_p1_p0_p0 = pt.lattice.generate_coord('atop_O1.(1,0,0).Ce1')
-O_1_p0_n1_p0 = pt.lattice.generate_coord('atop_O1.(0,-1,0).Ce1')
-O_1_p2_p1_p0 = pt.lattice.generate_coord('atop_O1.(2,1,0).Ce1')
-O_1_n1_p1_p0 = pt.lattice.generate_coord('atop_O1.(-1,1,0).Ce1')
+O_1_p0_p1_p0 = kmc_model.lattice.generate_coord('atop_O1.(0,1,0).Ce1')
+O_1_p1_p1_p0 = kmc_model.lattice.generate_coord('atop_O1.(1,1,0).Ce1')
+O_1_n1_p0_p0 = kmc_model.lattice.generate_coord('atop_O1.(-1,0,0).Ce1')
+O_1_p1_p0_p0 = kmc_model.lattice.generate_coord('atop_O1.(1,0,0).Ce1')
+O_1_p0_n1_p0 = kmc_model.lattice.generate_coord('atop_O1.(0,-1,0).Ce1')
+O_1_p2_p1_p0 = kmc_model.lattice.generate_coord('atop_O1.(2,1,0).Ce1')
+O_1_n1_p1_p0 = kmc_model.lattice.generate_coord('atop_O1.(-1,1,0).Ce1')
 
-Ce_1_p0_n1_p0 = pt.lattice.generate_coord('atop_Ce1.(0,-1,0).Ce1')
-Ce_1_n1_n1_p0 = pt.lattice.generate_coord('atop_Ce1.(-1,-1,0).Ce1')
-Ce_1_n1_p0_p0 = pt.lattice.generate_coord('atop_Ce1.(-1,0,0).Ce1')
-Ce_1_p1_p0_p0 = pt.lattice.generate_coord('atop_Ce1.(1,0,0).Ce1')
-Ce_1_p1_n1_p0 = pt.lattice.generate_coord('atop_Ce1.(1,-1,0).Ce1')
-Ce_1_n2_n1_p0 = pt.lattice.generate_coord('atop_Ce1.(-2,-1,0).Ce1')
+Ce_1_p0_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce1.(0,-1,0).Ce1')
+Ce_1_n1_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce1.(-1,-1,0).Ce1')
+Ce_1_n1_p0_p0 = kmc_model.lattice.generate_coord('atop_Ce1.(-1,0,0).Ce1')
+Ce_1_p1_p0_p0 = kmc_model.lattice.generate_coord('atop_Ce1.(1,0,0).Ce1')
+Ce_1_p1_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce1.(1,-1,0).Ce1')
+Ce_1_n2_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce1.(-2,-1,0).Ce1')
 
-Ce_2_p1_p0_p0 = pt.lattice.generate_coord('atop_Ce2.(1,0,0).Ce1')
-Ce_2_n1_p0_p0 = pt.lattice.generate_coord('atop_Ce2.(-1,0,0).Ce1')
-Ce_2_p2_p0_p0 = pt.lattice.generate_coord('atop_Ce2.(2,0,0).Ce1')
-Ce_2_p0_p1_p0 = pt.lattice.generate_coord('atop_Ce2.(0,1,0).Ce1')
-Ce_2_p1_p1_p0 = pt.lattice.generate_coord('atop_Ce2.(1,1,0).Ce1')
-Ce_2_n1_n1_p0 = pt.lattice.generate_coord('atop_Ce2.(-1,-1,0).Ce1')
-Ce_2_p0_n1_p0 = pt.lattice.generate_coord('atop_Ce2.(0,-1,0).Ce1')
-Ce_2_p1_n1_p0 = pt.lattice.generate_coord('atop_Ce2.(1,-1,0).Ce1')
-Ce_2_n2_n1_p0 = pt.lattice.generate_coord('atop_Ce2.(-2,-1,0).Ce1')
+Ce_2_p1_p0_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(1,0,0).Ce1')
+Ce_2_n1_p0_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(-1,0,0).Ce1')
+Ce_2_p2_p0_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(2,0,0).Ce1')
+Ce_2_p0_p1_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(0,1,0).Ce1')
+Ce_2_p1_p1_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(1,1,0).Ce1')
+Ce_2_n1_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(-1,-1,0).Ce1')
+Ce_2_p0_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(0,-1,0).Ce1')
+Ce_2_p1_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(1,-1,0).Ce1')
+Ce_2_n2_n1_p0 = kmc_model.lattice.generate_coord('atop_Ce2.(-2,-1,0).Ce1')
 
-bridge_O_O_1_p0_p0_p0 = pt.lattice.generate_coord('bridge_O_O_1_p0_p0_p0.(0,0,0).Ce1')
-bridge_O_O_2_p0_p0_p0 = pt.lattice.generate_coord('bridge_O_O_2_p0_p0_p0.(0,0,0).Ce1')
-bridge_O_O_3_p0_p0_p0 = pt.lattice.generate_coord('bridge_O_O_3_p0_p0_p0.(0,0,0).Ce1')
-bridge_O_O_4_p0_p0_p0 = pt.lattice.generate_coord('bridge_O_O_4_p0_p0_p0.(0,0,0).Ce1')
-bridge_O_O_5_p0_p0_p0 = pt.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(0,0,0).Ce1')
-bridge_O_O_6_p0_p0_p0 = pt.lattice.generate_coord('bridge_O_O_6_p0_p0_p0.(0,0,0).Ce1')
+bridge_O_O_1_p0_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_1_p0_p0_p0.(0,0,0).Ce1')
+bridge_O_O_2_p0_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_2_p0_p0_p0.(0,0,0).Ce1')
+bridge_O_O_3_p0_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_3_p0_p0_p0.(0,0,0).Ce1')
+bridge_O_O_4_p0_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_4_p0_p0_p0.(0,0,0).Ce1')
+bridge_O_O_5_p0_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(0,0,0).Ce1')
+bridge_O_O_6_p0_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_6_p0_p0_p0.(0,0,0).Ce1')
 
-bridge_O_O_1_n1_p0_p0 = pt.lattice.generate_coord('bridge_O_O_1_p0_p0_p0.(-1,0,0).Ce1')
-bridge_O_O_3_n1_p0_p0 = pt.lattice.generate_coord('bridge_O_O_3_p0_p0_p0.(-1,0,0).Ce1')
-bridge_O_O_4_n1_p0_p0 = pt.lattice.generate_coord('bridge_O_O_4_p0_p0_p0.(-1,0,0).Ce1')
-bridge_O_O_5_n1_n1_p0 = pt.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(-1,-1,0).Ce1')
-bridge_O_O_6_p0_n1_p0 = pt.lattice.generate_coord('bridge_O_O_6_p0_p0_p0.(0,-1,0).Ce1')
-bridge_O_O_2_p1_p0_p0 = pt.lattice.generate_coord('bridge_O_O_2_p0_p0_p0.(1,0,0).Ce1')
-bridge_O_O_6_p1_p0_p0 = pt.lattice.generate_coord('bridge_O_O_6_p0_p0_p0.(1,0,0).Ce1')
-bridge_O_O_5_n1_p0_p0 = pt.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(-1,0,0).Ce1')
-bridge_O_O_1_p0_p1_p0 = pt.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(0,1,0).Ce1')
+bridge_O_O_1_n1_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_1_p0_p0_p0.(-1,0,0).Ce1')
+bridge_O_O_3_n1_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_3_p0_p0_p0.(-1,0,0).Ce1')
+bridge_O_O_4_n1_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_4_p0_p0_p0.(-1,0,0).Ce1')
+bridge_O_O_5_n1_n1_p0 = kmc_model.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(-1,-1,0).Ce1')
+bridge_O_O_6_p0_n1_p0 = kmc_model.lattice.generate_coord('bridge_O_O_6_p0_p0_p0.(0,-1,0).Ce1')
+bridge_O_O_2_p1_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_2_p0_p0_p0.(1,0,0).Ce1')
+bridge_O_O_6_p1_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_6_p0_p0_p0.(1,0,0).Ce1')
+bridge_O_O_5_n1_p0_p0 = kmc_model.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(-1,0,0).Ce1')
+bridge_O_O_1_p0_p1_p0 = kmc_model.lattice.generate_coord('bridge_O_O_5_p0_p0_p0.(0,1,0).Ce1')
 
 #Lists for automatically generated processes
 
@@ -721,7 +721,7 @@ for x in range(1,2+1):
 			temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 			temporary_tof_count_dict = {'R8p7':1}
 			temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-			pt.add_process(**temporary_kwargs_dictionary)
+			kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #forward process for the hopping event is same as reverse process.	
 current_process_name ='pF8p7'
@@ -744,7 +744,7 @@ for x in range(1,2+1):
 			temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 			temporary_tof_count_dict = {'F8p7':1}
 			temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-			pt.add_process(**temporary_kwargs_dictionary)
+			kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #Process for H2O molecular desorption (rxn 9.0)
 #Again, only requires two processes for each of the Ce atoms in the cell.
@@ -769,7 +769,7 @@ for x in range(1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #Processes for H2O molecular Adsorption(rxn -9.0)
 #This process requires two processes as it is an H2O molecule adsorbing on a Ce4+ site.
@@ -794,7 +794,7 @@ for x in range(1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 		
 
@@ -831,7 +831,7 @@ for x in range (1,2+1):
 					temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 					temporary_tof_count_dict = {'F9p8':1}
 					temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-					pt.add_process(**temporary_kwargs_dictionary)
+					kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 current_process_name ='pR9p8'
@@ -846,7 +846,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R9p8':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #Processes for Methanol Adsorption (rxn -15.0)
@@ -876,7 +876,7 @@ for x in range(1,2+1):
     
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #Processes for Methanol Desorption (rxn 15.0)
 #This process requires 6 processes.  And results in an empty Ce and neighboring O.
@@ -905,7 +905,7 @@ for x in range(1,2+1):
     
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #Processes for Methanol ionic dissociation reactions activation energy is the same as that for desorption (for now)(rxn -15.1)
 #This requires that a Ce is occupied by a methanol and a neighboring O is occupied by the bridging methanol species.  The H dissociates leaving Ce occupied by methoxy and O occupied by H+.  This requires 2Ce * 3O = 6 processes.
@@ -934,7 +934,7 @@ for x in range(1,2+1):
     
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This is the reverse of 15p1
 
@@ -962,7 +962,7 @@ for x in range(1,2+1):
     
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 		
 		
@@ -993,7 +993,7 @@ for x in range(1,2+1):
     
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #Processes for ionic methoxy migration to vacancy from Ce4+ (rxn 16.8)
 #This is the reverse of -16.8 and requires a vacant O and an adjacent Ce4+ occupied by ionic methoxy.  Again, there should be 6 processes for each of the possible surrounding Ce4+ (2 V * 3 Ce = 6 total processes).
@@ -1022,7 +1022,7 @@ for x in range(1,2+1):
     
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 		
 		
 #Processes for CH2O molecular desorption (rxn 18.0)
@@ -1042,7 +1042,7 @@ for x in range(1,2+1):
 		temporary_tof_count_dict = {'F18p0':1,'CH2O_output_flux':1}
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 #This process does not actually occur, but is included for parallel data structures(rxn 10.0)
 
 current_process_name ='pR18p0'
@@ -1057,7 +1057,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R18p0':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #### Processes 1##.# will implement the TPD mechanism reactions from the DFT team.
@@ -1098,7 +1098,7 @@ for x in range(1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -1138,7 +1138,7 @@ for x in range(1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #101p5
@@ -1186,7 +1186,7 @@ for x in range (1,2+1):
 
 							temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-							pt.add_process(**temporary_kwargs_dictionary)
+							kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -1234,7 +1234,7 @@ for x in range (1,2+1):
 
 							temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-							pt.add_process(**temporary_kwargs_dictionary)
+							kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #101p6
 #This reaction is for CH3OH @ Ce + O -> CH3O @ Ce + H @ O.  The coadsorbates from DFT for this reaction are CH3OH@Ce, CH3O@Ce and H@O.  Since there are 3 neighboring Ce sites in the DFT and 6 in the KMC, we will consider this to be 1/3 (DFT) -> 2/6 (KMC) neighboring Ce sites filled with CH3OH, 1/3 (DFT) -> 2/6 (KMC) neighboring Ce sites filled with CH3O, and 1/3 neighboring O filled with H.  
@@ -1285,7 +1285,7 @@ for x in range(1,2+1):
 
 								temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-								pt.add_process(**temporary_kwargs_dictionary)
+								kmc_model.add_process(**temporary_kwargs_dictionary)
 #The reverse reaction
 
 current_process_name ='pR101p6'
@@ -1337,7 +1337,7 @@ for x in range(1,2+1):
 
 								temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-								pt.add_process(**temporary_kwargs_dictionary)
+								kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #102p6
 #This reaction is for CH3O @ Ce + O -> CH2O @ Ce + H @ O.  The DFT reports coadsorbate species of 2CH3O@Ce and 3H@O.  This corresponds to 2/3 (DFT) -> 4/6 (KMC) CH3O @ Ce and 100% (2/3 + abstracted H from methoxy) coverage on the surrounding O sites.
@@ -1391,7 +1391,7 @@ for x in range(1,2+1):
 
 									temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-									pt.add_process(**temporary_kwargs_dictionary)
+									kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -1446,7 +1446,7 @@ for x in range(1,2+1):
 
 									temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-									pt.add_process(**temporary_kwargs_dictionary)
+									kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #102p8
@@ -1486,7 +1486,7 @@ for x in range (1,2+1):
 
 					temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-					pt.add_process(**temporary_kwargs_dictionary)
+					kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -1526,7 +1526,7 @@ for x in range (1,2+1):
 
 					temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-					pt.add_process(**temporary_kwargs_dictionary)
+					kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #103p6
 #This process is for 2CH3O@Ce + O -> CH3OH@Ce + CH2O@Ce . will need an open O site for the CH3OH bridge.
@@ -1558,7 +1558,7 @@ for x in range (1,2+1):
 
 			temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-			pt.add_process(**temporary_kwargs_dictionary)
+			kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -1592,7 +1592,7 @@ for x in range (1,2+1):
 
 			temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-			pt.add_process(**temporary_kwargs_dictionary)
+			kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #104p7
 #This process is for CH3OH@Ce + H@O -> CH3O@Ce + H2O@V .  There are no coadsorbate species but there is an H occupying a neighboring O.
@@ -1629,7 +1629,7 @@ for x in range (1,2+1):
 
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure. But we do not need to require an empty site for water to jump back in.
 current_process_name ='pR104p7'
@@ -1662,7 +1662,7 @@ for x in range (1,2+1):
 
 			temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-			pt.add_process(**temporary_kwargs_dictionary)
+			kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #105p4
 #This process is for CH3O@Ce + H2O@V -> CH3O@V + H2O@Ce .  There are no coadsorbate species.  The water and methoxy switch places, but it is not an option for the methoxy to push the water to a totally different site (this is different from Jonathan's DFT calculation).
@@ -1690,7 +1690,7 @@ for x in range (1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #the reverse reaction
 
@@ -1718,7 +1718,7 @@ for x in range (1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 
@@ -1767,7 +1767,7 @@ for x in range (1,2+1):
 
 							temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-							pt.add_process(**temporary_kwargs_dictionary)
+							kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -1783,7 +1783,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R106p5':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #106p6
 #This process is for CH3OH desorption CH3OH@Ce -> CH3OH(g) + Ce.  There are three coadsorbate species: CH3OH@Ce, CH3O@Ce and H@O.  This translates to 1/3 (DFT) -> 2/6 (KMC) CH3OH, 1/3 (DFT) -> 2/6 (KMC) CH3O and there will be 1 out of 3 neighboring O filled with H.
@@ -1834,7 +1834,7 @@ for x in range (1,2+1):
 
 								temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-								pt.add_process(**temporary_kwargs_dictionary)
+								kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -1850,7 +1850,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R106p6':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #106p7
@@ -1906,7 +1906,7 @@ for x in range (1,2+1):
 
 									temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-									pt.add_process(**temporary_kwargs_dictionary)
+									kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -1922,7 +1922,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R106p7':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #108p2
@@ -1966,7 +1966,7 @@ for x in range (1,2+1):
 
 						temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-						pt.add_process(**temporary_kwargs_dictionary)
+						kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -2009,7 +2009,7 @@ for x in range (1,2+1):
 
 						temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 
-						pt.add_process(**temporary_kwargs_dictionary)
+						kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #108p4
@@ -2039,7 +2039,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'F108p4':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -2071,7 +2071,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'R108p4':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #109p2
 #This process is for CH3OH desorption CH3OH@Ce + O -> CH3OH(g).  There are two coadsorbate species: CH3O@Ce and CH3O@V.  This translates to 1/3 (DFT) -> 2/6 (KMC) CH3O, 1/3 (DFT) -> 1/3 (KMC) CH3O@V.
@@ -2108,7 +2108,7 @@ for x in range (1,2+1):
 						temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 						temporary_tof_count_dict = {'F109p2':1, 'CH3OH_output_flux':1}
 						temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-						pt.add_process(**temporary_kwargs_dictionary)
+						kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -2124,7 +2124,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R109p2':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #109p3
@@ -2154,7 +2154,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'F109p3':1, 'CH3OH_output_flux':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -2170,7 +2170,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R109p3':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 
@@ -2201,7 +2201,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'F109p4':1, 'CH3OH_output_flux':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -2217,7 +2217,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R109p4':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #110p3
@@ -2251,7 +2251,7 @@ for x in range (1,2+1):
 					temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 					temporary_tof_count_dict = {'F110p3':1, 'H2O_output_flux':1}
 					temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-					pt.add_process(**temporary_kwargs_dictionary)
+					kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -2267,7 +2267,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R110p3':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #110p4
 #This process is for H2O desorption H2O@Ce -> H2O (g) + Ce.  There are two coadsorbate species: CH3O@Ce.  There are 1/3 (DFT) -> 2/6 (KMC) CH3O@Ce
@@ -2297,7 +2297,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'F110p4':1, 'H2O_output_flux':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 
@@ -2313,7 +2313,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R110p4':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #111p2
 #This process is for CH3O@Ce + CH3O@V -> CH3OH@Ce CH2O@V.  There are two coadsorbate species: CH3O@Ce and H@O.  There are 1/3 (DFT) -> 2/6 (KMC) CH3O@Ce and 1/3 H@O
@@ -2355,7 +2355,7 @@ for x in range (1,2+1):
 							temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 							temporary_tof_count_dict = {'F111p2':1}
 							temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-							pt.add_process(**temporary_kwargs_dictionary)
+							kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -2399,7 +2399,7 @@ for x in range (1,2+1):
 							temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 							temporary_tof_count_dict = {'R111p2':1}
 							temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-							pt.add_process(**temporary_kwargs_dictionary)
+							kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #111p3
 #This process is for CH3O@Ce + CH3O@V -> CH3OH@Ce + CH2O@V.  There are no coadsorbate species.
@@ -2428,7 +2428,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'F111p3':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 
@@ -2460,7 +2460,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'R111p3':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #112p3
@@ -2498,7 +2498,7 @@ for x in range (1,2+1):
 						temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 						temporary_tof_count_dict = {'F112p3':1}
 						temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-						pt.add_process(**temporary_kwargs_dictionary)
+						kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 current_process_name ='pR112p3'
@@ -2537,7 +2537,7 @@ for x in range (1,2+1):
 						temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 						temporary_tof_count_dict = {'R112p3':1}
 						temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-						pt.add_process(**temporary_kwargs_dictionary)
+						kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #112p7
 #This process is for CH3O@V + O -> CH2O/v + H@O.  There are no coadsorbate species, but two Ce4plus will become Ce3+ for charge balance.
@@ -2571,7 +2571,7 @@ for x in range (1,2+1):
 					temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 					temporary_tof_count_dict = {'F112p7':1}
 					temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-					pt.add_process(**temporary_kwargs_dictionary)
+					kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 current_process_name ='pR112p7'
@@ -2606,7 +2606,7 @@ for x in range (1,2+1):
 					temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 					temporary_tof_count_dict = {'R112p7':1}
 					temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-					pt.add_process(**temporary_kwargs_dictionary)
+					kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #113p1
@@ -2636,7 +2636,7 @@ for x in range (1,2+1):
 				temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 				temporary_tof_count_dict = {'F113p1':1, 'CH2O_output_flux':1}
 				temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-				pt.add_process(**temporary_kwargs_dictionary)
+				kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 current_process_name ='pR113p1'
@@ -2651,7 +2651,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R113p1':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #113p7
 #This process is for CH2O@V -> CH2O(g) + V.  There are no coadsorbate species
@@ -2669,7 +2669,7 @@ for x in range (1,2+1):
 	temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 	temporary_tof_count_dict = {'F113p7':1, 'CH2O_output_flux':1}
 	temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-	pt.add_process(**temporary_kwargs_dictionary)
+	kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 current_process_name ='pR113p7'
@@ -2684,7 +2684,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R113p7':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #116p1
 #This process is for 2H@O -> H2(g) + 2O.  There are no coadsorbate species, but there are 2 Ce3+ that become Ce4+
@@ -2718,7 +2718,7 @@ for x in range (1,2+1):
 					temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 					temporary_tof_count_dict = {'F116p1':1, 'H2_output_flux':1}
 					temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-					pt.add_process(**temporary_kwargs_dictionary)
+					kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #This process is for parallel data structure and will not happen.
 current_process_name ='pR116p1'
@@ -2733,7 +2733,7 @@ temporary_total_interaction_energy = temporary_tst_interaction_energy - temporar
 temporary_rate_constant_string = '(p_H2gas*bar*A/sqrt(2*Pi*1.38e-23*T*(mass_H2kgmol/N_A)))*(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 temporary_tof_count_dict = {'R116p1':1}
 temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-pt.add_process(**temporary_kwargs_dictionary)
+kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #117p2
 #This process is for CH2O@V + Ce + O -> V + CH2O@O + O.  There are 2 coadsorbate H.  This corresponds to 2/3 (DFT) -> 4/6 (KMC) H@O.
@@ -2775,7 +2775,7 @@ for x in range (1,2+1):
 							temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 							temporary_tof_count_dict = {'F117p2':1}
 							temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-							pt.add_process(**temporary_kwargs_dictionary)
+							kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction
 current_process_name ='pR117p2'
@@ -2819,7 +2819,7 @@ for x in range (1,2+1):
 							temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 							temporary_tof_count_dict = {'R117p2':1}
 							temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-							pt.add_process(**temporary_kwargs_dictionary)
+							kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #117p3
 #This process is for CH2O@V + Ce + O -> V + CH2O@O + O.  There are no coadsorbates.
@@ -2842,7 +2842,7 @@ for x in range (1,2+1):
 		temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 		temporary_tof_count_dict = {'F117p3':1}
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 #The reverse reaction.
 current_process_name ='pR117p3'
@@ -2866,7 +2866,7 @@ for x in range (1,2+1):
 		temporary_rate_constant_string = '(%s*exp(-((%s)+(%s))/(R*T)))' %(process_parameters_array[process_names.index(current_process_name)][1], process_parameters_array[process_names.index(current_process_name)][2], temporary_total_interaction_energy)
 		temporary_tof_count_dict = {'R117p3':1}
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 
 #This changes an empty O site ('U50_O') into a fake species called "ExcitedOxygen". The reverse reaction goes the other way.		
@@ -2892,7 +2892,7 @@ for x in range(1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 		
 #This is the reverse process of F120p0.
@@ -2916,9 +2916,9 @@ for x in range(1,2+1):
 
 		temporary_kwargs_dictionary = {"name": temporary_name_string, "conditions" : temporary_conditions_list, "actions" : temporary_actions_list, "rate_constant" : temporary_rate_constant_string, "tof_count" : temporary_tof_count_dict}
 		
-		pt.add_process(**temporary_kwargs_dictionary)
+		kmc_model.add_process(**temporary_kwargs_dictionary)
 
 		
 
-pt.filename = model_name + ".xml"
-pt.save()
+kmc_model.filename = model_name + ".xml"
+kmc_model.save()
