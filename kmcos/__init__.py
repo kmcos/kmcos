@@ -440,9 +440,13 @@ def evaluate_rate_expression(rate_expr, parameters={}):
 
     return rate_const
 
-def compile(kmc_model):
+def compile(kmc_model): #exports the kmc_model.xml file
     import kmcos
     kmcos.export(kmc_model.filename + ' -b' + kmc_model.backend)
+
+def create_kmc_model(model_name = None): #pointer to create_kmc_model in types.py, which creates the kmc_model
+    from kmcos.types import create_kmc_model
+    return create_kmc_model(model_name)
 
 #kmcos can be invoked directly from the command line in one of the following ways::
 #    kmcos [help] (all|benchmark|build|edit|export|help|import|rebuild|run|settings-export|shell|version|view|xml) [options]
