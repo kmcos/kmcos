@@ -55,7 +55,7 @@ from __future__ import print_function
 #import kmcos.types
 #import kmcos.io
 
-__version__ = "0.0.50"
+__version__ = "0.0.60"
 VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):
