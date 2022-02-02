@@ -2510,7 +2510,7 @@ and <classname>.lock should be moved out of the way ::
         coverages.
         """
         import matplotlib
-        matplotlib.use(backend, warn=False)
+        matplotlib.use(backend)
         # Suppress backend warning, because we cannot
         # control how often the current method is called from
         # a script and superfluous warning tends to confuse users
