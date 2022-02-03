@@ -1,32 +1,32 @@
 <?xml version="1.0" ?>
 <kmc version="(0, 3)">
-    <meta author="Christa Cody" email="codycn@ornl.gov" model_name="MyFirstTPD_Precovered" model_dimension="2" debug="0"/>
+    <meta author="Christa Cody" debug="0" email="codycn@ornl.gov" model_dimension="2" model_name="MyFirstTPD_Precovered"/>
     <species_list default_species="empty">
-        <species name="CO" representation="Atoms('CO',[[0,0,0],[0,0,1.2]])" color="#000000" tags="carbon"/>
-        <species name="empty" representation="" color="#ffffff" tags=""/>
+        <species color="#000000" name="CO" representation="Atoms('CO',[[0,0,0],[0,0,1.2]])" tags="carbon"/>
+        <species color="#ffffff" name="empty" representation="" tags=""/>
     </species_list>
     <parameter_list>
-        <parameter name="A" value="(3.5*angstrom)**2" adjustable="False" min="0.0" max="0.0" scale="linear"/>
-        <parameter name="A_CO_des" value="14500000000000.0" adjustable="False" min="0.0" max="0.0" scale="linear"/>
-        <parameter name="E_act_des" value="84000" adjustable="False" min="0.0" max="0.0" scale="linear"/>
-        <parameter name="R" value="8.314" adjustable="False" min="0.0" max="0.0" scale="linear"/>
-        <parameter name="T" value="600" adjustable="True" min="150" max="500" scale="linear"/>
-        <parameter name="deltaG" value="-0.5" adjustable="True" min="-1.3" max="0.3" scale="linear"/>
-        <parameter name="p_COgas" value="0.2" adjustable="True" min="1e-13" max="1000.0" scale="log"/>
+        <parameter adjustable="False" max="0.0" min="0.0" name="A" scale="linear" value="(3.5*angstrom)**2"/>
+        <parameter adjustable="False" max="0.0" min="0.0" name="A_CO_des" scale="linear" value="14500000000000.0"/>
+        <parameter adjustable="False" max="0.0" min="0.0" name="E_act_des" scale="linear" value="84000"/>
+        <parameter adjustable="False" max="0.0" min="0.0" name="R" scale="linear" value="8.314"/>
+        <parameter adjustable="True" max="500" min="150" name="T" scale="linear" value="600"/>
+        <parameter adjustable="True" max="0.3" min="-1.3" name="deltaG" scale="linear" value="-0.5"/>
+        <parameter adjustable="True" max="1000.0" min="1e-13" name="p_COgas" scale="log" value="0.2"/>
     </parameter_list>
-    <lattice cell_size="3.5 0.0 0.0 0.0 3.5 0.0 0.0 0.0 10.0" default_layer="simple_cubic" substrate_layer="simple_cubic" representation="">
-        <layer name="simple_cubic" color="#ffffff">
-            <site pos="0.5 0.5 0.5" type="coord1" tags="" default_species="CO"/>
+    <lattice cell_size="3.5 0.0 0.0 0.0 3.5 0.0 0.0 0.0 10.0" default_layer="simple_cubic" representation="" substrate_layer="simple_cubic">
+        <layer color="#ffffff" name="simple_cubic">
+            <site default_species="CO" pos="0.5 0.5 0.5" tags="" type="coord1"/>
         </layer>
     </lattice>
     <process_list>
-        <process rate_constant="A_CO_des*exp(-E_act_des/(R*T))" name="CO_desorption" enabled="True" tof_count="{'CO_Desorption': 1}">
-            <condition species="CO" coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0"/>
-            <action species="empty" coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0"/>
+        <process enabled="True" name="CO_desorption" rate_constant="A_CO_des*exp(-E_act_des/(R*T))" tof_count="{'CO_Desorption': 1}">
+            <condition coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0" species="CO"/>
+            <action coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0" species="empty"/>
         </process>
-        <process rate_constant="0" name="Do_nothing" enabled="True" tof_count="{'Do_nothing': 1}">
-            <condition species="CO" coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0"/>
-            <action species="empty" coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0"/>
+        <process enabled="True" name="Do_nothing" rate_constant="0" tof_count="{'Do_nothing': 1}">
+            <condition coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0" species="CO"/>
+            <action coord_layer="simple_cubic" coord_name="coord1" coord_offset="0 0 0" species="empty"/>
         </process>
     </process_list>
     <output_list/>

@@ -23,7 +23,7 @@
             <condition coord_layer="simplecubic_2d" coord_name="a" coord_offset="0 0 0" species="empty"/>
             <action coord_layer="simplecubic_2d" coord_name="a" coord_offset="0 0 0" species="CO"/>
         </process>
-        <process enabled="True" name="CO_desorption" otf_rate="base_rate*exp(beta*nr_CO_1nn*E_CO_nn*eV)" rate_constant="p_COgas*A*bar/sqrt(2*m_CO*umass/beta)">
+        <process enabled="True" name="CO_desorption" otf_rate="base_rate*exp(beta*nr_CO_1nn*E_CO_nn*eV)" rate_constant="p_COgas*A*bar/sqrt(2*m_CO*umass/beta)*exp(beta*(E_CO-mu_COgas)*eV)">
             <condition coord_layer="simplecubic_2d" coord_name="a" coord_offset="0 0 0" species="CO"/>
             <action coord_layer="simplecubic_2d" coord_name="a" coord_offset="0 0 0" species="empty"/>
             <bystander allowed_species="CO" coord_layer="simplecubic_2d" coord_name="a" coord_offset="-1 0 0" flag="1nn"/>

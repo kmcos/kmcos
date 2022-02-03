@@ -6,6 +6,7 @@
 #compared to the last version, I added a fake process of 120p0 and the reverse -- exciting and de-exciting one of the surface oxygens.  This should prevent lockups during temperature ramp.
 #once the temperature gets higher, new processes will appear and lockup will not be an issue.
 
+import kmcos
 from kmcos.types import *
 from kmcos.io import *
 from itertools import product
@@ -14,6 +15,7 @@ import numpy as np
 #from math import sqrt
 
 model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
+model_name = model_name.replace("__build", "")
 kmc_model = kmcos.create_kmc_model(model_name)
 kmc_model.set_meta(author='Thomas Danielson',
 	    email='thomasd1@vt.edu',
@@ -2920,5 +2922,9 @@ for x in range(1,2+1):
 
 		
 
-kmc_model.filename = model_name + ".xml"
-kmc_model.save()
+# Save the model to an xml file
+###It's good to simply copy and paste the below lines between model creation files.
+kmc_model.print_statistics()
+kmc_model.clear_model(model_name, backend=kmc_model.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
+kmc_model.save_model()
+kmcos.compile(kmc_model)
