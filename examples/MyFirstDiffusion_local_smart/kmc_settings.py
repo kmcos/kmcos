@@ -89,3 +89,11 @@ xml = """<?xml version="1.0" ?>
     <output_list/>
 </kmc>
 """
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) == 1:
+        from kmcos import cli
+        cli.main("benchmark")
+    if len(sys.argv) == 2:
+        from kmcos import cli
+        cli.main(sys.argv[1])
