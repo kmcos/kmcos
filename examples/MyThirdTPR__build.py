@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #Timing: Python3 MyThirdTPR.py takes about 30 seconds on a regular computer.
-#After that, kmcos export takes starting at 5:32. Expecting around 30 minutes to 1 hour time for proclist to finish, based on earlier notes. took longer than expected, not sure how long.
+#After that, kmcos export or kmcos.compile(kmc_model) takes around 30 minutes to 1 hour time for proclist to finish.
 #This file assumes an arrhenius expression from transition state theory for each processes rate constant. This files generates reaction processes automatically.
 
 #compared to the last version, I added a fake process of 120p0 and the reverse -- exciting and de-exciting one of the surface oxygens.  This should prevent lockups during temperature ramp.
@@ -2925,6 +2925,7 @@ for x in range(1,2+1):
 # Save the model to an xml file
 ###It's good to simply copy and paste the below lines between model creation files.
 kmc_model.print_statistics()
-kmc_model.clear_model(model_name, backend=kmc_model.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
 kmc_model.save_model()
-kmcos.compile(kmc_model)
+print("For this example, we are not using the compile step because it takes more than 30 minutes. To do the compile step, the user should uncomment the kmcos.compile(kmc_model) line or should type in 'kmcos export MyThirdTPR.xml' in the terminal")
+# For this example, we are not using the compile step because it takes more than 30 minutes. To do the compile step, the user should uncomment the below kmcos.compile(kmc_model) line or should type in 'kmcos export MyThirdTPR.xml' in the terminal
+#kmcos.compile(kmc_model)
