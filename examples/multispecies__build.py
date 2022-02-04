@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#Timing: Python3 multispecies__build.py takes about 5 minutes seconds on a regular computer.
+#After that, kmcos export or kmcos.compile(kmc_model) takes around 30 minutes to 1 hour time for proclist to finish.
+
 
 from kmcos.types import *
 import kmcos
@@ -10,7 +13,7 @@ model_name = model_name.replace("__build", "")
 kmc_model = kmcos.create_kmc_model(model_name)
 kmc_model.set_meta(author='Max J. Hoffmann',
             email='mjhoffmann@gmail.com',
-            model_name='dummy_pairwise_interaction',
+            #model_name='dummy_pairwise_interaction',
             model_dimension=2)
 
 layer = kmc_model.add_layer(name='simplecubic_2d')
@@ -78,4 +81,6 @@ for species_name in species_names:
 ###It's good to simply copy and paste the below lines between model creation files.
 kmc_model.print_statistics()
 kmc_model.save_model()
-kmcos.compile(kmc_model)
+print("For this example, we are not using the compile step because it takes more than 30 minutes. To do the compile step, the user should uncomment the kmcos.compile(kmc_model) line or should type in 'kmcos export multispecies.xml' in the terminal")
+# For this example, we are not using the compile step because it takes more than 30 minutes. To do the compile step, the user should uncomment the below kmcos.compile(kmc_model) line or should type in 'kmcos export multispecies.xml' in the terminal
+#kmcos.compile(kmc_model)
