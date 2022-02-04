@@ -1,28 +1,29 @@
 #!/usr/bin/env python
 
 from kmcos.types import *
+import kmcos
 
 def main():
 
-    pt = Project()
+    kmc_model = kmcos.create_kmc_model(model_name)
 # Meta
-    pt.meta.author = 'Max J. Hoffmann'
-    pt.meta.email = 'mjhoffmann@gmail.com'
-    pt.meta.model_name = 'AB_no_diffusion'
-    pt.meta.model_dimension = 2
-    pt.meta.debug = 0
+    kmc_model.meta.author = 'Max J. Hoffmann'
+    kmc_model.meta.email = 'mjhoffmann@gmail.com'
+    kmc_model.meta.model_name = 'AB_no_diffusion'
+    kmc_model.meta.model_dimension = 2
+    kmc_model.meta.debug = 0
 
 
 # add species
-    pt.add_species(name='empty')
-    pt.add_species(name='A', representation="Atoms('O')")
-    pt.add_species(name='B', representation="Atoms('CO', [[0,0,0],[0,0,1.2]])")
+    kmc_model.add_species(name='empty')
+    kmc_model.add_species(name='A', representation="Atoms('O')")
+    kmc_model.add_species(name='B', representation="Atoms('CO', [[0,0,0],[0,0,1.2]])")
 
 # add sites/layer
     layer = Layer(name='default')
     layer.sites.append(Site(name='a'))
-    pt.add_layer(layer)
-    pt.species_list.default_species = 'empty'
+    kmc_model.add_layer(layer)
+    kmc_model.species_list.default_species = 'empty'
 
 
 # add parameter
@@ -41,31 +42,31 @@ def main():
 
 
     for key, value in parameters.items():
-        pt.add_parameter(name=key, **value)
+        kmc_model.add_parameter(name=key, **value)
 
 
-    coord = pt.lattice.generate_coord('a.(0,0,0).default')
-    up = pt.lattice.generate_coord('a.(0,1,0).default')
-    right = pt.lattice.generate_coord('a.(1,0,0).default')
-    down = pt.lattice.generate_coord('a.(0,-1,0).default')
-    left = pt.lattice.generate_coord('a.(-1,0,0).default')
+    coord = kmc_model.lattice.generate_coord('a.(0,0,0).default')
+    up = kmc_model.lattice.generate_coord('a.(0,1,0).default')
+    right = kmc_model.lattice.generate_coord('a.(1,0,0).default')
+    down = kmc_model.lattice.generate_coord('a.(0,-1,0).default')
+    left = kmc_model.lattice.generate_coord('a.(-1,0,0).default')
 
-    pt.add_process(name='A_adsorption',
+    kmc_model.add_process(name='A_adsorption',
                    rate_constant='p_O2gas*bar*A/sqrt(2*pi*m_O2*umass/beta)',
                    condition_list=[Condition(coord=coord, species='empty')],
                    action_list=[Action(coord=coord, species='A')],)
 
-    pt.add_process(name='A_desorption',
+    kmc_model.add_process(name='A_desorption',
                    rate_constant='p_O2gas*bar*A/sqrt(2*pi*m_O2*umass/beta)*exp(beta*(E_bind_O2-mu_O2gas)*eV)',
                    condition_list=[Condition(coord=coord, species='A')],
                    action_list=[Action(coord=coord, species='empty')],)
 
-    pt.add_process(name='B_adsorption',
+    kmc_model.add_process(name='B_adsorption',
                    rate_constant='p_COgas*bar*A/sqrt(2*pi*m_CO*umass/beta)',
                    condition_list=[Condition(coord=coord, species='empty')],
                    action_list=[Action(coord=coord, species='B')],)
 
-    pt.add_process(name='B_desorption',
+    kmc_model.add_process(name='B_desorption',
                    rate_constant='p_COgas*bar*A/sqrt(2*pi*m_CO*umass/beta)*exp(beta*(E_bind_CO-mu_COgas)*eV)',
                    condition_list=[Condition(coord=coord, species='B')],
                    action_list=[Condition(coord=coord, species='empty')],)
@@ -74,7 +75,7 @@ def main():
                            (left, 'left'),
                            (up, 'up'),
                            (down, 'down')]:
-        pt.add_process(name='AB_react_%s' % name,
+        kmc_model.add_process(name='AB_react_%s' % name,
                        rate_constant='1/(beta*h)*exp(-beta*E_react*eV)',
                        condition_list=[Condition(coord=coord, species='A'),
                                        Condition(coord=neighbor, species='B')],
@@ -83,8 +84,8 @@ def main():
                        tof_count={'TOF':1})
 
 
-    return pt
+    return kmc_model
 
 if __name__ == '__main__':
-    pt = main()
-    pt.save('AB_model.ini')
+    kmc_model = main()
+    kmc_model.save('AB_model.ini')

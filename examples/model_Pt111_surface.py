@@ -10,8 +10,8 @@ import numpy as np
 slab = fcc111('Pt', [1,1,4], vacuum=10)
 
 positions = slab.get_scaled_positions()
-pt = Project()
-pt.set_meta(model_name='pt111',
+kmc_model = kmcos.create_kmc_model(model_name)
+kmc_model.set_meta(model_name='pt111',
             model_dimension='2',
             author='Max J. Hoffmann',
             email='mjhoffmann@gmail.com',
@@ -34,23 +34,23 @@ rpos = np.linalg.solve(slab.cell, np.array(pos2))
 layer.add_site(Site(name='hollow2',
                     pos=pos2))
 
-pt.add_layer(layer)
-pt.lattice.representation = '[%s]' % get_ase_constructor(slab)
+kmc_model.add_layer(layer)
+kmc_model.lattice.representation = '[%s]' % get_ase_constructor(slab)
 
 # Add species
-pt.add_species(name='empty', color='#ffffff')
-pt.add_species(name='H', representation="Atoms('H')", color='#ffff00')
+kmc_model.add_species(name='empty', color='#ffffff')
+kmc_model.add_species(name='H', representation="Atoms('H')", color='#ffff00')
 
 #Add Processes
-pt.parse_and_add_process('H_adsorption_hollow1; ->H@hollow1; 100000')
-pt.parse_and_add_process('H_adsorption_hollow2; ->H@hollow2; 100000')
+kmc_model.parse_and_add_process('H_adsorption_hollow1; ->H@hollow1; 100000')
+kmc_model.parse_and_add_process('H_adsorption_hollow2; ->H@hollow2; 100000')
 
-pt.parse_and_add_process('H_desorption_hollow1; H@hollow1->; 100000')
-pt.parse_and_add_process('H_desorption_hollow2; H@hollow2->; 100000')
+kmc_model.parse_and_add_process('H_desorption_hollow1; H@hollow1->; 100000')
+kmc_model.parse_and_add_process('H_desorption_hollow2; H@hollow2->; 100000')
 
 
-pt.parse_and_add_process('H_diff_h1h2; H@hollow1 -> H@hollow2; 1000000000')
-pt.parse_and_add_process('H_diff_h2h1; H@hollow2 -> H@hollow1; 1000000000')
+kmc_model.parse_and_add_process('H_diff_h1h2; H@hollow1 -> H@hollow2; 1000000000')
+kmc_model.parse_and_add_process('H_diff_h2h1; H@hollow2 -> H@hollow1; 1000000000')
 
 
 
