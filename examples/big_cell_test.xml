@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<kmc version="(0, 3)">
+    <meta author="Max J. Hoffmann" debug="0" email="mjhoffmann@gmail.com" model_dimension="2" model_name="big_cell_test"/>
+    <species_list default_species="empty">
+        <species name="Li" representation="Atoms('Li')" tags=""/>
+        <species name="empty" representation="" tags=""/>
+    </species_list>
+    <parameter_list>
+        <parameter adjustable="False" max="0.0" min="0.0" name="k" scale="linear" value="1000.0"/>
+    </parameter_list>
+    <lattice cell_size="1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0" default_layer="default" representation="" substrate_layer="default">
+        <layer color="#ffffff" name="default">
+            <site default_species="default_species" pos="0.5 0.0 0.0" tags="" type="bottom"/>
+            <site default_species="default_species" pos="0.0 0.5 0.0" tags="" type="left"/>
+            <site default_species="default_species" pos="1.0 0.5 0.0" tags="" type="right"/>
+            <site default_species="default_species" pos="0.5 1.0 0.0" tags="" type="top"/>
+        </layer>
+    </lattice>
+    <process_list>
+        <process enabled="True" name="left_east" rate_constant="k">
+            <condition coord_layer="default" coord_name="left" coord_offset="0 0 0" species="Li"/>
+            <condition coord_layer="default" coord_name="right" coord_offset="0 0 0" species="empty"/>
+            <action coord_layer="default" coord_name="right" coord_offset="0 0 0" species="Li"/>
+            <action coord_layer="default" coord_name="left" coord_offset="0 0 0" species="empty"/>
+        </process>
+        <process enabled="True" name="left_farwest" rate_constant="k">
+            <condition coord_layer="default" coord_name="left" coord_offset="0 0 0" species="Li"/>
+            <condition coord_layer="default" coord_name="left" coord_offset="-1 0 0" species="empty"/>
+            <action coord_layer="default" coord_name="left" coord_offset="-1 0 0" species="Li"/>
+            <action coord_layer="default" coord_name="left" coord_offset="0 0 0" species="empty"/>
+        </process>
+        <process enabled="True" name="left_west" rate_constant="k">
+            <condition coord_layer="default" coord_name="left" coord_offset="0 0 0" species="Li"/>
+            <condition coord_layer="default" coord_name="right" coord_offset="-1 0 0" species="empty"/>
+            <action coord_layer="default" coord_name="right" coord_offset="-1 0 0" species="Li"/>
+            <action coord_layer="default" coord_name="left" coord_offset="0 0 0" species="empty"/>
+        </process>
+        <process enabled="True" name="right_east" rate_constant="k">
+            <condition coord_layer="default" coord_name="right" coord_offset="0 0 0" species="Li"/>
+            <condition coord_layer="default" coord_name="left" coord_offset="1 0 0" species="empty"/>
+            <action coord_layer="default" coord_name="left" coord_offset="1 0 0" species="Li"/>
+            <action coord_layer="default" coord_name="right" coord_offset="0 0 0" species="empty"/>
+        </process>
+        <process enabled="True" name="right_west" rate_constant="k">
+            <condition coord_layer="default" coord_name="right" coord_offset="0 0 0" species="Li"/>
+            <condition coord_layer="default" coord_name="left" coord_offset="0 0 0" species="empty"/>
+            <action coord_layer="default" coord_name="left" coord_offset="0 0 0" species="Li"/>
+            <action coord_layer="default" coord_name="right" coord_offset="0 0 0" species="empty"/>
+        </process>
+    </process_list>
+    <output_list/>
+</kmc>

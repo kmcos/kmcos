@@ -613,14 +613,14 @@ subroutine touchup_simple_cubic_hollow1(site)
         call del_proc(CO_diffusion_hollow2_right, site)
     endif
     select case(get_species(site))
-    case(empty)
-        call add_proc(CO_adsorption, site)
     case(CO)
         select case(get_species(site + (/0, 0, 0, simple_cubic_hollow2 - simple_cubic_hollow1/)))
         case(empty)
             call add_proc(CO_diffusion_hollow1_right, site)
         end select
 
+    case(empty)
+        call add_proc(CO_adsorption, site)
     end select
 
 end subroutine touchup_simple_cubic_hollow1
