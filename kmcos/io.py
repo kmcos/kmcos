@@ -47,18 +47,20 @@ def clear_model(model_name, backend="local_smart"):
     os.system("rm " + model_name +".xml") #for linux systems
     os.system("del "+ model_name +".ini") #for windows systems
     os.system("rm " + model_name +".ini") #for linux systems
-    os.chdir(model_name+"_"+backend)
     listOfDirectoriesAndFiles = os.listdir(".")
-    os.system("del "+ "*.so") #for windows systems
-    os.system("rm " + "*.so") #for linux systems
-    os.system("del "+ "kmc_settings.py") #for windows systems
-    os.system("rm " + "kmc_settings.py") #for linux systems
-    if 'src' in listOfDirectoriesAndFiles:
-        os.chdir('src')
-        os.system("del "+ "*.*") #for windows systems
-        os.system("rm " + "*.*") #for linux systems
+    if (model_name+"_"+backend in os.listdir()):
+        os.chdir(model_name+"_"+backend)
+        listOfDirectoriesAndFiles = os.listdir(".")
+        os.system("del "+ "*.so") #for windows systems
+        os.system("rm " + "*.so") #for linux systems
+        os.system("del "+ "kmc_settings.py") #for windows systems
+        os.system("rm " + "kmc_settings.py") #for linux systems
+        if 'src' in listOfDirectoriesAndFiles:
+            os.chdir('src')
+            os.system("del "+ "*.*") #for windows systems
+            os.system("rm " + "*.*") #for linux systems
+            os.chdir('..')
         os.chdir('..')
-    os.chdir('..')
     sys.stdout.flush()
 
 def _casetree_dict(dictionary, indent='', out=None):

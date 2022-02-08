@@ -570,12 +570,15 @@ class Project(object):
         import kmcos.io
         kmcos.io.clear_model(model_name, backend=backend)
     
-    def save_model(self, filename=None, validate=True):
+    def save_model(self, filename="", validate=True):
         self.model_name = self.meta.model_name
-        if filename is None:
+        #If the user provides a filename, save_model will use that. Otherwise, save_model will create a default filename with the model_name
+        if len(filename) == 0:
             self.filename = self.model_name + ".xml"
+            filename = self.filename
         else:
             self.filename = filename
+        #The logic depends on whether the filename type is an xml or ini
         if self.filename.endswith('.xml'):
             self.export_xml_file(self.filename, validate=validate)
         elif filename.endswith('.ini'):
