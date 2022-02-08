@@ -7,7 +7,6 @@ import kmcos
 from kmcos.types import *
 from kmcos.io import *
 import numpy as np
-import os
 
 
 model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
@@ -375,10 +374,5 @@ kmc_model.save('CO_oxidation.ini')
 # Save the model to an xml file
 ###It's good to simply copy and paste the below lines between model creation files.
 kmc_model.print_statistics()
-kmc_model.backend = 'local_smart' #specifying is optional. 'local_smart' is the default. Currently, the other options are 'lat_int' and 'otf'
-if (kmc_model.backend in os.listdir()):
-        kmc_model.clear_model(model_name=kmc_model.model_name, backend=kmc_model.backend) #This line is optional: if you are updating a model, this line will remove the old model files (including compiled files) before exporting the new one. It is convenient to always include this line because then you don't need to 'confirm' removing/overwriting the old model during the compile step.
-else:
-        pass
 kmc_model.save_model()
 kmcos.compile(kmc_model)

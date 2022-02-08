@@ -7,14 +7,12 @@ from kmcos.types import *
 import kmcos
 from itertools import product
 import numpy as np
-import os
 
 model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
 model_name = model_name.replace("__build", "")
 kmc_model = kmcos.create_kmc_model(model_name)
 kmc_model.set_meta(author='Max J. Hoffmann',
             email='mjhoffmann@gmail.com',
-            model_name = model_name,
             #model_name='dummy_pairwise_interaction',
             model_dimension=2)
 
@@ -81,14 +79,7 @@ for species_name in species_names:
 
 # Save the model to an xml file
 ###It's good to simply copy and paste the below lines between model creation files.
-# Save the model to an xml file
-###It's good to simply copy and paste the below lines between model creation files.
 kmc_model.print_statistics()
-kmc_model.backend = 'local_smart' #specifying is optional. 'local_smart' is the default. Currently, the other options are 'lat_int' and 'otf'
-if (kmc_model.backend in os.listdir()):
-        kmc_model.clear_model(model_name=kmc_model.model_name, backend=kmc_model.backend) #This line is optional: if you are updating a model, this line will remove the old model files (including compiled files) before exporting the new one. It is convenient to always include this line because then you don't need to 'confirm' removing/overwriting the old model during the compile step.
-else:
-        pass
 kmc_model.save_model()
 print("For this example, we are not using the compile step because it takes more than 30 minutes. To do the compile step, the user should uncomment the kmcos.compile(kmc_model) line or should type in 'kmcos export multispecies.xml' in the terminal")
 # For this example, we are not using the compile step because it takes more than 30 minutes. To do the compile step, the user should uncomment the below kmcos.compile(kmc_model) line or should type in 'kmcos export multispecies.xml' in the terminal
