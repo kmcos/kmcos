@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0,'..') #This is for the janaf_data directory.
 
 
-model_name = 'CO_oxidation_Ruo2__acc_backend__do_steps'
+model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
 
 kmc_model = kmcos.create_kmc_model(model_name)
 
