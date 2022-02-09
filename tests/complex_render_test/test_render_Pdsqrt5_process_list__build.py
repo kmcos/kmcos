@@ -18,7 +18,7 @@ DEFAULT_LAYER = 'Pd100'
 
 class ModelBuilder(object):
     def __init__(self):
-        self.pt = Project()
+        self.kmc_model = kmcos.create_kmc_model()
 
     def standard_build(self):
         self.set_meta()
@@ -36,7 +36,7 @@ class ModelBuilder(object):
         self.set_layers()
         new_pos = (self.atoms.positions[3]-self.y +self.atoms.positions[0])/2
         self.atoms += ase.atoms.Atoms('Pd',[new_pos])
-        self.pt.layer_list.set_representation(self.atoms)
+        self.kmc_model.layer_list.set_representation(self.atoms)
 
         new_sites = [['bridge7', self.atoms.positions[[2,14]].mean(axis=0)],
                      ['bridge8', self.atoms.positions[[3,14]].mean(axis=0)],
@@ -45,12 +45,12 @@ class ModelBuilder(object):
 
         for name, pos in new_sites:
             pos = np.linalg.solve(self.atoms.cell, pos)
-            self.pt.layer_list[0].sites.append(Site(name=name,
+            self.kmc_model.layer_list[0].sites.append(Site(name=name,
                                              default_species='empty',
                                              layer=DEFAULT_LAYER,
                                              tags='weakbridge CO',
                                              pos=pos))
-        self.coord_set = self.pt.layer_list.generate_coord_set(size=[3, 3, 1],
+        self.coord_set = self.kmc_model.layer_list.generate_coord_set(size=[3, 3, 1],
                                                                layer_name=DEFAULT_LAYER)
         self.set_species()
         self.set_parameters()
@@ -65,32 +65,32 @@ class ModelBuilder(object):
 
 
     def export(self, filename):
-        export_xml(self.pt, filename)
+        export_xml(self.kmc_model, filename)
 
     def print_statistics(self):
         print('Statistics\n-------------')
         for process_type in ['CO_adsorption', 'CO_desorption', 'CO_diffusion',
                              'O2_adsorption', 'O2_desorption', 'O_diffusion',
                              'Reaction']:
-            nprocs = len([x for x in self.pt.get_processes() if x.name.startswith(process_type)])
+            nprocs = len([x for x in self.kmc_model.get_processes() if x.name.startswith(process_type)])
             print(('\t- %s : %s' % (process_type, nprocs)))
 
     def set_meta(self):
         # Meta
-        self.pt.meta.author = 'Max J. Hoffmann'
-        self.pt.meta.email = 'mjhoffmann@gmail.com'
-        self.pt.meta.model_dimension = '2'
-        self.pt.meta.model_name = 'Pdsqrt5'
-        self.pt.meta.debug = '0'
+        self.kmc_model.meta.author = 'Max J. Hoffmann'
+        self.kmc_model.meta.email = 'mjhoffmann@gmail.com'
+        self.kmc_model.meta.model_dimension = '2'
+        self.kmc_model.meta.model_name = 'Pdsqrt5'
+        self.kmc_model.meta.debug = '0'
 
     def set_lattice(self):
         # Lattice / Layer
         self.atoms = ase.io.read('substrate_2layers.traj')
         cell = tuple(self.atoms.cell.diagonal())
 
-        self.pt.layer_list.default_layer = DEFAULT_LAYER
-        self.pt.layer_list.cell = self.atoms.cell
-        self.pt.layer_list.set_representation(self.atoms)
+        self.kmc_model.layer_list.default_layer = DEFAULT_LAYER
+        self.kmc_model.layer_list.cell = self.atoms.cell
+        self.kmc_model.layer_list.set_representation(self.atoms)
 
     def set_layers(self):
         pos = self.atoms.positions
@@ -106,7 +106,7 @@ class ModelBuilder(object):
         def frac(pos, cell=cell):
             return np.linalg.solve(cell, pos)
 
-        self.pt.add_layer(Layer(name=DEFAULT_LAYER, color='#ffffff'))
+        self.kmc_model.add_layer(Layer(name=DEFAULT_LAYER, color='#ffffff'))
 
         sites = {}
         sites['bridge1'] = {'pos': frac(.5 * (pos[2] + pos[1] - y) + z),
@@ -142,49 +142,49 @@ class ModelBuilder(object):
                         layer=DEFAULT_LAYER,
                         tags=tags,
                         pos=data['pos'])
-            self.pt.get_layers()[0].sites.append(site)
+            self.kmc_model.get_layers()[0].sites.append(site)
         # Create 'enlarged' coord set
-        self.coord_set = self.pt.layer_list.generate_coord_set(size=[3, 3, 1],
+        self.coord_set = self.kmc_model.layer_list.generate_coord_set(size=[3, 3, 1],
                                                                layer_name=DEFAULT_LAYER)
 
     def set_species(self):
         # Species
-        self.pt.add_species(Species(name='empty',
+        self.kmc_model.add_species(Species(name='empty',
                        color='#ffffff',
                        representation=''))
-        self.pt.add_species(Species(name='CO',
+        self.kmc_model.add_species(Species(name='CO',
                        color='#000000',
                        representation='Atoms(\'CO\', [[0,0,0],[0,0,1.2]])'))
-        self.pt.add_species(Species(name='O',
+        self.kmc_model.add_species(Species(name='O',
                        color='#ff0000',
                        representation='Atoms(\'O\')'))
-        self.pt.species_list.default_species = 'empty'
+        self.kmc_model.species_list.default_species = 'empty'
 
     def set_parameters(self):
-        self.pt.add_parameter(Parameter(name='T', value='600',
+        self.kmc_model.add_parameter(Parameter(name='T', value='600',
                                         adjustable=True,
                                         min='300',
                                         max='1500'))
-        self.pt.add_parameter(Parameter(name='p_COgas', value='1.0',
+        self.kmc_model.add_parameter(Parameter(name='p_COgas', value='1.0',
                                         adjustable=True,
                                         scale='log',
                                         min=1.e-13,
                                         max=1.e2))
-        self.pt.add_parameter(Parameter(name='p_O2gas', value='1.0',
+        self.kmc_model.add_parameter(Parameter(name='p_O2gas', value='1.0',
                                         adjustable=True,
                                         scale='log',
                                         min=1.e-13,
                                         max=1.e2))
-        self.pt.add_parameter(Parameter(name='A', value='(3.94*angstrom)**2'))
+        self.kmc_model.add_parameter(Parameter(name='A', value='(3.94*angstrom)**2'))
 
 
-        self.pt.add_parameter(Parameter(name='E_CO_diff', value='0.4'))
-        self.pt.add_parameter(Parameter(name='E_O_diff', value='0.5'))
-        self.pt.add_parameter(Parameter(name='E_O_corner', value='-1.37'))
-        self.pt.add_parameter(Parameter(name='E_O_hollow', value='-1.28'))
-        self.pt.add_parameter(Parameter(name='E_CO_weak', value='-2.02'))
-        self.pt.add_parameter(Parameter(name='E_CO_strong', value='-2.10'))
-        self.pt.add_parameter(Parameter(name='E_react', value='0.9'))
+        self.kmc_model.add_parameter(Parameter(name='E_CO_diff', value='0.4'))
+        self.kmc_model.add_parameter(Parameter(name='E_O_diff', value='0.5'))
+        self.kmc_model.add_parameter(Parameter(name='E_O_corner', value='-1.37'))
+        self.kmc_model.add_parameter(Parameter(name='E_O_hollow', value='-1.28'))
+        self.kmc_model.add_parameter(Parameter(name='E_CO_weak', value='-2.02'))
+        self.kmc_model.add_parameter(Parameter(name='E_CO_strong', value='-2.10'))
+        self.kmc_model.add_parameter(Parameter(name='E_react', value='0.9'))
 
     def set_processes(self):
         self.set_co_adsorption_desorption()
@@ -212,7 +212,7 @@ class ModelBuilder(object):
                               action_list=action_list,
                               rate_constant='p_COgas*bar*A/2/sqrt(2*pi*umass*m_CO/beta)')
 
-                self.pt.add_process(proc)
+                self.kmc_model.add_process(proc)
 
                 # desorption
                 if 'weak' in coord.tags:
@@ -228,7 +228,7 @@ class ModelBuilder(object):
                               condition_list=condition_list,
                               action_list=action_list,
                               rate_constant=rate_constant)
-                self.pt.add_process(proc)
+                self.kmc_model.add_process(proc)
 
 
     def set_co_diffusion(self):
@@ -271,7 +271,7 @@ class ModelBuilder(object):
                                                                     E_final,
                                                                     E_initial)
 
-                        self.pt.add_process(Process(name='CO_diffusion_%02i' % procs,
+                        self.kmc_model.add_process(Process(name='CO_diffusion_%02i' % procs,
                                                condition_list=conditions,
                                                action_list=actions,
                                                rate_constant=rate_constant))
@@ -291,8 +291,8 @@ class ModelBuilder(object):
 
 
         for i, (a, b) in enumerate(O2_pairs):
-            coord_a = self.pt.layer_list.generate_coord(a)
-            coord_b = self.pt.layer_list.generate_coord(b)
+            coord_a = self.kmc_model.layer_list.generate_coord(a)
+            coord_b = self.kmc_model.layer_list.generate_coord(b)
 
             # O2 adsorption
             condition_list = [ConditionAction(coord=coord_a, species='empty'),
@@ -310,7 +310,7 @@ class ModelBuilder(object):
 
             rate_constant = 'p_O2gas*bar*A*2/sqrt(2*pi*umass*m_O2/beta)'
 
-            self.pt.add_process(Process(name='O2_adsorption_%02i' % i,
+            self.kmc_model.add_process(Process(name='O2_adsorption_%02i' % i,
                            condition_list=condition_list,
                            action_list=action_list,
                            rate_constant=rate_constant))
@@ -335,7 +335,7 @@ class ModelBuilder(object):
             rate_constant = 'p_O2gas*bar*A*2/sqrt(2*pi*umass*m_O2/beta)*' + \
                             'exp(beta*(%s+%s-mu_O2gas)*eV)' % (E_a, E_b)
 
-            self.pt.add_process(Process(name='O2_desorption_%02i' % i,
+            self.kmc_model.add_process(Process(name='O2_desorption_%02i' % i,
                                    condition_list=condition_list,
                                    action_list=action_list,
                                    rate_constant=rate_constant))
@@ -376,7 +376,7 @@ class ModelBuilder(object):
                             E_final = 'E_O_hollow'
 
                         rate_constant = '1/(beta*h)*exp(-beta*(E_O_diff+max(0,%s-%s))*eV)' % (E_final, E_initial)
-                        self.pt.add_process(Process(name='O_diffusion_%02i' % procs,
+                        self.kmc_model.add_process(Process(name='O_diffusion_%02i' % procs,
                                                condition_list=conditions,
                                                action_list=actions,
                                                rate_constant=rate_constant))
@@ -405,7 +405,7 @@ class ModelBuilder(object):
                         procs.append(proc)
 
         for proc in procs:
-            self.pt.add_process(proc)
+            self.kmc_model.add_process(proc)
 
 
 def main():
@@ -416,7 +416,7 @@ def main():
     builder = ModelBuilder()
     builder.pd100_build()
     builder.export('CO_oxidation_on_Pd100.xml')
-    builder.pt.print_statistics()
+    builder.kmc_model.print_statistics()
 
 def test_man():
     cwd = os.curdir

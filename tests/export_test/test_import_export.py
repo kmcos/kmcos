@@ -27,9 +27,9 @@ def test_import_export():
     #if os.path.exists(TEST_DIR):
         #shutil.rmtree(TEST_DIR)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('default.xml')
-    kmcos.io.export_source(pt, TEST_DIR)
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('default.xml')
+    kmcos.io.export_source(kmc_model, TEST_DIR)
     for filename in ['base', 'lattice', 'proclist']:
         print(filename)
         assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
@@ -55,9 +55,9 @@ def test_import_export_lat_int():
     print(sys.path)
     print(kmcos.__file__)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('default.xml')
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='lat_int')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('default.xml')
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='lat_int')
     for filename in ['base', 'lattice', 'proclist'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'nli*.f90'))]:
@@ -85,10 +85,10 @@ def test_import_export_otf():
     print(sys.path)
     print(kmcos.__file__)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('default.xml')
-    pt.shorten_names(max_length = 35)
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='otf')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('default.xml')
+    kmc_model.shorten_names(max_length = 35)
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='otf')
     for filename in ['base', 'lattice', 'proclist', 'proclist_pars', 'proclist_constants'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
@@ -112,11 +112,11 @@ def test_import_export_pdopd_local_smart():
     #if os.path.exists(TEST_DIR):
         #shutil.rmtree(TEST_DIR)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('pdopd.xml')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('pdopd.xml')
     print("PROJECT")
-    print(pt)
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='local_smart')
+    print(kmc_model)
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='local_smart')
     for filename in ['base', 'lattice', 'proclist']:
         print(filename)
         diff = get_diff(
@@ -147,11 +147,11 @@ def test_import_export_pdopd_lat_int():
 
     print(sys.path)
     print(kmcos.__file__)
-    pt = kmcos.types.Project()
-    pt.import_xml_file('pdopd.xml')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('pdopd.xml')
     print("PROJECT")
-    print(pt)
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='lat_int')
+    print(kmc_model)
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='lat_int')
     for filename in ['base', 'lattice', 'proclist', 'proclist_constants'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'nli*.f90'))]:
@@ -187,9 +187,9 @@ def test_import_export_intZGB_otf():
     print(sys.path)
     print(kmcos.__file__)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('intZGB_otf.xml')
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='otf')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('intZGB_otf.xml')
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='otf')
     for filename in ['base', 'lattice', 'proclist','proclist_pars','proclist_constants'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
@@ -206,12 +206,12 @@ def off_compare_import_variants():
     cwd = os.path.abspath(os.curdir)
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-    pt = kmcos.types.Project()
+    kmc_model = kmcos.types.Project()
     editor = kmcos.gui.Editor()
     editor.import_xml_file('default.xml')
-    pt.import_xml_file('default.xml')
+    kmc_model.import_xml_file('default.xml')
     os.chdir(cwd)
-    assert str(pt) == str(editor.project_tree)
+    assert str(kmc_model) == str(editor.project_tree)
 
 def test_ml_export():
     cwd = os.path.abspath(os.curdir)
@@ -219,8 +219,8 @@ def test_ml_export():
 
 
     import kmcos.io
-    pt = kmcos.io.import_xml_file('pdopd.xml')
-    kmcos.io.export_source(pt)
+    kmc_model = kmcos.io.import_xml_file('pdopd.xml')
+    kmcos.io.export_source(kmc_model)
     import shutil
     shutil.rmtree('sqrt5PdO')
 
@@ -228,4 +228,4 @@ def test_ml_export():
     os.chdir(cwd)
 if __name__ == '__main__':
      test_import_export()
-     test_compare_import_variants()
+
