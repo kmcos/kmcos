@@ -86,7 +86,7 @@ class Project(object):
         if type(model_name)==type(None):
             self.model_name = "UntitledModel"
         else:
-            self.model_name = model_name 
+            self.model_name = model_name
         self.layer_list = LayerList()
         self.lattice = self.layer_list
         self.parameter_list = ParameterList()
@@ -570,18 +570,28 @@ class Project(object):
         import kmcos.io
         kmcos.io.clear_model(model_name, backend=backend)
     
-    def save(self, filename=None, validate=True):
-        if filename is None:
+    def save_model(self, filename="", validate=True):
+        self.model_name = self.meta.model_name
+        #If the user provides a filename, save_model will use that. Otherwise, save_model will create a default filename with the model_name
+        if len(filename) == 0:
+            self.filename = self.model_name + ".xml"
             filename = self.filename
-        if filename.endswith('.xml'):
-            self.export_xml_file(filename, validate=validate)
+        else:
+            self.filename = filename
+        #The logic depends on whether the filename type is an xml or ini
+        if self.filename.endswith('.xml'):
+            self.export_xml_file(self.filename, validate=validate)
         elif filename.endswith('.ini'):
-            with open(filename, 'w') as outfile:
+            with open(self.filename, 'w') as outfile:
                 outfile.write(self._get_ini_string())
         else:
             raise UserWarning('Cannot export to file suffix %s' %
-                              os.path.splitext(filename)[-1])
-    save_model = save
+                              os.path.splitext(self.filename)[-1])
+
+
+    def save(self, filename=None, validate=True):
+        self.save_model(filename, validate)
+        
 
     def export_xml_file(self, filename, validate=True):
         f = open(filename, 'w')
@@ -1307,24 +1317,30 @@ class Project(object):
         return model
 
     def set_meta(self,
-                 author=None,
-                 email=None,
-                 model_name=None,
-                 model_dimension=None,
-                 debug=None):
+            author=None,
+            email=None,
+            model_name=None,
+            model_dimension=None,
+            debug=None):
         if type(author) != type(None):
             self.meta.author = str(author)
+            self.author = str(author)
         if type(email) != type(None):
             self.meta.email = str(email)
+            self.email = str(email)
         if type(model_name) != type(None):
             self.meta.model_name = str(model_name)
+            self.model_name = str(model_name)
+            self.filename = str(model_name) + ".xml"
         if type(model_dimension) != type(None):
             self.meta.model_dimension = int(model_dimension)
+            self.model_dimension = int(model_dimension)
         if type(debug) != type(None):
             self.meta.debug = str(debug)
+            self.debug = str(debug)
 
 
-def create_kmc_model(model_name=None):
+def create_kmc_model(model_name=None): #Creates a project, which is the kmc model, object with an optional argument for model name.
     if type(model_name) == type(None):
         pt = Project()
     else:

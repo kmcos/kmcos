@@ -11,9 +11,12 @@ def setup_model(model):
     #setup_model(model)
     pass
 
+# Default history length in graph
+hist_length = 30
+
 parameters = {
     "A":{"value":"(3.5*angstrom)**2", "adjustable":False, "min":"0.0", "max":"0.0","scale":"linear"},
-    "A_CO_des":{"value":"1.45e+13", "adjustable":False, "min":"0.0", "max":"0.0","scale":"linear"},
+    "A_CO_des":{"value":"14500000000000.0", "adjustable":False, "min":"0.0", "max":"0.0","scale":"linear"},
     "E_act_des":{"value":"84000", "adjustable":False, "min":"0.0", "max":"0.0","scale":"linear"},
     "R":{"value":"8.314", "adjustable":False, "min":"0.0", "max":"0.0","scale":"linear"},
     "T":{"value":"600", "adjustable":True, "min":"150.0", "max":"500.0","scale":"linear"},
@@ -45,15 +48,15 @@ tof_count = {
     }
 
 xml = """<?xml version="1.0" ?>
-<kmc version="(0, 2)">
-    <meta author="Christa Cody" debug="0" email="coinzc@ornl.gov" model_dimension="2" model_name="MyFirstTPD_DesorptionOnly"/>
+<kmc version="(0, 3)">
+    <meta author="Christa Cody" debug="0" email="codycn@ornl.gov" model_dimension="2" model_name="MyFirstTPD_DesorptionOnly"/>
     <species_list default_species="empty">
         <species color="#000000" name="CO" representation="Atoms('CO',[[0,0,0],[0,0,1.2]])" tags="carbon"/>
         <species color="#ffffff" name="empty" representation="" tags=""/>
     </species_list>
     <parameter_list>
         <parameter adjustable="False" max="0.0" min="0.0" name="A" scale="linear" value="(3.5*angstrom)**2"/>
-        <parameter adjustable="False" max="0.0" min="0.0" name="A_CO_des" scale="linear" value="1.45e+13"/>
+        <parameter adjustable="False" max="0.0" min="0.0" name="A_CO_des" scale="linear" value="14500000000000.0"/>
         <parameter adjustable="False" max="0.0" min="0.0" name="E_act_des" scale="linear" value="84000"/>
         <parameter adjustable="False" max="0.0" min="0.0" name="R" scale="linear" value="8.314"/>
         <parameter adjustable="True" max="500.0" min="150.0" name="T" scale="linear" value="600"/>
@@ -78,3 +81,11 @@ xml = """<?xml version="1.0" ?>
     <output_list/>
 </kmc>
 """
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) == 1:
+        from kmcos import cli
+        cli.main("benchmark")
+    if len(sys.argv) == 2:
+        from kmcos import cli
+        cli.main(sys.argv[1])

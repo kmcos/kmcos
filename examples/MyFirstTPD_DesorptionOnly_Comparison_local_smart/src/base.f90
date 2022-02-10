@@ -1,25 +1,25 @@
 !/* ROBODOC this makes robodoc to document this file */
 #include "assert.ppc"
-! Copyright (C)  2009-2012 Max J. Hoffmann
+! Copyright (C)  2009-2013 Max J. Hoffmann
 !
-! This file is part of kmos.
+! This file is part of kmcos.
 !
-! kmos is free software; you can redistribute it and/or modify
+! kmcos is free software; you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
 ! the Free Software Foundation; either version 2 of the License, or
 ! (at your option) any later version.
 !
-! kmos is distributed in the hope that it will be useful,
+! kmcos is distributed in the hope that it will be useful,
 ! but WITHOUT ANY WARRANTY; without even the implied warranty of
 ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ! GNU General Public License for more details.
 !
 ! You should have received a copy of the GNU General Public License
-! along with kmos; if not, write to the Free Software
+! along with kmcos; if not, write to the Free Software
 ! Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 ! USA
 
-!****h* kmos/base
+!****h* kmcos/base
 ! FUNCTION
 !    The base kMC module, which implements the kMC method on a :math:`d = 1`
 !    lattice. Virtually any lattice kMC model can be build on top of this.
@@ -55,6 +55,7 @@ public :: add_proc, &
     get_integ_rate, &
     get_avail_site, &
     get_kmc_step, &
+    set_kmc_step, &
     get_kmc_time, &
     set_kmc_time, &
     set_system_name, &
@@ -134,9 +135,9 @@ real(kind=rdouble), dimension(:), allocatable :: integ_rates
 !   per unit surface and time.
 !   Let :math:`\mathbf{a}` the integrated rates, :math:`\mathbf{c}` be the
 !   rate constants, :math:`\mathbf{n}_i` the number of available sites
-!   during kMC-time interval i,  :math: `\{\Delta t_i\}` the corresponding
-!   timesteps then :math:`a_{i}(t)` at the time :math: `t=\sum_{i=1}\Delta t_i`
-!   is calculated according to :math:`a_{i}(t)=\sum_{i=1}} c_{i} n_{i}\Delta t_i`.
+!   during kMC-time interval i,  :math:`\{\Delta t_i\}` the corresponding
+!   timesteps then :math:`a_{i}(t)` at the time :math:`t=\sum_{i=1}\Delta t_i`
+!   is calculated according to :math:`a_{i}(t)=\sum_{i=1} c_{i} n_{i}\Delta t_i`.
 !
 !******
 !------ S. Matera 09/18/2012------
@@ -543,7 +544,7 @@ subroutine save_system()
     write(filename,'(2a)',iostat=io_state) trim(adjustl(system_name)),'.reload'
     open(filehandler, file=filename)
     ! Write scalar fields
-    write(filehandler,'(a)')"#Reload file written by kmos. Do not edit manually!"
+    write(filehandler,'(a)')"#Reload file written by kmcos. Do not edit manually!"
     write(filehandler,'(a)')"#Scalar variables"
     write(filehandler,'(a,es22.15)')' kmc_time  ',kmc_time
     write(filehandler,'(a,es13.7)')' walltime   ',walltime
@@ -640,8 +641,8 @@ subroutine update_integ_rate()
         integ_rates(i)=integ_rates(i)+nr_of_sites(i)*rates(i)*kmc_time_step
     enddo
 
-!!$    ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found &
-!!$        accum_rates(nr_of_proc)=0, so no process is available at all")
+    ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found" // &
+        "accum_rates(nr_of_proc)=0, so no process is available at all")
 
 end subroutine update_integ_rate
 !------ S. Matera 09/18/2012------
@@ -667,45 +668,45 @@ subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name)
 
     ! Make sure we have at least one process
     if(input_nr_of_proc.le.0)then
-        print *,"kmos/base/allocate_system: there needs to be at least one process in a kMC system"
+        print *,"kmcos/base/allocate_system: there needs to be at least one process in a kMC system"
         stop
     endif
 
     ! Make sure we have at least one site
     if(input_volume.le.0)then
-        print *,"kmos/base/allocate_system: there needs to be at least one site in the system"
+        print *,"kmcos/base/allocate_system: there needs to be at least one site in the system"
         stop
     endif
 
     ! Make sure we don't try to allocate twice
     if(allocated(avail_sites))then
-        print *,"kmos/base/allocate_system: Tried to allocate avail_sites twice, please deallocate first"
+        print *,"kmcos/base/allocate_system: Tried to allocate avail_sites twice, please deallocate first"
         system_allocated = .true.
     endif
     if(allocated(lattice))then
-        print *,"kmos/base/allocate_system: Tried to allocate lattice twice, please deallocate first"
+        print *,"kmcos/base/allocate_system: Tried to allocate lattice twice, please deallocate first"
         system_allocated = .true.
     endif
     if(allocated(nr_of_sites))then
-        print *,"kmos/base/allocate_system: Tried to allocate nr_of_sites twice, please deallocate first"
+        print *,"kmcos/base/allocate_system: Tried to allocate nr_of_sites twice, please deallocate first"
         system_allocated = .true.
     endif
     if(allocated(rates))then
-        print *,"kmos/base/allocate_system: Tried to allocate rates twice, please deallocate first"
+        print *,"kmcos/base/allocate_system: Tried to allocate rates twice, please deallocate first"
         system_allocated = .true.
     endif
     if(allocated(accum_rates))then
-        print *,"kmos/base/allocate_system: Tried to allocate accum_rates twice, please deallocate first"
+        print *,"kmcos/base/allocate_system: Tried to allocate accum_rates twice, please deallocate first"
         system_allocated = .true.
     endif
 !------ S. Matera 09/18/2012------
     if(allocated(integ_rates))then
-        print *,"kmos/base/allocate_system: Tried to allocate integ_rates twice, please deallocate first"
+        print *,"kmcos/base/allocate_system: Tried to allocate integ_rates twice, please deallocate first"
         system_allocated = .true.
     endif
 !------ S. Matera 09/18/2012------
     if(allocated(procstat))then
-        print *,"kmos/base/allocate_system: Tried to allocate procstat twice, please deallocate first"
+        print *,"kmcos/base/allocate_system: Tried to allocate procstat twice, please deallocate first"
         system_allocated = .true.
     endif
 
@@ -822,7 +823,7 @@ subroutine set_system_name(input_system_name)
     !****f* base/set_system_name
     ! FUNCTION
     !    Set the systems name. Useful in conjunction with base.save_system
-    !    to save *.reload files under a different name than the default one.
+    !    to save \*.reload files under a different name than the default one.
     !
     ! ARGUMENTS
     !
@@ -869,6 +870,26 @@ subroutine get_kmc_time(return_kmc_time)
 end subroutine get_kmc_time
 
 
+!Added by J.E. Sutton, ORNL, 2016/08/15 to permit setting the number of KMC
+!steps from the Python runtime code.
+subroutine set_kmc_step(new_kmc_step)
+    !****f* base/set_kmc_step
+    ! FUNCTION
+    !    Sets the current kmc_step
+    !
+    ! ARGUMENTS
+    !
+    !    * ``kmc_step`` Writeable integer
+    !******
+    !---------------I/O variables---------------
+    integer(kind=ilong), intent(in) :: new_kmc_step
+
+    kmc_step = new_kmc_step
+
+end subroutine set_kmc_step
+
+
+
 subroutine get_kmc_time_step(return_kmc_time_step)
     !****f* base/get_kmc_time_step
     ! FUNCTION
@@ -898,7 +919,7 @@ subroutine get_procstat(proc, return_procstat)
     !******
     !---------------I/O variables---------------
     integer(kind=iint),intent(in) :: proc
-    integer(kind=iint),intent(out) :: return_procstat
+    integer(kind=ilong),intent(out) :: return_procstat
 
     return_procstat = procstat(proc)
 
@@ -936,7 +957,7 @@ subroutine get_avail_site(proc_nr, field, switch, return_avail_site)
     !******
     !---------------I/O variables---------------
     integer(kind=iint), intent(in) :: proc_nr, field, switch
-    integer(kind=rdouble), intent(out) :: return_avail_site
+    integer(kind=iint), intent(out) :: return_avail_site
 
     return_avail_site = avail_sites(proc_nr, field, switch)
 
@@ -955,7 +976,7 @@ subroutine get_accum_rate(proc_nr, return_accum_rate)
     !******
     !---------------I/O variables---------------
     integer(kind=iint), intent(in), optional :: proc_nr
-    real(kind=iint), intent(out) :: return_accum_rate
+    real(kind=rdouble), intent(out) :: return_accum_rate
 
     if(.not. present(proc_nr) .or. proc_nr.eq.0) then
       return_accum_rate=accum_rates(nr_of_proc)
@@ -978,7 +999,7 @@ subroutine get_integ_rate(proc_nr, return_integ_rate)
     !******
     !---------------I/O variables---------------
     integer(kind=iint), intent(in), optional :: proc_nr
-    real(kind=iint), intent(out) :: return_integ_rate
+    real(kind=rdouble), intent(out) :: return_integ_rate
 
     if(.not. present(proc_nr) .or. proc_nr.eq.0) then
       return_integ_rate=integ_rates(nr_of_proc)
@@ -1066,7 +1087,7 @@ subroutine get_kmc_step(return_kmc_step)
     !    * ``kmc_step`` Writeable integer
     !******
     !---------------I/O variables---------------
-    integer(kind=iint), intent(out) :: return_kmc_step
+    integer(kind=ilong), intent(out) :: return_kmc_step
 
     return_kmc_step = kmc_step
 
@@ -1114,7 +1135,7 @@ subroutine determine_procsite(ran_proc, ran_site, proc, site)
 
     ASSERT(nr_of_sites(proc).gt.0,"base/determine_procsite: chosen process is invalid &
         because it has no sites available.")
-    ASSERT(site.gt.0,"kmos/base/determine_procsite: tries to return invalid site")
+    ASSERT(site.gt.0,"kmcos/base/determine_procsite: tries to return invalid site")
     ASSERT(site.le.volume,"base/determine_procsite: tries to return site larger than volume")
 
 
@@ -1177,8 +1198,8 @@ pure function get_species(site)
 
     !! DEBUG
     !print *, site
-    !ASSERT(site.ge.1,"kmos/base/get_species was asked for a zero or negative site")
-    !ASSERT(site.le.volume,"kmos/base/get_species was asked for a site outside the lattice")
+    !ASSERT(site.ge.1,"kmcos/base/get_species was asked for a zero or negative site")
+    !ASSERT(site.le.volume,"kmcos/base/get_species was asked for a site outside the lattice")
 
     get_species = lattice(site)
 
@@ -1200,18 +1221,18 @@ subroutine replace_species(site, old_species, new_species)
     !******
     integer(kind=iint), intent(in) :: site, old_species, new_species
 
-    ASSERT(site.le.volume,"kmos/base/replace_species was asked for a site outside the lattice")
+    ASSERT(site.le.volume,"kmcos/base/replace_species was asked for a site outside the lattice")
 
     ! Double-check that we actually remove the atom that we think is there
     if(old_species.ne.lattice(site))then
-        print '(a)', "kmos/base/replace_species Tried to remove species from sites which is not there!"
+        print '(a)', "kmcos/base/replace_species Tried to remove species from sites which is not there!"
         print '(a,i2,a,i2)', "Attempted replacement:", old_species, "->", new_species
         print '(a,i2,a,i9,a,i9)', "Found species:", lattice(site),"on site", site,"at step",kmc_step
         print '(a)', "For a more human-readable error message, please run"
         print '(a)', "in a python console"
         print '(a)', "--"
         print '(a)', " "
-        print '(a)', "from kmos.run import KMC_Model"
+        print '(a)', "from kmcos.run import KMC_Model"
         print '(a)', "model = KMC_Model(banner=False, print_rates=False)"
         print '(a,i2,a,i2,a,i2,a,i10,a,i10,a)', &
         "model.post_mortem(err_code=(",old_species,", ",new_species, ", ",  lattice(site), ", ", site, ", ", kmc_step, "))"
@@ -1219,7 +1240,7 @@ subroutine replace_species(site, old_species, new_species)
         print '(a)', "--"
         print '(a)', "or in a command line"
         print '(a)', "--"
-        print '(a)', "kmos run"
+        print '(a)', "kmcos run"
         print '(a,i2,a,i2,a,i2,a,i10,a,i10,a)', &
         "model.post_mortem(err_code=(",old_species,", ",new_species, ", ",  lattice(site), ", ", site, ", ", kmc_step, "))"
         print '(a)', "model.show()"
