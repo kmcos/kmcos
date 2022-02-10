@@ -55,7 +55,7 @@ from __future__ import print_function
 #import kmcos.types
 #import kmcos.io
 
-__version__ = "0.0.62"
+__version__ = "0.0.61"
 VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):
@@ -73,7 +73,7 @@ def evaluate_param_expression(param, parameters={}):
 
     parameter_str = str(parameters[param]['value'])
 
-    # replace some aliasestest
+    # replace some aliases
     parameter_str = parameter_str.replace('beta', '(1./(kboltzmann*T))')
     # replace units used in parameters
     for unit in units.keys:
