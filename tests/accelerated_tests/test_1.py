@@ -72,4 +72,4 @@ if __name__ == "__main__":
    #This is the normal way of using the UnitTesterSG module, and will be run by UnitTesterSG or by running this test file by itself.
    ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = True, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
    
-os.system("cd ..")
+os.chdir('..')
