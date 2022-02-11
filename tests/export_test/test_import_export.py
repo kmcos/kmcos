@@ -228,4 +228,4 @@ def test_ml_export():
     os.chdir(cwd)
 if __name__ == '__main__':
      test_import_export()
-
+     test_compare_import_variants()
