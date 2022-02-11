@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #This file assumes an arrhenius expression from transition state theory for each processes rate constant. This files generates reaction processes automatically.
+import kmcos
 from kmcos.types import *
 from kmcos.io import *
 from itertools import product
