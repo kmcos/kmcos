@@ -19,20 +19,20 @@ def test_import_export_local_smart():
     #if os.path.exists(TEST_DIR):
         #shutil.rmtree(TEST_DIR)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('default.xml')
-    kmcos.io.export_source(pt, TEST_DIR)
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('default.xml')
+    kmcos.io.export_source(kmc_model, TEST_DIR)
+    testResult = []
     for filename in ['base', 'lattice', 'proclist']:
         print(filename)
-        testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s comparison.' % filename
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
         if filename == 'proclist':
             print("proclist tests are not working! Even if it fails this test, it is probably still correct!")
             continue
         assert testResult[0]
-        
-            
     os.chdir(cwd)
 
 def test_import_export_lat_int():
@@ -52,16 +52,18 @@ def test_import_export_lat_int():
     print(sys.path)
     print(kmcos.__file__)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('default.xml')
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='lat_int')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('default.xml')
+    testResult = []
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='lat_int')
     for filename in ['base', 'lattice', 'proclist'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'nli*.f90'))]:
         print(filename)
-        testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                           os.path.join(TEST_DIR, '%s.f90' % filename)),\
-              '%s comparison.' % filename
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
         if filename == 'proclist':
             print("proclist tests are not working! Even if it fails this test, it is probably still correct!")
             continue
@@ -86,17 +88,19 @@ def test_import_export_otf():
     print(sys.path)
     print(kmcos.__file__)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('default.xml')
-    pt.shorten_names(max_length = 35)
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='otf')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('default.xml')
+    kmc_model.shorten_names(max_length = 35)
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='otf')
+    testResult = []
     #original order was 'base', 'lattice', 'proclist', 'proclist_pars','proclist_constants'
     for filename in ['base', 'lattice',  'proclist_pars', 'proclist_constants', 'proclist'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
-        testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                           os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s comparison.' % filename
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
         if (filename == 'proclist') or (filename == 'proclist_pars'):
             print("proclist tests are not working! Even if it fails this test, it is probably still correct!")
             continue
@@ -121,14 +125,16 @@ def test_import_export_pdopd_local_smart():
     #if os.path.exists(TEST_DIR):
         #shutil.rmtree(TEST_DIR)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('pdopd.xml')
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='local_smart')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('pdopd.xml')
+    testResult = []
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='local_smart')
     for filename in ['base', 'lattice', 'proclist']:
         print(filename)
-        testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s comparison.' % filename
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
         if filename == 'proclist':
             print("proclist tests are not working! Even if it fails this test, it is probably still correct!")
             continue
@@ -153,18 +159,19 @@ def test_import_export_pdopd_lat_int():
 
     print(sys.path)
     print(kmcos.__file__)
-    pt = kmcos.types.Project()
-    pt.import_xml_file('pdopd.xml')
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='lat_int')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('pdopd.xml')
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='lat_int')
+    testResult = []
     #original order was 'base', 'lattice', 'proclist', 'proclist_constants'
     for filename in ['base', 'lattice', 'proclist_constants', 'proclist'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'nli*.f90'))]:
-
         print(filename)
-        testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s comparison.' % filename
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
         if filename == 'proclist':
             print("proclist tests are not working! Even if it fails this test, it is probably still correct!")
             continue
@@ -191,16 +198,18 @@ def test_import_export_intZGB_otf():
     print(sys.path)
     print(kmcos.__file__)
 
-    pt = kmcos.types.Project()
-    pt.import_xml_file('intZGB_otf.xml')
-    kmcos.io.export_source(pt, TEST_DIR, code_generator='otf')
+    kmc_model = kmcos.types.Project()
+    kmc_model.import_xml_file('intZGB_otf.xml')
+    kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='otf')
+    testResult = []
     #original order was 'base', 'lattice', 'proclist', 'proclist_pars','proclist_constants'
     for filename in ['base', 'lattice', 'proclist_pars','proclist_constants', 'proclist'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
-        testResult = filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s comparison.' % filename
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
         if (filename == 'proclist' or filename == 'proclist_pars'):
             print("proclist tests are not working! Even if it fails this test, it is probably still correct!")
             continue
@@ -218,13 +227,13 @@ def off_compare_import_variants():
     cwd = os.path.abspath(os.curdir)
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-    pt = kmcos.types.Project()
+    kmc_model = kmcos.types.Project()
     editor = kmcos.gui.Editor()
     print("line 213 the editor has been defined")
     editor.import_xml_file('default.xml')
-    pt.import_xml_file('default.xml')
+    kmc_model.import_xml_file('default.xml')
     os.chdir(cwd)
-    testResult = str(pt) == str(editor.project_tree)
+    testResult = str(kmc_model) == str(editor.project_tree)
     assert testResult[0]
 
 def test_ml_export():
@@ -233,8 +242,8 @@ def test_ml_export():
 
 
     import kmcos.io
-    pt = kmcos.io.import_xml_file('pdopd.xml')
-    kmcos.io.export_source(pt)
+    kmc_model = kmcos.io.import_xml_file('pdopd.xml')
+    kmcos.io.export_source(kmc_model)
     # import shutil
     # shutil.rmtree('sqrt5PdO')
 
