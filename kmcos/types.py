@@ -589,7 +589,7 @@ class Project(object):
                               os.path.splitext(self.filename)[-1])
 
 
-    def save(self, filename=None, validate=True):
+    def save(self, filename="", validate=True):
         self.save_model(filename, validate)
         
 
