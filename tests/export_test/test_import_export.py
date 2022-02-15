@@ -29,15 +29,16 @@ def test_import_export():
 
     kmc_model = kmcos.create_kmc_model()
     kmc_model.import_xml_file('default.xml')
+    testResult = []
     kmcos.io.export_source(kmc_model, TEST_DIR)
     for filename in ['base', 'lattice', 'proclist']:
         print(filename)
-        assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s changed.' % filename
-
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
+        assert testResult[0]
     os.chdir(cwd)
-
 def test_import_export_lat_int():
 
     import kmcos.types
@@ -58,14 +59,16 @@ def test_import_export_lat_int():
     kmc_model = kmcos.create_kmc_model()
     kmc_model.import_xml_file('default.xml')
     kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='lat_int')
+    testResult = []
     for filename in ['base', 'lattice', 'proclist'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'nli*.f90'))]:
         print(filename)
-        assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s changed.' % filename
-
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
+        assert testResult[0]
     os.chdir(cwd)
 
 def test_import_export_otf():
@@ -88,14 +91,16 @@ def test_import_export_otf():
     kmc_model = kmcos.create_kmc_model()
     kmc_model.import_xml_file('default.xml')
     kmc_model.shorten_names(max_length = 35)
+    testResult = []
     kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='otf')
     for filename in ['base', 'lattice', 'proclist', 'proclist_pars', 'proclist_constants'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
-        assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s changed.' % filename
-
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
+        assert testResult[0]
     os.chdir(cwd)
 
 
@@ -116,6 +121,7 @@ def test_import_export_pdopd_local_smart():
     kmc_model.import_xml_file('pdopd.xml')
     print("PROJECT")
     print(kmc_model)
+    testResult = []
     kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='local_smart')
     for filename in ['base', 'lattice', 'proclist']:
         print(filename)
@@ -126,11 +132,14 @@ def test_import_export_pdopd_local_smart():
         if diff:
             print("DIFF BETWEEN {REFERENCE_DIR}/{filename}.f90 and {TEST_DIR}/{filename}.f90".format(**locals()))
             print(diff)
-        assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s changed.' % filename
-
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
+        assert testResult[0]
     os.chdir(cwd)
+
+
 def test_import_export_pdopd_lat_int():
 
     import kmcos.types
@@ -151,6 +160,7 @@ def test_import_export_pdopd_lat_int():
     kmc_model.import_xml_file('pdopd.xml')
     print("PROJECT")
     print(kmc_model)
+    testResult = []
     kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='lat_int')
     for filename in ['base', 'lattice', 'proclist', 'proclist_constants'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))] \
@@ -164,11 +174,13 @@ def test_import_export_pdopd_lat_int():
         if diff:
             print("DIFF BETWEEN {REFERENCE_DIR}/{filename}.f90 and {TEST_DIR}/{filename}.f90".format(**locals()))
             print(diff)
-        assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s changed.' % filename
-
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
+        assert testResult[0]
     os.chdir(cwd)
+
 
 def test_import_export_intZGB_otf():
 
@@ -189,13 +201,16 @@ def test_import_export_intZGB_otf():
 
     kmc_model = kmcos.create_kmc_model()
     kmc_model.import_xml_file('intZGB_otf.xml')
+    testResult = []
     kmcos.io.export_source(kmc_model, TEST_DIR, code_generator='otf')
     for filename in ['base', 'lattice', 'proclist','proclist_pars','proclist_constants'] \
         + [os.path.basename(os.path.splitext(x)[0]) for x in glob(os.path.join(TEST_DIR, 'run_proc*.f90'))]:
         print(filename)
-        assert filecmp.cmp(os.path.join(REFERENCE_DIR, '%s.f90' % filename),
-                          os.path.join(TEST_DIR, '%s.f90' % filename)),\
-             '%s changed.' % filename
+        if open(os.path.join(REFERENCE_DIR, '%s.f90' % filename)).read() == open(os.path.join(TEST_DIR, '%s.f90' % filename)).read():
+            testResult.append(True)
+        else:
+            testResult.append(False)
+        assert testResult[0]
     os.chdir(cwd)
 
 
@@ -219,7 +234,7 @@ def test_ml_export():
 
 
     import kmcos.io
-    pt = kmcos.io.import_xml_file('pdopd.xml')
+    kmc_model = kmcos.io.import_xml_file('pdopd.xml')
     kmcos.io.export_source(kmc_model)
     import shutil
     shutil.rmtree('sqrt5PdO')
