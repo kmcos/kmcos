@@ -26,17 +26,12 @@ from __future__ import print_function
 import re
 import copy
 #gtk import
-try:
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
-    import goocanvas
-except ModuleNotFoundError:
-    import gi
-    gi.require_version('Gtk', '3.0')
-    gi.require_version('GooCanvas', '2.0')
-    from gi.repository import Gtk as gtk
-    from gi.repository import GooCanvas as goocanvas
+
+import gi
+gi.require_version('Gtk', '3.0')
+#gi.require_version('GooCanvas', '2.0')
+from gi.repository import Gtk as gtk
+from gi.repository import GooCanvas as goocanvas
 
 #kiwi imports
 from kiwi.ui.delegates import ProxySlaveDelegate, GladeDelegate, \
