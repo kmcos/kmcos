@@ -5,6 +5,7 @@
 
 from kmcos.types import *
 from kmcos.io import *
+import kmcos
 import numpy as np
 import sys
 sys.path.insert(0,'..') #This is for the janaf_data directory.

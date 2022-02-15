@@ -4,6 +4,7 @@
 #BEWARE OF BUGS
 
 from kmcos.types import *
+import kmcos
 from kmcos.io import *
 import numpy as np
 import sys
