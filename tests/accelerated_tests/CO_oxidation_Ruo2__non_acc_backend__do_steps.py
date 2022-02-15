@@ -12,19 +12,19 @@ sys.path.insert(0,'..') #This is for the janaf_data directory.
 
 name = 'CO_oxidation_Ruo2__non_acc_backend__do_steps'
 
-pt = Project()
+kmc_model = kmcos.create_kmc_model()
 
-pt.set_meta(author='Mie Andersen',
+kmc_model.set_meta(author='Mie Andersen',
             email='mieand@gmail.com',
             model_name=name,
             model_dimension=2)
 
 # Species
-pt.add_species(name='empty', color='#ffffff')
-pt.add_species(name='CO',
+kmc_model.add_species(name='empty', color='#ffffff')
+kmc_model.add_species(name='CO',
                color='#000000',
                representation="Atoms('CO',[[0,0,0],[0,0,1.2]])")
-pt.add_species(name='O',
+kmc_model.add_species(name='O',
                color='#ff0000',
                representation="Atoms('O')")
 
@@ -33,9 +33,9 @@ layer = Layer(name='ruo2')
 layer.sites.append(Site(name='bridge', pos='0.0 0.5 0.7'))
 layer.sites.append(Site(name='cus', pos='0.5 0.5 0.7'))
 
-pt.add_layer(layer)
+kmc_model.add_layer(layer)
 
-pt.lattice.representation = """[
+kmc_model.lattice.representation = """[
 Atoms(symbols='O2Ru2',
           pbc=np.array([False, False, False], dtype=bool),
           cell=np.array(
@@ -49,66 +49,66 @@ Atoms(symbols='O2Ru2',
        [  3.1950724 ,   1.5582457 ,  12.7802862 ]]))
 
 ]"""
-pt.lattice.cell = np.diag([6.43, 3.12, 20])
+kmc_model.lattice.cell = np.diag([6.43, 3.12, 20])
 
 # Parameters
 
-pt.add_parameter(name='p_COgas', value=1e-3, adjustable=True, min=1e-13, max=1e2,
+kmc_model.add_parameter(name='p_COgas', value=1e-3, adjustable=True, min=1e-13, max=1e2,
                  scale='log')
-pt.add_parameter(name='p_O2gas', value=1e-3, adjustable=True, min=1e-15, max=1e2,
+kmc_model.add_parameter(name='p_O2gas', value=1e-3, adjustable=True, min=1e-15, max=1e2,
                  scale='log')
-pt.add_parameter(name='T', value=350, adjustable=True, min=300, max=1500)
+kmc_model.add_parameter(name='T', value=350, adjustable=True, min=300, max=1500)
 
-pt.add_parameter(name='A', value='%s*angstrom**2' % (pt.lattice.cell[0,0]*
-                                                      pt.lattice.cell[1,1]))
-pt.add_parameter(name='E_O_bridge', value=-2.3)
-pt.add_parameter(name='E_O_cus', value=-1.0)
-pt.add_parameter(name='E_CO_bridge', value=-1.6)
-pt.add_parameter(name='E_CO_cus', value=-1.3)
+kmc_model.add_parameter(name='A', value='%s*angstrom**2' % (kmc_model.lattice.cell[0,0]*
+                                                      kmc_model.lattice.cell[1,1]))
+kmc_model.add_parameter(name='E_O_bridge', value=-2.3)
+kmc_model.add_parameter(name='E_O_cus', value=-1.0)
+kmc_model.add_parameter(name='E_CO_bridge', value=-1.6)
+kmc_model.add_parameter(name='E_CO_cus', value=-1.3)
 
-pt.add_parameter(name='E_react_Ocus_COcus', value=0.9)
-pt.add_parameter(name='E_react_Ocus_CObridge', value=0.8)
-pt.add_parameter(name='E_react_Obridge_COcus', value=1.2)
-pt.add_parameter(name='E_react_Obridge_CObridge', value=1.5)
+kmc_model.add_parameter(name='E_react_Ocus_COcus', value=0.9)
+kmc_model.add_parameter(name='E_react_Ocus_CObridge', value=0.8)
+kmc_model.add_parameter(name='E_react_Obridge_COcus', value=1.2)
+kmc_model.add_parameter(name='E_react_Obridge_CObridge', value=1.5)
 
-pt.add_parameter(name='E_COdiff_cus_cus', value=1.7)
-pt.add_parameter(name='E_COdiff_cus_bridge', value=1.3)
-pt.add_parameter(name='E_COdiff_bridge_bridge', value=0.6)
-pt.add_parameter(name='E_COdiff_bridge_cus', value=1.6)
+kmc_model.add_parameter(name='E_COdiff_cus_cus', value=1.7)
+kmc_model.add_parameter(name='E_COdiff_cus_bridge', value=1.3)
+kmc_model.add_parameter(name='E_COdiff_bridge_bridge', value=0.6)
+kmc_model.add_parameter(name='E_COdiff_bridge_cus', value=1.6)
 
-pt.add_parameter(name='E_Odiff_cus_cus', value=1.6)
-pt.add_parameter(name='E_Odiff_bridge_bridge', value=0.7)
-pt.add_parameter(name='E_Odiff_bridge_cus', value=2.3)
-pt.add_parameter(name='E_Odiff_cus_bridge', value=1.0)
+kmc_model.add_parameter(name='E_Odiff_cus_cus', value=1.6)
+kmc_model.add_parameter(name='E_Odiff_bridge_bridge', value=0.7)
+kmc_model.add_parameter(name='E_Odiff_bridge_cus', value=2.3)
+kmc_model.add_parameter(name='E_Odiff_cus_bridge', value=1.0)
 
 
 # Coordinates
 
-cus = pt.lattice.generate_coord('cus.(0,0,0).ruo2')
-cus_right = pt.lattice.generate_coord('bridge.(1,0,0).ruo2')
-cus_up = pt.lattice.generate_coord('cus.(0,1,0).ruo2')
+cus = kmc_model.lattice.generate_coord('cus.(0,0,0).ruo2')
+cus_right = kmc_model.lattice.generate_coord('bridge.(1,0,0).ruo2')
+cus_up = kmc_model.lattice.generate_coord('cus.(0,1,0).ruo2')
 
-bridge = pt.lattice.generate_coord('bridge.(0,0,0).ruo2')
-bridge_right = pt.lattice.generate_coord('cus.(0,0,0).ruo2')
-bridge_up = pt.lattice.generate_coord('bridge.(0,1,0).ruo2')
+bridge = kmc_model.lattice.generate_coord('bridge.(0,0,0).ruo2')
+bridge_right = kmc_model.lattice.generate_coord('cus.(0,0,0).ruo2')
+bridge_up = kmc_model.lattice.generate_coord('bridge.(0,1,0).ruo2')
 
 # Processes
 
 # CO Adsorption/Desorption
-pt.add_process(name='CO_adsorption_cus',
+kmc_model.add_process(name='CO_adsorption_cus',
                conditions=[Condition(species='empty', coord=cus)],
                actions=[Action(species='CO', coord=cus)],
                rate_constant='p_COgas*bar*A/2/sqrt(2*pi*umass*m_CO/beta)')
-pt.add_process(name='CO_desorption_cus',
+kmc_model.add_process(name='CO_desorption_cus',
                conditions=[Condition(species='CO', coord=cus)],
                actions=[Action(species='empty', coord=cus)],
                rate_constant='p_COgas*bar*A/2/sqrt(2*pi*umass*m_CO/beta)*exp(beta*(E_CO_cus-mu_COgas)*eV)')
 
-pt.add_process(name='CO_adsorption_bridge',
+kmc_model.add_process(name='CO_adsorption_bridge',
                conditions=[Condition(species='empty', coord=bridge)],
                actions=[Action(species='CO', coord=bridge)],
                rate_constant='p_COgas*bar*A/2/sqrt(2*pi*umass*m_CO/beta)')
-pt.add_process(name='CO_desorption_bridge',
+kmc_model.add_process(name='CO_desorption_bridge',
                conditions=[Condition(species='CO', coord=bridge)],
                actions=[Action(species='empty', coord=bridge)],
                rate_constant='p_COgas*bar*A/2/sqrt(2*pi*umass*m_CO/beta)*exp(beta*(E_CO_bridge-mu_COgas)*eV)')
@@ -116,14 +116,14 @@ pt.add_process(name='CO_desorption_bridge',
 # CO diffusion
 
 # cus/cus
-pt.add_process(name='COdiff_cus_up',
+kmc_model.add_process(name='COdiff_cus_up',
                conditions=[Condition(species='CO', coord=cus),
                            Condition(species='empty', coord=cus_up)],
                actions=[Condition(species='empty', coord=cus),
                         Condition(species='CO', coord=cus_up)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_COdiff_cus_cus)*eV)')
 
-pt.add_process(name='COdiff_cus_down',
+kmc_model.add_process(name='COdiff_cus_down',
                conditions=[Condition(species='CO', coord=cus_up),
                            Condition(species='empty', coord=cus)],
                actions=[Condition(species='empty', coord=cus_up),
@@ -131,13 +131,13 @@ pt.add_process(name='COdiff_cus_down',
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_COdiff_cus_cus)*eV)')
 
 # bridge/bridge
-pt.add_process(name='COdiff_bridge_up',
+kmc_model.add_process(name='COdiff_bridge_up',
                conditions=[Condition(species='CO', coord=bridge),
                            Condition(species='empty', coord=bridge_up)],
                actions=[Condition(species='empty', coord=bridge),
                         Condition(species='CO', coord=bridge_up)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_COdiff_bridge_bridge)*eV)')
-pt.add_process(name='COdiff_bridge_down',
+kmc_model.add_process(name='COdiff_bridge_down',
                conditions=[Condition(species='CO', coord=bridge_up),
                            Condition(species='empty', coord=bridge)],
                actions=[Condition(species='empty', coord=bridge_up),
@@ -145,14 +145,14 @@ pt.add_process(name='COdiff_bridge_down',
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_COdiff_bridge_bridge)*eV)')
 
 # bridge/cus
-pt.add_process(name='COdiff_bridge_right',
+kmc_model.add_process(name='COdiff_bridge_right',
                conditions=[Condition(species='CO', coord=bridge),
                            Condition(species='empty', coord=bridge_right)],
                actions=[Condition(species='empty', coord=bridge),
                         Condition(species='CO', coord=bridge_right)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_COdiff_bridge_cus)*eV)')
 
-pt.add_process(name='COdiff_bridge_left',
+kmc_model.add_process(name='COdiff_bridge_left',
                conditions=[Condition(species='CO', coord=bridge_right),
                            Condition(species='empty', coord=bridge)],
                actions=[Condition(species='empty', coord=bridge_right),
@@ -160,14 +160,14 @@ pt.add_process(name='COdiff_bridge_left',
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_COdiff_cus_bridge)*eV)')
 
 # bridge/cus
-pt.add_process(name='COdiff_cus_right',
+kmc_model.add_process(name='COdiff_cus_right',
                conditions=[Condition(species='CO', coord=cus),
                            Condition(species='empty', coord=cus_right)],
                actions=[Condition(species='empty', coord=cus),
                         Condition(species='CO', coord=cus_right)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_COdiff_cus_bridge)*eV)')
 
-pt.add_process(name='COdiff_cus_left',
+kmc_model.add_process(name='COdiff_cus_left',
                conditions=[Condition(species='CO', coord=cus_right),
                            Condition(species='empty', coord=cus)],
                actions=[Condition(species='empty', coord=cus_right),
@@ -177,56 +177,56 @@ pt.add_process(name='COdiff_cus_left',
 
 # O2 Adsorption/Desorption
 # avoiding double-counting ...
-pt.add_process(name='O2_adsorption_cus_up',
+kmc_model.add_process(name='O2_adsorption_cus_up',
                conditions=[Condition(species='empty', coord=cus),
                         Condition(species='empty', coord=cus_up),],
                actions=[Condition(species='O', coord=cus),
                         Condition(species='O', coord=cus_up),],
                rate_constant='p_O2gas*bar*A/sqrt(2*pi*umass*m_O2/beta)')
 
-pt.add_process(name='O2_desorption_cus_up',
+kmc_model.add_process(name='O2_desorption_cus_up',
                conditions=[Condition(species='O', coord=cus),
                         Condition(species='O', coord=cus_up),],
                actions=[Condition(species='empty', coord=cus),
                         Condition(species='empty', coord=cus_up),],
                rate_constant='p_O2gas*bar*A/sqrt(2*pi*umass*m_O2/beta)*exp(beta*(2*E_O_cus-mu_O2gas)*eV)')
 
-pt.add_process(name='O2_adsorption_cus_right',
+kmc_model.add_process(name='O2_adsorption_cus_right',
                conditions=[Condition(species='empty', coord=cus),
                         Condition(species='empty', coord=cus_right),],
                actions=[Condition(species='O', coord=cus),
                         Condition(species='O', coord=cus_right),],
                rate_constant='p_O2gas*bar*A/sqrt(2*pi*umass*m_O2/beta)')
 
-pt.add_process(name='O2_desorption_cus_right',
+kmc_model.add_process(name='O2_desorption_cus_right',
                conditions=[Condition(species='O', coord=cus),
                         Condition(species='O', coord=cus_right),],
                actions=[Condition(species='empty', coord=cus),
                         Condition(species='empty', coord=cus_right),],
                rate_constant='p_O2gas*bar*A/sqrt(2*pi*umass*m_O2/beta)*exp(beta*((E_O_cus+E_O_bridge)-mu_O2gas)*eV)')
 
-pt.add_process(name='O2_adsorption_bridge_up',
+kmc_model.add_process(name='O2_adsorption_bridge_up',
                conditions=[Condition(species='empty', coord=bridge),
                         Condition(species='empty', coord=bridge_up),],
                actions=[Condition(species='O', coord=bridge),
                         Condition(species='O', coord=bridge_up),],
                rate_constant='p_O2gas*bar*A/sqrt(2*pi*umass*m_O2/beta)')
 
-pt.add_process(name='O2_desorption_bridge_up',
+kmc_model.add_process(name='O2_desorption_bridge_up',
                conditions=[Condition(species='O', coord=bridge),
                         Condition(species='O', coord=bridge_up),],
                actions=[Condition(species='empty', coord=bridge),
                         Condition(species='empty', coord=bridge_up),],
                rate_constant='p_O2gas*bar*A/sqrt(2*pi*umass*m_O2/beta)*exp(beta*(2*E_O_bridge-mu_O2gas)*eV)')
 
-pt.add_process(name='O2_adsorption_bridge_right',
+kmc_model.add_process(name='O2_adsorption_bridge_right',
                conditions=[Condition(species='empty', coord=bridge),
                         Condition(species='empty', coord=bridge_right),],
                actions=[Condition(species='O', coord=bridge),
                         Condition(species='O', coord=bridge_right),],
                rate_constant='p_O2gas*bar*A/sqrt(2*pi*umass*m_O2/beta)')
 
-pt.add_process(name='O2_desorption_bridge_right',
+kmc_model.add_process(name='O2_desorption_bridge_right',
                conditions=[Condition(species='O', coord=bridge),
                         Condition(species='O', coord=bridge_right),],
                actions=[Condition(species='empty', coord=bridge),
@@ -237,14 +237,14 @@ pt.add_process(name='O2_desorption_bridge_right',
 # O diffusion
 
 # cus/cus
-pt.add_process(name='Odiff_cus_up',
+kmc_model.add_process(name='Odiff_cus_up',
                conditions=[Condition(species='O', coord=cus),
                            Condition(species='empty', coord=cus_up)],
                actions=[Condition(species='empty', coord=cus),
                         Condition(species='O', coord=cus_up)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_Odiff_cus_cus)*eV)')
 
-pt.add_process(name='Odiff_cus_down',
+kmc_model.add_process(name='Odiff_cus_down',
                conditions=[Condition(species='O', coord=cus_up),
                            Condition(species='empty', coord=cus)],
                actions=[Condition(species='empty', coord=cus_up),
@@ -253,27 +253,27 @@ pt.add_process(name='Odiff_cus_down',
 
 
 # bridge/bridge
-pt.add_process(name='Odiff_bridge_up',
+kmc_model.add_process(name='Odiff_bridge_up',
                conditions=[Condition(species='O', coord=bridge),
                            Condition(species='empty', coord=bridge_up)],
                actions=[Condition(species='empty', coord=bridge),
                         Condition(species='O', coord=bridge_up)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_Odiff_bridge_bridge)*eV)')
-pt.add_process(name='Odiff_bridge_down',
+kmc_model.add_process(name='Odiff_bridge_down',
                conditions=[Condition(species='O', coord=bridge_up),
                            Condition(species='empty', coord=bridge)],
                actions=[Condition(species='empty', coord=bridge_up),
                         Condition(species='O', coord=bridge)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_Odiff_bridge_bridge)*eV)')
 # bridge/cus
-pt.add_process(name='Odiff_bridge_right',
+kmc_model.add_process(name='Odiff_bridge_right',
                conditions=[Condition(species='O', coord=bridge),
                            Condition(species='empty', coord=bridge_right)],
                actions=[Condition(species='empty', coord=bridge),
                         Condition(species='O', coord=bridge_right)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_Odiff_bridge_cus)*eV)')
 
-pt.add_process(name='Odiff_bridge_left',
+kmc_model.add_process(name='Odiff_bridge_left',
                conditions=[Condition(species='O', coord=bridge_right),
                            Condition(species='empty', coord=bridge)],
                actions=[Condition(species='empty', coord=bridge_right),
@@ -281,14 +281,14 @@ pt.add_process(name='Odiff_bridge_left',
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_Odiff_cus_bridge)*eV)')
 
 # bridge/cus
-pt.add_process(name='Odiff_cus_right',
+kmc_model.add_process(name='Odiff_cus_right',
                conditions=[Condition(species='O', coord=cus),
                            Condition(species='empty', coord=cus_right)],
                actions=[Condition(species='empty', coord=cus),
                         Condition(species='O', coord=cus_right)],
                 rate_constant='(beta*h)**(-1)*exp(-beta*(E_Odiff_cus_bridge)*eV)')
 
-pt.add_process(name='Odiff_cus_left',
+kmc_model.add_process(name='Odiff_cus_left',
                conditions=[Condition(species='O', coord=cus_right),
                            Condition(species='empty', coord=cus)],
                actions=[Condition(species='empty', coord=cus_right),
@@ -297,7 +297,7 @@ pt.add_process(name='Odiff_cus_left',
 
 
 # Reaction
-pt.add_process(name='React_cus_up',
+kmc_model.add_process(name='React_cus_up',
                conditions=[Condition(species='O', coord=cus),
                            Condition(species='CO', coord=cus_up)],
                actions=[Action(species='empty', coord=cus),
@@ -305,7 +305,7 @@ pt.add_process(name='React_cus_up',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Ocus_COcus*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_cus_up',
+kmc_model.add_process(name='Ads_cus_up',
                conditions=[Condition(species='empty', coord=cus),
                            Condition(species='empty', coord=cus_up)],
                actions=[Action(species='O', coord=cus),
@@ -314,7 +314,7 @@ pt.add_process(name='Ads_cus_up',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.add_process(name='React_cus_down',
+kmc_model.add_process(name='React_cus_down',
                conditions=[Condition(species='O', coord=cus_up),
                            Condition(species='CO', coord=cus)],
                actions=[Action(species='empty', coord=cus_up),
@@ -322,7 +322,7 @@ pt.add_process(name='React_cus_down',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Ocus_COcus*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_cus_down',
+kmc_model.add_process(name='Ads_cus_down',
                conditions=[Condition(species='empty', coord=cus_up),
                            Condition(species='empty', coord=cus)],
                actions=[Action(species='O', coord=cus_up),
@@ -331,7 +331,7 @@ pt.add_process(name='Ads_cus_down',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.add_process(name='React_cus_right',
+kmc_model.add_process(name='React_cus_right',
                conditions=[Condition(species='O', coord=cus),
                            Condition(species='CO', coord=cus_right)],
                actions=[Action(species='empty', coord=cus),
@@ -339,7 +339,7 @@ pt.add_process(name='React_cus_right',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Ocus_CObridge*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_cus_right',
+kmc_model.add_process(name='Ads_cus_right',
                conditions=[Condition(species='empty', coord=cus),
                            Condition(species='empty', coord=cus_right)],
                actions=[Action(species='O', coord=cus),
@@ -348,7 +348,7 @@ pt.add_process(name='Ads_cus_right',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.add_process(name='React_cus_left',
+kmc_model.add_process(name='React_cus_left',
                conditions=[Condition(species='O', coord=cus_right),
                            Condition(species='CO', coord=cus)],
                actions=[Action(species='empty', coord=cus_right),
@@ -356,7 +356,7 @@ pt.add_process(name='React_cus_left',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Obridge_COcus*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_cus_left',
+kmc_model.add_process(name='Ads_cus_left',
                conditions=[Condition(species='empty', coord=cus_right),
                            Condition(species='empty', coord=cus)],
                actions=[Action(species='O', coord=cus_right),
@@ -365,7 +365,7 @@ pt.add_process(name='Ads_cus_left',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.add_process(name='React_bridge_up',
+kmc_model.add_process(name='React_bridge_up',
                conditions=[Condition(species='O', coord=bridge),
                            Condition(species='CO', coord=bridge_up)],
                actions=[Action(species='empty', coord=bridge),
@@ -373,7 +373,7 @@ pt.add_process(name='React_bridge_up',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Obridge_CObridge*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_bridge_up',
+kmc_model.add_process(name='Ads_bridge_up',
                conditions=[Condition(species='empty', coord=bridge),
                            Condition(species='empty', coord=bridge_up)],
                actions=[Action(species='O', coord=bridge),
@@ -382,7 +382,7 @@ pt.add_process(name='Ads_bridge_up',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.add_process(name='React_bridge_down',
+kmc_model.add_process(name='React_bridge_down',
                conditions=[Condition(species='O', coord=bridge_up),
                            Condition(species='CO', coord=bridge)],
                actions=[Action(species='empty', coord=bridge_up),
@@ -390,7 +390,7 @@ pt.add_process(name='React_bridge_down',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Obridge_CObridge*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_bridge_down',
+kmc_model.add_process(name='Ads_bridge_down',
                conditions=[Condition(species='empty', coord=bridge_up),
                            Condition(species='empty', coord=bridge)],
                actions=[Action(species='O', coord=bridge_up),
@@ -399,7 +399,7 @@ pt.add_process(name='Ads_bridge_down',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.add_process(name='React_bridge_right',
+kmc_model.add_process(name='React_bridge_right',
                conditions=[Condition(species='O', coord=bridge),
                            Condition(species='CO', coord=bridge_right)],
                actions=[Action(species='empty', coord=bridge),
@@ -407,7 +407,7 @@ pt.add_process(name='React_bridge_right',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Obridge_COcus*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_bridge_right',
+kmc_model.add_process(name='Ads_bridge_right',
                conditions=[Condition(species='empty', coord=bridge),
                            Condition(species='empty', coord=bridge_right)],
                actions=[Action(species='O', coord=bridge),
@@ -416,7 +416,7 @@ pt.add_process(name='Ads_bridge_right',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.add_process(name='React_bridge_left',
+kmc_model.add_process(name='React_bridge_left',
                conditions=[Condition(species='O', coord=bridge_right),
                            Condition(species='CO', coord=bridge)],
                actions=[Action(species='empty', coord=bridge_right),
@@ -424,7 +424,7 @@ pt.add_process(name='React_bridge_left',
                 rate_constant='(beta*h)**(-1)*exp(-beta*E_react_Ocus_CObridge*eV)',
                 tof_count={'CO_oxidation':1})
 
-pt.add_process(name='Ads_bridge_left',
+kmc_model.add_process(name='Ads_bridge_left',
                conditions=[Condition(species='empty', coord=bridge_right),
                            Condition(species='empty', coord=bridge)],
                actions=[Action(species='O', coord=bridge_right),
@@ -433,14 +433,14 @@ pt.add_process(name='Ads_bridge_left',
                 tof_count={'CO_oxidation':-1})
 
 
-pt.export_xml_file(name+'.xml')
-pt.print_statistics()
+kmc_model.export_xml_file(name+'.xml')
+kmc_model.print_statistics()
 
 model_name = name
 import kmcos
 ###It's good to simply copy and paste the below lines between model creation files.
-pt.filename = model_name + ".xml"
-pt.backend = 'local_smart' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
-pt.clear_model(model_name, backend=pt.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
-pt.save()
-kmcos.export(pt.filename + ' -b ' + pt.backend) #alternatively, one can use: kmcos.cli.main('export '+  pt.filename + ' -b' + pt.backend)
+kmc_model.filename = model_name + ".xml"
+kmc_model.backend = 'local_smart' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
+kmc_model.clear_model(model_name, backend=kmc_model.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
+kmc_model.save_model()
+kmcos.export(kmc_model.filename + ' -b ' + kmc_model.backend) #alternatively, one can use: kmcos.cli.main('export '+  kmc_model.filename + ' -b' + kmc_model.backend)
