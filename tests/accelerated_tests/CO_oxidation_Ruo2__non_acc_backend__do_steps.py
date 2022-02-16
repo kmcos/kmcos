@@ -444,4 +444,4 @@ kmc_model.filename = model_name + ".xml"
 kmc_model.backend = 'local_smart' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
 kmc_model.clear_model(model_name, backend=kmc_model.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
 kmc_model.save_model()
-kmcos.export(kmc_model.filename + ' -b ' + kmc_model.backend) #alternatively, one can use: kmcos.cli.main('export '+  kmc_model.filename + ' -b' + kmc_model.backend)
+kmcos.compile(kmc_model) #alternatively, one can use: kmcos.cli.main('export '+  kmc_model.filename + ' -b' + kmc_model.backend)
