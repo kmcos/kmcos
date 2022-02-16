@@ -441,7 +441,7 @@ import kmcos
 ###It's good to simply copy and paste the below lines between model creation files.
 kmc_model.filename = model_name + ".xml"
 kmc_model.backend = 'local_smart' #specifying is optional. local_smart is the dfault. Currently, the other options are 'lat_int' and 'otf'
-kmc_model.clear_model(model_name, backend=kmc_model.backend) #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
+kmc_model.clear_model() #This line is optional: if you are updating a model, this line will remove the old model before exporting the new one. It is convenent to always include this line because then you don't need to 'confirm' removing the old model.
 kmc_model.save_model()
-acceleration =  ' -t ' #should be '' if acceleration is not desired. 
-kmcos.export(kmc_model.filename + ' -b ' + kmc_model.backend + acceleration) #alternatively, one can use: kmcos.cli.main('export '+  kmc_model.filename + ' -b' + kmc_model.backend)
+kmc_model.compile_options =  ' -t ' #should be '' if acceleration is not desired. 
+kmcos.compile(kmc_model) #alternatively, one can use: kmcos.cli.main('export '+  kmc_model.filename + ' -b' + kmc_model.backend)

@@ -85,8 +85,10 @@ class Project(object):
         self.meta = Meta()
         if type(model_name)==type(None):
             self.model_name = "UntitledModel"
+            self.meta.model_name = "UntitledModel"
         else:
             self.model_name = model_name
+            self.meta.model_name = model_name
         self.layer_list = LayerList()
         self.lattice = self.layer_list
         self.parameter_list = ParameterList()
@@ -95,6 +97,7 @@ class Project(object):
         self.output_list = OutputList()
         self.filename = self.model_name + ".xml"
         self.backend = "local_smart" #this is just the default.
+        self.compile_options = ""
 
         # Quick'n'dirty define access functions
         # needed in context with GTKProject
@@ -565,8 +568,9 @@ class Project(object):
         with open('abbreviations_{}.dat'.format(self.meta.model_name), 'w') as outfile:
             outfile.write(pprint.pformat(stub_map))
 
-    def clear_model(self, model_name, backend=''):
+    def clear_model(self, model_name='', backend=''):
         if backend=='': backend = self.backend
+        if model_name=='': model_name = self.model_name
         import kmcos.io
         kmcos.io.clear_model(model_name, backend=backend)
     

@@ -55,7 +55,8 @@ from __future__ import print_function
 #import kmcos.types
 #import kmcos.io
 
-__version__ = "0.0.62"
+
+__version__ = "0.0.63"
 VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):
@@ -442,7 +443,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
 
 def compile(kmc_model): #exports the kmc_model.xml file
     import kmcos
-    kmcos.export(kmc_model.filename + ' -b' + kmc_model.backend)
+    kmcos.export(kmc_model.filename + ' -b' + kmc_model.backend + ' ' + kmc_model.compile_options) # You can find these various compile_options in get_options() in kmcos/cli.py
 
 def create_kmc_model(model_name = None): #pointer to create_kmc_model in types.py, which creates the kmc_model
     from kmcos.types import create_kmc_model
