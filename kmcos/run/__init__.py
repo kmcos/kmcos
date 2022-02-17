@@ -937,10 +937,10 @@ class KMC_Model(Process):
         ase = import_ase()
         ase.visualize.view(self.get_atoms(tag=tag), *args, **kwargs)
 
-    def view(self):
+    def view(self, scaleA = None):
         """Start current model in live view mode."""
         from kmcos import view
-        view.main(self)
+        view.main(self, scaleA = scaleA)
 
     def get_atoms(self, geometry=True, tag=None, reset_time_overrun=False):
         """Return an ASE Atoms object with additional

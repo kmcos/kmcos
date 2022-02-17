@@ -165,7 +165,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
     """
 
     def __init__(self, queue, signal_queue, vbox, window,
-                rotations='', show_unit_cell=True, show_bonds=False):
+                rotations='', scaleA = None, show_unit_cell=True, show_bonds=False):
 
         threading.Thread.__init__(self)
         self.image_queue = queue
@@ -178,6 +178,7 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
         self.images.initialize([ase.atoms.Atoms()])
         self.killed = False
         self.paused = False
+        self.scaleA = scaleA
 
         self.vbox = vbox
         self.window = window
@@ -196,7 +197,11 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
             self.live_plot = False
 
         #self.drawing_area.realize()
-        self.scaleA = 3.0
+        if type(self.scaleA) == type(None):
+            self.scaleA = 3.0
+        else:
+            pass
+
         self.center = np.array([8, 8, 8])
         #self.set_colors()
         #self.set_coordinates(0)
@@ -398,14 +403,18 @@ class KMC_Viewer():
     and view a kMC model.
     """
 
-    def __init__(self, model=None, steps_per_frame=50000):
+    def __init__(self, model=None, scaleA = None, steps_per_frame=50000):
         if sys.version_info.major == 3:
             self.window = gtk.Window()
         else:
             self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
             self.window.set_position(gtk.WIN_POS_CENTER)
+
+        
             
         self.window.connect('delete-event', self.exit)
+
+        self.scaleA = scaleA
 
         self.vbox = gtk.VBox()
         self.window.add(self.vbox)
@@ -422,8 +431,8 @@ class KMC_Viewer():
             self.model.image_queue = queue
             self.model.parameter_queue = self.parameter_queue
             self.model.signal_queue = self.signal_queue
-        self.viewbox = KMC_ViewBox(queue, self.signal_queue,
-                                   self.vbox, self.window)
+        self.viewbox = KMC_ViewBox(queue = queue, signal_queue = self.signal_queue,
+                                 vbox = self.vbox, window = self.window, scaleA = self.scaleA)
 
         adjustable_params = [param for param in settings.parameters
                              if settings.parameters[param]['adjustable']]
@@ -467,7 +476,7 @@ class KMC_Viewer():
         return True
 
 
-def main(model=None, steps_per_frame=50000):
+def main(model=None, scaleA = None, steps_per_frame=50000):
     """The entry point for the kmcos viewer application. In order to
     run and view a model the corresponding kmc_settings.py and
     kmc_model.(so/pyd) must be in the current import path, e.g. ::
@@ -477,9 +486,8 @@ def main(model=None, steps_per_frame=50000):
         from kmcos.view import main
         main() # launch viewer
     """
-
     GObject.threads_init()
-    viewer = KMC_Viewer(model, steps_per_frame=steps_per_frame)
+    viewer = KMC_Viewer(model = model, scaleA = scaleA, steps_per_frame=steps_per_frame)
     viewer.model.start()
     viewer.viewbox.start()
     gtk.main()
