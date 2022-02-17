@@ -12,7 +12,8 @@ import UnitTesterSG as ut
 suffix = ut.returnDigitFromFilename(__file__)
 #prefix. Make this '' if you do not want any prefix.
 prefix = ''
-
+import os
+os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
 ####in this file, we are going to delete the xml and freshly export a model and change directories before doing anything####
 import os
@@ -66,11 +67,13 @@ absoluteTolerance = 2E-7
 
 #this is so that pytest can do UnitTesterSG tests.
 def test_pytest(): #note that it cannot have any required arguments for pytest to use it, and that it is using variables that are defined above in the module.
+    import os
+    cwd = os.path.abspath(os.curdir)
     ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = False, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
+    os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
 """#For any individual test, after finishing getting it working, set allowOverwrite to False in the line below calling doTest if you want to skip UnitTesterSG from stopping to notify user when results match but result strings don't. """        
 if __name__ == "__main__":
    #This is the normal way of using the UnitTesterSG module, and will be run by UnitTesterSG or by running this test file by itself.
    ut.doTest(resultObj, resultStr, prefix=prefix,suffix=suffix, allowOverwrite = True, relativeTolerance=relativeTolerance, absoluteTolerance=absoluteTolerance)
-   
-os.system("cd ..")
+   os.chdir('..')

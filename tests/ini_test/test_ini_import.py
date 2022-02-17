@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
+import kmcos
 from glob import glob
 
 def test_ini_import():
     for ini_filename in glob('*.ini'):
         from kmcos.types import Project
-        pt = Project()
-        pt.import_ini_file(open(ini_filename))
-        pt.save('foo.ini')
-        pt.save('foo.xml')
+        kmc_model = kmcos.create_kmc_model()
+        kmc_model.import_ini_file(open(ini_filename))
+        kmc_model.save('foo.ini')
+        kmc_model.save('foo.xml')
 
 if __name__ == '__main__':
     test_ini_import()
