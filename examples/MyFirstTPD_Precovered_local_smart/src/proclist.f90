@@ -119,7 +119,7 @@ subroutine do_kmc_steps(n)
 
 end subroutine do_kmc_steps
 
-subroutine do_kmc_steps_time(t, num_iter)
+subroutine do_kmc_steps_time(t, n, num_iter)
 !****f* proclist/do_kmc_steps_time
 ! FUNCTION
 !    Performs a variable number of KMC steps to try to match the requested
@@ -133,12 +133,15 @@ subroutine do_kmc_steps_time(t, num_iter)
 ! ARGUMENTS
 !
 !    ``t`` : Requested simulation time increment (input)
+!    ``n`` : Maximum number of steps to run (input)
 !    ``num_iter`` : the number of executed iterations (output)
 !******
     use base, only: get_accum_rate
     real(kind=rdouble), intent(in) :: t
+    integer(kind=ilong), intent(in) :: n
     integer(kind=ilong), intent(out) :: num_iter
 
+    integer(kind=ilong) :: i
     real(kind=rsingle) :: ran_proc, ran_time, ran_site
     integer(kind=iint) :: nr_site, proc_nr
     integer(kind=iint) :: state(33)
@@ -146,8 +149,7 @@ subroutine do_kmc_steps_time(t, num_iter)
 
     loop_kmc_time = 0
     num_iter = 0
-    do
-
+    do i = 1, n
       call random_seed(get=state)
       call random_number(ran_time)
       call random_number(ran_proc)
@@ -166,9 +168,7 @@ subroutine do_kmc_steps_time(t, num_iter)
         loop_kmc_time = loop_kmc_time + time_step
         num_iter = num_iter + 1
       end if
-
     end do
-
 end subroutine do_kmc_steps_time
 
 subroutine do_kmc_step()

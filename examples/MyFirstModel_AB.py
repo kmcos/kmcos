@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 from kmcos.types import *
+import kmcos
 
 def main():
-
+    model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
+    model_name = model_name.replace("__build", "")
     kmc_model = kmcos.create_kmc_model(model_name)
 # Meta
     kmc_model.meta.author = 'Max J. Hoffmann'
@@ -83,8 +85,8 @@ def main():
                        tof_count={'TOF':1})
 
 
-    return pt
+    return kmc_model
 
 if __name__ == '__main__':
-    pt = main()
+    kmc_model = main()
     kmc_model.save('AB_model.ini')

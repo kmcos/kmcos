@@ -15,10 +15,10 @@ def test_coord_comparison():
 
     import AB_model
     print(dir(AB_model))
-    pt = AB_model.main()
+    kmc_model = AB_model.main()
 
-    coord1 = pt.layer_list.generate_coord('a.(1,0,0)')
-    coord2 = pt.layer_list.generate_coord('a.(1,0,0)')
+    coord1 = kmc_model.layer_list.generate_coord('a.(1,0,0)')
+    coord2 = kmc_model.layer_list.generate_coord('a.(1,0,0)')
 
     assert coord1==coord2
     assert (coord1!=coord2) == False

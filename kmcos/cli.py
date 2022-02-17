@@ -170,7 +170,8 @@ def get_options(args=None, get_parser=False):
         + ') [options]',
         version=kmcos.__version__)
 
-    parser.add_option('-s', '--source-only',
+    # -s is the shorthamd for --source-only. All following options follow the same syntax
+    parser.add_option('-s', '--source-only', 
                       dest='source_only',
                       action='store_true',
                       default=False)

@@ -155,7 +155,7 @@ subroutine do_kmc_steps(n)
 
 end subroutine do_kmc_steps
 
-subroutine do_kmc_steps_time(t, num_iter)
+subroutine do_kmc_steps_time(t, n, num_iter)
 !****f* proclist/do_kmc_steps_time
 ! FUNCTION
 !    Performs a variable number of KMC steps to try to match the requested
@@ -169,12 +169,15 @@ subroutine do_kmc_steps_time(t, num_iter)
 ! ARGUMENTS
 !
 !    ``t`` : Requested simulation time increment (input)
+!    ``n`` : Maximum number of steps to run (input)
 !    ``num_iter`` : the number of executed iterations (output)
 !******
     use base, only: get_accum_rate
     real(kind=rdouble), intent(in) :: t
+    integer(kind=ilong), intent(in) :: n
     integer(kind=ilong), intent(out) :: num_iter
 
+    integer(kind=ilong) :: i
     real(kind=rsingle) :: ran_proc, ran_time, ran_site
     integer(kind=iint) :: nr_site, proc_nr
     integer(kind=iint) :: state(33)
@@ -182,8 +185,7 @@ subroutine do_kmc_steps_time(t, num_iter)
 
     loop_kmc_time = 0
     num_iter = 0
-    do
-
+    do i = 1, n
       call random_seed(get=state)
       call random_number(ran_time)
       call random_number(ran_proc)
@@ -202,9 +204,7 @@ subroutine do_kmc_steps_time(t, num_iter)
         loop_kmc_time = loop_kmc_time + time_step
         num_iter = num_iter + 1
       end if
-
     end do
-
 end subroutine do_kmc_steps_time
 
 subroutine do_kmc_step()
@@ -697,31 +697,31 @@ subroutine put_CO_ruo2_bridge(site)
     ! enable affected processes
     call add_proc(CO_desorption_bridge, site)
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(COdiff_bridge_down, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(React_bridge_up, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(COdiff_bridge_down, site + (/0, -1, 0, 0/))
     end select
 
     select case(get_species(site + (/-1, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(COdiff_bridge_left, site)
     case(O)
         call add_proc(React_cus_right, site)
+    case(empty)
+        call add_proc(COdiff_bridge_left, site)
     end select
 
     select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(COdiff_bridge_right, site)
     case(O)
         call add_proc(React_cus_left, site)
+    case(empty)
+        call add_proc(COdiff_bridge_right, site)
     end select
 
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(COdiff_bridge_up, site)
     case(O)
         call add_proc(React_bridge_down, site)
+    case(empty)
+        call add_proc(COdiff_bridge_up, site)
     end select
 
 
@@ -774,39 +774,39 @@ subroutine take_CO_ruo2_bridge(site)
     ! enable affected processes
     call add_proc(CO_adsorption_bridge, site)
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_up, site)
-    case(CO)
-        call add_proc(COdiff_bridge_down, site)
     case(O)
         call add_proc(Odiff_bridge_down, site)
+    case(CO)
+        call add_proc(COdiff_bridge_down, site)
+    case(empty)
+        call add_proc(O2_adsorption_bridge_up, site)
     end select
 
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_up, site + (/0, -1, 0, 0/))
-    case(CO)
-        call add_proc(COdiff_bridge_up, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(Odiff_bridge_up, site + (/0, -1, 0, 0/))
+    case(CO)
+        call add_proc(COdiff_bridge_up, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(O2_adsorption_bridge_up, site + (/0, -1, 0, 0/))
     end select
 
     select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_right, site)
-    case(CO)
-        call add_proc(COdiff_cus_left, site)
     case(O)
         call add_proc(Odiff_cus_left, site)
+    case(CO)
+        call add_proc(COdiff_cus_left, site)
+    case(empty)
+        call add_proc(O2_adsorption_bridge_right, site)
     end select
 
     select case(get_species(site + (/-1, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_right, site)
-    case(CO)
-        call add_proc(COdiff_cus_right, site)
     case(O)
         call add_proc(Odiff_cus_right, site)
+    case(CO)
+        call add_proc(COdiff_cus_right, site)
+    case(empty)
+        call add_proc(O2_adsorption_cus_right, site)
     end select
 
 
@@ -875,31 +875,31 @@ subroutine put_CO_ruo2_cus(site)
     ! enable affected processes
     call add_proc(CO_desorption_cus, site)
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(COdiff_cus_down, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(React_cus_up, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(COdiff_cus_down, site + (/0, -1, 0, 0/))
     end select
 
     select case(get_species(site + (/0, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(COdiff_cus_left, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(React_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(COdiff_cus_left, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/1, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(COdiff_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(React_bridge_left, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(COdiff_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(COdiff_cus_up, site)
     case(O)
         call add_proc(React_cus_down, site)
+    case(empty)
+        call add_proc(COdiff_cus_up, site)
     end select
 
 
@@ -952,39 +952,39 @@ subroutine take_CO_ruo2_cus(site)
     ! enable affected processes
     call add_proc(CO_adsorption_cus, site)
     select case(get_species(site + (/1, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
-    case(CO)
-        call add_proc(COdiff_bridge_left, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(Odiff_bridge_left, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(CO)
+        call add_proc(COdiff_bridge_left, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(O2_adsorption_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/0, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
-    case(CO)
-        call add_proc(COdiff_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(Odiff_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(CO)
+        call add_proc(COdiff_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(O2_adsorption_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_up, site)
-    case(CO)
-        call add_proc(COdiff_cus_down, site)
     case(O)
         call add_proc(Odiff_cus_down, site)
+    case(CO)
+        call add_proc(COdiff_cus_down, site)
+    case(empty)
+        call add_proc(O2_adsorption_cus_up, site)
     end select
 
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_up, site + (/0, -1, 0, 0/))
-    case(CO)
-        call add_proc(COdiff_cus_up, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(Odiff_cus_up, site + (/0, -1, 0, 0/))
+    case(CO)
+        call add_proc(COdiff_cus_up, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(O2_adsorption_cus_up, site + (/0, -1, 0, 0/))
     end select
 
 
@@ -1052,39 +1052,39 @@ subroutine put_O_ruo2_bridge(site)
 
     ! enable affected processes
     select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(Odiff_bridge_right, site)
-    case(CO)
-        call add_proc(React_bridge_right, site)
     case(O)
         call add_proc(O2_desorption_bridge_right, site)
+    case(CO)
+        call add_proc(React_bridge_right, site)
+    case(empty)
+        call add_proc(Odiff_bridge_right, site)
     end select
 
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(Odiff_bridge_up, site)
-    case(CO)
-        call add_proc(React_bridge_up, site)
     case(O)
         call add_proc(O2_desorption_bridge_up, site)
+    case(CO)
+        call add_proc(React_bridge_up, site)
+    case(empty)
+        call add_proc(Odiff_bridge_up, site)
     end select
 
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(Odiff_bridge_down, site + (/0, -1, 0, 0/))
-    case(CO)
-        call add_proc(React_bridge_down, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(O2_desorption_bridge_up, site + (/0, -1, 0, 0/))
+    case(CO)
+        call add_proc(React_bridge_down, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(Odiff_bridge_down, site + (/0, -1, 0, 0/))
     end select
 
     select case(get_species(site + (/-1, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(Odiff_bridge_left, site)
-    case(CO)
-        call add_proc(React_bridge_left, site)
     case(O)
         call add_proc(O2_desorption_cus_right, site)
+    case(CO)
+        call add_proc(React_bridge_left, site)
+    case(empty)
+        call add_proc(Odiff_bridge_left, site)
     end select
 
 
@@ -1149,39 +1149,39 @@ subroutine take_O_ruo2_bridge(site)
     ! enable affected processes
     call add_proc(CO_adsorption_bridge, site)
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_up, site)
-    case(CO)
-        call add_proc(COdiff_bridge_down, site)
     case(O)
         call add_proc(Odiff_bridge_down, site)
+    case(CO)
+        call add_proc(COdiff_bridge_down, site)
+    case(empty)
+        call add_proc(O2_adsorption_bridge_up, site)
     end select
 
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_up, site + (/0, -1, 0, 0/))
-    case(CO)
-        call add_proc(COdiff_bridge_up, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(Odiff_bridge_up, site + (/0, -1, 0, 0/))
+    case(CO)
+        call add_proc(COdiff_bridge_up, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(O2_adsorption_bridge_up, site + (/0, -1, 0, 0/))
     end select
 
     select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_right, site)
-    case(CO)
-        call add_proc(COdiff_cus_left, site)
     case(O)
         call add_proc(Odiff_cus_left, site)
+    case(CO)
+        call add_proc(COdiff_cus_left, site)
+    case(empty)
+        call add_proc(O2_adsorption_bridge_right, site)
     end select
 
     select case(get_species(site + (/-1, 0, 0, ruo2_cus - ruo2_bridge/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_right, site)
-    case(CO)
-        call add_proc(COdiff_cus_right, site)
     case(O)
         call add_proc(Odiff_cus_right, site)
+    case(CO)
+        call add_proc(COdiff_cus_right, site)
+    case(empty)
+        call add_proc(O2_adsorption_cus_right, site)
     end select
 
 
@@ -1249,39 +1249,39 @@ subroutine put_O_ruo2_cus(site)
 
     ! enable affected processes
     select case(get_species(site + (/0, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(Odiff_cus_left, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
-    case(CO)
-        call add_proc(React_cus_left, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(O2_desorption_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(CO)
+        call add_proc(React_cus_left, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(Odiff_cus_left, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/1, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(Odiff_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
-    case(CO)
-        call add_proc(React_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(O2_desorption_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(CO)
+        call add_proc(React_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(Odiff_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(Odiff_cus_up, site)
-    case(CO)
-        call add_proc(React_cus_up, site)
     case(O)
         call add_proc(O2_desorption_cus_up, site)
+    case(CO)
+        call add_proc(React_cus_up, site)
+    case(empty)
+        call add_proc(Odiff_cus_up, site)
     end select
 
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(Odiff_cus_down, site + (/0, -1, 0, 0/))
-    case(CO)
-        call add_proc(React_cus_down, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(O2_desorption_cus_up, site + (/0, -1, 0, 0/))
+    case(CO)
+        call add_proc(React_cus_down, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(Odiff_cus_down, site + (/0, -1, 0, 0/))
     end select
 
 
@@ -1346,39 +1346,39 @@ subroutine take_O_ruo2_cus(site)
     ! enable affected processes
     call add_proc(CO_adsorption_cus, site)
     select case(get_species(site + (/1, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
-    case(CO)
-        call add_proc(COdiff_bridge_left, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(Odiff_bridge_left, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(CO)
+        call add_proc(COdiff_bridge_left, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(O2_adsorption_cus_right, site + (/1, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/0, 0, 0, ruo2_bridge - ruo2_cus/)))
-    case(empty)
-        call add_proc(O2_adsorption_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
-    case(CO)
-        call add_proc(COdiff_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     case(O)
         call add_proc(Odiff_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(CO)
+        call add_proc(COdiff_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
+    case(empty)
+        call add_proc(O2_adsorption_bridge_right, site + (/0, 0, 0, ruo2_bridge - ruo2_cus/))
     end select
 
     select case(get_species(site + (/0, 1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_up, site)
-    case(CO)
-        call add_proc(COdiff_cus_down, site)
     case(O)
         call add_proc(Odiff_cus_down, site)
+    case(CO)
+        call add_proc(COdiff_cus_down, site)
+    case(empty)
+        call add_proc(O2_adsorption_cus_up, site)
     end select
 
     select case(get_species(site + (/0, -1, 0, 0/)))
-    case(empty)
-        call add_proc(O2_adsorption_cus_up, site + (/0, -1, 0, 0/))
-    case(CO)
-        call add_proc(COdiff_cus_up, site + (/0, -1, 0, 0/))
     case(O)
         call add_proc(Odiff_cus_up, site + (/0, -1, 0, 0/))
+    case(CO)
+        call add_proc(COdiff_cus_up, site + (/0, -1, 0, 0/))
+    case(empty)
+        call add_proc(O2_adsorption_cus_up, site + (/0, -1, 0, 0/))
     end select
 
 
@@ -1497,84 +1497,84 @@ subroutine touchup_ruo2_bridge(site)
         call del_proc(React_cus_up, site)
     endif
     select case(get_species(site))
-    case(empty)
-        call add_proc(CO_adsorption_bridge, site)
-        select case(get_species(site + (/0, 1, 0, 0/)))
-        case(empty)
-            call add_proc(O2_adsorption_bridge_up, site)
-        case(CO)
-            call add_proc(COdiff_bridge_down, site)
+    case(O)
+        select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
         case(O)
-            call add_proc(Odiff_bridge_down, site)
+            call add_proc(O2_desorption_bridge_right, site)
+        case(CO)
+            call add_proc(React_bridge_right, site)
+        case(empty)
+            call add_proc(Odiff_bridge_right, site)
         end select
 
-        select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
-        case(empty)
-            call add_proc(O2_adsorption_bridge_right, site)
-        case(CO)
-            call add_proc(COdiff_cus_left, site)
+        select case(get_species(site + (/0, 1, 0, 0/)))
         case(O)
-            call add_proc(Odiff_cus_left, site)
+            call add_proc(O2_desorption_bridge_up, site)
+        case(CO)
+            call add_proc(React_bridge_up, site)
+        case(empty)
+            call add_proc(Odiff_bridge_up, site)
         end select
 
         select case(get_species(site + (/-1, 0, 0, ruo2_cus - ruo2_bridge/)))
-        case(empty)
-            call add_proc(O2_adsorption_cus_right, site)
-        case(CO)
-            call add_proc(COdiff_cus_right, site)
         case(O)
-            call add_proc(Odiff_cus_right, site)
+            call add_proc(O2_desorption_cus_right, site)
+        case(CO)
+            call add_proc(React_bridge_left, site)
+        case(empty)
+            call add_proc(Odiff_bridge_left, site)
         end select
 
     case(CO)
         call add_proc(CO_desorption_bridge, site)
         select case(get_species(site + (/-1, 0, 0, ruo2_cus - ruo2_bridge/)))
-        case(empty)
-            call add_proc(COdiff_bridge_left, site)
         case(O)
             call add_proc(React_cus_right, site)
+        case(empty)
+            call add_proc(COdiff_bridge_left, site)
         end select
 
         select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
-        case(empty)
-            call add_proc(COdiff_bridge_right, site)
         case(O)
             call add_proc(React_cus_left, site)
+        case(empty)
+            call add_proc(COdiff_bridge_right, site)
         end select
 
         select case(get_species(site + (/0, 1, 0, 0/)))
-        case(empty)
-            call add_proc(COdiff_bridge_up, site)
         case(O)
             call add_proc(React_bridge_down, site)
-        end select
-
-    case(O)
-        select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
         case(empty)
-            call add_proc(Odiff_bridge_right, site)
-        case(CO)
-            call add_proc(React_bridge_right, site)
-        case(O)
-            call add_proc(O2_desorption_bridge_right, site)
+            call add_proc(COdiff_bridge_up, site)
         end select
 
+    case(empty)
+        call add_proc(CO_adsorption_bridge, site)
         select case(get_species(site + (/0, 1, 0, 0/)))
-        case(empty)
-            call add_proc(Odiff_bridge_up, site)
-        case(CO)
-            call add_proc(React_bridge_up, site)
         case(O)
-            call add_proc(O2_desorption_bridge_up, site)
+            call add_proc(Odiff_bridge_down, site)
+        case(CO)
+            call add_proc(COdiff_bridge_down, site)
+        case(empty)
+            call add_proc(O2_adsorption_bridge_up, site)
+        end select
+
+        select case(get_species(site + (/0, 0, 0, ruo2_cus - ruo2_bridge/)))
+        case(O)
+            call add_proc(Odiff_cus_left, site)
+        case(CO)
+            call add_proc(COdiff_cus_left, site)
+        case(empty)
+            call add_proc(O2_adsorption_bridge_right, site)
         end select
 
         select case(get_species(site + (/-1, 0, 0, ruo2_cus - ruo2_bridge/)))
-        case(empty)
-            call add_proc(Odiff_bridge_left, site)
-        case(CO)
-            call add_proc(React_bridge_left, site)
         case(O)
-            call add_proc(O2_desorption_cus_right, site)
+            call add_proc(Odiff_cus_right, site)
+        case(CO)
+            call add_proc(COdiff_cus_right, site)
+        case(empty)
+            call add_proc(O2_adsorption_cus_right, site)
         end select
 
     end select
@@ -1694,34 +1694,34 @@ subroutine touchup_ruo2_cus(site)
         call del_proc(React_cus_up, site)
     endif
     select case(get_species(site))
-    case(empty)
-        call add_proc(CO_adsorption_cus, site)
+    case(O)
         select case(get_species(site + (/0, 1, 0, 0/)))
-        case(empty)
-            call add_proc(O2_adsorption_cus_up, site)
-        case(CO)
-            call add_proc(COdiff_cus_down, site)
         case(O)
-            call add_proc(Odiff_cus_down, site)
+            call add_proc(O2_desorption_cus_up, site)
+        case(CO)
+            call add_proc(React_cus_up, site)
+        case(empty)
+            call add_proc(Odiff_cus_up, site)
         end select
 
     case(CO)
         call add_proc(CO_desorption_cus, site)
         select case(get_species(site + (/0, 1, 0, 0/)))
-        case(empty)
-            call add_proc(COdiff_cus_up, site)
         case(O)
             call add_proc(React_cus_down, site)
+        case(empty)
+            call add_proc(COdiff_cus_up, site)
         end select
 
-    case(O)
+    case(empty)
+        call add_proc(CO_adsorption_cus, site)
         select case(get_species(site + (/0, 1, 0, 0/)))
-        case(empty)
-            call add_proc(Odiff_cus_up, site)
-        case(CO)
-            call add_proc(React_cus_up, site)
         case(O)
-            call add_proc(O2_desorption_cus_up, site)
+            call add_proc(Odiff_cus_down, site)
+        case(CO)
+            call add_proc(COdiff_cus_down, site)
+        case(empty)
+            call add_proc(O2_adsorption_cus_up, site)
         end select
 
     end select
