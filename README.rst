@@ -127,7 +127,7 @@ FILES
 | │   ├── ruptured_Pd.xml                          # a fcc(100) like surface with some sites missing
 | │   └── small.xml                                # demo file
 | ├── tests/                                       # Unit tests and test data
-| └── tools                                        # Entry points for command line interface
+| ├── tools                                        # Entry points for command line interface
 | │   ├── kmcos
 | │   ├── kmcos.bat
 | │   ├── kmcos-build-standalone
