@@ -1983,6 +1983,21 @@ class KMC_Model(Process):
         self._set_configuration(config)
         self._adjust_database()
 
+    def pickle_export_atoms(self, filename = ""):
+        # takes atoms object in filename and turns it into a .pkl file
+        import pickle
+        if filename == "":
+            filename = "atoms_export.pkl"
+        else:
+            if filename[-3:] == '.pkl':
+                filename.replace('.pkl', '.pkl')
+            else:
+                filename = filename + '.pkl'
+        filehandler = open(filename, 'wb')
+        pickle.dump(self.get_atoms(), filehandler)
+        filehandler.close()
+
+
 class Model_Parameters(object):
     """Holds all user defined parameters of a model in
     concise form. All user defined parameters can be
