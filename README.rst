@@ -128,10 +128,10 @@ FILES
 | │   └── small.xml                                # demo file
 | ├── tests/                                       # Unit tests and test data
 | └── tools                                        # Entry points for command line interface
-|     ├── kmcos
-|     ├── kmcos.bat
-|     ├── kmcos-build-standalone
-|     └── kmcos-install-dependencies-ubuntu
+| │   ├── kmcos
+| │   ├── kmcos.bat
+| │   ├── kmcos-build-standalone
+| │   └── kmcos-install-dependencies-ubuntu
 
 
 COPYRIGHT AND LICENSE
