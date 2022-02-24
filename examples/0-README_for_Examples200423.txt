@@ -8,7 +8,7 @@ Below is a list of the examples, then explanation of how to use them.
 
 To use one of the examples, follow this type of procedure:
 
-python3 MyFirstSnapshots.py
+python3 MyFirstSnapshots__build.py
 cd MyFirstSnapshots_local_smart
 python3 runfile.py
 

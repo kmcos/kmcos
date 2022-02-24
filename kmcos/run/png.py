@@ -16,6 +16,7 @@ class MyPNG(PNG):
                  model=None,
                  scale=20) :
 
+        self.atoms = atoms
         self.numbers = atoms.get_atomic_numbers()
         self.colors = colors
         self.model = model
@@ -114,7 +115,6 @@ class MyPNG(PNG):
         self.filename = filename
         self.write_header(resolution=resolution)
         self.write_info()
-        self.write_body()
         self.write_trailer(resolution=resolution)
 
     def write_info(self):
@@ -140,8 +140,9 @@ class MyPNG(PNG):
             text.draw(self.renderer)
 
     def write_header(self, resolution=72):
-        from matplotlib.backends.backend_agg import RendererAgg, Figure
+        from matplotlib.backends.backend_agg import RendererAgg
         from matplotlib.backend_bases import GraphicsContextBase
+        from matplotlib.figure import Figure
 
         try:
             from matplotlib.transforms import Value
@@ -157,23 +158,20 @@ class MyPNG(PNG):
         self.gc.set_linewidth(.2)
 
     def write_trailer(self, resolution=72):
+        import matplotlib
         renderer = self.renderer
         if hasattr(renderer._renderer, 'write_png'):
             # Old version of matplotlib:
             renderer._renderer.write_png(self.filename)
         else:
-            from matplotlib import _png
-            # buffer_rgba does not accept arguments from version 1.2.0
-            # https://github.com/matplotlib/matplotlib/commit/f4fee350f9fbc639853bee76472d8089a10b40bd
-            import matplotlib
-            if matplotlib.__version__ < '1.2.0':
-                x = renderer._renderer.buffer_rgba(0, 0)
-                _png.write_png(renderer._renderer.buffer_rgba(0, 0),
-                               renderer.width, renderer.height,
-                               self.filename, resolution)
+            from ase.io import write
+            #self.atoms.rotate(a=0.5, (0,1,0), rotate_self=True)
+            if self.filename == "":
+                write('atomic_view.png', self.atoms)
             else:
-                x = renderer._renderer.buffer_rgba()
-                _png.write_png(renderer._renderer.buffer_rgba(),
-                               #renderer.width, renderer.height,
-                               self.filename, resolution)
+                if self.filename[-4:] == '.png':
+                    self.filename.replace('.png', '.png')
+                else:
+                    self.filename = self.filename + '.png'
+                write(self.filename, self.atoms)
 

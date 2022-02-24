@@ -930,12 +930,15 @@ class KMC_Model(Process):
                 print('Wrote {filename}'.format(**locals()))
             self.do_steps(skip)
 
-    def show(self, *args, **kwargs):
+    def peek(self, *args, **kwargs):
         """Visualize the current configuration of the model using ASE ag."""
         tag = kwargs.pop('tag', None)
 
         ase = import_ase()
         ase.visualize.view(self.get_atoms(tag=tag), *args, **kwargs)
+
+    def show(self):
+        return self.peek()
 
     def view(self, scaleA = None):
         """Start current model in live view mode."""
@@ -1558,9 +1561,17 @@ class KMC_Model(Process):
         if showFigure==False:
             plt.close(fig0)
         return fig0, ax0
+
+    def export_picture(self, filename, resolution, scale, **kwargs):
+        atoms = self.get_atoms(reset_time_overrun = False) #here, the self is the KMC_Model object
+        kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
+        return 
         
-    def plot_configuration(self, plot_settings = {}):
+    def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """
+        representation is an optional argument for spatial and atomic view
+        You should specify as 'atomic' to see the atomic view. Leaving representation empty returns spatial view by default.
+
         plot_settings is a dictionary that allows for the plot to change given the arguements
         EX:
             "y_label": "test",
@@ -1572,12 +1583,24 @@ class KMC_Model(Process):
             "dpi": 220,
             "speciesName": False
         plot_configuration will make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
-        """
-        config = self._get_configuration().tolist()
-        species = self.species_tags
-        species_coordinates = self.get_species_coordinates(config, species)
-        self.create_plot(species_coordinates, species, plot_settings)
-        
+        """        
+        if representation == 'atomic':
+            if 'show_unit_cell' in plot_settings:
+                show_unit_cell = plot_settings['show_unit_cell']
+            else:
+                show_unit_cell = True
+            if 'kwargs' in plot_settings:
+                kwargs = plot_settings['kwargs']
+            else:
+                kwargs = {} #default for kwargs is a blank dictionary
+            self.export_picture(filename = filename, resolution = resolution, scale = scale)
+
+        if (representation == 'spatial') or (representation == 'circles'):
+            config = self._get_configuration().tolist()
+            species = self.species_tags
+            species_coordinates = self.get_species_coordinates(config, species)
+            self.create_plot(species_coordinates, species, plot_settings)
+            
     def _put(self, site, new_species, reduce=False):
         """
         Works exactly like put, but without updating the database of
@@ -1982,6 +2005,21 @@ class KMC_Model(Process):
 
         self._set_configuration(config)
         self._adjust_database()
+
+    def pickle_export_atoms(self, filename = ""):
+        # takes atoms object in filename and turns it into a .pkl file
+        import pickle
+        if filename == "":
+            filename = "atoms_export.pkl"
+        else:
+            if filename[-4:] == '.pkl':
+                filename.replace('.pkl', '.pkl')
+            else:
+                filename = filename + '.pkl'
+        filehandler = open(filename, 'wb')
+        pickle.dump(self.get_atoms(), filehandler)
+        filehandler.close()
+
 
 class Model_Parameters(object):
     """Holds all user defined parameters of a model in
