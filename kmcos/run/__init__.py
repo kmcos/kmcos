@@ -1989,7 +1989,7 @@ class KMC_Model(Process):
         if filename == "":
             filename = "atoms_export.pkl"
         else:
-            if filename[-3:] == '.pkl':
+            if filename[-4:] == '.pkl':
                 filename.replace('.pkl', '.pkl')
             else:
                 filename = filename + '.pkl'
