@@ -43,7 +43,11 @@ do_snapshots(sps, n_snapshots)
 create_log()
 
 #The first plot_configuration will use default arguments to construct the plot and export as "plottedConfiguration.png"
-sg.model.plot_configuration()
+#sg.model.plot_configuration()
+
+#The second plot_configuration will use the atomic argument to contruct the plot and export as "atomic_view.png"
+sg.model.plot_configuration('atomic')
+
 
 plot_settings = {
     "y_label": "y_direction",
