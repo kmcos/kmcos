@@ -930,12 +930,15 @@ class KMC_Model(Process):
                 print('Wrote {filename}'.format(**locals()))
             self.do_steps(skip)
 
-    def show(self, *args, **kwargs):
+    def peek(self, *args, **kwargs):
         """Visualize the current configuration of the model using ASE ag."""
         tag = kwargs.pop('tag', None)
 
         ase = import_ase()
         ase.visualize.view(self.get_atoms(tag=tag), *args, **kwargs)
+
+    def show(self):
+        return self.peek()
 
     def view(self, scaleA = None):
         """Start current model in live view mode."""
@@ -1559,14 +1562,12 @@ class KMC_Model(Process):
             plt.close(fig0)
         return fig0, ax0
 
-    def export_picture(self, filename, resolution, show_unit_cell, scale, **kwargs):
+    def export_picture(self, filename, resolution, scale, **kwargs):
         atoms = self.get_atoms(reset_time_overrun = False) #here, the self is the KMC_Model object
-        #kmcos.run.png.MyPNG(atoms, show_unit_cell = show_unit_cell, scale = scale, **kwargs).write(filename = filename, resolution)
-        kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=20, model=self, **kwargs).write(filename, resolution=150)
+        kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
-    
         
-    def plot_configuration(self, representation = '', plot_settings = {}):
+    def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = '', plot_settings = {}):
         """
         representation is an optional argument for spatial and atomic view
         You should specify as 'atomic' to see the atomic view. Leaving representation empty returns spatial view by default.
@@ -1592,7 +1593,7 @@ class KMC_Model(Process):
                 kwargs = plot_settings['kwargs']
             else:
                 kwargs = {} #default for kwargs is a blank dictionary
-            self.export_picture(filename = 'PlotConfiguration.png', resolution = 150, show_unit_cell=True, scale = 20)
+            self.export_picture(filename = filename, resolution = resolution, scale = scale)
 
         else:
             config = self._get_configuration().tolist()

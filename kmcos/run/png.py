@@ -112,10 +112,9 @@ class MyPNG(PNG):
         self.d = 2 * scale * radii
 
     def write(self, filename, resolution=72):
-        self.filename = filename
         self.write_header(resolution=resolution)
         self.write_info()
-        self.write_trailer(resolution=resolution)
+        self.write_trailer(filename=filename, resolution=resolution)
 
     def write_info(self):
         def latex_float(f):
@@ -157,14 +156,21 @@ class MyPNG(PNG):
         self.gc = GraphicsContextBase()
         self.gc.set_linewidth(.2)
 
-    def write_trailer(self, resolution=72):
+    def write_trailer(self, filename = "", resolution=72):
         import matplotlib
         renderer = self.renderer
         if hasattr(renderer._renderer, 'write_png'):
             # Old version of matplotlib:
-            renderer._renderer.write_png(self.filename)
+            renderer._renderer.write_png(filename)
         else:
             from ase.io import write
             #self.atoms.rotate(a=0.5, (0,1,0), rotate_self=True)
-            write('atomic_view.png', self.atoms)
+            if filename == "":
+                write('atomic_view.png', self.atoms)
+            else:
+                if filename[-4:] == '.png':
+                    filename.replace('.png', '.png')
+                else:
+                    filename = filename + '.png'
+                write(filename, self.atoms)
 
