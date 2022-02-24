@@ -49,7 +49,7 @@ create_log()
 
 #The second plot_configuration will use the atomic argument to contruct the plot and export as "atomic_view.png"
 #for the filename, you can specify with or without the .png at the end. This function will automatically convert to .png file
-sg.model.plot_configuration(filename='MyFirstDiffusion_atomic_view', resolution=100, scale=20, representation='atomic')
+sg.model.plot_configuration(filename='MyFirstSnapshots_atomic_view', resolution=100, scale=20, representation='atomic')
 
 
 plot_settings = {
