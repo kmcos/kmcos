@@ -1567,7 +1567,7 @@ class KMC_Model(Process):
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
         
-    def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = '', plot_settings = {}):
+    def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """
         representation is an optional argument for spatial and atomic view
         You should specify as 'atomic' to see the atomic view. Leaving representation empty returns spatial view by default.
@@ -1595,7 +1595,7 @@ class KMC_Model(Process):
                 kwargs = {} #default for kwargs is a blank dictionary
             self.export_picture(filename = filename, resolution = resolution, scale = scale)
 
-        else:
+        if (representation == 'spatial') or (representation == 'circles'):
             config = self._get_configuration().tolist()
             species = self.species_tags
             species_coordinates = self.get_species_coordinates(config, species)
