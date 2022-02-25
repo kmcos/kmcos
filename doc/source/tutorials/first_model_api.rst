@@ -32,11 +32,8 @@ from `kmcos.io` will only be needed at the end to save the project
 or to export compilable code.
 
 The example sketched out here leads you to a kMC model for CO adsorption
-and desorption on Pd(100) including a simple lateral interaction. Granted
-this hardly excites surface scientists but we need to start somewhere, right?
-
-
-First you should instantiate a new project and fill in meta information ::
+and desorption on Pd(100). First you should instantiate a new project 
+and fill in meta information ::
 
   pt = Project()
   pt.set_meta(author = 'Your Name',
