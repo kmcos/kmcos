@@ -6,10 +6,10 @@ two files: kmc_model.so and kmc_settings.py. These two files
 are really all you need for simulations. So a simple
 way to view the model is the ::
 
-  kmcos view
+  python3 kmcos view
 
 command from the command line. For this two work you need to
-be in the same directory as these two file (more precisely
+be in the same directory as these two files (more precisely
 these two files need to be in the python import path) and
 you should see an instance of your model running.
 This feature can be quite useful to quickly obtain an
