@@ -12,7 +12,7 @@ import numpy as np
 slab = fcc111('Pt', [1,1,4], vacuum=10)
 
 positions = slab.get_scaled_positions()
-model_name = __file__[+0:-3].replace("__build", "") # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py"). The a replace command removes the ‘__build’ part of the string. To manually name the model just set the model_name variable equal to the name you would like.
+model_name = str(__file__[+0:-3]).replace("__build", "") # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py"). The a replace command removes the ‘__build’ part of the string. To manually name the model just set the model_name variable equal to the name you would like.
 kmc_model = kmcos.create_kmc_model(model_name)
 kmc_model.set_meta(model_name='pt111',
             model_dimension='2',
