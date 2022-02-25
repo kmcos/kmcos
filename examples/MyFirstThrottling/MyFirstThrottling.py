@@ -7,7 +7,7 @@ import numpy as np
 #from math import exp
 #from math import sqrt
 
-model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
+model_name = str(__file__[+0:-3]) # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
 kmc_model = kmcos.create_kmc_model(model_name)
 kmc_model.set_meta(author='Thomas Danielson',
             email='thomasd1@vt.edu',
