@@ -5,7 +5,7 @@ import kmcos
 from itertools import product
 import numpy as np
 
-model_name = str(__file__[+0:-3]).replace("__build", "") # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py"). The a replace command removes the ‘__build’ part of the string. To manually name the model just set the model_name variable equal to the name you would like.
+model_name = str(__file__[+0:-3]).replace("__build", "") # This line automatically names the model based on the python file’s name. The brackets cut off zero characters from the beginning and three character from the end (".py"). The replace command removes the ‘__build’ part of the string. If you want to override this automatic naming, just set the variable ‘model_name’ equal to the string that you would like to use.
 kmc_model = kmcos.create_kmc_model(model_name)
 kmc_model.set_meta(author='Juan M. Lorenzi',
             email='jmlorenzi@gmail.com',
