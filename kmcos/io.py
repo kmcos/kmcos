@@ -3070,8 +3070,9 @@ class ProcListWriter():
         # XML
         out.write('xml = """%s"""\n' % data)
         
-        #benchmark if run directly, else cli.
+        #benchmark if kmc_settings.py is run without additional arguments, else call cli with additional argument provided.
         out.write('if __name__ == "__main__":\n')
+        out.write('    #benchmark if kmc_settings.py is run without additional arguments, else call cli with additional argument provided.\n')
         out.write('    import sys\n')
         out.write('    if len(sys.argv) == 1:\n')
         out.write('        from kmcos import cli\n')

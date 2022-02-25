@@ -17,6 +17,4 @@ Tutorials
 
 .. include:: run_model_gui.rst
 
-
 .. include:: development.rst
-

@@ -1,5 +1,5 @@
 The Model Editor (Deprecated -- glade migration is required to revive this feature)
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
@@ -32,7 +32,3 @@ The Model Editor (Deprecated -- glade migration is required to revive this featu
   
   Processes can be added by point and click or by entering
   a chemical expression.
-
-
-
-

@@ -1,7 +1,7 @@
 .. _api-tutorial:
 
 A first kMC Model--the API way
-==============================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In general there are two interfaces to *defining* a new
 model: A GUI and an API. While the GUI can be quite
@@ -15,10 +15,10 @@ do this will also pay-off especially if you starting tinkering
 with your existing models and make little changes here and there.
 
 
-Construct the model
-^^^^^^^^^^^^^^^^^^^
+Build the model
+===============
 
-You may also look at MyFirstDiffusion.py in the examples directory.
+You may also look at MyFirstDiffusion__build.py in the examples directory.
 
 We start by making the necessary import statements (in `*python* <http://python.org>`_ or better `*ipython* <http://ipython.org>`_)::
 
@@ -32,11 +32,8 @@ from `kmcos.io` will only be needed at the end to save the project
 or to export compilable code.
 
 The example sketched out here leads you to a kMC model for CO adsorption
-and desorption on Pd(100) including a simple lateral interaction. Granted
-this hardly excites surface scientists but we need to start somewhere, right?
-
-
-First you should instantiate a new project and fill in meta information ::
+and desorption on Pd(100). First you should instantiate a new project 
+and fill in meta information ::
 
   pt = Project()
   pt.set_meta(author = 'Your Name',
@@ -99,7 +96,7 @@ Ok, let us see what we managed so far: you have a *lattice* with a
 
 
 Populate process list and parameter list
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+========================================
 
 The remaining work is to populate the `process list` and the
 `parameter list`. The parameter list defines the parameters
@@ -205,7 +202,7 @@ coordinate is ::
 check :ref:`manual_coord_generation` for details.
 
 Export, save, compile
-^^^^^^^^^^^^^^^^^^^^^
+=====================
 
 Next, it's a good idea to save your work ::
 
@@ -256,7 +253,7 @@ for some hints. To learn more about the kmcos approach
 and methods you should into :ref:`topic guides <topic-guides>`.
 
 Taking it home
-^^^^^^^^^^^^^^^
+==============
 
 Despite its simplicity you have now seen all elements needed
 to implement a kMC model and hopefully gotten a first feeling for
@@ -279,7 +276,7 @@ the workflow.
 
 
 An alternative way using .ini files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+===================================
 
 Presently, a full description of the .ini capability is not being provided because this way is not the standard way of using kmcos. However, it is available.  This method is an alternative to making an xml file, and can be used instead of kmcos export.
 
