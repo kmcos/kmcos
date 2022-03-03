@@ -35,8 +35,8 @@ The example sketched out here leads you to a kMC model for CO adsorption
 and desorption on Pd(100). First you should instantiate a new project 
 and fill in meta information ::
 
-  pt = Project()
-  pt.set_meta(author = 'Your Name',
+  kmc_model = kmcos.create_kmc_model()
+  kmc_model.set_meta(author = 'Your Name',
               email = 'your.name@server.com',
               model_name = 'MyFirstModel',
               model_dimension = 2,)
@@ -49,12 +49,12 @@ system will be initialized. Of course this can be changed later
 For surface science simulations it is useful to define an
 *empty* state, so we add ::
 
- pt.add_species(name='empty')
+ kmc_model.add_species(name='empty')
 
 and some surface species. Given you want to simulate CO adsorption and
 desorption on a single crystal surface you would say ::
 
-  pt.add_species(name='CO',
+  kmc_model.add_species(name='CO',
                  representation="Atoms('CO',[[0,0,0],[0,0,1.2]])")
 
 where the string passed as `representation` is a string representing
@@ -65,7 +65,7 @@ To keep it simple we will stick with a simple-cubic lattice in 2D which
 could for example represent the (100) surface of a fcc crystal with only
 one adsorption site per unit cell. You start by giving your layer a name ::
 
-  layer = pt.add_layer(name='simple_cubic')
+  layer = kmc_model.add_layer(name='simple_cubic')
 
 and adding a site ::
 
@@ -86,7 +86,7 @@ to allow a graphical representation of the simulation one can add geometry
 as you have already done for the site. You set the size of the unit cell
 via ::
 
-  pt.lattice.cell = np.diag([3.5, 3.5, 10])
+  kmc_model.lattice.cell = np.diag([3.5, 3.5, 10])
 
 which are prototypical dimensions for a single-crystal surface in
 Angstrom.
@@ -119,8 +119,8 @@ First of all you want to define the external parameters to
 which our model is coupled. Here we use the temperature
 and the CO partial pressure::
 
-  pt.add_parameter(name='T', value=600., adjustable=True, min=400, max=800)
-  pt.add_parameter(name='p_CO', value=1., adjustable=True, min=1e-10, max=1.e2)
+  kmc_model.add_parameter(name='T', value=600., adjustable=True, min=400, max=800)
+  kmc_model.add_parameter(name='p_CO', value=1., adjustable=True, min=1e-10, max=1.e2)
 
 You can also set a default value and a minimum and maximum value
 set defines how the scrollbars a behave later in the runtime GUI.
@@ -128,19 +128,19 @@ set defines how the scrollbars a behave later in the runtime GUI.
 To describe the adsorption rate constant you will need the area
 of the unit cell::
 
-  pt.add_parameter(name='A', value='(3.5*angstrom)**2')
+  kmc_model.add_parameter(name='A', value='(3.5*angstrom)**2')
 
 Last but not least you need a binding energy of the particle on
 the surface. Since without further ado we have no value for the
 gas phase chemical potential, we'll just call it deltaG and keep
 it adjustable ::
 
-  pt.add_parameter(name='deltaG', value='-0.5', adjustable=True,
+  kmc_model.add_parameter(name='deltaG', value='-0.5', adjustable=True,
                              min=-1.3, max=0.3)
 
 To define processes we first need a coordinate [#coord_minilanguage]_  ::
 
-  coord = pt.lattice.generate_coord('hollow.(0,0,0).simple_cubic')
+  coord = kmc_model.lattice.generate_coord('hollow.(0,0,0).simple_cubic')
 
 
 Then you need to have at least two processes. A process or elementary step in kMC
@@ -151,7 +151,7 @@ So for example an adsorption requires at least one site to be empty
 (condition). Then this site can be occupied by CO (action) with a
 rate constant. Written down in code this looks as follows ::
 
-  pt.add_process(name='CO_adsorption',
+  kmc_model.add_process(name='CO_adsorption',
                  conditions=[Condition(coord=coord, species='empty')],
                  actions=[Action(coord=coord, species='CO')],
                  rate_constant='p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)')
@@ -169,7 +169,7 @@ that we need conversion factors of `bar` and `umass`.
 
 Then the desorption process is almost the same, except the reverse::
 
-  pt.add_process(name='CO_desorption',
+  kmc_model.add_process(name='CO_desorption',
                  conditions=[Condition(coord=coord, species='CO')],
                  actions=[Action(coord=coord, species='empty')],
                  rate_constant='p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
@@ -178,19 +178,19 @@ Then the desorption process is almost the same, except the reverse::
 To reduce typing, kmcos also knows a shorthand notation for processes.
 In order to produce the same process you could also type ::
 
-  pt.parse_process('CO_desorption; CO@hollow->empty@hollow ; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
+  kmc_model.parse_process('CO_desorption; CO@hollow->empty@hollow ; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
 
 and since any non-existing on either the left or the right side
 of the `->` symbol is replaced by a corresponding term with
 the `default_species` (in this case `empty`) you could as
 well type ::
 
-  pt.parse_process('CO_desorption; CO@hollow->; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
+  kmc_model.parse_process('CO_desorption; CO@hollow->; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
 
 
 and to make it even shorter you can parse and add the process on one line ::
 
-  pt.parse_and_add_process('CO_desorption; CO@hollow->; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
+  kmc_model.parse_and_add_process('CO_desorption; CO@hollow->; p_CO*bar*A/sqrt(2*pi*umass*m_CO/beta)*exp(beta*deltaG*eV)')
 
 
 In order to add processes on more than one site possible spanning across unit
@@ -204,29 +204,40 @@ check :ref:`manual_coord_generation` for details.
 Export, save, compile
 =====================
 
-Next, it's a good idea to save your work ::
+Before we compile the model, we should specify and understand the various backends that are involved.
 
-  pt.filename = 'myfirst_kmc.xml'
-  pt.save()
+local_smart backend (default) for models with <100 processes.
+lat_int backend for models with >100 processes. (build the model same ways local_smart but different backend for compile step)
+otf backend requires custom model (build requires different process definitions compared to local_smart) and can work for models which require >10000 processes, since each process rate is calculated on the fly instead of being held in memory.
 
-This creates an XML file with the full definition of your model.
-Finally, you will export the the model to compiled code. ::
+Here is how we specify the model's backend ::
 
-  import kmcos.cli
-  kmcos.cli.main('export myfirst_kmc.xml')
+  kmc_model.backend = 'local_smart'
+  kmc_model.backend = 'lat_int'
+  kmc_model.backend = 'otf'
+
+Next, it's a good idea to save and compile your work ::
+
+  kmc_model.save_model()
+  kmcos.compile(kmc_model)
+
+This creates an XML file with the full definition of your model and exports the model to compiled code.
 
 Now is the time to leave the python shell. In the current
 directory you should see a `myfirst_kmc.xml`.
 You will also see a directory ending with _local_smart,
 this directory includes your compiled model.
 
-You can also skip the model exporting and do it later:
+You can also skip the model exporting and do it later by removing kmcos.compile(kmc_model):
 you can use a separate python file later, or from the command line 
 can run `kmcos export myfirst_kmc.xml` in the same directory as the XML.
 
 During troubleshooting, exporting separately can be useful to make sure 
 the compiling occurs gracefully without any line
 containining an error.
+
+Running and viewing the model
+-----------------------------
 
 If you now `cd` to that folder `myfirst_kmc_local_smart` and run ::
 
@@ -238,7 +249,9 @@ Next, let's try seeing how it looks visually with ::
   python3 kmc_settings.py view
 
 ... and dada! Your first running kMC model right there!
-For some installations, one can type `kmcos benchmark` and `kmcos view`.
+For some installations, one can type `kmcos benchmark` and `kmcos view.`
+
+For running the model, you should use a runfile.
 
 If you wonder why the CO molecules are basically just dangling
 there in mid-air that is because you have no background setup, yet.
@@ -251,6 +264,13 @@ and just need some more idioms to implement it
 I suggest you take a look at the `examples folder <https://github.com/mhoffman/kmcos/tree/master/examples>`_.
 for some hints. To learn more about the kmcos approach
 and methods you should into :ref:`topic guides <topic-guides>`.
+
+In technical terms, kmcos is run  an API via the kmcos python module.
+
+Additionally, though now discouraged, kmcos can be invoked directly from the command line in one of the following
+ways::
+
+    kmcos [help] (all|benchmark|build|edit|export|help|import|rebuild|run|settings-export|shell|version|view|xml) [options]
 
 Taking it home
 ==============

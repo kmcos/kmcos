@@ -172,31 +172,8 @@ There is more than one way to get required dependencies. I have tested MacPorts 
 Installation on windows
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Direct installation on windows is currently not supported. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions. You may need to adjust the resolution to work effectively.
-For direct installin on windows, partial instructions have been written below. In the future, an "Ubuntu on Windows 10 via Windows Subsystem" set of instructions will be provided (and would be welcomed as a contribution).
-
-***
-
-If a virtual ubuntu machine is used, the below instructions may be useful for allowing sharing of files and copy and paste between the virtual machine and windows.
-
-Open the virtual machine, and use the file menu at the top of the window.
-
-1) Devices --> Shared Folders  --> + icon on right --> Folder Path (navigate to shared folder) --> auto mount --> Make permanent
-2) Devices --> Insert Guest Additions CD Image --> Run
-
-Now the folder shows up.
-
-Now add your user account to the group of vboxsf, otherwise won't have folder access permissions:
-
-sudo usermod -a -G vboxsf "$USER"
-
-Then restart virtual machine (from inside machine).
-
-Now can access shared folder.
-
-Devices --> Shared Clipboard --> Bidirectional
-Devices --> Shared Drag and Drop --> Bidrectional (only works for dragging to/from shared folder)
-
+Direct installation on windows is currently not supported. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions in the intro2kmcos pdf file here: https://github.com/kmcos/intro2kmcos. You may need to adjust the resolution to work effectively.
+For direct installion on windows, partial instructions have been written below. In the future, an "Ubuntu on Windows 10 via Windows Subsystem" set of instructions will be provided (and would be welcomed as a contribution).
 
 ***
 

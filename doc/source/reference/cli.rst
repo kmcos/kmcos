@@ -84,7 +84,7 @@ List of commands
 
 ``kmcos import <xml-file>``
     Take a kmcos xml-file and open an ipython shell
-    with the project_tree imported as pt.
+    with the project_tree imported as kmc_model.
 
 
 ``kmcos rebuild``
