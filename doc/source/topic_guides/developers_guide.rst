@@ -26,8 +26,12 @@ How to edit, install, and test your changes locally
 ---------------------------------------------------
 
 With every change made to the kmcos source code, that is, the files within the kmcos directory, we need to make sure that we've reinstalled kmcos into the computer's virtual environment where the kmcos dependencies are held. It's important to host kmcos dependencies on the virtual environment as that will allow for changes to be made easier without causing issues when running kmcos.
-Before we do so, note that it's highly recommended to delete the past kmcos dependencies in your virtual environment. To do so, locate the site-package directory where kmcos is 
-To do so, we first need to cd into the kmcos directory in the terminal, where setup.py is located, and run the following commands ::
+
+To enter into the kmcos virtual environment, enter this command in the terminal ::
+   source ~/VENV/kmcos/activate
+
+Note that it's highly recommended to delete the past kmcos dependencies in your virtual environment. To do so, locate the site-package directory where the kmcos virtual environment is located.
+Now that we deleted the past kmcos dependencies, we can now go into the kmcos directory in the terminal, where setup.py is located, and run the following commands to reinstall kmcos with the latest changes ::
    
    python3 setup.py build
    python3 setup.py install
