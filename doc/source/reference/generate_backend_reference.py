@@ -20,31 +20,31 @@ shutil.copy(os.path.join(os.path.dirname(kmcos.__file__),
 for backend in ['local_smart', 'lat_int', 'otf']:
     print("Backend {backend}".format(**locals()))
 
-    pt = Project()
+    kmc_model = kmcos.create_kmc_model()
     outdir = tempfile.mkdtemp()
     outdir = 'outdir'
     outdir
-    pt.meta.model_dimension = 2
-    pt.species_list.default_species = 'default'
+    kmc_model.meta.model_dimension = 2
+    kmc_model.species_list.default_species = 'default'
 
-    pt.meta.model_name = 'example'
-    pt.meta.model_name = 'some_model'
-    pt.meta.author = 'some guy'
-    pt.meta.email = 'some.guy@server.org'
+    kmc_model.meta.model_name = 'example'
+    kmc_model.meta.model_name = 'some_model'
+    kmc_model.meta.author = 'some guy'
+    kmc_model.meta.email = 'some.guy@server.org'
 
-    pt.add_layer(name='default')
-    pt.get_layers()[0].add_site(Site(name='default'))
-    pt.add_species(name='a', representation='')
-    pt.add_species(name='b', representation='')
+    kmc_model.add_layer(name='default')
+    kmc_model.get_layers()[0].add_site(Site(name='default'))
+    kmc_model.add_species(name='a', representation='')
+    kmc_model.add_species(name='b', representation='')
 
-    pt.species_list.default_species = 'a'
-    coord = pt.layer_list.generate_coord('default.(0,0,0).default')
+    kmc_model.species_list.default_species = 'a'
+    coord = kmc_model.layer_list.generate_coord('default.(0,0,0).default')
 
-    pt.add_process(name='ab',
+    kmc_model.add_process(name='ab',
                    condition_list=[Condition(coord=coord, species='a')],
                    action_list=[Condition(coord=coord, species='b')],
                    )
-    pt.add_process(name='ba',
+    kmc_model.add_process(name='ba',
                    condition_list=[Condition(coord=coord, species='b')],
                    action_list=[Condition(coord=coord, species='a')],
                    )
