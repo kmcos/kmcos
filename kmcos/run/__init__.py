@@ -1481,6 +1481,9 @@ class KMC_Model(Process):
             
     @staticmethod  
     def get_species_coordinates(config, species):
+        """
+        Gets the species coordinates from a 4d list and appends it into a 2d array that's then returned
+        """
         species_coords = []
         for k in range(len(species)):
             species_coords.append([])
@@ -1491,7 +1494,24 @@ class KMC_Model(Process):
         return species_coords
 
     @staticmethod 
-    def create_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
+    def create_configuration_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
+        """
+        coords is expected to be the results from get_species_coordinates(config, species)
+            Ex:
+        species is expected to be the results from get_coords(), which is a dictionary that contains the names of the species
+            Ex: {"CO" : "carbon"}
+        plot_settings is a dictionary that allows for the plot to change given the arguements
+            EX:
+                "y_label": "test",
+                "x_label": "test",
+                "legendLabel": "Species",
+                "legendExport": False,
+                "legend": True,
+                "figure_name": "Plot",
+                "dpi": 220,
+                "speciesName": False
+        create_configuration_plot will return the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
+        """
         import matplotlib.pyplot as plt
         exportFigure = True #This variable should be moved to an argument or something in plot_settings.
         #First put some defaults in if not already defined.
@@ -1518,7 +1538,7 @@ class KMC_Model(Process):
         ax0.set_xlabel(plot_settings['x_label'], fontdict=fontdict)
         ax0.set_ylabel(plot_settings['y_label'], fontdict=fontdict) #TODO: THis is not yet generalized (will be a function)
         
-        for (i, key) in zip(list(range(len(coords))), list(species.keys())):
+        for (i, key) in zip(list(range(len(coords))), list(species.keys())): #goes through each species and plots their coordinates
             x, y = list(zip(*coords[i]))
             if plot_settings['legend'] == True:
                     if plot_settings['speciesName'] == False:
@@ -1526,32 +1546,32 @@ class KMC_Model(Process):
                     else:
                         ax0.scatter(x,y,label=key)
             
-            if plot_settings['legend'] == True:
+            if plot_settings['legend'] == True: #creates the configuration's legend
                 if 'legendLabel' in plot_settings:
                     ax0.legend(title = plot_settings['legendLabel'], bbox_to_anchor=(1.05,1.0), loc="upper left")
                 else:
                     ax0.legend(bbox_to_anchor=(1.05,1.0), loc="upper left")
 
-        if plot_settings['legendExport'] == True:
+        if plot_settings['legendExport'] == True: #exports the legend into a separate text file
             with open(plot_settings['figure_name'] + "Legend.txt", 'w') as f:
                 for key, value in list(species.items()):
                     f.write('%s\n' % (key))
                     
-        if str(plot_settings['num_x_ticks']) != 'auto':
+        if str(plot_settings['num_x_ticks']) != 'auto': #sets the tick locator for the x-axis
             plot_settings['num_x_ticks'] = int(plot_settings['num_x_ticks'])
             from matplotlib.ticker import MaxNLocator
             ax0.xaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_x_ticks']))
         
-        if str(plot_settings['num_y_ticks']) != 'auto':
+        if str(plot_settings['num_y_ticks']) != 'auto': #sets the tick locator for the y-axis
             plot_settings['num_y_ticks'] = int(plot_settings['num_y_ticks'])
             from matplotlib.ticker import MaxNLocator
             ax0.yaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_y_ticks']))
 
-        if 'x_ticks' in plot_settings:
+        if 'x_ticks' in plot_settings: #sets the ticker for the x-axis
             if str(plot_settings['x_ticks']).lower != 'auto':
                 ax0.set_xticks(plot_settings['x_ticks'])
 
-        if 'y_ticks' in plot_settings:
+        if 'y_ticks' in plot_settings: #sets the ticker for the y-axis
             if str(plot_settings['y_ticks']).lower != 'auto':
                 ax0.set_yticks(plot_settings['y_ticks'])
 
@@ -1562,7 +1582,10 @@ class KMC_Model(Process):
             plt.close(fig0)
         return fig0, ax0
 
-    def export_picture(self, filename, resolution, scale, **kwargs):
+    def export_picture(self, resolution, scale,  filename="", **kwargs):
+        """
+        Gets the atoms objects of the kmc_model and returns a atomic view of the configuration and make a file named 'atomic_view.png' unless specified by 'filename' in the function's argument
+        """
         atoms = self.get_atoms(reset_time_overrun = False) #here, the self is the KMC_Model object
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
@@ -1570,6 +1593,8 @@ class KMC_Model(Process):
     def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """
         representation is an optional argument for spatial and atomic view
+        resolution and scale are strictly for the atomic view
+            resolution changes the plot's 
         You should specify as 'atomic' to see the atomic view. Leaving representation empty returns spatial view by default.
 
         plot_settings is a dictionary that allows for the plot to change given the arguements
@@ -1582,7 +1607,7 @@ class KMC_Model(Process):
             "figure_name": "Plot",
             "dpi": 220,
             "speciesName": False
-        plot_configuration will make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
+        plot_configuration either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
         """        
         if representation == 'atomic':
             if 'show_unit_cell' in plot_settings:
@@ -1593,13 +1618,13 @@ class KMC_Model(Process):
                 kwargs = plot_settings['kwargs']
             else:
                 kwargs = {} #default for kwargs is a blank dictionary
-            self.export_picture(filename = filename, resolution = resolution, scale = scale)
+            self.export_picture(resolution = resolution, scale = scale, filename = filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
             config = self._get_configuration().tolist()
             species = self.species_tags
             species_coordinates = self.get_species_coordinates(config, species)
-            self.create_plot(species_coordinates, species, plot_settings)
+            self.create_configuration_plot(species_coordinates, species, plot_settings)
             
     def _put(self, site, new_species, reduce=False):
         """
