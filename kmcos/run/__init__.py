@@ -797,138 +797,39 @@ class KMC_Model(Process):
                     settings.parameters.update(parameters)
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
-    def export_movie(self,
-                    frames=30,
-                    skip=1,
-                    prefix='movie',
-                    rotation='15z,-70x',
-                    suffix='png',
-                    verbose=False,
-                    **kwargs):
-        """Export series of snapshots of model instance to an image
-        file in the current directory which allows for easy post-processing
-        of images, e.g. using `ffmpeg` ::
-
-            avconv -i movie_%06d.png -r 24 movie.avi
-
-        or ::
-
-            ffmpeg -i movie_%06d.png -f image2 -r 24 movie.avi
-
-        Allows suffixes are png, pov, and eps. Additional keyword arguments
-        (kwargs) are passed directly the ase.io.write of the ASE library.
-
-        When exporting to *.pov, one has to manually povray each *.pov file in
-        the directory which is as simple as typing ::
-
-            for pov_file in *.pov
-            do
-               povray ${pov_file}
-            done
-
-        using bash.
-
-        :param frames: Number of frames to records (Default: 30).
-        :type frames: int
-        :param skip: Number of kMC steps between frames (Default: 1).
-        :type skip: int
-        :param prefix: Prefix for filename (Default: movie).
-        :type
-#@ !------ A. Garhammer 2015------
-#@ !subroutine update_clocks_acf(ran_time)
-#@ !****f* base/update_clocks_acf
-#@ ! FUNCTION
-#@ !    Updates walltime, kmc_step, kmc_step_acf, time_intervalls and kmc_time.
-#@ !
-#@ ! ARGUMENTS
-#@ !
-#@ !    * ``ran_time`` Random real number :math:`\in [0,1]`
-#@ !******
-#@ !real(kind=rsingle), intent(in) :: ran_time
-#@ !real(kind=rsingle) :: runtime
-#@
-#@
-#@ ! Make sure ran_time is in the right interval
-#@ !ASSERT(ran_time.ge.0.,"base/update_clocks: ran_time variable has to be positive.")
-#@ !ASSERT(ran_time.le.1.,"base/update_clocks: ran_time variable has to be less than 1.")
-#@
-#@ !kmc_time_step = -log(ran_time)/accum_rates(nr_of_proc)
-#@ ! Make sure the difference is not so small, that it is rounded off
-#@ ! ASSERT(kmc_time+kmc_time_step>kmc_time,"base/update_clocks: precision of kmc_time is not sufficient")
-#@
-#@ !call CPU_TIME(runtime)
-#@
-#@ ! Make sure we are not dividing by zeroprefix: str
-        :param rotation: Angle from which movie is recorded
-                         (only useful if suffix is png).
-                         String to be interpreted by ASE (Default: '15x,-70x')
-        :type rotation: str
-        :param suffix: File suffix (type) of exported file (Default: png).
-        :type suffix: str
-
+    def export_movie(self, filename = "", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
+        """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
+        in the folder_with_movie_images directory and then creates a .webm video file of all the images
+        of the images into a video
+            'filename' sets the filename for the images in the image directory and the video
+            'scale' increases the size of each species in the structure (currently not working as desired)
+            'resolution' changes the dpi of the images (currently not working as desired)
+            'fps' sets how long each image will stay in the video
+            'frames' sets the total video length
+            'steps' is the amount of steps the model does between each image
         """
 
-        import ase.io
-        import ase.data.colors
-        jmol_colors = ase.data.colors.jmol_colors
+        import os
+        import moviepy.video.io.ImageSequenceClip
 
+        if filename == '':
+            filename = 'atoms_image'
+            video_filename = 'atoms_video.webm'
+        else:
+            video_filename = filename + '.webm'
+        if not os.path.exists('folder_with_movie_images'):
+            os.mkdir('folder_with_movie_images')
+        image_folder = 'folder_with_movie_images'
+        os.chdir(image_folder)
         for i in range(frames):
-            atoms = self.get_atoms(reset_time_overrun=False)
-            filename = '{prefix:s}_{i:06d}.{suffix:s}'.format(**locals())
-            #write('%s_%06i.%s' % (prefix, i, suffix),
-                  #atoms,
-                  #show_unit_cell=True,
-                  #rotation=rotation,
-                  #**kwargs)
+            self.do_steps(steps)
+            self.export_picture(filename = filename + str(i), resolution = resolution, scale = scale)
+        os.chdir("..")
+        image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
+        clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
+        clip.write_videofile(video_filename)
+        clip.close()
 
-            if suffix == 'png':
-                writer = kmcos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
-            elif suffix == 'pov':
-                rescale = 0.5
-                radii_dict2 = {'Ni':0.9*rescale,
-                             'O': 1.0*rescale,
-                             'H': 0.5*rescale}
-
-                radii2 = []
-                water_radii_dict2 = {'O':1.0*rescale, 'H': 0.5*rescale, 'Ni':0.9*rescale}
-                colors = []
-                colors2 = []
-                for atom in atoms:
-                     radii2+=[water_radii_dict2[atom.symbol]]
-                     colors+=[(jmol_colors[atom.number][0],jmol_colors[atom.number][1],jmol_colors[atom.number][2],0.00,0.00)]
-                     colors2+=[(jmol_colors[atom.number][0],jmol_colors[atom.number][1],jmol_colors[atom.number][2])]
-
-                BA = []
-                distances = atoms.get_all_distances()
-                for i, j in zip(*np.where(distances<2.2)):
-                    if distances[i, j] < 0.1 :
-                        continue
-                    if not (atoms[i].symbol=='H' or atoms[j].symbol=='H') :
-                        BA += [[i, j]]
-                    elif distances[i, j] < 1.5:
-                        BA += [[i, j]]
-
-                ase.io.write(filename, atoms, run_povray=False,display=False,pause=False,
-                             #rotation='-90x,30y',
-                             #rotation='-90x,30y',
-                             show_unit_cell=1,
-                             #bbox=(-7,17,0,20),
-                             #bbox=(-8,12,8,28),
-                             bbox=(-(3.0*20 + 2) ,-2,7*20,5.5*20),
-                             textures=['ase3' for atom in atoms],
-                             canvas_height=500,
-                             camera_type='orthographic',
-                             bondatoms=BA,
-                             radii=radii2,
-                             colors=colors2)
-            elif suffix == 'traj':
-                write(filename, atoms)
-            else:
-                writer = kmcos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
-
-            if verbose:
-                print('Wrote {filename}'.format(**locals()))
-            self.do_steps(skip)
 
     def peek(self, *args, **kwargs):
         """Visualize the current configuration of the model using ASE ag."""
@@ -1585,6 +1486,9 @@ class KMC_Model(Process):
     def export_picture(self, resolution, scale,  filename="", **kwargs):
         """
         Gets the atoms objects of the kmc_model and returns a atomic view of the configuration and make a file named 'atomic_view.png' unless specified by 'filename' in the function's argument
+            'filename' sets the filename for the images in the image directory and the video
+            'scale' increases the size of each species in the structure (currently not working as desired)
+            'resolution' changes the dpi of the images (currently not working as desired)
         """
         atoms = self.get_atoms(reset_time_overrun = False) #here, the self is the KMC_Model object
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
