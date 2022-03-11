@@ -797,138 +797,39 @@ class KMC_Model(Process):
                     settings.parameters.update(parameters)
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
-    def export_movie(self,
-                    frames=30,
-                    skip=1,
-                    prefix='movie',
-                    rotation='15z,-70x',
-                    suffix='png',
-                    verbose=False,
-                    **kwargs):
-        """Export series of snapshots of model instance to an image
-        file in the current directory which allows for easy post-processing
-        of images, e.g. using `ffmpeg` ::
-
-            avconv -i movie_%06d.png -r 24 movie.avi
-
-        or ::
-
-            ffmpeg -i movie_%06d.png -f image2 -r 24 movie.avi
-
-        Allows suffixes are png, pov, and eps. Additional keyword arguments
-        (kwargs) are passed directly the ase.io.write of the ASE library.
-
-        When exporting to *.pov, one has to manually povray each *.pov file in
-        the directory which is as simple as typing ::
-
-            for pov_file in *.pov
-            do
-               povray ${pov_file}
-            done
-
-        using bash.
-
-        :param frames: Number of frames to records (Default: 30).
-        :type frames: int
-        :param skip: Number of kMC steps between frames (Default: 1).
-        :type skip: int
-        :param prefix: Prefix for filename (Default: movie).
-        :type
-#@ !------ A. Garhammer 2015------
-#@ !subroutine update_clocks_acf(ran_time)
-#@ !****f* base/update_clocks_acf
-#@ ! FUNCTION
-#@ !    Updates walltime, kmc_step, kmc_step_acf, time_intervalls and kmc_time.
-#@ !
-#@ ! ARGUMENTS
-#@ !
-#@ !    * ``ran_time`` Random real number :math:`\in [0,1]`
-#@ !******
-#@ !real(kind=rsingle), intent(in) :: ran_time
-#@ !real(kind=rsingle) :: runtime
-#@
-#@
-#@ ! Make sure ran_time is in the right interval
-#@ !ASSERT(ran_time.ge.0.,"base/update_clocks: ran_time variable has to be positive.")
-#@ !ASSERT(ran_time.le.1.,"base/update_clocks: ran_time variable has to be less than 1.")
-#@
-#@ !kmc_time_step = -log(ran_time)/accum_rates(nr_of_proc)
-#@ ! Make sure the difference is not so small, that it is rounded off
-#@ ! ASSERT(kmc_time+kmc_time_step>kmc_time,"base/update_clocks: precision of kmc_time is not sufficient")
-#@
-#@ !call CPU_TIME(runtime)
-#@
-#@ ! Make sure we are not dividing by zeroprefix: str
-        :param rotation: Angle from which movie is recorded
-                         (only useful if suffix is png).
-                         String to be interpreted by ASE (Default: '15x,-70x')
-        :type rotation: str
-        :param suffix: File suffix (type) of exported file (Default: png).
-        :type suffix: str
-
+    def export_movie(self, filename = "", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
+        """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
+        in the folder_with_movie_images directory and then creates a .webm video file of all the images
+        of the images into a video
+            'filename' sets the filename for the images in the image directory and the video
+            'scale' increases the size of each species in the structure (currently not working as desired)
+            'resolution' changes the dpi of the images (currently not working as desired)
+            'fps' sets how long each image will stay in the video
+            'frames' sets the total video length
+            'steps' is the amount of steps the model does between each image
         """
 
-        import ase.io
-        import ase.data.colors
-        jmol_colors = ase.data.colors.jmol_colors
+        import os
+        import moviepy.video.io.ImageSequenceClip
 
+        if filename == '':
+            filename = 'atoms_image'
+            video_filename = 'atoms_video.webm'
+        else:
+            video_filename = filename + '.webm'
+        if not os.path.exists('folder_with_movie_images'):
+            os.mkdir('folder_with_movie_images')
+        image_folder = 'folder_with_movie_images'
+        os.chdir(image_folder)
         for i in range(frames):
-            atoms = self.get_atoms(reset_time_overrun=False)
-            filename = '{prefix:s}_{i:06d}.{suffix:s}'.format(**locals())
-            #write('%s_%06i.%s' % (prefix, i, suffix),
-                  #atoms,
-                  #show_unit_cell=True,
-                  #rotation=rotation,
-                  #**kwargs)
+            self.do_steps(steps)
+            self.export_picture(filename = filename + str(i), resolution = resolution, scale = scale)
+        os.chdir("..")
+        image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
+        clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
+        clip.write_videofile(video_filename)
+        clip.close()
 
-            if suffix == 'png':
-                writer = kmcos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
-            elif suffix == 'pov':
-                rescale = 0.5
-                radii_dict2 = {'Ni':0.9*rescale,
-                             'O': 1.0*rescale,
-                             'H': 0.5*rescale}
-
-                radii2 = []
-                water_radii_dict2 = {'O':1.0*rescale, 'H': 0.5*rescale, 'Ni':0.9*rescale}
-                colors = []
-                colors2 = []
-                for atom in atoms:
-                     radii2+=[water_radii_dict2[atom.symbol]]
-                     colors+=[(jmol_colors[atom.number][0],jmol_colors[atom.number][1],jmol_colors[atom.number][2],0.00,0.00)]
-                     colors2+=[(jmol_colors[atom.number][0],jmol_colors[atom.number][1],jmol_colors[atom.number][2])]
-
-                BA = []
-                distances = atoms.get_all_distances()
-                for i, j in zip(*np.where(distances<2.2)):
-                    if distances[i, j] < 0.1 :
-                        continue
-                    if not (atoms[i].symbol=='H' or atoms[j].symbol=='H') :
-                        BA += [[i, j]]
-                    elif distances[i, j] < 1.5:
-                        BA += [[i, j]]
-
-                ase.io.write(filename, atoms, run_povray=False,display=False,pause=False,
-                             #rotation='-90x,30y',
-                             #rotation='-90x,30y',
-                             show_unit_cell=1,
-                             #bbox=(-7,17,0,20),
-                             #bbox=(-8,12,8,28),
-                             bbox=(-(3.0*20 + 2) ,-2,7*20,5.5*20),
-                             textures=['ase3' for atom in atoms],
-                             canvas_height=500,
-                             camera_type='orthographic',
-                             bondatoms=BA,
-                             radii=radii2,
-                             colors=colors2)
-            elif suffix == 'traj':
-                write(filename, atoms)
-            else:
-                writer = kmcos.run.png.MyPNG(atoms, show_unit_cell=True, scale=20, model=self, **kwargs).write(filename, resolution=150)
-
-            if verbose:
-                print('Wrote {filename}'.format(**locals()))
-            self.do_steps(skip)
 
     def peek(self, *args, **kwargs):
         """Visualize the current configuration of the model using ASE ag."""
@@ -1481,6 +1382,9 @@ class KMC_Model(Process):
             
     @staticmethod  
     def get_species_coordinates(config, species):
+        """
+        Gets the species coordinates from a 4d list and appends it into a 2d array that's then returned
+        """
         species_coords = []
         for k in range(len(species)):
             species_coords.append([])
@@ -1491,7 +1395,24 @@ class KMC_Model(Process):
         return species_coords
 
     @staticmethod 
-    def create_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
+    def create_configuration_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
+        """
+        coords is expected to be the results from get_species_coordinates(config, species)
+            Ex:
+        species is expected to be the results from get_coords(), which is a dictionary that contains the names of the species
+            Ex: {"CO" : "carbon"}
+        plot_settings is a dictionary that allows for the plot to change given the arguements
+            EX:
+                "y_label": "test",
+                "x_label": "test",
+                "legendLabel": "Species",
+                "legendExport": False,
+                "legend": True,
+                "figure_name": "Plot",
+                "dpi": 220,
+                "speciesName": False
+        create_configuration_plot will return the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
+        """
         import matplotlib.pyplot as plt
         exportFigure = True #This variable should be moved to an argument or something in plot_settings.
         #First put some defaults in if not already defined.
@@ -1518,7 +1439,7 @@ class KMC_Model(Process):
         ax0.set_xlabel(plot_settings['x_label'], fontdict=fontdict)
         ax0.set_ylabel(plot_settings['y_label'], fontdict=fontdict) #TODO: THis is not yet generalized (will be a function)
         
-        for (i, key) in zip(list(range(len(coords))), list(species.keys())):
+        for (i, key) in zip(list(range(len(coords))), list(species.keys())): #goes through each species and plots their coordinates
             x, y = list(zip(*coords[i]))
             if plot_settings['legend'] == True:
                     if plot_settings['speciesName'] == False:
@@ -1526,32 +1447,32 @@ class KMC_Model(Process):
                     else:
                         ax0.scatter(x,y,label=key)
             
-            if plot_settings['legend'] == True:
+            if plot_settings['legend'] == True: #creates the configuration's legend
                 if 'legendLabel' in plot_settings:
                     ax0.legend(title = plot_settings['legendLabel'], bbox_to_anchor=(1.05,1.0), loc="upper left")
                 else:
                     ax0.legend(bbox_to_anchor=(1.05,1.0), loc="upper left")
 
-        if plot_settings['legendExport'] == True:
+        if plot_settings['legendExport'] == True: #exports the legend into a separate text file
             with open(plot_settings['figure_name'] + "Legend.txt", 'w') as f:
                 for key, value in list(species.items()):
                     f.write('%s\n' % (key))
                     
-        if str(plot_settings['num_x_ticks']) != 'auto':
+        if str(plot_settings['num_x_ticks']) != 'auto': #sets the tick locator for the x-axis
             plot_settings['num_x_ticks'] = int(plot_settings['num_x_ticks'])
             from matplotlib.ticker import MaxNLocator
             ax0.xaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_x_ticks']))
         
-        if str(plot_settings['num_y_ticks']) != 'auto':
+        if str(plot_settings['num_y_ticks']) != 'auto': #sets the tick locator for the y-axis
             plot_settings['num_y_ticks'] = int(plot_settings['num_y_ticks'])
             from matplotlib.ticker import MaxNLocator
             ax0.yaxis.set_major_locator(MaxNLocator(nbins = plot_settings['num_y_ticks']))
 
-        if 'x_ticks' in plot_settings:
+        if 'x_ticks' in plot_settings: #sets the ticker for the x-axis
             if str(plot_settings['x_ticks']).lower != 'auto':
                 ax0.set_xticks(plot_settings['x_ticks'])
 
-        if 'y_ticks' in plot_settings:
+        if 'y_ticks' in plot_settings: #sets the ticker for the y-axis
             if str(plot_settings['y_ticks']).lower != 'auto':
                 ax0.set_yticks(plot_settings['y_ticks'])
 
@@ -1562,7 +1483,13 @@ class KMC_Model(Process):
             plt.close(fig0)
         return fig0, ax0
 
-    def export_picture(self, filename, resolution, scale, **kwargs):
+    def export_picture(self, resolution, scale,  filename="", **kwargs):
+        """
+        Gets the atoms objects of the kmc_model and returns a atomic view of the configuration and make a file named 'atomic_view.png' unless specified by 'filename' in the function's argument
+            'filename' sets the filename for the images in the image directory and the video
+            'scale' increases the size of each species in the structure (currently not working as desired)
+            'resolution' changes the dpi of the images (currently not working as desired)
+        """
         atoms = self.get_atoms(reset_time_overrun = False) #here, the self is the KMC_Model object
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
@@ -1570,6 +1497,8 @@ class KMC_Model(Process):
     def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """
         representation is an optional argument for spatial and atomic view
+        resolution and scale are strictly for the atomic view
+            resolution changes the plot's 
         You should specify as 'atomic' to see the atomic view. Leaving representation empty returns spatial view by default.
 
         plot_settings is a dictionary that allows for the plot to change given the arguements
@@ -1582,7 +1511,7 @@ class KMC_Model(Process):
             "figure_name": "Plot",
             "dpi": 220,
             "speciesName": False
-        plot_configuration will make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
+        plot_configuration either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
         """        
         if representation == 'atomic':
             if 'show_unit_cell' in plot_settings:
@@ -1593,13 +1522,13 @@ class KMC_Model(Process):
                 kwargs = plot_settings['kwargs']
             else:
                 kwargs = {} #default for kwargs is a blank dictionary
-            self.export_picture(filename = filename, resolution = resolution, scale = scale)
+            self.export_picture(resolution = resolution, scale = scale, filename = filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
             config = self._get_configuration().tolist()
             species = self.species_tags
             species_coordinates = self.get_species_coordinates(config, species)
-            self.create_plot(species_coordinates, species, plot_settings)
+            self.create_configuration_plot(species_coordinates, species, plot_settings)
             
     def _put(self, site, new_species, reduce=False):
         """
