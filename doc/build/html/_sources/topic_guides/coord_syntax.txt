@@ -57,7 +57,7 @@ Manual generation
 To quickly generate single coordinates you can generate it
 from a Project like so ::
 
-  pt.lattice.generate_coord('hollow.(0,0,0).layer_name')
+  kmc_model.lattice.generate_coord('hollow.(0,0,0).layer_name')
 
 Let's look at the generation string. The general syntax is ::
 
@@ -85,7 +85,7 @@ Often times it is handier (less typing) to generate a larger set
 of coordinates at first and then select different subsets from it
 in a process definition. For this purpose you can use ::
 
-  pset = pt.lattice.generate_coord_set(size=[x,y,z], layer_name='layer_name')
+  pset = kmc_model.lattice.generate_coord_set(size=[x,y,z], layer_name='layer_name')
 
 
 This collects all sites from the given layer and generates

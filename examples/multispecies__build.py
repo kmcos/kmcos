@@ -8,8 +8,7 @@ import kmcos
 from itertools import product
 import numpy as np
 
-model_name = __file__[+0:-3] # This is the python file name, the brackets cut off zero characters from the beginning and three character from the end (".py").  To manually name the model just place a string here.
-model_name = model_name.replace("__build", "")
+model_name = str(__file__[+0:-3]).replace("__build", "") # This line automatically names the model based on the python file’s name. The brackets cut off zero characters from the beginning and three character from the end (".py"). The replace command removes the ‘__build’ part of the string. If you want to override this automatic naming, just set the variable ‘model_name’ equal to the string that you would like to use.
 kmc_model = kmcos.create_kmc_model(model_name)
 kmc_model.set_meta(author='Max J. Hoffmann',
             email='mjhoffmann@gmail.com',
@@ -80,7 +79,7 @@ for species_name in species_names:
 # Save the model to an xml file
 ###It's good to simply copy and paste the below lines between model creation files.
 kmc_model.print_statistics()
-kmc_model.backend = 'local_smart' #specifying is optional. 'local_smart' is the default. Currently, the other options are 'lat_int' and 'otf'
+kmc_model.backend = 'lat_int' #specifying is optional. 'local_smart' is the default. Currently, the other options are 'lat_int' and 'otf'
 kmc_model.clear_model() #This line is optional: if you are updating a model, this line will remove the old model files (including compiled files) before exporting the new one. It is convenient to always include this line because then you don't need to 'confirm' removing/overwriting the old model during the compile step.
 kmc_model.save_model()
 print("For this example, we are not using the compile step because it takes more than 30 minutes. To do the compile step, the user should uncomment the kmcos.compile(kmc_model) line or should type in 'kmcos export multispecies.xml' in the terminal")
