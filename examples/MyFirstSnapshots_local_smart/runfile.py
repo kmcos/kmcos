@@ -67,3 +67,5 @@ plot_settings = {
 #the second plot_configuration here will construct the plot using the above dictionary and export the file as "Plot.png"
 # Note that the spatial representation plots by default, but you can always specify in representation
 sg.model.plot_configuration(representation='spatial', plot_settings=plot_settings)
+
+sg.model.export_movie()

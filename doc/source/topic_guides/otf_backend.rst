@@ -107,7 +107,7 @@ need any changes.
 We also need to collect a set of all interacting coordinates which
 will affect CO desorption rate::
   # fetch a lot of coordinates
-  coords = pt.lattice.generate_coord_set(size=[2, 2, 2],
+  coords = kmc_model.lattice.generate_coord_set(size=[2, 2, 2],
                                          layer_name='simplecubic_2d')
   # fetch all nearest neighbor coordinates
   nn_coords = [nn_coord for i, nn_coord in enumerate(coords)
@@ -152,7 +152,7 @@ All of this comes together in the process definition::
 		 bystander_list = bystander_list,
 		 rate_constant=rate_constant,
 		 otf_rate=otf_rate)
-  pt.add_process(proc)
+  kmc_model.add_process(proc)
 
 Advanced OTF rate expressions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

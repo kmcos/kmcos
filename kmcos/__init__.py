@@ -20,13 +20,6 @@ you plan the model.
 
 Typical users will run kmcos entirely from python code by following the examples.
 
-In technical terms, kmcos is run  an API via the kmcos python module.
-
-Additionally, though now discouraged, kmcos can be invoked directly from the command line in one of the following
-ways::
-
-    kmcos [help] (all|benchmark|build|edit|export|help|import|rebuild|run|settings-export|shell|version|view|xml) [options]
-
 
 .. rubric:: Footnotes
 
@@ -57,7 +50,7 @@ from __future__ import print_function
 
 
 
-__version__ = "0.0.66"
+__version__ = "0.0.67"
 VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):

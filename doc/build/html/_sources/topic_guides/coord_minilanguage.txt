@@ -12,5 +12,5 @@ Manual generation
 Autogeneration of sets
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. TODO:: describe pt.lattice.generate_coord_set
+.. TODO:: describe kmc_model.lattice.generate_coord_set
           and other ways using e.g. list expressions

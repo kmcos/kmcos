@@ -46,21 +46,21 @@ adsorption of a gas phase species, let call it ``A`` on a
 surface site. For this we need a species ::
 
   from kmcos.types import *
-  pt = Project()
+  kmc_model = kmcos.create_kmc_model()
 
   A = Species(name='A')
-  pt.add_species(A)
+  kmc_model.add_species(A)
 
   empty = Species(name='empty')
-  pt.add_species(empty)
+  kmc_model.add_species(empty)
 
 
 and the coordinate of a surface site ::
 
   layer = Layer(name='default')
-  pt.add_layer(layer)
+  kmc_model.add_layer(layer)
   layer.sites.append(Site(name='a'))
-  coord = pt.lattice.generate_coord('a.(0,0,0).default')
+  coord = kmc_model.lattice.generate_coord('a.(0,0,0).default')
 
 which is for now all we need to define an adsorption
 process::
@@ -70,7 +70,7 @@ process::
                                                 species='empty')],
                       action_list=[Action(coord=coord,
                                           species='A')])
-  pt.add_process(adsorption)
+  kmc_model.add_process(adsorption)
 
 Now this wasn't hard, was it?
 
@@ -82,7 +82,7 @@ Let's move to another example, namely the `diffusion` of
 a particle to the next unit cell in the y-direction.
 You first need the coordinate of the final site ::
 
-  final = pt.lattice.generate_coord('a.(0,1,0).default')
+  final = kmc_model.lattice.generate_coord('a.(0,1,0).default')
 
 and you are good to go ::
 
@@ -95,7 +95,7 @@ and you are good to go ::
                                                    species='empty'),
                                          Condition(coord=final,
                                                    species='A')],
-  pt.add_process(diffusion_up)
+  kmc_model.add_process(diffusion_up)
 
 You can complicated this `ad infinitum` but you know all elements
 needed to define processes.

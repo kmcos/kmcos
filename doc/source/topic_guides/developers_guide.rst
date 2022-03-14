@@ -22,7 +22,22 @@ effectively add functionality to kmcos.
 For developers of the project, branch management will follow
 `this flowchart <https://github.com/kmcos/kmcos/tree/master/doc/source/topic_guides/GithubGuideKmcos.pptx>`__
 
-Some nomenclature.
+How to edit, install, and test your changes locally
+---------------------------------------------------
+
+With every change made to the kmcos source code (within the kmcos directory), kmcos needs to be reinstalled for the changes to take place. 
+Before re-installing kmcos, to ensure the re-installation occurs correctly, it's best to delete  any past kmcos installation files in your python environment. To do so, locate the site-package directory for whichever python environment you're using (typically this would be located in a directory that looks something like ~/VENV/kmcos/lib/python3/site-packages/). Within the site-packages directory, delete any subdirectories that have the name kmcos as well as any other files you see with the name kmcos (typically egg or zip files). 
+Next, using the terminal, navigate the kmcos source code directory that you have edited, and make sure you are in the directory where setup.py is located. Run the following commands to reinstall kmcos with changes ::
+
+   source ~/VENV/kmcos/bin/activate #this is the command to enter the python virtual environment
+   python3 setup.py build
+   python3 setup.py install
+
+Now that the kmcos dependencies are updated, you can start testing your latest changes. 
+
+Before pushing to github, you should enter the the tests directory and run the unit tests.
+
+Some nomenclature
 ------------------
 
 For some terms used frequently in this guide, there might exist some
