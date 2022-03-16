@@ -32,6 +32,7 @@ import os
 janaf_data = None
 
 janaf_warning_string = str("""
+
     Could not import JANAF data
     Installing JANAF Thermochemical Tables
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -117,9 +118,8 @@ class Species(object):
                 val = interp1d(T, self.T_grid, self.G_grid) + \
                        kboltzmann_in_eVK * T * log(p)
             except Exception:
-                print(janaf_warning_string)
                 raise Exception('Could not find JANAF tables for %s.'
-                                % self.name)
+                                % self.name + janaf_warning_string)
             else:
                 return val
 
@@ -155,8 +155,7 @@ class Species(object):
         try:
             data = np.loadtxt(filename, skiprows=2, usecols=(0, 2, 4))
         except IOError:
-            print(janaf_warning_string)
-            print('Warning: JANAF table %s not installed' % filename)
+            print('Warning: JANAF table %s not installed' % filename + janaf_warning_string)
             return
 
         # define data
