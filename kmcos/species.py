@@ -30,11 +30,9 @@ from math import log
 import os
 
 janaf_data = None
-try:
-    import janaf_data
-except:
-    raise Exception("""
-    Error: Could not import JANAF data
+
+janaf_warning_string = str("""
+    Could not import JANAF data
     Installing JANAF Thermochemical Tables
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -62,6 +60,11 @@ except:
             `NIST website <http://kinetics.nist.gov/janaf/>`_
             in the tab-delimited text format
             to the `janaf_data` directory.""")
+try:
+    import janaf_data
+except:
+    #raise Exception(""" On Mar 16 2022 made this into a warning rather than an exception.
+    print("Warning: " + janaf_warning_string)
 
 def GibbsAds(energy, frequencies, T):
     #Expecting T in Kelvin
@@ -114,6 +117,7 @@ class Species(object):
                 val = interp1d(T, self.T_grid, self.G_grid) + \
                        kboltzmann_in_eVK * T * log(p)
             except Exception:
+                print(janaf_warning_string)
                 raise Exception('Could not find JANAF tables for %s.'
                                 % self.name)
             else:
@@ -151,6 +155,7 @@ class Species(object):
         try:
             data = np.loadtxt(filename, skiprows=2, usecols=(0, 2, 4))
         except IOError:
+            print(janaf_warning_string)
             print('Warning: JANAF table %s not installed' % filename)
             return
 
