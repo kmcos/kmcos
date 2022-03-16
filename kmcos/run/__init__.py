@@ -1365,8 +1365,11 @@ class KMC_Model(Process):
         else:
             return res
             
-    def get_species_coords(self):
+    def get_species_coords(self, filename_csv="", export_csv=True):
         """
+        'filename' sets the name of the csv file that will be exported if 'export_csv' is true
+        'export_csv' determines whether the functions exports the species coordinates as a csv file
+
         'config' in the function is a nested 4d array that contains the species's coordinates
             EX: [[[[0]], [[1]], [[1]], [[0]]]]
         'species' in the function is a dictionary that contains the names of the species
@@ -1383,6 +1386,11 @@ class KMC_Model(Process):
                 ['empty', [0, 3]]],
                 {'CO': 'carbon', 'empty': ''})
         """
+        if filename_csv == "" and export_csv==True:
+            filename_csv = "species_coords.csv"
+
+        filename_csv.replace(".csv", "") + ".csv"
+
         config = self._get_configuration().tolist()
         species = self.species_tags
         species_list = list(species)
@@ -1393,6 +1401,14 @@ class KMC_Model(Process):
         for species_index in range(len(species_coords)): #loop across each species
             for coordinate_pair in species_coords[species_index]: #loop across each sublist in the species
                 coords_list.append([species_list[species_index], coordinate_pair]) #appends the coordinates for each respesctive species into coords
+
+        if export_csv==True: #creates the csv file and exports coords_list into two columns
+            import csv
+            with open(filename_csv, 'w', newline="") as file:
+                writer = csv.writer(file)
+                writer.writerow(['Species', 'Coordinates'])
+                writer.writerows(coords_list)
+                file.close()
 
         return coords_list #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
                             #put the module "ColumnSort" in the directory and call later for sorting
