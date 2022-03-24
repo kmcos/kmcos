@@ -1408,7 +1408,7 @@ class KMC_Model(Process):
 
         if export_csv==True: #creates the csv file and exports coords_list into two columns
             import csv
-            with open(filename_csv, 'w', newline="") as file:
+            with open(filename_csv, 'w') as file:
                 writer = csv.writer(file)
                 writer.writerow(['Species', 'Coordinates'])
                 writer.writerows(coords_list)
