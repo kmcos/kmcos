@@ -832,7 +832,9 @@ class KMC_Model(Process):
 
 
     def peek(self, *args, **kwargs):
-        """Visualize the current configuration of the model using ASE ag."""
+        """Creates a static image of the model
+
+        """
         tag = kwargs.pop('tag', None)
 
         ase = import_ase()
@@ -842,7 +844,9 @@ class KMC_Model(Process):
         return self.peek()
 
     def view(self, scaleA = None):
-        """Start current model in live view mode."""
+        """Start current model in live view mode.
+
+        """
         from kmcos import view
         view.main(self, scaleA = scaleA)
 
@@ -1365,43 +1369,92 @@ class KMC_Model(Process):
         else:
             return res
             
-    def get_coords(self):
-        """
-        Config is expected to be a nested array that contains the species's coordinates
+    def get_species_coords(self, filename_csv="", export_csv=True):
+        """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name
+            EX: [[['CO', [0, 11]],
+                ['CO', [0, 13]],
+                ['CO', [1, 2]],
+                ['CO', [1, 4]],
+                ['empty', [0, 0]],
+                ['empty', [0, 1]],
+                ['empty', [0, 2]],
+                ['empty', [0, 3]]],
+                {'CO': 'carbon', 'empty': ''})
+
+        'filename' sets the name of the csv file that will be exported if 'export_csv' is true
+        'export_csv' determines whether the functions exports the species coordinates as a csv file
+
+        'config' in the function is a nested 4d array that contains the species's coordinates
             EX: [[[[0]], [[1]], [[1]], [[0]]]]
-        Species is exptected to be a dictionary that contains the names of the species
-            EX: {"CO" : "carbon"}
+        'species' in the function is a dictionary that contains the names of the species
+            EX: {'CO': 'carbon', 'empty': ''}
+
         """
+        if filename_csv == "" and export_csv==True:
+            filename_csv = "species_coords.csv"
+
+        filename_csv.replace(".csv", "") + ".csv"
+
         config = self._get_configuration().tolist()
         species = self.species_tags
-        coords = []
-        for i in range(len(config)):
-            for j in range(len(config[0])):
-                coords.append([i,j])
-        return coords, species
-            
+        species_list = list(species)
+        coords_list = []
+        species_coords = self.get_species_coordinates(config, species)
+
+        #Note: taking a list of a dictionary turns the keys into a list
+        for species_index in range(len(species_coords)): #loop across each species
+            for coordinate_pair in species_coords[species_index]: #loop across each sublist in the species
+                coords_list.append([species_list[species_index], coordinate_pair]) #appends the coordinates for each respesctive species into coords
+
+        if export_csv==True: #creates the csv file and exports coords_list into two columns
+            import csv
+            with open(filename_csv, 'w') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Species', 'Coordinates'])
+                writer.writerows(coords_list)
+                file.close()
+
+        return coords_list #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
+                            #put the module "ColumnSort" in the directory and call later for sorting
+    
     @staticmethod  
     def get_species_coordinates(config, species):
-        """
-        Gets the species coordinates from a 4d list and appends it into a 2d array that's then returned
+        """Gets the species coordinates from config and appends it into a 3d array, where each sub array lists the coordinates for a single species
+            EX: [[[0, 11],
+                [0, 13],
+                [1, 2],
+                [1, 4],
+                [19, 10]],
+                [[0, 0],
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 4]]]
+
+        'config' is expected to be a nested 4d array that contains the species's coordinates
+            EX: [[[[0]], [[1]], [[1]], [[0]]]]
+        'species' is exptected to be a dictionary that contains the names of the species
+            EX: {'CO': 'carbon', 'empty': ''}
+
         """
         species_coords = []
-        for k in range(len(species)):
+        for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
             species_coords.append([])
             for i in range(len(config)):
                 for j in range(len(config[0])):
                     if (config[i][j][0][0] == k):
-                        species_coords[k].append([i,j])  
+                        species_coords[k].append([i,j])
         return species_coords
 
-    @staticmethod 
+    @staticmethod
     def create_configuration_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
-        """
-        coords is expected to be the results from get_species_coordinates(config, species)
+        """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
+
+        'coords' is expected to be the results from get_species_coordinates(config, species)
             Ex:
-        species is expected to be the results from get_coords(), which is a dictionary that contains the names of the species
+        'species' is expected to be the results from get_coords(), which is a dictionary that contains the names of the species
             Ex: {"CO" : "carbon"}
-        plot_settings is a dictionary that allows for the plot to change given the arguements
+        'plot_settings' is a dictionary that allows for the plot to change given the arguements
             EX:
                 "y_label": "test",
                 "x_label": "test",
@@ -1411,7 +1464,7 @@ class KMC_Model(Process):
                 "figure_name": "Plot",
                 "dpi": 220,
                 "speciesName": False
-        create_configuration_plot will return the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
+
         """
         import matplotlib.pyplot as plt
         exportFigure = True #This variable should be moved to an argument or something in plot_settings.
@@ -1495,10 +1548,13 @@ class KMC_Model(Process):
         return 
         
     def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
-        """
-        representation is an optional argument for spatial and atomic view
-        resolution and scale are strictly for the atomic view
-            resolution changes the plot's 
+        """Either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
+
+        'representation' is an optional argument for spatial and atomic view
+        'scale' increases the size of each species in the structure (currently not working as desired)
+        'resolution' changes the dpi of the images (currently not working as desired)
+                Note: 'resolution' and 'scale' are strictly for the atomic view
+
         You should specify as 'atomic' to see the atomic view. Leaving representation empty returns spatial view by default.
 
         plot_settings is a dictionary that allows for the plot to change given the arguements
@@ -1511,7 +1567,7 @@ class KMC_Model(Process):
             "figure_name": "Plot",
             "dpi": 220,
             "speciesName": False
-        plot_configuration either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
+
         """        
         if representation == 'atomic':
             if 'show_unit_cell' in plot_settings:
