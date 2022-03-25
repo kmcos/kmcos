@@ -65,7 +65,8 @@ try:
     import janaf_data
 except:
     #raise Exception(""" On Mar 16 2022 made this into a warning rather than an exception.
-    print("Warning: " + janaf_warning_string)
+    pass
+    #print("Warning: " + janaf_warning_string)
 
 def GibbsAds(energy, frequencies, T):
     #Expecting T in Kelvin
