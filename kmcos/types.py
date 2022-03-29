@@ -98,6 +98,7 @@ class Project(object):
         self.filename = self.model_name + ".xml"
         self.backend = "local_smart" #this is just the default.
         self.compile_options = ""
+        self.error_list = []
 
         # Quick'n'dirty define access functions
         # needed in context with GTKProject
@@ -198,6 +199,10 @@ class Project(object):
                 kwargs.pop('actions')
             process = Process(**kwargs)
             self.process_list.append(process)
+
+            if 'name' in kwargs:
+                if len(kwargs['name']) > 30:
+                    self.error_list.append(tuple(("Process Name", kwargs['name'], "Process name should not be longer than 30 characters, otherwise the Fortran compiler may raise errors")))
         return process
 
     def parse_process(self, string):
@@ -592,6 +597,8 @@ class Project(object):
             raise UserWarning('Cannot export to file suffix %s' %
                               os.path.splitext(self.filename)[-1])
 
+        if len(self.error_list) > 0:
+            np.savetxt(filename+"_error.txt", self.error_list, delimiter=", ", fmt="%s")
 
     def save(self, filename="", validate=True):
         self.save_model(filename, validate)
