@@ -580,7 +580,6 @@ class Project(object):
         kmcos.io.clear_model(model_name, backend=backend)
     
     def save_model(self, filename="", validate=True):
-        import sys
         self.model_name = self.meta.model_name
         #If the user provides a filename, save_model will use that. Otherwise, save_model will create a default filename with the model_name
         if len(filename) == 0:
@@ -600,7 +599,7 @@ class Project(object):
 
         #If there are errors with the model object, then write the list of errors to a .log file
         if len(self.error_list) > 0:
-            np.savetxt(sys.argv[0][0:-3]+".log", self.error_list, delimiter=", ", fmt="%s", header = "Type, Name, Message")
+            np.savetxt(self.model_name+"__build.log", self.error_list, delimiter=", ", fmt="%s", header = "Type, Name, Message")
 
 
     def save(self, filename="", validate=True):
