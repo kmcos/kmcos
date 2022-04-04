@@ -322,3 +322,28 @@ def reload(sg_module_state):
                This is a known bug, but the reason is not yet looked into. \n \
                You may need to throw away your first restarted datapoint,  \n \
                and if it affects your system dynamics then this bug needs to be fixed.")
+
+def save_txt(n_snapshots, sps, directory = "./exported_configurations", spi = 100):
+    """
+    Creates a directory to save the model configurations in array format and the atomic representation of the model.
+        n_snapshots is the number of snapshots
+        sps is the steps per snapshot
+        directory is the directory name where the .txt and .png files will be saved
+        spi is the snapshots per image, where after a certain number of steps indicated by spi, the function will export an image
+
+    """
+    import numpy as np
+    check_directory(directory)
+    for current_snapshot in range(1, n_snapshots):
+        do_snapshots(n_snapshots=current_snapshot, sps=sps)
+        np.savetxt("exported_configurations/" + str(current_snapshot) + "_snapshot.txt", sg.model.get_species_coords(), delimiter=", ", fmt="%s", header = "Species, Coordinates")  
+        counter = counter + 1
+        if counter % 100 == 0:
+            sg.model.plot_configuration(filename=str(counter) + "atomic", resolution=100, scale=20, representation='atomic')
+
+def check_directory(directory):
+    import os
+    try:
+        os.mkdir(directory)
+    except:
+        pass
