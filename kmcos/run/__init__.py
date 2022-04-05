@@ -140,6 +140,19 @@ class ProclistProxy(object):
         else:
             raise AttributeError('%s not found' % attr)
 
+def check_directory(self, directory):
+        """
+        Checks if the directory exists in the current working directory and creates it if it does not
+        """
+        import os
+        if directory[:2] != "./":
+            directory = "./" + directory
+
+        try:
+            os.mkdir(directory)
+        except:
+            pass
+
 class KMC_Model(Process):
     """API Front-end to initialize and run a kMC model using python bindings.
     Depending on the constructor call the model can be run either via directory
@@ -746,7 +759,7 @@ class KMC_Model(Process):
         """
         from kmcos.snapshots import do_snapshots
         import numpy as np
-        self.check_directory(directory)
+        check_directory(directory)
         counter = 0
         for current_snapshot in range(1, n_snapshots):
             do_snapshots(n_snapshots=current_snapshot, sps=sps)
@@ -754,19 +767,6 @@ class KMC_Model(Process):
             counter = counter + 1
             if counter % 100 == 0:
                 self.plot_configuration(filename=str(counter) + "atomic", resolution=100, scale=20, representation='atomic')
-
-    def check_directory(self, directory):
-        """
-        Checks if the directory exists in the current working directory and creates it if it does not
-        """
-        import os
-        if directory[:2] != "./":
-            directory = "./" + directory
-
-        try:
-            os.mkdir(directory)
-        except:
-            pass
 
     def run(self):
         """Runs the model indefinitely. To control the
@@ -851,7 +851,7 @@ class KMC_Model(Process):
         else:
             video_filename = filename + '.webm'
 
-        self.check_directory(directory)
+        check_directory(directory)
         if not os.path.exists('folder_with_movie_images'):
             os.mkdir('folder_with_movie_images')
         image_folder = 'folder_with_movie_images'
@@ -1425,7 +1425,7 @@ class KMC_Model(Process):
             EX: {'CO': 'carbon', 'empty': ''}
 
         """
-        self.check_directory(directory)
+        check_directory(directory)
 
         if filename_csv == "" and export_csv==True:
             filename_csv = directory + "/species_coords.csv"
@@ -1506,6 +1506,8 @@ class KMC_Model(Process):
 
         """
         import matplotlib.pyplot as plt
+
+        check_directory(directory)
         exportFigure = True #This variable should be moved to an argument or something in plot_settings.
         #First put some defaults in if not already defined.
         if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
@@ -1586,7 +1588,7 @@ class KMC_Model(Process):
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
         
-    def plot_configuration(self, filename = '', directory = "./exported_configuration", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
+    def plot_configuration(self, filename = '', directory = "./exported_configurations", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """Either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
 
         'representation' is an optional argument for spatial and atomic view
@@ -1608,7 +1610,7 @@ class KMC_Model(Process):
             "speciesName": False
 
         """
-        self.check_directory(directory)        
+        check_directory(directory)        
         if representation == 'atomic':
             if 'show_unit_cell' in plot_settings:
                 show_unit_cell = plot_settings['show_unit_cell']
@@ -2007,17 +2009,17 @@ class KMC_Model(Process):
         else:
             return res
 
-    def dump_config(self, filename, directory = "./exported_configuration"):
+    def dump_config(self, filename, directory = "./exported_configurations"):
         """Use numpy mechanism to store current configuration in a file.
 
         :param filename: Name of file, to write configuration to.
         :type filename: str
 
         """
-        self.check_directory(directory)
+        check_directory(directory)
         np.save(directory + '/%s.npy' % filename, self._get_configuration())
 
-    def load_config(self, filename):
+    def load_config(self, filename, directory = "./exported_configurations"):
         """Use numpy mechanism to load configuration from a file. User
         must ensure that size of stored configuration is correct.
 
@@ -2025,9 +2027,10 @@ class KMC_Model(Process):
         :type filename: str
 
         """
+        check_directory(directory)
         x, y, z = self.lattice.system_size
         spuck = self.lattice.spuck
-        config = np.load('%s.npy' % filename)
+        config = np.load(directory + '/%s.npy' % filename)
 
         self._set_configuration(config)
         self._adjust_database()
@@ -2035,7 +2038,7 @@ class KMC_Model(Process):
     def pickle_export_atoms(self, filename = "", directory = "./exported_configurations"):
         # takes atoms object in filename and turns it into a .pkl file
         import pickle
-        self.check_directory(directory)
+        check_directory(directory)
         if filename == "":
             filename = "atoms_export.pkl"
         else:
