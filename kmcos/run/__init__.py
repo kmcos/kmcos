@@ -747,26 +747,7 @@ class KMC_Model(Process):
         """
         assert (self.can_accelerate), 'This model has not been compiled using the acceleration flag -t'
         proclist.do_acc_kmc_steps(n, self.settings.sampling_steps, stats, save_exe, save_proc)
-
-    def export_steps(self, n_snapshots, sps, directory = "./exported_configurations", spi = 100):
-        """
-        Creates a directory to save the model configurations in array format and the atomic representation of the model.
-            n_snapshots is the number of snapshots
-            sps is the steps per snapshot
-            directory is the directory name where the .txt and .png files will be saved
-            spi is the snapshots per image, where after a certain number of steps indicated by spi, the function will export an image
-
-        """
-        from kmcos.snapshots import do_snapshots
-        import numpy as np
-        check_directory(directory)
-        counter = 0
-        for current_snapshot in range(1, n_snapshots):
-            do_snapshots(n_snapshots=current_snapshot, sps=sps)
-            np.savetxt(directory + "/" + str(current_snapshot) + "_snapshot.txt", self.get_species_coords(), delimiter=", ", fmt="%s", header = "Species, Coordinates")  
-            counter = counter + 1
-            if counter % 100 == 0:
-                self.plot_configuration(filename=str(counter) + "atomic", resolution=100, scale=20, representation='atomic')
+    
 
     def run(self):
         """Runs the model indefinitely. To control the
