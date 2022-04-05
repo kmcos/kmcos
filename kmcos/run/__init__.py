@@ -2000,14 +2000,15 @@ class KMC_Model(Process):
         else:
             return res
 
-    def dump_config(self, filename):
+    def dump_config(self, filename, directory = "./exported_configuration"):
         """Use numpy mechanism to store current configuration in a file.
 
         :param filename: Name of file, to write configuration to.
         :type filename: str
 
         """
-        np.save('%s.npy' % filename, self._get_configuration())
+        self.check_directory(directory)
+        np.save(directory + '/%s.npy' % filename, self._get_configuration())
 
     def load_config(self, filename):
         """Use numpy mechanism to load configuration from a file. User
