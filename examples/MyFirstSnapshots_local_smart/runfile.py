@@ -69,6 +69,6 @@ plot_settings = {
 sg.model.plot_configuration(representation='spatial', plot_settings=plot_settings)
 
 
-#sg.model.export_movie()
+sg.model.export_movie()
 
 sg.model.pickle_export_atoms(directory = "./pickle")
