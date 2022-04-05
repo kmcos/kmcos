@@ -140,7 +140,7 @@ class ProclistProxy(object):
         else:
             raise AttributeError('%s not found' % attr)
 
-def check_directory(self, directory):
+def check_directory(directory):
         """
         Checks if the directory exists in the current working directory and creates it if it does not
         """
@@ -832,7 +832,7 @@ class KMC_Model(Process):
 
     def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
-        in the folder_with_movie_images directory and then creates a .webm video file of all the images
+        in the exported_movie_images directory and then creates a .webm video file of all the images
         of the images into a video
             'filename' sets the filename for the images in the image directory and the video
             'scale' increases the size of each species in the structure (currently not working as desired)
@@ -852,9 +852,9 @@ class KMC_Model(Process):
             video_filename = filename + '.webm'
 
         check_directory(directory)
-        if not os.path.exists('folder_with_movie_images'):
-            os.mkdir('folder_with_movie_images')
-        image_folder = 'folder_with_movie_images'
+        if not os.path.exists('exported_movie_images'):
+            os.mkdir('exported_movie_images')
+        image_folder = './exported_movie_images'
         # os.chdir(image_folder)
         for i in range(frames):
             self.do_steps(steps)
