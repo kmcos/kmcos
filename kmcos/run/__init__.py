@@ -750,13 +750,19 @@ class KMC_Model(Process):
         counter = 0
         for current_snapshot in range(1, n_snapshots):
             do_snapshots(n_snapshots=current_snapshot, sps=sps)
-            np.savetxt("exported_configurations/" + str(current_snapshot) + "_snapshot.txt", self.get_species_coords(), delimiter=", ", fmt="%s", header = "Species, Coordinates")  
+            np.savetxt(directory + "/" + str(current_snapshot) + "_snapshot.txt", self.get_species_coords(), delimiter=", ", fmt="%s", header = "Species, Coordinates")  
             counter = counter + 1
             if counter % 100 == 0:
                 self.plot_configuration(filename=str(counter) + "atomic", resolution=100, scale=20, representation='atomic')
 
     def check_directory(self, directory):
+        """
+        Checks if the directory exists in the current working directory and creates it if it does not
+        """
         import os
+        if directory[:2] != "./":
+            directory = "./" + directory
+
         try:
             os.mkdir(directory)
         except:
