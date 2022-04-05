@@ -830,7 +830,7 @@ class KMC_Model(Process):
                     settings.parameters.update(parameters)
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
-    def export_movie(self, filename = "", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
+    def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
         in the folder_with_movie_images directory and then creates a .webm video file of all the images
         of the images into a video
@@ -850,17 +850,19 @@ class KMC_Model(Process):
             video_filename = 'atoms_video.webm'
         else:
             video_filename = filename + '.webm'
+
+        self.check_directory(directory)
         if not os.path.exists('folder_with_movie_images'):
             os.mkdir('folder_with_movie_images')
         image_folder = 'folder_with_movie_images'
-        os.chdir(image_folder)
+        # os.chdir(image_folder)
         for i in range(frames):
             self.do_steps(steps)
-            self.export_picture(filename = filename + str(i), resolution = resolution, scale = scale)
-        os.chdir("..")
+            self.export_picture(filename = image_folder + "/" + filename + str(i), resolution = resolution, scale = scale)
+        #os.chdir("..")
         image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
-        clip.write_videofile(video_filename)
+        clip.write_videofile(directory + "/" + video_filename)
         clip.close()
 
 
@@ -1402,7 +1404,7 @@ class KMC_Model(Process):
         else:
             return res
             
-    def get_species_coords(self, filename_csv="", export_csv=True):
+    def get_species_coords(self, filename_csv="", directory = "./exported_configurations", export_csv=True):
         """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name
             EX: [[['CO', [0, 11]],
                 ['CO', [0, 13]],
@@ -1423,8 +1425,12 @@ class KMC_Model(Process):
             EX: {'CO': 'carbon', 'empty': ''}
 
         """
+        self.check_directory(directory)
+
         if filename_csv == "" and export_csv==True:
-            filename_csv = "species_coords.csv"
+            filename_csv = directory + "/species_coords.csv"
+        else:
+            filename_csv = directory + filename_csv
 
         filename_csv.replace(".csv", "") + ".csv"
 
@@ -1480,7 +1486,7 @@ class KMC_Model(Process):
         return species_coords
 
     @staticmethod
-    def create_configuration_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
+    def create_configuration_plot(coords, species, directory = "./exported_configurations", plot_settings={}, showFigure=True):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species)
@@ -1564,7 +1570,7 @@ class KMC_Model(Process):
 
         fig0.tight_layout()
         if exportFigure==True:
-            fig0.savefig(directory + plot_settings['figure_name'] + '.png', dpi=plot_settings['dpi'])
+            fig0.savefig(directory + "/" + plot_settings['figure_name'] + '.png', dpi=plot_settings['dpi'])
         if showFigure==False:
             plt.close(fig0)
         return fig0, ax0
@@ -1580,7 +1586,7 @@ class KMC_Model(Process):
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
         
-    def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
+    def plot_configuration(self, filename = '', directory = "./exported_configuration", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """Either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
 
         'representation' is an optional argument for spatial and atomic view
@@ -1601,7 +1607,8 @@ class KMC_Model(Process):
             "dpi": 220,
             "speciesName": False
 
-        """        
+        """
+        self.check_directory(directory)        
         if representation == 'atomic':
             if 'show_unit_cell' in plot_settings:
                 show_unit_cell = plot_settings['show_unit_cell']
@@ -1611,13 +1618,13 @@ class KMC_Model(Process):
                 kwargs = plot_settings['kwargs']
             else:
                 kwargs = {} #default for kwargs is a blank dictionary
-            self.export_picture(resolution = resolution, scale = scale, filename = filename)
+            self.export_picture(resolution = resolution, scale = scale, filename = directory + "/" + filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
             config = self._get_configuration().tolist()
             species = self.species_tags
             species_coordinates = self.get_species_coordinates(config, species)
-            self.create_configuration_plot(species_coordinates, species, plot_settings)
+            self.create_configuration_plot(coords = species_coordinates, species = species, directory = directory, plot_settings = plot_settings)
             
     def _put(self, site, new_species, reduce=False):
         """
@@ -2025,9 +2032,10 @@ class KMC_Model(Process):
         self._set_configuration(config)
         self._adjust_database()
 
-    def pickle_export_atoms(self, filename = ""):
+    def pickle_export_atoms(self, filename = "", directory = "./exported_configurations"):
         # takes atoms object in filename and turns it into a .pkl file
         import pickle
+        self.check_directory(directory)
         if filename == "":
             filename = "atoms_export.pkl"
         else:
@@ -2035,7 +2043,7 @@ class KMC_Model(Process):
                 filename.replace('.pkl', '.pkl')
             else:
                 filename = filename + '.pkl'
-        filehandler = open(filename, 'wb')
+        filehandler = open(directory + "/" + filename, 'wb')
         pickle.dump(self.get_atoms(), filehandler)
         filehandler.close()
 
