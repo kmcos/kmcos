@@ -1385,7 +1385,7 @@ class KMC_Model(Process):
         else:
             return res
             
-    def get_species_coords(self, filename_csv="", directory = "./exported_configurations", export_csv=True):
+    def get_species_coords(self, filename_csv="", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
         """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name
             EX: [[['CO', [0, 11]],
                 ['CO', [0, 13]],
@@ -1405,40 +1405,53 @@ class KMC_Model(Process):
         'species' in the function is a dictionary that contains the names of the species
             EX: {'CO': 'carbon', 'empty': ''}
 
+        'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv with (x,y,z) format, and the meshgrid format
+        returns as a csv with a XX, YY format
+
         """
+        #Fix me, this function is currently written for 2d, and needs to be extended for 3d
         check_directory(directory)
 
-        if filename_csv == "" and export_csv==True:
-            filename_csv = directory + "/species_coords.csv"
-        else:
-            filename_csv = directory + filename_csv
-
-        filename_csv.replace(".csv", "") + ".csv"
-
-        config = self._get_configuration().tolist()
+        if export_csv == True:
+            if filename_csv == "":
+                filename_csv = "species_coords" + "_" + str(self.base.get_kmc_step()) + ".csv"
+            else:
+                if filename_csv[-4:] == ".csv":
+                    filename_csv.replace(".csv", "") + "_" + str(self.base.get_kmc_step()) + ".csv" 
+                else:
+                    filename_csv = filename_csv + "_" + str(self.base.get_kmc_step()) + ".csv"
+        filename_csv = directory + "/" + filename_csv
+        
         species = self.species_tags
         species_list = list(species)
         coords_list = []
-        species_coords = self.get_species_coordinates(config, species)
+        
+        if matrix_format == "cartesian":
+            config = self._get_configuration().tolist()
+            #Note: taking a list of a dictionary turns the keys into a list
+            species_coords = self.get_species_coordinates(config, species, export_csv=False, matrix_format="cartesian")
+            for species_index in range(len(species_coords)): #loop across each species
+                for coordinate_pair in species_coords[species_index]: #loop across each sublist in the species
+                    coords_list.append([species_list[species_index], coordinate_pair]) #appends the coordinates for each respesctive species into coords
+            final_coords = coords_list
+            if export_csv==True: #creates the csv file and exports coords_list into two columns
+                import csv  #TODO, need to change this to use savetxt to have three columns instead of two
+                with open(filename_csv, 'w') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(['Species', 'Coordinates'])
+                    writer.writerows(final_coords)
+                    file.close()
 
-        #Note: taking a list of a dictionary turns the keys into a list
-        for species_index in range(len(species_coords)): #loop across each species
-            for coordinate_pair in species_coords[species_index]: #loop across each sublist in the species
-                coords_list.append([species_list[species_index], coordinate_pair]) #appends the coordinates for each respesctive species into coords
-
-        if export_csv==True: #creates the csv file and exports coords_list into two columns
-            import csv
-            with open(filename_csv, 'w') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Species', 'Coordinates'])
-                writer.writerows(coords_list)
-                file.close()
-
-        return coords_list #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
-                            #put the module "ColumnSort" in the directory and call later for sorting
-    
+        elif matrix_format == "meshgrid":
+            config = self._get_configuration()
+            final_coords = self.get_species_coordinates(config, species, export_csv=False, matrix_format="meshgrid")
+            np.savetxt(filename_csv, np.array(final_coords, dtype = "object"), delimiter = ",", fmt="%s") #we use dtype to avoid a np warning
+        
+        return final_coords  #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
+                                #put the module "ColumnSort" in the directory and call later for sorting
+            
     @staticmethod  
-    def get_species_coordinates(config, species):
+    def get_species_coordinates(config, species, filename_csv = "", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
         """Gets the species coordinates from config and appends it into a 3d array, where each sub array lists the coordinates for a single species
             EX: [[[0, 11],
                 [0, 13],
@@ -1452,19 +1465,41 @@ class KMC_Model(Process):
                 [0, 4]]]
 
         'config' is expected to be a nested 4d array that contains the species's coordinates
-            EX: [[[[0]], [[1]], [[1]], [[0]]]]
+            EX: [[[[0]], [[1]], [[2]], [[0]], [[3]], [[2]]]]
         'species' is exptected to be a dictionary that contains the names of the species
             EX: {'CO': 'carbon', 'empty': ''}
 
         """
-        species_coords = []
-        for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
-            species_coords.append([])
-            for i in range(len(config)):
-                for j in range(len(config[0])):
-                    if (config[i][j][0][0] == k):
-                        species_coords[k].append([i,j])
-        return species_coords
+        check_directory(directory)
+        
+        if matrix_format == "cartesian":
+            species_coords = []
+            for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
+                species_coords.append([])
+                for i in range(len(config)): #Loop across the x values
+                    for j in range(len(config[0])): #Loop across the y values
+                        if (config[i][j][0][0] == k):
+                            species_coords[k].append([i,j])
+            final_coords = species_coords
+
+        elif matrix_format == "meshgrid":
+            matrix_array = config * 1.0
+            matrix_array = np.reshape(matrix_array, (len(config), len(config[0])))
+            final_coords = matrix_array
+
+        if export_csv == True:
+            if filename_csv == "":
+                filename_csv = "species_coordinates" + "_" + str(base.get_kmc_step()) + ".csv"
+            else:
+                if filename_csv[-4:] == ".csv":
+                    filename_csv.replace(".csv", "") + "_" + str(base.get_kmc_step()) + ".csv"
+                else:
+                    filename_csv = filename_csv + "_" + str(base.get_kmc_step()) + ".csv"
+            filename_csv = directory + "/" + filename_csv
+            np.savetxt(filename_csv, np.array(final_coords, dtype = "object"), delimiter = ",", fmt="%s") #we use dtype to avoid a np warning
+
+        return final_coords
+
 
     @staticmethod
     def create_configuration_plot(coords, species, directory = "./exported_configurations", plot_settings={}, showFigure=True):
