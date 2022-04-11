@@ -1423,6 +1423,8 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
+                Note: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                enough spaces in the model.
 
         """
         #Fix me, this function is currently written for 2d, and needs to be extended for 3d
@@ -1498,6 +1500,8 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
+                Note: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                enough spaces in the model.
 
         """
         check_directory(directory)
