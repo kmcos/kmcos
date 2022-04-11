@@ -1407,6 +1407,22 @@ class KMC_Model(Process):
 
         'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv with (x,y,z) format, and the meshgrid format
         returns as a csv with a XX, YY format
+            EX: Cartesian
+            Species     Coordinates
+            CO          [0,2]
+            CO          [0,4]
+            CO          [0,5]
+            empty       [0,0]
+            empty       [0,1]
+            empty       [0,3]
+
+            EX: Meshgrid
+            [[0, 1, 1, 0, 1, 0],
+            [1, 1, 1, 0, 1, 0],
+            [0, 1, 1, 0, 1, 0],
+            [1, 1, 0, 0, 1, 0],
+            [1, 0, 1, 1, 1, 0],
+            [1, 0, 1, 0, 1, 0]]
 
         """
         #Fix me, this function is currently written for 2d, and needs to be extended for 3d
@@ -1468,6 +1484,20 @@ class KMC_Model(Process):
             EX: [[[[0]], [[1]], [[2]], [[0]], [[3]], [[2]]]]
         'species' is exptected to be a dictionary that contains the names of the species
             EX: {'CO': 'carbon', 'empty': ''}
+
+        'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv where each row 
+        represents the coordinates for a single species, and the meshgrid format returns as a csv with a XX, YY format
+            EX: Cartesian
+            [[0	 10] [0	 11] [0	 18] [1	 6]	 [2	 3]	 [2	 11] [2	 13]] -> This is CO
+            [[0	 0]	 [0	 1]	 [0	 2]	 [0	 3]	 [0	 4]	 [0	 5]	 [0	 6]]  -> This is empty
+
+            EX: Meshgrid
+            [[0, 1, 1, 0, 1, 0],
+            [1, 1, 1, 0, 1, 0],
+            [0, 1, 1, 0, 1, 0],
+            [1, 1, 0, 0, 1, 0],
+            [1, 0, 1, 1, 1, 0],
+            [1, 0, 1, 0, 1, 0]]
 
         """
         check_directory(directory)
