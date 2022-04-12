@@ -58,7 +58,7 @@ plot_settings = {
     "legendLabel": "Species",
     "legendExport": False,
     "legend": True,
-    "figure_name": "Plot",
+    #"figure_name": "Plot",
     "dpi": 220,
     "speciesName": True,
     "num_x_ticks": 3,
@@ -68,4 +68,7 @@ plot_settings = {
 # Note that the spatial representation plots by default, but you can always specify in representation
 sg.model.plot_configuration(representation='spatial', plot_settings=plot_settings)
 
+
 sg.model.export_movie()
+
+sg.model.pickle_export_atoms(directory = "./pickle")

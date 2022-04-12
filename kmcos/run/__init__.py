@@ -140,6 +140,19 @@ class ProclistProxy(object):
         else:
             raise AttributeError('%s not found' % attr)
 
+def check_directory(directory):
+        """
+        Checks if the directory exists in the current working directory and creates it if it does not
+        """
+        import os
+        if directory[:2] != "./":
+            directory = "./" + directory
+
+        try:
+            os.mkdir(directory)
+        except:
+            pass
+
 class KMC_Model(Process):
     """API Front-end to initialize and run a kMC model using python bindings.
     Depending on the constructor call the model can be run either via directory
@@ -734,6 +747,7 @@ class KMC_Model(Process):
         """
         assert (self.can_accelerate), 'This model has not been compiled using the acceleration flag -t'
         proclist.do_acc_kmc_steps(n, self.settings.sampling_steps, stats, save_exe, save_proc)
+    
 
     def run(self):
         """Runs the model indefinitely. To control the
@@ -797,9 +811,9 @@ class KMC_Model(Process):
                     settings.parameters.update(parameters)
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
-    def export_movie(self, filename = "", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
+    def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
-        in the folder_with_movie_images directory and then creates a .webm video file of all the images
+        in the exported_movie_images directory and then creates a .webm video file of all the images
         of the images into a video
             'filename' sets the filename for the images in the image directory and the video
             'scale' increases the size of each species in the structure (currently not working as desired)
@@ -817,17 +831,19 @@ class KMC_Model(Process):
             video_filename = 'atoms_video.webm'
         else:
             video_filename = filename + '.webm'
-        if not os.path.exists('folder_with_movie_images'):
-            os.mkdir('folder_with_movie_images')
-        image_folder = 'folder_with_movie_images'
-        os.chdir(image_folder)
+
+        check_directory(directory)
+        if not os.path.exists('exported_movie_images'):
+            os.mkdir('exported_movie_images')
+        image_folder = './exported_movie_images'
+        # os.chdir(image_folder)
         for i in range(frames):
             self.do_steps(steps)
-            self.export_picture(filename = filename + str(i), resolution = resolution, scale = scale)
-        os.chdir("..")
+            self.export_picture(filename = image_folder + "/" + filename + str(i), resolution = resolution, scale = scale)
+        #os.chdir("..")
         image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
-        clip.write_videofile(video_filename)
+        clip.write_videofile(directory + "/" + video_filename)
         clip.close()
 
 
@@ -1369,7 +1385,7 @@ class KMC_Model(Process):
         else:
             return res
             
-    def get_species_coords(self, filename_csv="", export_csv=True):
+    def get_species_coords(self, filename_csv="", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
         """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name
             EX: [[['CO', [0, 11]],
                 ['CO', [0, 13]],
@@ -1389,36 +1405,71 @@ class KMC_Model(Process):
         'species' in the function is a dictionary that contains the names of the species
             EX: {'CO': 'carbon', 'empty': ''}
 
+        'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv with (x,y,z) format, and the meshgrid format
+        returns as a csv with a XX, YY format
+            EX: Cartesian
+            Species     Coordinates
+            CO          [0,2]
+            CO          [0,4]
+            CO          [0,5]
+            empty       [0,0]
+            empty       [0,1]
+            empty       [0,3]
+
+            EX: Meshgrid
+            [[0, 1, 1, 0, 1, 0],
+            [1, 1, 1, 0, 1, 0],
+            [0, 1, 1, 0, 1, 0],
+            [1, 1, 0, 0, 1, 0],
+            [1, 0, 1, 1, 1, 0],
+            [1, 0, 1, 0, 1, 0]]
+                Note: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                enough spaces in the model.
+
         """
-        if filename_csv == "" and export_csv==True:
-            filename_csv = "species_coords.csv"
+        #Fix me, this function is currently written for 2d, and needs to be extended for 3d
+        check_directory(directory)
 
-        filename_csv.replace(".csv", "") + ".csv"
-
-        config = self._get_configuration().tolist()
+        if export_csv == True:
+            if filename_csv == "":
+                filename_csv = "species_coords" + "_" + str(self.base.get_kmc_step()) + ".csv"
+            else:
+                if filename_csv[-4:] == ".csv":
+                    filename_csv.replace(".csv", "") + "_" + str(self.base.get_kmc_step()) + ".csv" 
+                else:
+                    filename_csv = filename_csv + "_" + str(self.base.get_kmc_step()) + ".csv"
+        filename_csv = directory + "/" + filename_csv
+        
         species = self.species_tags
         species_list = list(species)
         coords_list = []
-        species_coords = self.get_species_coordinates(config, species)
+        
+        if matrix_format == "cartesian":
+            config = self._get_configuration().tolist()
+            #Note: taking a list of a dictionary turns the keys into a list
+            species_coords = self.get_species_coordinates(config, species, export_csv=False, matrix_format="cartesian")
+            for species_index in range(len(species_coords)): #loop across each species
+                for coordinate_pair in species_coords[species_index]: #loop across each sublist in the species
+                    coords_list.append([species_list[species_index], coordinate_pair]) #appends the coordinates for each respesctive species into coords
+            final_coords = coords_list
+            if export_csv==True: #creates the csv file and exports coords_list into two columns
+                import csv  #TODO, need to change this to use savetxt to have three columns instead of two
+                with open(filename_csv, 'w') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(['Species', 'Coordinates'])
+                    writer.writerows(final_coords)
+                    file.close()
 
-        #Note: taking a list of a dictionary turns the keys into a list
-        for species_index in range(len(species_coords)): #loop across each species
-            for coordinate_pair in species_coords[species_index]: #loop across each sublist in the species
-                coords_list.append([species_list[species_index], coordinate_pair]) #appends the coordinates for each respesctive species into coords
-
-        if export_csv==True: #creates the csv file and exports coords_list into two columns
-            import csv
-            with open(filename_csv, 'w') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Species', 'Coordinates'])
-                writer.writerows(coords_list)
-                file.close()
-
-        return coords_list #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
-                            #put the module "ColumnSort" in the directory and call later for sorting
-    
+        elif matrix_format == "meshgrid":
+            config = self._get_configuration()
+            final_coords = self.get_species_coordinates(config, species, export_csv=False, matrix_format="meshgrid")
+            np.savetxt(filename_csv, np.array(final_coords, dtype = "object"), delimiter = ",", fmt="%s") #we use dtype to avoid a np warning
+        
+        return final_coords  #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
+                                #put the module "ColumnSort" in the directory and call later for sorting
+            
     @staticmethod  
-    def get_species_coordinates(config, species):
+    def get_species_coordinates(config, species, filename_csv = "", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
         """Gets the species coordinates from config and appends it into a 3d array, where each sub array lists the coordinates for a single species
             EX: [[[0, 11],
                 [0, 13],
@@ -1432,22 +1483,60 @@ class KMC_Model(Process):
                 [0, 4]]]
 
         'config' is expected to be a nested 4d array that contains the species's coordinates
-            EX: [[[[0]], [[1]], [[1]], [[0]]]]
+            EX: [[[[0]], [[1]], [[2]], [[0]], [[3]], [[2]]]]
         'species' is exptected to be a dictionary that contains the names of the species
             EX: {'CO': 'carbon', 'empty': ''}
 
+        'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv where each row 
+        represents the coordinates for a single species, and the meshgrid format returns as a csv with a XX, YY format
+            EX: Cartesian
+            [[0	 10] [0	 11] [0	 18] [1	 6]	 [2	 3]	 [2	 11] [2	 13]] -> This is CO
+            [[0	 0]	 [0	 1]	 [0	 2]	 [0	 3]	 [0	 4]	 [0	 5]	 [0	 6]]  -> This is empty
+
+            EX: Meshgrid
+            [[0, 1, 1, 0, 1, 0],
+            [1, 1, 1, 0, 1, 0],
+            [0, 1, 1, 0, 1, 0],
+            [1, 1, 0, 0, 1, 0],
+            [1, 0, 1, 1, 1, 0],
+            [1, 0, 1, 0, 1, 0]]
+                Note: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                enough spaces in the model.
+
         """
-        species_coords = []
-        for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
-            species_coords.append([])
-            for i in range(len(config)):
-                for j in range(len(config[0])):
-                    if (config[i][j][0][0] == k):
-                        species_coords[k].append([i,j])
-        return species_coords
+        check_directory(directory)
+        
+        if matrix_format == "cartesian":
+            species_coords = []
+            for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
+                species_coords.append([])
+                for i in range(len(config)): #Loop across the x values
+                    for j in range(len(config[0])): #Loop across the y values
+                        if (config[i][j][0][0] == k):
+                            species_coords[k].append([i,j])
+            final_coords = species_coords
+
+        elif matrix_format == "meshgrid":
+            matrix_array = config * 1.0
+            matrix_array = np.reshape(matrix_array, (len(config), len(config[0])))
+            final_coords = matrix_array
+
+        if export_csv == True:
+            if filename_csv == "":
+                filename_csv = "species_coordinates" + "_" + str(base.get_kmc_step()) + ".csv"
+            else:
+                if filename_csv[-4:] == ".csv":
+                    filename_csv.replace(".csv", "") + "_" + str(base.get_kmc_step()) + ".csv"
+                else:
+                    filename_csv = filename_csv + "_" + str(base.get_kmc_step()) + ".csv"
+            filename_csv = directory + "/" + filename_csv
+            np.savetxt(filename_csv, np.array(final_coords, dtype = "object"), delimiter = ",", fmt="%s") #we use dtype to avoid a np warning
+
+        return final_coords
+
 
     @staticmethod
-    def create_configuration_plot(coords, species, plot_settings={}, showFigure=True, directory=''):
+    def create_configuration_plot(coords, species, directory = "./exported_configurations", plot_settings={}, showFigure=True):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species)
@@ -1467,6 +1556,8 @@ class KMC_Model(Process):
 
         """
         import matplotlib.pyplot as plt
+
+        check_directory(directory)
         exportFigure = True #This variable should be moved to an argument or something in plot_settings.
         #First put some defaults in if not already defined.
         if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
@@ -1531,7 +1622,7 @@ class KMC_Model(Process):
 
         fig0.tight_layout()
         if exportFigure==True:
-            fig0.savefig(directory + plot_settings['figure_name'] + '.png', dpi=plot_settings['dpi'])
+            fig0.savefig(directory + "/" + plot_settings['figure_name'] + '.png', dpi=plot_settings['dpi'])
         if showFigure==False:
             plt.close(fig0)
         return fig0, ax0
@@ -1547,7 +1638,7 @@ class KMC_Model(Process):
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
         
-    def plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
+    def plot_configuration(self, filename = '', directory = "./exported_configurations", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """Either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
 
         'representation' is an optional argument for spatial and atomic view
@@ -1568,7 +1659,8 @@ class KMC_Model(Process):
             "dpi": 220,
             "speciesName": False
 
-        """        
+        """
+        check_directory(directory)        
         if representation == 'atomic':
             if 'show_unit_cell' in plot_settings:
                 show_unit_cell = plot_settings['show_unit_cell']
@@ -1578,13 +1670,13 @@ class KMC_Model(Process):
                 kwargs = plot_settings['kwargs']
             else:
                 kwargs = {} #default for kwargs is a blank dictionary
-            self.export_picture(resolution = resolution, scale = scale, filename = filename)
+            self.export_picture(resolution = resolution, scale = scale, filename = directory + "/" + filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
             config = self._get_configuration().tolist()
             species = self.species_tags
             species_coordinates = self.get_species_coordinates(config, species)
-            self.create_configuration_plot(species_coordinates, species, plot_settings)
+            self.create_configuration_plot(coords = species_coordinates, species = species, directory = directory, plot_settings = plot_settings)
             
     def _put(self, site, new_species, reduce=False):
         """
@@ -1967,16 +2059,17 @@ class KMC_Model(Process):
         else:
             return res
 
-    def dump_config(self, filename):
+    def dump_config(self, filename, directory = "./exported_configurations"):
         """Use numpy mechanism to store current configuration in a file.
 
         :param filename: Name of file, to write configuration to.
         :type filename: str
 
         """
-        np.save('%s.npy' % filename, self._get_configuration())
+        check_directory(directory)
+        np.save(directory + '/%s.npy' % filename, self._get_configuration())
 
-    def load_config(self, filename):
+    def load_config(self, filename, directory = "./exported_configurations"):
         """Use numpy mechanism to load configuration from a file. User
         must ensure that size of stored configuration is correct.
 
@@ -1984,16 +2077,18 @@ class KMC_Model(Process):
         :type filename: str
 
         """
+        check_directory(directory)
         x, y, z = self.lattice.system_size
         spuck = self.lattice.spuck
-        config = np.load('%s.npy' % filename)
+        config = np.load(directory + '/%s.npy' % filename)
 
         self._set_configuration(config)
         self._adjust_database()
 
-    def pickle_export_atoms(self, filename = ""):
+    def pickle_export_atoms(self, filename = "", directory = "./exported_configurations"):
         # takes atoms object in filename and turns it into a .pkl file
         import pickle
+        check_directory(directory)
         if filename == "":
             filename = "atoms_export.pkl"
         else:
@@ -2001,7 +2096,7 @@ class KMC_Model(Process):
                 filename.replace('.pkl', '.pkl')
             else:
                 filename = filename + '.pkl'
-        filehandler = open(filename, 'wb')
+        filehandler = open(directory + "/" + filename, 'wb')
         pickle.dump(self.get_atoms(), filehandler)
         filehandler.close()
 
