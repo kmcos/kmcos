@@ -1536,7 +1536,7 @@ class KMC_Model(Process):
 
         return final_coords
 
-    def get_local_configuration(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_csv=True, unique_only=True):
+    def get_local_configuration(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_files=True, unique_only=True):
         """Gets the coordinates as a meshgrid and returns a list of smaller meshgrids (i.e. the local configurations)
         Currently, this function returns all the local configurations of the meshgrid, including duplicates.
             Meshgrid is a matrix with all the species
@@ -1583,7 +1583,7 @@ class KMC_Model(Process):
         subsquares = im[subsquareRow, subsquareCol]
         subsquareList = subsquares.reshape(-1, sidel, sidel)
 
-        if export_csv == True:
+        if export_files == True:
             check_directory(directory)
             if filename == "":
                 filename = "local_configurations" + "_of_" + str(base.get_kmc_step()) + "_steps"
