@@ -1536,7 +1536,7 @@ class KMC_Model(Process):
 
         return final_coords
 
-    def get_local_configuration(self, meshgrid, radius = 2, filename_npy="", directory = "./exported_configurations", export_csv=True):
+    def get_local_configuration(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_csv=True, unique_only=True):
         """Gets the coordinates as a meshgrid and returns a list of smaller meshgrids (i.e. the local configurations)
         Currently, this function returns all the local configurations of the meshgrid, including duplicates.
             Meshgrid is a matrix with all the species
@@ -1585,20 +1585,25 @@ class KMC_Model(Process):
 
         if export_csv == True:
             check_directory(directory)
-            if filename_npy == "":
-                filename_npy = "local_configurations" + "_" + str(base.get_kmc_step()) + ".npy"
+            if filename == "":
+                filename = "local_configurations" + "_of_" + str(base.get_kmc_step()) + "_steps"
             else:
-                if filename_npy[-4:] == ".npy":
-                    filename_npy.replace(".npy", "") + "_" + str(base.get_kmc_step()) + ".npy"
+                if filename[-4:] == ".npy":
+                    filename.replace(".npy", "") + "_of_" + str(base.get_kmc_step()) + "_steps"
                 else:
-                    filename_npy = filename_npy + "_" + str(base.get_kmc_step()) + ".npy"
-            filename_npy = directory + "/" + filename_npy
-            np.save(file=filename_npy, arr=subsquareList)
+                    filename = filename + "_of_" + str(base.get_kmc_step()) + "_steps"
+            filename = directory + "/" + filename
+
+            if unique_only == True:
+                subsquareList = np.unique(subsquareList, axis=0)
+                with open(filename + ".txt", 'w') as file:
+                    file.write('# Array shape: {0}\n'.format(subsquareList.shape))
+                    for local_configuration in subsquareList: #loops between all local configurations in subsquareList
+                        np.savetxt(file, local_configuration, fmt='%-7.2f') #saves as txt file
+                        file.write('# New local_configuration\n')
+                        np.save(file=filename + ".npy", arr=subsquareList) #saves as npy file
 
         return subsquareList
-
-        # TODO Now taking the set to get only the unique values
-        # for row in range(len(subsquareList)): (loop to make each array into a list)
 
 
     @staticmethod
