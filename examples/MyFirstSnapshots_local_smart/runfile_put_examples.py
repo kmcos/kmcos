@@ -26,7 +26,7 @@ print(sg.model.lattice.get_species([1,1,0, sg.model.lattice.simple_cubic]))
 
 #For adjusting species at sites and updating the database of available processes automatically, we will use the "put" function. 
 #The put function's documentation and source code are included below this function call, and also explain how to know what species and sites options are available.
-sg.model.put([1,1,0, sg.model.lattice.simple_cubic_hollow], sg.model.proclist.empty)
+sg.model.put(site = [1,1,0, sg.model.lattice.simple_cubic_hollow], new_species = sg.model.proclist.empty)
 """
 Function: put(self, site, new_species, reduce=False)
 
@@ -37,29 +37,28 @@ where the first 3 entries define the unit cell from 0 to the number of unit cell
 And n specifies the site within the unit cell.
 
 In this case, '[1,1,0, sg.model.lattice.simple_cubic_hollow]' is the site and
-'sg.model.proclist.empty' is the new species.
+'sg.model.proclist.empty' is the new species. 'sg.model.lattice.simple_cubic_hollow' is the site name.
 
-To know what species name to use, check the Layer name in the build file.
-    Ex: layer = kmc_model.add_layer(name='simple_cubic')
-        layer.sites.append(Site(name='hollow', pos='0.5 0.5 0.5',
-                        default_species='empty'))
+To see all the available site names, check the site_name in kmc_settings.py.
+    Ex: site_names = ['simple_cubic_hollow']
+    set site name as 'sg.model.lattice.simple_cubic_hollow'
     
-    set site as 'sg.model.lattice.simple_cubic_hollow'
-    
-    Ex: layerName = 'ruo2'
-        layer = Layer(name=layerName)
-        layer.sites.append(Site(name='bridge', pos='0.0 0.5 0.7'))
-        layer.sites.append(Site(name='cus', pos='0.5 0.5 0.7'))
-        layer.sites.append(Site(name='Burrowed', pos='0.0 0.0 0.0')) #This is for the pace-restrictor reaction
+    Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
+    set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
 
-    set site as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
+To see all the available species names, check the species_tags in kmc_settings.py.
+    Ex: species_tags = {
+            "CO":"""""",
+            "O":"""""",
+            "empty":"""""",
+            }
 
 The database of available processes will be updated automatically."""
 
 
 #Rather than using the "put" function, we can use the "_put" function. This separates the adjusting species at sites and updating the database of available processes manually
 #This is useuful if a person needs to do many (e.g., thousands) of put functions in the middle of a simulation.
-sg.model._put([1,1,0, sg.model.lattice.simple_cubic_hollow], sg.model.proclist.empty)
+sg.model._put(site = [1,1,0, sg.model.lattice.simple_cubic_hollow], new_species = sg.model.proclist.empty)
 sg.model._adjust_database() #This must be called when using ._put() to update the database
 
 """
@@ -72,24 +71,21 @@ where the first 3 entries define the unit cell from 0 to the number of unit cell
 And n specifies the site within the unit cell.
 
 In this case, '[1,1,0, sg.model.lattice.simple_cubic_hollow]' is the site and
-'sg.model.proclist.empty' is the new species.
+'sg.model.proclist.empty' is the new species. 'sg.model.lattice.simple_cubic_hollow' is the site name.
 
-To know what species name to use, check the Layer name in the build file.
-    Ex: layer = kmc_model.add_layer(name='simple_cubic')
-        layer.sites.append(Site(name='hollow', pos='0.5 0.5 0.5',
-                        default_species='empty'))
+To see all the available site names, check the site_name in kmc_settings.py.
+    Ex: site_names = ['simple_cubic_hollow']
+    set site name as 'sg.model.lattice.simple_cubic_hollow'
     
-    set site as 'sg.model.lattice.simple_cubic_hollow'
-    
-    Ex: layerName = 'ruo2'
-        layer = Layer(name=layerName)
-        layer.sites.append(Site(name='bridge', pos='0.0 0.5 0.7'))
-        layer.sites.append(Site(name='cus', pos='0.5 0.5 0.7'))
-        layer.sites.append(Site(name='Burrowed', pos='0.0 0.0 0.0')) #This is for the pace-restrictor reaction
+    Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
+    set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
 
-    set site as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
-
-The database of available processes will be updated automatically.
+To see all the available species names, check the species_tags in kmc_settings.py.
+    Ex: species_tags = {
+            "CO":"""""",
+            "O":"""""",
+            "empty":"""""",
+            }
 
 Note: This function works the same as the .put(), which is the one above, except that the database
 of available processes does not update automatically. You must call sg.model._adjust_database() to do so.
