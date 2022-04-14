@@ -25,8 +25,7 @@ sg.model.lattice.get_species([1,1,0, sg.model.lattice.simple_cubic])
 print(sg.model.lattice.get_species([1,1,0, sg.model.lattice.simple_cubic]))
 
 #For adjusting species at sites and updating the database of available processes automatically, we will use the "put" function. 
-#The put function's documentation and source code are included below
-
+#The put function's documentation and source code are included below this function call, and also explain how to know what species and sites options are available.
 sg.model.put([1,1,0, sg.model.lattice.simple_cubic_hollow], sg.model.proclist.empty)
 """
 Function: put(self, site, new_species, reduce=False)
