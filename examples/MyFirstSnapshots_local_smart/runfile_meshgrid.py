@@ -13,8 +13,5 @@ create_headers()
 
 do_snapshots(sps, n_snapshots)
 
-sg.model.get_local_configuration(directory = "./test", meshgrid=sg.model.get_species_coords(export_csv=False, matrix_format='meshgrid'))
-
-data = np.load("./test/local_configurations_100.npy") 
-
-print(data)
+meshgrid=sg.model.get_species_coords(export_csv=False, matrix_format='meshgrid')
+sg.model.get_local_configuration(meshgrid = meshgrid, radius = 2, filename = "unique_local_configurations", directory = "./local_configurations")
