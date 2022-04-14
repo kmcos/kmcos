@@ -2,50 +2,32 @@ from kmcos.snapshots import *
 import kmcos.snapshots_globals as sg
 import os
 
-#sg.simulation_name = model_name  #<--- You can change this to whatever you want, but this is the default. All it does is affect the filenames of the exports the format for this type would be MyFirstModel_TOFs_and_Coverages.csv.
-#other common options are:
-#sg.simulation_name = os.path.basename(__file__)[:-3] #<--- Uses the runfile name as part of the file names i.e. runfile_TOFs_and_Coverages.csv  . The [:-3] is to remove the ".py" from the end of the filename.
-#sg.simulation_name = '%s_%s' %(model_name,random_seed) #<--- Includes the model_name and random seed (e.g., 6483) used for the KMC as part of the file names e.g., MyFirstModel_6483_TOFs_and_Coverages.csv
 
+"""
+This runfile is intended for a user to learn how to use the put function.
+"""
 
-#Below sets up some "options" for running the snapshots.
-sg.parameters_of_interest = None #['T','R'] #<-- put the parameters you want exported with each snapshot here. Can also put activation energy etc.
 sps = 10 # <-- this is just an example
 n_snapshots = 10 # <-- this is just an example
-
 
 #The kmcos Model is initialized in create_headers
 create_headers()
 
-#If it is desired to run snapshots without writing output to a file, set sg.write_output = 'False'.
-#If you want to start writing again, set sg.write_output = 'True' before running
-#more snapshots.
-
-#If you need to change a parameter after each snapshot, only do 1 snapshot at a time with n_snapshots=1.
+#First we will do some snapshots so that the system has done some steps.
 do_snapshots(sps, n_snapshots)
 
-#do_snapshots(500, 2) <-- here is another example of how to use the syntax.
-
-#If you want to dump a configuration between snapshots, you may want to do something
-#like this.
-#sg.model.dump_config(sg.simulation_name + str(sg.steps_so_far))#
-
-
-#below are  some examples of  arrays and lists that may be of interest.
-#print sg.occ_header_array
-#print sg.TOF_data_list
-#print sg.occ_data_list
-#print("line 40 of the runfile, sg.last_snapshot_outputs:", sg.last_snapshot_outputs)
-#print("line 41 of the runfile, sg.snapshot_output_headers:", sg.snapshot_output_headers)
-
-
-#The final command below writes the simulation details to the logfile
-create_log()
-
-#Adjusting species at sites and updating the database of available processes automatically
+#After doing some steps, we can add a species to the surface.
+#Frist we will print one of the lattice sub objects.
 print(sg.model.lattice.simple_cubic)
-sg.model.put([1,1,0, sg.model.lattice.simple_cubic_hollow], sg.model.proclist.empty)
 
+#We can see what is the particular species on one of the sites.
+sg.model.lattice.get_species([1,1,0, sg.model.lattice.simple_cubic])
+print(sg.model.lattice.get_species([1,1,0, sg.model.lattice.simple_cubic]))
+
+#For adjusting species at sites and updating the database of available processes automatically, we will use the "put" function. 
+#The put function's documentation and source code are included below
+
+sg.model.put([1,1,0, sg.model.lattice.simple_cubic_hollow], sg.model.proclist.empty)
 """
 Function: put(self, site, new_species, reduce=False)
 
@@ -76,7 +58,8 @@ To know what species name to use, check the Layer name in the build file.
 The database of available processes will be updated automatically."""
 
 
-#Adjusting species at sites and updating the database of available processes manually
+#Rather than using the "put" function, we can use the "_put" function. This separates the adjusting species at sites and updating the database of available processes manually
+#This is useuful if a person needs to do many (e.g., thousands) of put functions in the middle of a simulation.
 sg.model._put([1,1,0, sg.model.lattice.simple_cubic_hollow], sg.model.proclist.empty)
 sg.model._adjust_database() #This must be called when using ._put() to update the database
 
@@ -116,5 +99,8 @@ The benefit of this function over the other is that this is much faster when doi
 as the database is not updated until the end."""
 
 
-#Getting the species from the sites
-sg.model.lattice.get_species([1,1,0, sg.model.lattice.simple_cubic])
+#We can do some more steps.
+do_snapshots(sps=10, n_snapshots=2)
+
+#After finishing a simulation with snapshots, the final command below writes the simulation details to the logfile.  This command only exports information from steps. It is unrelated to the "put" examples we have used and will ignore them.
+create_log()
