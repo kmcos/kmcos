@@ -1428,7 +1428,6 @@ class KMC_Model(Process):
 
         """
         #Fix me, this function is currently written for 2d, and needs to be extended for 3d
-        check_directory(directory)
 
         if export_csv == True:
             if filename_csv == "":
@@ -1454,6 +1453,7 @@ class KMC_Model(Process):
             final_coords = coords_list
             if export_csv==True: #creates the csv file and exports coords_list into two columns
                 import csv  #TODO, need to change this to use savetxt to have three columns instead of two
+                check_directory(directory)
                 with open(filename_csv, 'w') as file:
                     writer = csv.writer(file)
                     writer.writerow(['Species', 'Coordinates'])
@@ -1463,7 +1463,9 @@ class KMC_Model(Process):
         elif matrix_format == "meshgrid":
             config = self._get_configuration()
             final_coords = self.get_species_coordinates(config, species, export_csv=False, matrix_format="meshgrid")
-            np.savetxt(filename_csv, np.array(final_coords, dtype = "object"), delimiter = ",", fmt="%s") #we use dtype to avoid a np warning
+            if export_csv == True:
+                check_directory(directory)
+                np.savetxt(filename_csv, np.array(final_coords, dtype = "object"), delimiter = ",", fmt="%s") #we use dtype to avoid a np warning
         
         return final_coords  #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
                                 #put the module "ColumnSort" in the directory and call later for sorting
@@ -1504,8 +1506,7 @@ class KMC_Model(Process):
                 enough spaces in the model.
 
         """
-        check_directory(directory)
-        
+                
         if matrix_format == "cartesian":
             species_coords = []
             for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
@@ -1522,6 +1523,7 @@ class KMC_Model(Process):
             final_coords = matrix_array
 
         if export_csv == True:
+            check_directory(directory)
             if filename_csv == "":
                 filename_csv = "species_coordinates" + "_" + str(base.get_kmc_step()) + ".csv"
             else:
@@ -1533,6 +1535,75 @@ class KMC_Model(Process):
             np.savetxt(filename_csv, np.array(final_coords, dtype = "object"), delimiter = ",", fmt="%s") #we use dtype to avoid a np warning
 
         return final_coords
+
+    def get_local_configuration(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_files=True, unique_only=True):
+        """Gets the coordinates as a meshgrid and returns a list of smaller meshgrids (i.e. the local configurations)
+        Currently, this function returns all the local configurations of the meshgrid, including duplicates.
+            Meshgrid is a matrix with all the species
+            EX: Meshgrid
+                [[0, 1, 1, 0, 1, 0],
+                [1, 1, 1, 0, 1, 0],
+                [0, 1, 1, 0, 1, 0],
+                [1, 1, 0, 0, 1, 0],
+                [1, 0, 1, 1, 1, 0],
+                [1, 0, 1, 0, 1, 0]]
+            Meshgrid can be obtained by called self.get_species_coords(matrix_format='meshgrid')
+
+            Radius is the distance from the central species to the adjacent species
+            EX: Radius = 1
+            [[0, 1, 1,],
+            [1, 1, 1,],   --> This is also one of the local configurations of the meshgrid
+            [0, 1, 1,]]
+
+        subsquareList returns an array with all the possible local configurations of the meshgrid
+        EX:
+        [[[0, 1, 1,],
+        [1, 0, 1,],  
+        [0, 0, 1,]],
+
+        [[0, 1, 1,],
+        [1, 1, 1,],   
+        [0, 1, 1,]],
+
+        [[1, 1, 1,],
+        [1, 0, 0,],   
+        [0, 1, 1,]]]
+        
+        """
+
+        im = meshgrid
+        nRows = len(im)
+        nCols = len(im[0])
+        sidel = 1+(2*radius)
+        cornersRow = np.arange(nRows - sidel + 1)[:, np.newaxis, np.newaxis, np.newaxis]
+        cornersCol = np.arange(nCols - sidel + 1)[np.newaxis, :, np.newaxis, np.newaxis]
+        corners = im[cornersRow, cornersCol]
+        subsquareRow = cornersRow + np.arange(sidel)[:, np.newaxis]
+        subsquareCol = cornersCol + np.arange(sidel)
+        subsquares = im[subsquareRow, subsquareCol]
+        subsquareList = subsquares.reshape(-1, sidel, sidel)
+
+        if export_files == True:
+            check_directory(directory)
+            if filename == "":
+                filename = "local_configurations" + "_of_" + str(base.get_kmc_step()) + "_steps"
+            else:
+                if filename[-4:] == ".npy":
+                    filename.replace(".npy", "") + "_of_" + str(base.get_kmc_step()) + "_steps"
+                else:
+                    filename = filename + "_of_" + str(base.get_kmc_step()) + "_steps"
+            filename = directory + "/" + filename
+
+            if unique_only == True:
+                subsquareList = np.unique(subsquareList, axis=0)
+                with open(filename + ".txt", 'w') as file:
+                    file.write('# Array shape: {0}\n'.format(subsquareList.shape))
+                    for local_configuration in subsquareList: #loops between all local configurations in subsquareList
+                        np.savetxt(file, local_configuration, fmt='%-7.2f') #saves as txt file
+                        file.write('# New local_configuration\n')
+                        np.save(file=filename + ".npy", arr=subsquareList) #saves as npy file
+
+        return subsquareList
 
 
     @staticmethod
@@ -1704,6 +1775,20 @@ class KMC_Model(Process):
                        site lattice (Default: False)
         :type reduce: bool
 
+        To see all the available site names, check the site_name in kmc_settings.py.
+            Ex: site_names = ['simple_cubic_hollow']
+            set site name as 'sg.model.lattice.simple_cubic_hollow'
+            
+            Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
+            set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
+        
+        To see all the available species names, check the species_tags in kmc_settings.py.
+            Ex: species_tags = {
+                    "CO":"""""",
+                    "O":"""""",
+                    "empty":"""""",
+                    }
+
         """
         x, y, z, n = site
         if reduce:
@@ -1749,6 +1834,20 @@ class KMC_Model(Process):
         :param reduce: Of periodic boundary conditions if site falls out site
                        lattice (Default: False)
         :type reduce: bool
+
+        To see all the available site names, check the site_name in kmc_settings.py.
+            Ex: site_names = ['simple_cubic_hollow']
+            set site name as 'sg.model.lattice.simple_cubic_hollow'
+            
+            Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
+            set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
+        
+        To see all the available species names, check the species_tags in kmc_settings.py.
+            Ex: species_tags = {
+                    "CO":"""""",
+                    "O":"""""",
+                    "empty":"""""",
+                    }
 
         """
 
