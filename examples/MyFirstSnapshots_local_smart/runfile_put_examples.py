@@ -30,11 +30,25 @@ sg.model.put(site = [1,1,0, sg.model.lattice.simple_cubic_hollow], new_species =
 """
 Function: put(self, site, new_species, reduce=False)
 
-site: Site where to put the new species, i.e. [x, y, z, bridge]
-
 Puts new_species at site. The site is given by 4-entry sequence like [x, y, z, n], 
 where the first 3 entries define the unit cell from 0 to the number of unit cells in the respective direction. 
 And n specifies the site within the unit cell.
+
+The database of available processes will be updated automatically.
+
+    Example ::
+
+        model.put([0,0,0,model.lattice.site], model.proclist.co ])
+        # puts a CO molecule at the `bridge` site
+        # of the lower left unit cell
+
+:param site: Site where to put the new species, i.e. [x, y, z, bridge]
+:type site: list or np.array
+:param new_species: Name of new species.
+:type new_species: str
+:param reduce: Of periodic boundary conditions if site falls out site
+                lattice (Default: False)
+:type reduce: bool
 
 In this case, '[1,1,0, sg.model.lattice.simple_cubic_hollow]' is the site and
 'sg.model.proclist.empty' is the new species. 'sg.model.lattice.simple_cubic_hollow' is the site name.
@@ -52,8 +66,7 @@ To see all the available species names, check the species_tags in kmc_settings.p
             "O":"""""",
             "empty":"""""",
             }
-
-The database of available processes will be updated automatically."""
+"""
 
 
 #Rather than using the "put" function, we can use the "_put" function. This separates the adjusting species at sites and updating the database of available processes manually
@@ -62,13 +75,31 @@ sg.model._put(site = [1,1,0, sg.model.lattice.simple_cubic_hollow], new_species 
 sg.model._adjust_database() #This must be called when using ._put() to update the database
 
 """
-Function: put(self, site, new_species, reduce=False)
+Function: _put(self, site, new_species, reduce=False)
 
-site: Site where to put the new species, i.e. [x, y, z, bridge]
+Works exactly like put, but without updating the database of
+        available processes. This is faster for when one does a lot updates
+        at once, however one must call _adjust_database afterwards.
 
-Puts new_species at site. The site is given by 4-entry sequence like [x, y, z, n], 
-where the first 3 entries define the unit cell from 0 to the number of unit cells in the respective direction. 
-And n specifies the site within the unit cell.
+        Examples ::
+
+            model._put([0,0,0,model.lattice.lattice_bridge], model.proclist.co])
+            # puts a CO molecule at the `bridge` site of the lower left unit cell
+
+            model._put([1,0,0,model.lattice.lattice_bridge], model.proclist.co])
+            # puts a CO molecule at the `bridge` site one to the right
+
+            # ... many more
+
+            model._adjust_database() # Important! This updates the database.
+
+:param site: Site where to put the new species, i.e. [x, y, z, bridge]
+        :type site: list or np.array
+        :param new_species: Name of new species.
+        :type new_species: str
+        :param reduce: Of periodic boundary conditions if site falls out
+                       site lattice (Default: False)
+        :type reduce: bool
 
 In this case, '[1,1,0, sg.model.lattice.simple_cubic_hollow]' is the site and
 'sg.model.proclist.empty' is the new species. 'sg.model.lattice.simple_cubic_hollow' is the site name.
@@ -86,12 +117,7 @@ To see all the available species names, check the species_tags in kmc_settings.p
             "O":"""""",
             "empty":"""""",
             }
-
-Note: This function works the same as the .put(), which is the one above, except that the database
-of available processes does not update automatically. You must call sg.model._adjust_database() to do so.
-
-The benefit of this function over the other is that this is much faster when doing multiple updates,
-as the database is not updated until the end."""
+"""
 
 
 #We can do some more steps.
