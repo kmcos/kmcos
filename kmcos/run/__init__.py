@@ -1775,6 +1775,20 @@ class KMC_Model(Process):
                        site lattice (Default: False)
         :type reduce: bool
 
+        To see all the available site names, check the site_name in kmc_settings.py.
+            Ex: site_names = ['simple_cubic_hollow']
+            set site name as 'sg.model.lattice.simple_cubic_hollow'
+            
+            Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
+            set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
+        
+        To see all the available species names, check the species_tags in kmc_settings.py.
+            Ex: species_tags = {
+                    "CO":"""""",
+                    "O":"""""",
+                    "empty":"""""",
+                    }
+
         """
         x, y, z, n = site
         if reduce:
@@ -1820,6 +1834,20 @@ class KMC_Model(Process):
         :param reduce: Of periodic boundary conditions if site falls out site
                        lattice (Default: False)
         :type reduce: bool
+
+        To see all the available site names, check the site_name in kmc_settings.py.
+            Ex: site_names = ['simple_cubic_hollow']
+            set site name as 'sg.model.lattice.simple_cubic_hollow'
+            
+            Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
+            set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
+        
+        To see all the available species names, check the species_tags in kmc_settings.py.
+            Ex: species_tags = {
+                    "CO":"""""",
+                    "O":"""""",
+                    "empty":"""""",
+                    }
 
         """
 
