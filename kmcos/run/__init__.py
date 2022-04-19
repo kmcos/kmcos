@@ -1737,9 +1737,8 @@ class KMC_Model(Process):
             self.export_picture(resolution = resolution, scale = scale, filename = directory + "/" + filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
-            config = self._get_configuration().tolist()
             species = self.species_tags
-            species_coordinates = self.get_species_coordinates(config, species)
+            species_coordinates = self.get_species_coordinates()
             self.create_configuration_plot(coords = species_coordinates, species = species, directory = directory, plot_settings = plot_settings)
             
     def _put(self, site, new_species, reduce=False):
