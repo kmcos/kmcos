@@ -1394,12 +1394,6 @@ class KMC_Model(Process):
 
         'export_csv' determines whether the functions exports the species coordinates as a csv file
 
-        'config' in the function is a nested 4d array that contains the species's coordinates
-            EX: [[[[0]], [[1]], [[1]], [[0]]]]
-
-        'species' in the function is a dictionary that contains the names of the species
-            EX: {'CO': 'carbon', 'empty': ''}
-
         'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv with (x,y,z) format, and the meshgrid format
         returns as a csv with a XX, YY format
             EX: Cartesian
@@ -1418,8 +1412,9 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
-                Note: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
                 enough spaces in the model.
+                Note 2: The return value for get_species_coords() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
         #Fix me, this function is currently written for 2d, and needs to be extended for 3d
@@ -1473,12 +1468,6 @@ class KMC_Model(Process):
 
         'directory' sets the directory name where the .csv file is saved if 'export_csv' is true
 
-        'config' is expected to be a nested 4d array that contains the species's coordinates
-            EX: [[[[0]], [[1]], [[2]], [[0]], [[3]], [[2]]]]
-
-        'species' is exptected to be a dictionary that contains the names of the species
-            EX: {'CO': 'carbon', 'empty': ''}
-
         'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv where each row 
         represents the coordinates for a single species, and the meshgrid format returns as a csv with a XX, YY format
             EX: Cartesian
@@ -1492,8 +1481,9 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
-                Note: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
                 enough spaces in the model.
+                Note 2: The return value for get_species_coords() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
         config = self._get_configuration()
@@ -1606,16 +1596,12 @@ class KMC_Model(Process):
         return subsquareList
 
 
-    @staticmethod
-    def create_configuration_plot(coords, species, directory = "./exported_configurations", plot_settings={}, showFigure=True):
+    def create_configuration_plot(self, coords, directory = "./exported_configurations", plot_settings={}, showFigure=True):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
             Ex: [[0	 10] [0	 11] [0	 18] [1	 6]	 [2	 3]	 [2	 11] [2	 13]] -> This is CO
                 [[0	 0]	 [0	 1]	 [0	 2]	 [0	 3]	 [0	 4]	 [0	 5]	 [0	 6]]  -> This is empty
-
-        'species' is expected to be the results from self.species_tags, which is a dictionary that contains the names of the species
-            Ex: {"CO" : "carbon"}
 
         'directory' sets the directory name where the plot is saved
 
@@ -1659,6 +1645,7 @@ class KMC_Model(Process):
         ax0.set_xlabel(plot_settings['x_label'], fontdict=fontdict)
         ax0.set_ylabel(plot_settings['y_label'], fontdict=fontdict) #TODO: THis is not yet generalized (will be a function)
         
+        species = self.species_tags
         for (i, key) in zip(list(range(len(coords))), list(species.keys())): #goes through each species and plots their coordinates
             x, y = list(zip(*coords[i]))
             if plot_settings['legend'] == True:
@@ -1757,9 +1744,8 @@ class KMC_Model(Process):
             self.export_picture(resolution = resolution, scale = scale, filename = directory + "/" + filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
-            species = self.species_tags
             species_coordinates = self.get_species_coordinates()
-            self.create_configuration_plot(coords = species_coordinates, species = species, directory = directory, plot_settings = plot_settings)
+            self.create_configuration_plot(coords = species_coordinates, directory = directory, plot_settings = plot_settings)
             
     def _put(self, site, new_species, reduce=False):
         """
