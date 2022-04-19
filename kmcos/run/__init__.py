@@ -1386,16 +1386,7 @@ class KMC_Model(Process):
             return res
             
     def get_species_coords(self, filename_csv="", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
-        """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name
-            EX: [[['CO', [0, 11]],
-                ['CO', [0, 13]],
-                ['CO', [1, 2]],
-                ['CO', [1, 4]],
-                ['empty', [0, 0]],
-                ['empty', [0, 1]],
-                ['empty', [0, 2]],
-                ['empty', [0, 3]]],
-                {'CO': 'carbon', 'empty': ''})
+        """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name OR returns a meshgrid of the species
 
         'filename' sets the name of the csv file that will be exported if 'export_csv' is true
         'export_csv' determines whether the functions exports the species coordinates as a csv file
