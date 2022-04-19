@@ -1469,9 +1469,9 @@ class KMC_Model(Process):
         
         return final_coords  #to do: need to sort and export as a dataframe with the species name, x, and y values of the coordiantes in their own column
                                 #put the module "ColumnSort" in the directory and call later for sorting
-            
-    @staticmethod  
-    def get_species_coordinates(config, species, filename_csv = "", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
+             
+             
+    def get_species_coordinates(self, filename_csv = "", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
         """Gets the species coordinates from config and appends it into a 3d array, where each sub array lists the coordinates for a single species
             EX: [[[0, 11],
                 [0, 13],
@@ -1506,7 +1506,9 @@ class KMC_Model(Process):
                 enough spaces in the model.
 
         """
-                
+        config = self._get_configuration()
+        species = self.species_tags   
+
         if matrix_format == "cartesian":
             species_coords = []
             for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
