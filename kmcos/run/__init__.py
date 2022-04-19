@@ -2164,7 +2164,7 @@ class KMC_Model(Process):
 
         """
         check_directory(directory)
-        np.save(directory + '/%s.npy' % filename, self._get_configuration())
+        np.save(directory + "/" + filename + "_" + str(base.get_kmc_step()) + "_steps" + ".npy", self._get_configuration())
 
     def load_config(self, filename, directory = "./exported_configurations"):
         """Use numpy mechanism to load configuration from a file. User
