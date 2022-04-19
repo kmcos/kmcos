@@ -1386,13 +1386,17 @@ class KMC_Model(Process):
             return res
             
     def get_species_coords(self, filename_csv="", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
-        """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name OR returns a meshgrid of the species
+        """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and returns a dictionary of the species's name OR returns a meshgrid of all the species
 
-        'filename' sets the name of the csv file that will be exported if 'export_csv' is true
+        'filename_csv' sets the name of the csv file that will be exported if 'export_csv' is true
+
+        'directory' sets the directory name where the .csv file is saved if 'export_csv' is true
+
         'export_csv' determines whether the functions exports the species coordinates as a csv file
 
         'config' in the function is a nested 4d array that contains the species's coordinates
             EX: [[[[0]], [[1]], [[1]], [[0]]]]
+
         'species' in the function is a dictionary that contains the names of the species
             EX: {'CO': 'carbon', 'empty': ''}
 
@@ -1463,20 +1467,15 @@ class KMC_Model(Process):
              
              
     def get_species_coordinates(self, filename_csv = "", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
-        """Gets the species coordinates from config and appends it into a 3d array, where each sub array lists the coordinates for a single species
-            EX: [[[0, 11],
-                [0, 13],
-                [1, 2],
-                [1, 4],
-                [19, 10]],
-                [[0, 0],
-                [0, 1],
-                [0, 2],
-                [0, 3],
-                [0, 4]]]
+        """Gets the species coordinates from config and appends it into a 3d array, where each sub array lists the coordinates for a single species OR returns a meshgrid of all the species
+
+        'filename_csv' sets the filename for the functions return value as a .csv file if 'export_csv' is true
+
+        'directory' sets the directory name where the .csv file is saved if 'export_csv' is true
 
         'config' is expected to be a nested 4d array that contains the species's coordinates
             EX: [[[[0]], [[1]], [[2]], [[0]], [[3]], [[2]]]]
+
         'species' is exptected to be a dictionary that contains the names of the species
             EX: {'CO': 'carbon', 'empty': ''}
 
@@ -1530,9 +1529,9 @@ class KMC_Model(Process):
         return final_coords
 
     def get_local_configuration(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_files=True, unique_only=True):
-        """Gets the coordinates as a meshgrid and returns a list of smaller meshgrids (i.e. the local configurations)
-        Currently, this function returns all the local configurations of the meshgrid, including duplicates.
-            Meshgrid is a matrix with all the species
+        """Gets the coordinates as a meshgrid and returns either the list of all possible smaller meshgrids (i.e. the local configurations), or the unique local configurations
+        
+        'meshgrid' is a matrix with all the species
             EX: Meshgrid
                 [[0, 1, 1, 0, 1, 0],
                 [1, 1, 1, 0, 1, 0],
@@ -1542,25 +1541,33 @@ class KMC_Model(Process):
                 [1, 0, 1, 0, 1, 0]]
             Meshgrid can be obtained by called self.get_species_coords(matrix_format='meshgrid')
 
-            Radius is the distance from the central species to the adjacent species
+        'radius' is the distance from the central species to the adjacent species
             EX: Radius = 1
             [[0, 1, 1,],
             [1, 1, 1,],   --> This is also one of the local configurations of the meshgrid
             [0, 1, 1,]]
 
-        subsquareList returns an array with all the possible local configurations of the meshgrid
-        EX:
-        [[[0, 1, 1,],
-        [1, 0, 1,],  
-        [0, 0, 1,]],
+        'filename' sets the filename for the array of local configurations as a .npy file
 
-        [[0, 1, 1,],
-        [1, 1, 1,],   
-        [0, 1, 1,]],
+        'directory' sets the directory name where the .npy file is saved
 
-        [[1, 1, 1,],
-        [1, 0, 0,],   
-        [0, 1, 1,]]]
+        'export_file' is the argument that determines if the function will export the return value as a .npy file
+
+        'unique_only' is the argument that determines if the function returns all possible local configurations or the unique local configurations
+
+        Example of the function's return value
+            EX:
+            [[[0, 1, 1,],
+            [1, 0, 1,],  
+            [0, 0, 1,]],
+
+            [[0, 1, 1,],
+            [1, 1, 1,],   
+            [0, 1, 1,]],
+
+            [[1, 1, 1,],
+            [1, 0, 0,],   
+            [0, 1, 1,]]]
         
         """
 
@@ -1603,10 +1610,15 @@ class KMC_Model(Process):
     def create_configuration_plot(coords, species, directory = "./exported_configurations", plot_settings={}, showFigure=True):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
-        'coords' is expected to be the results from get_species_coordinates(config, species)
-            Ex:
-        'species' is expected to be the results from get_coords(), which is a dictionary that contains the names of the species
+        'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
+            Ex: [[0	 10] [0	 11] [0	 18] [1	 6]	 [2	 3]	 [2	 11] [2	 13]] -> This is CO
+                [[0	 0]	 [0	 1]	 [0	 2]	 [0	 3]	 [0	 4]	 [0	 5]	 [0	 6]]  -> This is empty
+
+        'species' is expected to be the results from self.species_tags, which is a dictionary that contains the names of the species
             Ex: {"CO" : "carbon"}
+
+        'directory' sets the directory name where the plot is saved
+
         'plot_settings' is a dictionary that allows for the plot to change given the arguements
             EX:
                 "y_label": "test",
@@ -1692,11 +1704,14 @@ class KMC_Model(Process):
         return fig0, ax0
 
     def export_picture(self, resolution, scale,  filename="", **kwargs):
-        """
-        Gets the atoms objects of the kmc_model and returns a atomic view of the configuration and make a file named 'atomic_view.png' unless specified by 'filename' in the function's argument
-            'filename' sets the filename for the images in the image directory and the video
-            'scale' increases the size of each species in the structure (currently not working as desired)
-            'resolution' changes the dpi of the images (currently not working as desired)
+        """Gets the atoms objects of the kmc_model and returns a atomic view of the configuration and make a file named 'atomic_view.png' unless specified by 'filename' in the function's argument
+
+        'filename' sets the filename for the images in the image directory and the video
+
+        'scale' increases the size of each species in the structure (currently not working as desired)
+
+        'resolution' changes the dpi of the images (currently not working as desired)
+
         """
         atoms = self.get_atoms(reset_time_overrun = False) #here, the self is the KMC_Model object
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
@@ -1705,14 +1720,19 @@ class KMC_Model(Process):
     def plot_configuration(self, filename = '', directory = "./exported_configurations", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
         """Either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
 
-        'representation' is an optional argument for spatial and atomic view
+        'filename' sets the filename for the plot
+
+        'directory' sets the directory name where the plot is saved
+
         'scale' increases the size of each species in the structure (currently not working as desired)
+
         'resolution' changes the dpi of the images (currently not working as desired)
                 Note: 'resolution' and 'scale' are strictly for the atomic view
 
+        'representation' is an optional argument for spatial and atomic view
         You should specify as 'atomic' to see the atomic view. Leaving representation empty returns spatial view by default.
 
-        plot_settings is a dictionary that allows for the plot to change given the arguements
+        'plot_settings' is a dictionary that allows for the plot to change given the arguements
         EX:
             "y_label": "test",
             "x_label": "test",
