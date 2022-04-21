@@ -1518,7 +1518,7 @@ class KMC_Model(Process):
 
         return final_coords
 
-    def get_local_configuration(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_files=True, unique_only=True):
+    def get_local_configurations(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_files=True, unique_only=True):
         """Gets the coordinates as a meshgrid and returns either the list of all possible smaller meshgrids (i.e. the local configurations), or the unique local configurations
         
         'meshgrid' is a matrix with all the species
@@ -1560,40 +1560,44 @@ class KMC_Model(Process):
             [0, 1, 1,]]]
         
         """
+        #A more efficient way to create the local configurations can be viewed here: https://matthewmcgonagle.github.io/blog/2017/10/13/SelectingSubsquaresWithNumpyIndexing
 
-        im = meshgrid
-        nRows = len(im)
-        nCols = len(im[0])
-        sidel = 1+(2*radius)
-        cornersRow = np.arange(nRows - sidel + 1)[:, np.newaxis, np.newaxis, np.newaxis]
-        cornersCol = np.arange(nCols - sidel + 1)[np.newaxis, :, np.newaxis, np.newaxis]
-        corners = im[cornersRow, cornersCol]
-        subsquareRow = cornersRow + np.arange(sidel)[:, np.newaxis]
-        subsquareCol = cornersCol + np.arange(sidel)
-        subsquares = im[subsquareRow, subsquareCol]
-        subsquareList = subsquares.reshape(-1, sidel, sidel)
+        initialMeshgrid = meshgrid
+        numRows = len(initialMeshgrid)
+        numColumns = len(initialMeshgrid[0])
+        #Now getting the individual tiles if not near edge
+        tileList = []
+        for rowIndex in range(len(initialMeshgrid)):
+            for columnIndex in range(len(initialMeshgrid[0])):
+                keepTile = True
+                if (rowIndex < radius) or (rowIndex > numRows - (radius+1)):
+                    keepTile = False
+                if (columnIndex < radius) or (columnIndex > numColumns - (radius+1)):
+                    keepTile = False
+                if keepTile == True:
+                    tileList.append(initialMeshgrid[rowIndex-radius:rowIndex+radius+1,columnIndex-radius:columnIndex+radius+1])
 
-        if export_files == True:
-            check_directory(directory)
-            if filename == "":
-                filename = "local_configurations" + "_of_" + str(base.get_kmc_step()) + "_steps"
-            else:
-                if filename[-4:] == ".npy":
-                    filename.replace(".npy", "") + "_of_" + str(base.get_kmc_step()) + "_steps"
+        if unique_only == True:
+            tileList = np.unique(tileList, axis=0)
+            if export_files == True:
+                check_directory(directory)
+                if filename == "":
+                    filename = "local_configurations" + "_of_" + str(base.get_kmc_step()) + "_steps"
                 else:
-                    filename = filename + "_of_" + str(base.get_kmc_step()) + "_steps"
-            filename = directory + "/" + filename
+                    if filename[-4:] == ".npy":
+                        filename.replace(".npy", "") + "_of_" + str(base.get_kmc_step()) + "_steps"
+                    else:
+                        filename = filename + "_of_" + str(base.get_kmc_step()) + "_steps"
+                filename = directory + "/" + filename
 
-            if unique_only == True:
-                subsquareList = np.unique(subsquareList, axis=0)
-                with open(filename + ".txt", 'w') as file:
-                    file.write('# Array shape: {0}\n'.format(subsquareList.shape))
-                    for local_configuration in subsquareList: #loops between all local configurations in subsquareList
-                        np.savetxt(file, local_configuration, fmt='%-7.2f') #saves as txt file
-                        file.write('# New local_configuration\n')
-                        np.save(file=filename + ".npy", arr=subsquareList) #saves as npy file
+            with open(filename + ".txt", 'w') as file:
+                file.write('# Array shape: {0}\n'.format(np.array(tileList).shape))
+                for local_configuration in tileList: #loops between all local configurations in subsquareList
+                    np.savetxt(file, local_configuration, fmt='%-7.2f') #saves as txt file
+                    file.write('# New local_configuration\n')
+                    np.save(file=filename + ".npy", arr=tileList) #saves as npy file
 
-        return subsquareList
+        return tileList
 
 
     def create_configuration_plot(self, coords, directory = "./exported_configurations", plot_settings={}, showFigure=True):
