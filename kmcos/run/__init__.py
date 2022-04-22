@@ -1562,6 +1562,18 @@ class KMC_Model(Process):
         """
         #A more efficient way to create the local configurations can be viewed here: https://matthewmcgonagle.github.io/blog/2017/10/13/SelectingSubsquaresWithNumpyIndexing
 
+        # im = meshgrid
+        # nRows = len(im)
+        # nCols = len(im[0])
+        # sidel = 1+(2*radius)
+        # cornersRow = np.arange(nRows - sidel + 1)[:, np.newaxis, np.newaxis, np.newaxis]
+        # cornersCol = np.arange(nCols - sidel + 1)[np.newaxis, :, np.newaxis, np.newaxis]
+        # corners = im[cornersRow, cornersCol]
+        # subsquareRow = cornersRow + np.arange(sidel)[:, np.newaxis]
+        # subsquareCol = cornersCol + np.arange(sidel)
+        # subsquares = im[subsquareRow, subsquareCol]
+        # subsquareList = subsquares.reshape(-1, sidel, sidel)
+
         initialMeshgrid = meshgrid
         numRows = len(initialMeshgrid)
         numColumns = len(initialMeshgrid[0])
@@ -1600,7 +1612,7 @@ class KMC_Model(Process):
         return tileList
 
 
-    def create_configuration_plot(self, coords, directory = "./exported_configurations", plot_settings={}, showFigure=True):
+    def create_configuration_plot(self, directory = "./exported_configurations", plot_settings={}, showFigure=True):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
@@ -1624,6 +1636,7 @@ class KMC_Model(Process):
         import matplotlib.pyplot as plt
 
         check_directory(directory)
+        coords = self.get_species_coordinates(export_csv = False, matrix_format = 'cartesian')
         exportFigure = True #This variable should be moved to an argument or something in plot_settings.
         #First put some defaults in if not already defined.
         if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
@@ -1709,7 +1722,7 @@ class KMC_Model(Process):
         return 
         
     def plot_configuration(self, filename = '', directory = "./exported_configurations", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
-        """Either calls create_configuration_plot to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
+        """Either calls create_configuration_plot() to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
 
         'filename' sets the filename for the plot
 
@@ -1748,8 +1761,7 @@ class KMC_Model(Process):
             self.export_picture(resolution = resolution, scale = scale, filename = directory + "/" + filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
-            species_coordinates = self.get_species_coordinates()
-            self.create_configuration_plot(coords = species_coordinates, directory = directory, plot_settings = plot_settings)
+            self.create_configuration_plot(directory = directory, plot_settings = plot_settings)
             
     def _put(self, site, new_species, reduce=False):
         """
