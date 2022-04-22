@@ -1722,7 +1722,7 @@ class KMC_Model(Process):
         return 
         
     def plot_configuration(self, filename = '', directory = "./exported_configurations", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
-        """Either calls create_configuration_plot() to create the spatial representation of the model, or calls export_picture to create the atomic representation of the model
+        """Either calls create_configuration_plot() to create the spatial representation of the model, or calls export_picture() to create the atomic representation of the model
 
         'filename' sets the filename for the plot
 
