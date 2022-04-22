@@ -1616,8 +1616,8 @@ class KMC_Model(Process):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
-            Ex: [[0	 10] [0	 11] [0	 18] [1	 6]	 [2	 3]	 [2	 11] [2	 13]] -> This is CO
-                [[0	 0]	 [0	 1]	 [0	 2]	 [0	 3]	 [0	 4]	 [0	 5]	 [0	 6]]  -> This is empty
+            Ex: [[0	10] [0 11] [0 18] [1 6] [2 3] [2 11] [2 13]] -> This is CO
+                [[0	0]	[0 1]  [0 2]  [0 3]	[0 4] [0 5]  [0 6]]  -> This is empty
 
         'directory' sets the directory name where the plot is saved
 
