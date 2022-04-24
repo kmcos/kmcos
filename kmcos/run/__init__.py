@@ -1462,7 +1462,7 @@ class KMC_Model(Process):
              
              
     def get_species_coordinates(self, filename_csv = "", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
-        """Gets the species coordinates from config and EIHER returns a 3d array, where each sub array lists the coordinates for a single species on the surface OR returns a meshgrid of all the species
+        """Gets the species coordinates from config and EITHER returns a 3d array, where each sub array lists the coordinates for a single species on the surface OR returns a meshgrid of all the species
 
         'filename_csv' sets the filename for the functions return value as a .csv file if 'export_csv' is true
 
