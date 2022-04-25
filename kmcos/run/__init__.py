@@ -1385,7 +1385,7 @@ class KMC_Model(Process):
         else:
             return res
             
-    def get_species_coords(self, filename_csv="", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
+    def get_global_configuration(self, filename_csv="", directory = "./exported_configurations", export_csv=True, matrix_format = "cartesian"):
         """Gets each species and their respective coordinates and returns a 3d list that separates the coordinates of each species and EITHER returns a dictionary of the species's name OR returns a meshgrid of all the species
 
         'filename_csv' sets the name of the csv file that will be exported if 'export_csv' is true
@@ -1414,7 +1414,7 @@ class KMC_Model(Process):
             [1, 0, 1, 0, 1, 0]]
                 Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
                 enough spaces in the model.
-                Note 2: The return value for get_species_coords() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
+                Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
         #Fix me, this function is currently written for 2d, and needs to be extended for 3d
@@ -1483,7 +1483,7 @@ class KMC_Model(Process):
             [1, 0, 1, 0, 1, 0]]
                 Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
                 enough spaces in the model.
-                Note 2: The return value for get_species_coords() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
+                Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
         config = self._get_configuration()
@@ -1529,7 +1529,7 @@ class KMC_Model(Process):
                 [1, 1, 0, 0, 1, 0],
                 [1, 0, 1, 1, 1, 0],
                 [1, 0, 1, 0, 1, 0]]
-            Meshgrid can be obtained by called self.get_species_coords(matrix_format='meshgrid')
+            Meshgrid can be obtained by called self.get_global_configuration(matrix_format='meshgrid')
 
         'radius' is the distance from the central species to the adjacent species
             EX: Radius = 1
