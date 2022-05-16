@@ -28,7 +28,7 @@ ValidationError = UserWarning
 try:
     from kiwi.datatypes import ValidationError
 except:
-    print('kiwi Validation not working.')
+    print('Warning: kiwi Validation not working. (this warning is expected)' )
 
 FCODE = """module kind
 implicit none
