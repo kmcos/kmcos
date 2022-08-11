@@ -14,4 +14,4 @@ create_headers()
 do_snapshots(sps, n_snapshots)
 
 meshgrid=sg.model.get_global_configuration(export_csv=False, matrix_format='meshgrid')
-sg.model.get_local_configuration(meshgrid = meshgrid, radius = 2, filename = "unique_local_configurations", directory = "./local_configurations")
+sg.model.get_local_configurations(meshgrid = meshgrid, radius = 2, filename = "unique_local_configurations", directory = "./local_configurations")
