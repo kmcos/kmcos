@@ -570,8 +570,13 @@ class Project(object):
 
                 process.name = short_name
 
-        with open('abbreviations_{}.dat'.format(self.meta.model_name), 'w') as outfile:
-            outfile.write(pprint.pformat(stub_map))
+        try: #Aug 14th 2022: A. Savara does not understand what the 'abbreviations_' is for. It was causing problems with a fresh installation on an Ubuntu 20.04 Virtual Machine with python 3.10, but removing 'abbreviations_' allowed kmcos to proceed normally.
+	        with open('abbreviations_{}.dat'.format(self.meta.model_name), 'w') as outfile:
+        	    outfile.write(pprint.pformat(stub_map))
+        except:
+	        with open('{}.dat'.format(self.meta.model_name), 'w') as outfile:
+        	    outfile.write(pprint.pformat(stub_map))        	
+        	    
 
     def clear_model(self, model_name='', backend=''):
         if backend=='': backend = self.backend
