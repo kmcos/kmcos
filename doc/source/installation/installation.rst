@@ -51,7 +51,9 @@ The easiest way to install kmcos is to use one of the automatic installers::
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv.  #For the develop branch, use install-kmcos-linux-venv-develop.bash or install-kmcos-linux-user-develop.bash
     
     
-#. If everything has gone well, you are done and can leave this Installation page!
+If everything has gone well, you have a minimal installation completed! However, for personal computer usage (not on a supercomputer), it is a good idea to also run the following command, which will add the kmcos viewer:
+
+    bash install-kmcos-complete-linux-venv-Ubuntu20.bash
     
 If the above simple way does not work for you, you will need to go through the commands manually one at a time from `installation on a venv <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-venv.bash>`_ or `installation as a user <https://github.com/kmcos/kmcos-installers/blob/main/install-kmcos-linux-user.bash>`_ . A kmcosInstallation directory is created during installation. The files in the kmcosInstallation are no longer needed after installation, but it has exampples in it.  So you can you can navigate into that directory and go through the examples, or you can remove the kmcosInstallation directory using 'rm -r directoryname'.
 
