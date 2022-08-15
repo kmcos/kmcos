@@ -2953,7 +2953,8 @@ class ProcListWriter():
 
         # stub for setup function
         out.write('def setup_model(model):\n')
-        out.write('    """Write initialization steps here.\n')
+        out.write('    """ Aug 15th 2022: setup_model is legacy code. Please ignore the rest of this comment and this function. \n')
+        out.write('    Write initialization steps here.\n')
         out.write('       e.g. ::\n')
         out.write('    model.put([0,0,0,model.lattice.default_a], model.proclist.species_a)\n')
         out.write('    """\n')
