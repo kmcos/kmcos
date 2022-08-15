@@ -494,14 +494,16 @@ def main(args=None):
             model = KMC_Model(print_rates=False)
         except Exception as theError:
             print("Warning: could not import kmc_model! The error was:", theError,
-                  "\n Please make sure you are in the right directory")        
+                  "\n Please make sure you are in the right directory",
+                  "\n There will now be a trace printed out using sys.error")        
+            sys.error #sys.error will always error, and is being used to print out a trace. 
 
 
         sh(banner='Note: model = KMC_Model(print_rates=False){catmap_message}'.format(**locals()))
         try:
             model.deallocate()
         except:
-            print("Warning: could not deallocate model. Was is allocated?")
+            print("Warning: could not deallocate model. Was it allocated?")
 
     elif args[0] == 'version':
         from kmcos import VERSION
