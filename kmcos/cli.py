@@ -494,7 +494,9 @@ def main(args=None):
             model = KMC_Model(print_rates=False)
         except Exception as theError:
             print("Warning: could not import kmc_model! The error was:", theError,
-                  "\n Please make sure you are in the right directory")        
+                  "\n Please make sure you are in the right directory",
+                  "\n There will now be a trace printed out using sys.error")        
+            sys.error #sys.error will always error, and is being used to print out a trace. 
 
 
         sh(banner='Note: model = KMC_Model(print_rates=False){catmap_message}'.format(**locals()))
