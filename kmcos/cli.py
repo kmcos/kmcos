@@ -492,9 +492,11 @@ def main(args=None):
 
         try:
             model = KMC_Model(print_rates=False)
-        except:
-            print("Warning: could not import kmc_model!"
-                  " Please make sure you are in the right directory")
+        except Exception as theError:
+            print("Warning: could not import kmc_model! The error was:", theError,
+                  "\n Please make sure you are in the right directory")        
+
+
         sh(banner='Note: model = KMC_Model(print_rates=False){catmap_message}'.format(**locals()))
         try:
             model.deallocate()
