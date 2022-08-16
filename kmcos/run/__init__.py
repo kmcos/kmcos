@@ -266,7 +266,7 @@ class KMC_Model(Process):
             try:
                 import types #https://stackoverflow.com/questions/37455426/advantages-of-using-methodtype-in-python
                 self.setup_model =  types.MethodType(settings.setup_model,
-                                         KMC_Model)
+                                         self)
             except ModuleNotFoundError:
                 import new
                 self.setup_model = new.instancemethod(settings.setup_model,
