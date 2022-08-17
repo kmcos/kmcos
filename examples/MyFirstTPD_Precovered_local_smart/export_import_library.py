@@ -23,7 +23,7 @@ class module_export_import:
         with open(self.save_filename, 'wt') as f:
             for module_var in module_vars:
                 module_var_val = getattr(self.module, module_var)
-                if type(module_var_val) is str or type(module_var_val) is str:
+                if (type(module_var_val) == type('str')) or (type(module_var_val) == type(b'str')):
                     # We need to make sure string values get printed as string
                     # values or they won't be read properly on reload
                     f.write(module_var + " = '" + str(module_var_val) + "'\n")
@@ -61,7 +61,20 @@ class module_export_import:
                 module_var_val = module_var_val.strip()
 
                 # Convert to an actual Python object
-                module_var_val = ast.literal_eval(module_var_val)
+                # Workaround for sets as literal_eval can't handle them in
+                # Python 2.7
+                if 'set' in module_var_val:
+                    # Extract the bracketed portion which can be converted into
+                    # a list
+                    module_var_val = module_var_val[4:-1]
+
+                    # Convert to a list
+                    module_var_val = ast.literal_eval(module_var_val)
+
+                    # Convert list to a set
+                    module_var_val = set(module_var_val)
+                else:
+                    module_var_val = ast.literal_eval(module_var_val)
 
                 # Store it in the module
                 setattr(self.module, module_var, module_var_val)

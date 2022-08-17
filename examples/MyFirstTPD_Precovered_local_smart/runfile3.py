@@ -64,7 +64,7 @@ if load_simulation_state:
     # The following assignment (and similar assignments elsewhere) is *magical*.
     # It invokes a hidden __setattr__ method of the Model_Parameters class that
     # calls the set_rate_constants() function to update the values of the rate
-    # constants in the Fortran base module. Any other kind of assignment will
+    # constants in the Fortran base module. Any other syntax of assignment will
     # require an explicit call to set_rate_constants(). *Failure to update the
     # rate constants in the Fortran module will result in wrong results!*
     T = Ti + beta * (sg.kmc_time)
