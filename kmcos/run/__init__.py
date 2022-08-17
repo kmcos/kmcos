@@ -837,9 +837,10 @@ class KMC_Model(Process):
             os.mkdir('exported_movie_images')
         image_folder = './exported_movie_images'
         # os.chdir(image_folder)
+        digitsLength = len(str(frames)) #we will need to add some zeros to get the images in order.
         for i in range(frames):
             self.do_steps(steps)
-            self.export_picture(filename = image_folder + "/" + filename + str(i), resolution = resolution, scale = scale)
+            self.export_picture(filename = image_folder + "/" + filename + str(i).zfill(digitsLength), resolution = resolution, scale = scale)
         #os.chdir("..")
         image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)

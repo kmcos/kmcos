@@ -322,3 +322,4 @@ kmc_model.add_process(**temporary_kwargs_dictionary)
 
 kmc_model.filename = model_name + ".xml"
 kmc_model.save_model()
+kmcos.compile(kmc_model)

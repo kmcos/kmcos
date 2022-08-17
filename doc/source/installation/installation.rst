@@ -51,7 +51,7 @@ The easiest way to install kmcos is to use one of the automatic installers::
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv.  #For the develop branch, use install-kmcos-linux-venv-develop.bash or install-kmcos-linux-user-develop.bash
     
     
-For personal computer usage (not on a supercomputer), it is a good idea to also run the following command, which will add the kmcos viewer::
+For personal computer usage (not on a supercomputer), it is a good idea to also run the following command, which will add the kmcos viewer and movie maker::
 
     bash install-kmcos-complete-linux-venv-Ubuntu20.bash #this is for Ubuntu20. There is also an Ubuntu18 version.
     
