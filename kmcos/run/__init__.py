@@ -811,7 +811,7 @@ class KMC_Model(Process):
                     settings.parameters.update(parameters)
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
-    def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6, representation= 'atomic'):
+    def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6, representation= 'atomic', stitch=True):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
         in the exported_movie_images directory and then creates a .webm video file of all the images
         of the images into a video
@@ -824,13 +824,13 @@ class KMC_Model(Process):
         """
 
         import os
-        import moviepy.video.io.ImageSequenceClip
+        
         representation = str(representation).lower() #make the representation lowercase for standardization purposes.
         if filename == '':
             filename = 'atoms_image'
             video_filename = 'atoms_video.webm'
         else:
-            video_filename = filename + '.webm'
+            video_filename = str(filename) + '.webm'
 
         check_directory(directory)
         if not os.path.exists('exported_movie_images'):
@@ -839,21 +839,30 @@ class KMC_Model(Process):
         # os.chdir(image_folder)
         digitsLength = len(str(frames)) #we will need to add some zeros to get the images in order.
         if representation == 'atomic':
-            for i in range(frames):
+            for i in range(1,frames):
                 self.do_steps(steps)
                 self.export_picture(filename = image_folder + "/" + filename + str(i).zfill(digitsLength), resolution = resolution, scale = scale)
         if (representation == 'spatial') or  (representation == 'circles') or (representation == 'configuration'):
-            for i in range(frames):
+            for i in range(1,frames):
                 self.do_steps(steps)
-                self.plot_configuration(directory=image_folder,plot_settings={'figure_name':filename+str(i).zfill(digitsLength)})
+                #only export the legend the first time.
+                if i == 1:
+                    legendExport = True
+                else:
+                    legendExport = False
+                self.plot_configuration(directory=image_folder,plot_settings={'figure_name':filename+str(i).zfill(digitsLength),'legendExport':legendExport})
             
             
         #os.chdir("..")
-        image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
-        clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
-        clip.write_videofile(directory + "/" + video_filename)
-        clip.close()
-
+        if stitch == True:
+                try:
+                    import moviepy.video.io.ImageSequenceClip
+                    image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
+                    clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
+                    clip.write_videofile(directory + "/" + video_filename)
+                    clip.close()
+                except:
+                    print("kmcos movie creation failed. Images are in exported_movie_images or user specified directory.")
 
     def peek(self, *args, **kwargs):
         """Creates a static image of the model
@@ -1685,7 +1694,7 @@ class KMC_Model(Process):
                     ax0.legend(bbox_to_anchor=(1.05,1.0), loc="upper left")
 
         if plot_settings['legendExport'] == True: #exports the legend into a separate text file
-            with open(plot_settings['figure_name'] + "Legend.txt", 'w') as f:
+            with open(directory + "/" + plot_settings['figure_name'] + "Legend.txt", 'w') as f:
                 for key, value in list(species.items()):
                     f.write('%s\n' % (key))
                     
