@@ -811,7 +811,7 @@ class KMC_Model(Process):
                     settings.parameters.update(parameters)
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
-    def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6):
+    def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6, representation= 'atomic'):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
         in the exported_movie_images directory and then creates a .webm video file of all the images
         of the images into a video
@@ -825,7 +825,7 @@ class KMC_Model(Process):
 
         import os
         import moviepy.video.io.ImageSequenceClip
-
+        representation = str(representation).lower() #make the representation lowercase for standardization purposes.
         if filename == '':
             filename = 'atoms_image'
             video_filename = 'atoms_video.webm'
@@ -838,9 +838,16 @@ class KMC_Model(Process):
         image_folder = './exported_movie_images'
         # os.chdir(image_folder)
         digitsLength = len(str(frames)) #we will need to add some zeros to get the images in order.
-        for i in range(frames):
-            self.do_steps(steps)
-            self.export_picture(filename = image_folder + "/" + filename + str(i).zfill(digitsLength), resolution = resolution, scale = scale)
+        if representation == 'atomic':
+            for i in range(frames):
+                self.do_steps(steps)
+                self.export_picture(filename = image_folder + "/" + filename + str(i).zfill(digitsLength), resolution = resolution, scale = scale)
+        if (representation == 'spatial') or  (representation == 'circles') or (representation == 'configuration'):
+            for i in range(frames):
+                self.do_steps(steps)
+                self.plot_configuration(directory=image_folder,plot_settings={'figure_name':filename+str(i).zfill(digitsLength)})
+            
+            
         #os.chdir("..")
         image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
@@ -1613,7 +1620,7 @@ class KMC_Model(Process):
         return tileList
 
 
-    def create_configuration_plot(self, directory = "./exported_configurations", plot_settings={}, showFigure=True):
+    def create_configuration_plot(self, directory = "./exported_configurations", plot_settings={}, showFigure=False, exportFigure= True):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
@@ -1638,7 +1645,6 @@ class KMC_Model(Process):
 
         check_directory(directory)
         coords = self.get_species_coordinates(export_csv = False, matrix_format = 'cartesian')
-        exportFigure = True #This variable should be moved to an argument or something in plot_settings.
         #First put some defaults in if not already defined.
         if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
         if 'y_label' not in plot_settings: plot_settings['y_label'] = ''
@@ -1722,7 +1728,7 @@ class KMC_Model(Process):
         kmcos.run.png.MyPNG(atoms, show_unit_cell=False, scale=scale, model=self, **kwargs).write(filename=filename, resolution=resolution)
         return 
         
-    def plot_configuration(self, filename = '', directory = "./exported_configurations", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}):
+    def plot_configuration(self, filename = '', directory = "./exported_configurations", resolution = 150, scale = 20, representation = 'spatial', plot_settings = {}, showFigure=False, exportFigure= True):
         """Either calls create_configuration_plot() to create the spatial representation of the model, or calls export_picture() to create the atomic representation of the model
 
         'filename' sets the filename for the plot
@@ -1749,8 +1755,9 @@ class KMC_Model(Process):
             "speciesName": False
 
         """
+        representation = str(representation).lower() #make the representation lowercase for standardization purposes.
         check_directory(directory)        
-        if representation == 'atomic':
+        if representation.lower() == 'atomic':
             if 'show_unit_cell' in plot_settings:
                 show_unit_cell = plot_settings['show_unit_cell']
             else:
@@ -1762,7 +1769,7 @@ class KMC_Model(Process):
             self.export_picture(resolution = resolution, scale = scale, filename = directory + "/" + filename)
 
         if (representation == 'spatial') or (representation == 'circles'):
-            self.create_configuration_plot(directory = directory, plot_settings = plot_settings)
+            self.create_configuration_plot(directory = directory, plot_settings = plot_settings, showFigure=showFigure, exportFigure= exportFigure)
             
     def _put(self, site, new_species, reduce=False):
         """
