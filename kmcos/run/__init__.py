@@ -825,19 +825,19 @@ class KMC_Model(Process):
         for i in range(frames):
             os.system('clear')
             self.do_steps(steps)
-            time.sleep(delay) #TODO: change the delay to be reduced by the time of the number of steps.
             self.show_ascii_picture(site,species)
+            time.sleep(delay) #TODO: change the delay to be reduced by the time of the number of steps.
         time.sleep(delay) #This delay should not be reduced, since the last image won't have any steps after that.
 
 
-    def show_ascii_picture(self,site,species):
+    def show_ascii_picture(self,site,species): #TODO: this only works for cubic or simlar right now. But, for hexagonal, can add a row in between and shift to the right.
         config=self._get_configuration()
         size=self.size[0]
         for i in reversed(range(size)):
             thisRow = config[:,i,0,site]
             thisRow = (str(x) if x in species else '.' for x in thisRow)
             print(*thisRow)
-    
+            sys.stdout.flush()
     
     def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6, representation= 'atomic', stitch=True):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
