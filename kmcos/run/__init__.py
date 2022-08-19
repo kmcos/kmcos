@@ -812,32 +812,34 @@ class KMC_Model(Process):
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
     
-    def play_ascii_movie(self,frames=30,steps=1,site=0,delay=0,species=''):
+    def play_ascii_movie(self,frames=30,steps=1,site=0,delay=0,species=None,hexagonal=False):
         """Shows a series of model snapshots in the current terminal.
             'frames' sets the total video length
             'steps' is the number of steps the model does between each image
             'site' is the site of interest to animate
             'species' is a list of species to display (default is all species)
         """
-        import time,sys
-        if species == '':
+        import time
+        if species is None:
             species = list(range(len(self.species_tags.keys())))
         for i in range(frames):
             os.system('clear')
+            self.show_ascii_picture(site,species,hexagonal)
+            time.sleep(delay)
             self.do_steps(steps)
-            self.show_ascii_picture(site,species)
-            time.sleep(delay) #TODO: change the delay to be reduced by the time of the number of steps.
-        time.sleep(delay) #This delay should not be reduced, since the last image won't have any steps after that.
 
-
-    def show_ascii_picture(self,site,species): #TODO: this only works for cubic or simlar right now. But, for hexagonal, can add a row in between and shift to the right.
+    def show_ascii_picture(self,site,species,hexagonal):
         config=self._get_configuration()
         size=self.size[0]
         for i in reversed(range(size)):
             thisRow = config[:,i,0,site]
-            thisRow = (str(x) if x in species else '.' for x in thisRow)
-            print(*thisRow)
-            sys.stdout.flush()
+            thisRow = (str(x) if x in species else ' ' for x in thisRow)
+            if hexagonal:
+                lineshift = (size-i)*' '
+            else:
+                lineshift = ''
+            print(lineshift,*thisRow)
+        sys.stdout.flush()
     
     def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6, representation= 'atomic', stitch=True):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
