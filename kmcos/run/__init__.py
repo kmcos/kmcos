@@ -825,8 +825,9 @@ class KMC_Model(Process):
         for i in range(frames):
             os.system('clear')
             self.do_steps(steps)
-            self.show_ascii_picture(site,species)
             time.sleep(delay) #TODO: change the delay to be reduced by the time of the number of steps.
+            self.show_ascii_picture(site,species)
+        time.sleep(delay) #This delay should not be reduced, since the last image won't have any steps after that.
 
 
     def show_ascii_picture(self,site,species):
