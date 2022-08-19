@@ -812,21 +812,30 @@ class KMC_Model(Process):
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
     
-    def play_ascii_movie(self, frames = 30, steps = 1):
+    def play_ascii_movie(self,frames=30,steps=1,site=0,delay=0,species=''):
         """Shows a series of model snapshots in the current terminal.
             'frames' sets the total video length
             'steps' is the number of steps the model does between each image
+            'site' is the site of interest to animate
+            'species' is a list of species to display (default is all species)
         """
+        import time,sys
+        if species == '':
+            species = list(range(len(self.species_tags.keys())))
         for i in range(frames):
             os.system('clear')
             self.do_steps(steps)
-            self.show_ascii_picture()
- 
-    def show_ascii_picture(self):
+            self.show_ascii_picture(site,species)
+            time.sleep(delay) #TODO: change the delay to be reduced by the time of the number of steps.
+
+
+    def show_ascii_picture(self,site,species):
         config=self._get_configuration()
-        size=config[:,0,0,0].size
+        size=self.size[0]
         for i in reversed(range(size)):
-            print(*tuple(config[:,i,0,0]))
+            thisRow = config[:,i,0,site]
+            thisRow = (str(x) if x in species else '.' for x in thisRow)
+            print(*thisRow)
     
     
     def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6, representation= 'atomic', stitch=True):
