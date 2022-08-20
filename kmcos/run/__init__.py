@@ -812,7 +812,7 @@ class KMC_Model(Process):
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
     
-    def play_ascii_movie(self,frames=30,steps=1,site=0,delay=0,species=None,hexagonal=False):
+    def play_ascii_movie(self,frames=30,steps=1,site=0,delay=0.1,species=None,hexagonal=False):
         """Shows a series of model snapshots in the current terminal.
             'frames' sets the total video length
             'steps' is the number of steps the model does between each image
