@@ -144,7 +144,7 @@ and right now you can find a recent build `here <https://build.opensuse.org/pack
 Installation on Mac OS X 10.10 or above (Deprecated Instructions)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There is more than one way to get required dependencies. I have tested MacPorts and worked quite well.
+There is more than one way to get required dependencies. MacPorts was previously tested and worked.
 
 #. Get MacPorts
     Search for MacPorts online, you'll need to install Xcode in the process
@@ -178,9 +178,7 @@ Installation on windows
 
 Direct installation on windows is currently not supported, but it is possible to use either "WSL" or to use Ubuntu on a virtualbox. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions in the intro2kmcos pdf file here: https://github.com/kmcos/intro2kmcos. You may need to adjust the resolution to work effectively.
 
-For using WSL::
-
-    Press the "start menu" button.  Type "Windows Powershell" but don't press enter:  Use run as administrator.
+If you prefer to use WSL rather than Virtualbox, you will need to install WSL Ubuntu. Press the "start menu" button.  Type "Windows Powershell" but don't press enter:  Use run as administrator.::
     Then use:
     wsl --install -d Ubuntu
 
@@ -195,14 +193,12 @@ From the terminal, type::
 
 With windows 11 and higher, you may see a GUI pop up. If you do not, then you probably will not be able to use a GUI with WSL, and the kmcos export_movie feature also will not work.
 
-For future reference: "cd ~" will take you to the home (default) place for working in Ubuntu, while "cd /" will take you to the root directory.
-Now "cd /mnt/c" will let you access files on to go to the windows C drive.
+For future reference: "cd ~" will take you to the home (default) place for working in Ubuntu, while "cd /" will take you to the root directory. 
 
+For sharing files, "cd /mnt/c" will let you access files on to go to the windows C drive.
 By going to mnt/c, you can move files back and forth between Ubuntu directories and the Windows directories.
 
-Now that you  have WSL working with Ubuntu, follow the regular instructions from the top of this Installation page.
-
-
+Now that you have WSL working with Ubuntu, follow the regular instructions from the top of this Installation page.
 
 Installing JANAF Thermochemical Tables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
