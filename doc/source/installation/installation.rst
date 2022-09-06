@@ -184,12 +184,12 @@ For using WSL::
     Then use:
     wsl --install -d Ubuntu
 
-Then within ubuntu, use::
+Now, you can close the Powershell window. Within ubuntu, use::
 
     sudo apt update
     sudo apt install x11-apps
 
-From the terminal, type:
+From the terminal, type::
 
     xeyes &
 
@@ -199,6 +199,8 @@ For future reference: "cd ~" will take you to the home (default) place for worki
 Now "cd /mnt/c" will let you access files on to go to the windows C drive.
 
 By going to mnt/c, you can move files back and forth between Ubuntu directories and the Windows directories.
+
+Now that you  have WSL working with Ubuntu, follow the regular instructions from the top of this Installation page.
 
 
 
