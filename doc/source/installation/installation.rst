@@ -176,89 +176,29 @@ There is more than one way to get required dependencies. I have tested MacPorts 
 Installation on windows
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Direct installation on windows is currently not supported. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions in the intro2kmcos pdf file here: https://github.com/kmcos/intro2kmcos. You may need to adjust the resolution to work effectively.
-For direct installion on windows, partial instructions have been written below. In the future, an "Ubuntu on Windows 10 via Windows Subsystem" set of instructions will be provided (and would be welcomed as a contribution).
+Direct installation on windows is currently not supported, but it is possible to use either "WSL" or to use Ubuntu on a virtualbox. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions in the intro2kmcos pdf file here: https://github.com/kmcos/intro2kmcos. You may need to adjust the resolution to work effectively.
 
-***
+For using WSL::
 
-In order for kmcos to work in a recent windows it is best to get Anaconda.
+    Press the "start menu" button.  Type "Windows Powershell" but don't press enter:  Use run as administrator.
+    Then use:
+    wsl --install -d Ubuntu
 
-Download anaconda and open an anaconda terminal.
+Then within ubuntu, use::
 
-The first time you install kmcos, you will need to fetch the full package from github::
+    sudo apt update
+    sudo apt install x11-apps
 
-    git clone http://www.github.com/kmcos/kmcos
+From the terminal, type:
 
-Next, go into the package directory and install using the setup.py file::
+    xeyes &
 
-    cd kmcos
-    python setup.py install
-    
-Note that on windows it is recommended to not use the --user command, otherwise the command line interface (typing 'kmcos' from the command line) will not work. Next, install the MINIMAL dependencies.
+With windows 11 and higher, you may see a GUI pop up. If you do not, then you probably will not be able to use a GUI with WSL, and the kmcos export_movie feature also will not work.
 
-    pip install kmcos[MINIMAL] --upgrade --user
-    
-Note: pip install kmcos[COMPLETE] won't work. to install pycairo and use the visual aspects, Microsoft Visual C++ 14.0 is required. Get it with "Microsoft Visual C++ Build Tools": https://visualstudio.microsoft.com/downloads/
+For future reference: "cd ~" will take you to the home (default) place for working in Ubuntu, while "cd /" will take you to the root directory.
+Now "cd /mnt/c" will let you access files on to go to the windows C drive.
 
-BELOW ARE DEPRECATED INSTRUCTIONS
-
-#. **Python**
-   If you have no python previously installed you should get `Anaconda`
-   with python 3.
-   or `Enthought Python Distribution`_ (EPD) in its free version since it
-   already comes with a number of useful libraries such a numpy, scipy,
-   ipython and matplotlib.
-
-#. **numpy**
-   Fetch it for `your version` of python from
-   `sourceforge's Numpy site <http://sourceforge.net/project/numpy>`_
-   and install it. [Not needed with EPD ]
-
-#.  **MinGW**
-    provides free Fortran and C compilers and can be obtained from the
-    `sourceforge's MinGW site <https://sourceforge.net/projects/mingw/>`_ .
-    Make sure you make a tick for the Fortran and the C compiler.
-
-#. **pyGTK**
-   is needed for the GUI frontend so fetch the
-   `all-in-one <http://www.pygtk.org/downloads.html>`_ bundle installer and
-   install most of it.
-
-#. **lxml**
-   is an awesome library to process xml files, which has unfortunately
-   not fully found its way into the standard library. As of this writing
-   the latest version with prebuilt binaries is `lxml 2.2.8`_ and installation
-   works without troubles.
-
-#. **ASE**
-   is needed for the representation of atoms in the frontend. So
-   download the latest from the
-   `GitLab website <https://gitlab.com/ase/ase/repository/archive.zip?ref=master>`_
-   and install it. This has to be installed using e.g. the powershell.
-   So after unpacking it, fire up the powershell, cd to the directory
-   and run::
-
-    python setup.py install
-
-   in there. Note that there is currently a slight glitch in the
-   `setup.py` script on windows, so open `setup.py` in a text
-   editor and find the line saying::
-
-     version = ...
-
-   comment out the lines above it and hard-code the current version
-   number.
-
-#. **kmcos**
-   is finally what we are after, so download the latest version
-   from `github <http://mhoffman.github.com/kmcos/>`_ and install
-   it in the same way as you installed **ASE**.
-
-
-There are probably a number of small changes you have to make
-which are not described in this document. Please post questions
-and comments in the
-`issues area <https://github.com/mhoffman/kmcos/issues>`_ .
+By going to mnt/c, you can move files back and forth between Ubuntu directories and the Windows directories.
 
 
 
