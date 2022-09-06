@@ -873,7 +873,7 @@ class KMC_Model(Process):
         if representation == 'atomic':
             for i in range(1,frames):
                 self.do_steps(steps)
-                self.export_picture(filename = image_folder + "/" + filename + str(i).zfill(digitsLength), resolution = resolution, scale = scale)
+                self.export_picture(filename = str(image_folder) + "/" + str(filename) + str(i).zfill(int(digitsLength)), resolution = resolution, scale = scale)
         if (representation == 'spatial') or  (representation == 'circles') or (representation == 'configuration'):
             for i in range(1,frames):
                 self.do_steps(steps)
@@ -882,7 +882,7 @@ class KMC_Model(Process):
                     legendExport = True
                 else:
                     legendExport = False
-                self.plot_configuration(directory=image_folder,plot_settings={'figure_name':filename+str(i).zfill(digitsLength),'legendExport':legendExport})
+                self.plot_configuration(directory=image_folder,plot_settings={'figure_name':str(filename)+str(i).zfill(int(digitsLength)),'legendExport':legendExport})
             
             
         #os.chdir("..")
