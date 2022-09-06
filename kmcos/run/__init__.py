@@ -811,6 +811,36 @@ class KMC_Model(Process):
                     settings.parameters.update(parameters)
                 set_rate_constants(parameters, self.print_rates, self.can_accelerate)
 
+    
+    def play_ascii_movie(self,frames=30,steps=1,site=0,delay=0.1,species=None,hexagonal=False):
+        """Shows a series of model snapshots in the current terminal.
+            'frames' sets the total video length
+            'steps' is the number of steps the model does between each image
+            'site' is the site of interest to animate
+            'species' is a list of species to display (default is all species)
+        """
+        import time
+        if species is None:
+            species = list(range(len(self.species_tags.keys())))
+        for i in range(frames):
+            os.system('clear')
+            self.show_ascii_picture(site,species,hexagonal)
+            time.sleep(delay)
+            self.do_steps(steps)
+
+    def show_ascii_picture(self,site,species,hexagonal):
+        config=self._get_configuration()
+        size=self.size[0]
+        for i in reversed(range(size)):
+            thisRow = config[:,i,0,site]
+            thisRow = (str(x) if x in species else ' ' for x in thisRow)
+            if hexagonal:
+                lineshift = (size-i)*' '
+            else:
+                lineshift = ''
+            print(lineshift,*thisRow)
+        sys.stdout.flush()
+    
     def export_movie(self, filename = "", directory = "./exported_movies", resolution = 150, scale = 20, fps=1, frames = 30, steps = 1e6, representation= 'atomic', stitch=True):
         """Exports a series of atomic view snapshots of model instance to a subdirectory, creating png files
         in the exported_movie_images directory and then creates a .webm video file of all the images
@@ -833,15 +863,17 @@ class KMC_Model(Process):
             video_filename = str(filename) + '.webm'
 
         check_directory(directory)
-        if not os.path.exists('exported_movie_images'):
-            os.mkdir('exported_movie_images')
+        if os.path.exists('exported_movie_images'): #remove the directory if it exists to avoid any errors.
+            import shutil
+            shutil.rmtree('exported_movie_images')
+        os.mkdir('exported_movie_images')
         image_folder = './exported_movie_images'
         # os.chdir(image_folder)
         digitsLength = len(str(frames)) #we will need to add some zeros to get the images in order.
         if representation == 'atomic':
             for i in range(1,frames):
                 self.do_steps(steps)
-                self.export_picture(filename = image_folder + "/" + filename + str(i).zfill(digitsLength), resolution = resolution, scale = scale)
+                self.export_picture(filename = str(image_folder) + "/" + str(filename) + str(i).zfill(int(digitsLength)), resolution = resolution, scale = scale)
         if (representation == 'spatial') or  (representation == 'circles') or (representation == 'configuration'):
             for i in range(1,frames):
                 self.do_steps(steps)
@@ -850,19 +882,25 @@ class KMC_Model(Process):
                     legendExport = True
                 else:
                     legendExport = False
-                self.plot_configuration(directory=image_folder,plot_settings={'figure_name':filename+str(i).zfill(digitsLength),'legendExport':legendExport})
+                self.plot_configuration(directory=image_folder,plot_settings={'figure_name':str(filename)+str(i).zfill(int(digitsLength)),'legendExport':legendExport})
             
             
         #os.chdir("..")
         if stitch == True:
+                if os.path.exists(directory): #remove the directory if it exists and make it fresh, becuase otherwise moviepy might have errors.
+                    import shutil
+                    shutil.rmtree(directory)
+                os.mkdir(directory)
+                    
                 try:
                     import moviepy.video.io.ImageSequenceClip
                     image_files = [os.path.join(image_folder,img) for img in os.listdir(image_folder) if img.endswith(".png")]
                     clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
                     clip.write_videofile(directory + "/" + video_filename)
                     clip.close()
-                except:
-                    print("kmcos movie creation failed. Images are in exported_movie_images or user specified directory.")
+                    print("Message: export_movie finished, files inside ", directory, "with exported movie images in ", image_folder, ". \n\n WARNING: Calling export_movie again will delete all earlier movie files to have fresh creation of these directories.\n")
+                except Exception as error:
+                    print("kmcos movie creation failed. Images are in exported_movie_images or user specified directory.", "The error was: ", error)
 
     def peek(self, *args, **kwargs):
         """Creates a static image of the model
