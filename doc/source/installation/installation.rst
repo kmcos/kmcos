@@ -146,21 +146,28 @@ Installation on Mac OS X 10.10 or above (Deprecated Instructions)
 
 There is more than one way to get required dependencies. MacPorts was previously tested and worked.
 
-As of 2022, 
+
+As of 2022, the MacPorts way does not seem to be working and the virtual machine way is recommended.
+
+The Virtual Machine Way:
 
 Needed to use Ubuntu 20.04 (Using Ubuntu 22 did not work).
 
-Guest additions was not working on the mac.
+Guest additions was not working on the mac. So needed to do below in addition to the instructions in the intro2kmcos doc.
 
 1) Needed to find Virtual Box with finder, right click on the Virtual Box application, show files / show contents, needed to find the VirtualBox.iso file, copy it out to a regular MacOS directory.
-2) Perl was not working:
-sudo apt-get update
-sudo apt-get install build-essential gcc make perl dkms
+2) Perl was not working, so needed to do the following::
+
+        sudo apt-get update
+        sudo apt-get install build-essential gcc make perl dkms
 
 That worked, then rebooted Ubuntu.
 
 3) bash autorun.sh
 
+Then was able to use the virtual machine as well as install kmcos normally.
+
+The MacPorts Way:
 
 #. Get MacPorts
     Search for MacPorts online, you'll need to install Xcode in the process
