@@ -146,6 +146,22 @@ Installation on Mac OS X 10.10 or above (Deprecated Instructions)
 
 There is more than one way to get required dependencies. MacPorts was previously tested and worked.
 
+As of 2022, 
+
+Needed to use Ubuntu 20.04 (Using Ubuntu 22 did not work).
+
+Guest additions was not working on the mac.
+
+1) Needed to find Virtual Box with finder, right click on the Virtual Box application, show files / show contents, needed to find the VirtualBox.iso file, copy it out to a regular MacOS directory.
+2) Perl was not working:
+sudo apt-get update
+sudo apt-get install build-essential gcc make perl dkms
+
+That worked, then rebooted Ubuntu.
+
+3) bash autorun.sh
+
+
 #. Get MacPorts
     Search for MacPorts online, you'll need to install Xcode in the process
 
