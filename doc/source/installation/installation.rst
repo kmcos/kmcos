@@ -163,7 +163,7 @@ Guest additions was not working on the mac. So needed to do below in addition to
 
 That worked, then rebooted Ubuntu.
 
-3) Navigated to the virtual disc of the virtual additions::
+3) Navigated to the virtual disc of the guest additions CD (virtual compact disc)::
 
         bash autorun.sh
 
