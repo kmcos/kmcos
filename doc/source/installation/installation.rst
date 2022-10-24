@@ -163,7 +163,9 @@ Guest additions was not working on the mac. So needed to do below in addition to
 
 That worked, then rebooted Ubuntu.
 
-3) bash autorun.sh
+3) Navigated to the virtual disc of the virtual additions::
+
+        bash autorun.sh
 
 Then was able to use the virtual machine as well as install kmcos normally.
 
