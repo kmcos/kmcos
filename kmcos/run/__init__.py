@@ -1526,8 +1526,8 @@ class KMC_Model(Process):
         'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv where each row 
         represents the coordinates for a single species, and the meshgrid format returns as a csv with a XX, YY format
             EX: Cartesian
-            [[0	 10] [0	 11] [0	 18] [1	 6]	 [2	 3]	 [2	 11] [2	 13]] -> This is CO
-            [[0	 0]	 [0	 1]	 [0	 2]	 [0	 3]	 [0	 4]	 [0	 5]	 [0	 6]]  -> This is empty
+            Ex: [[0 10 0] [0 11 0] [0 18 0] [1 6 0] [2 3 0] [2 11 0] [2 13 0]] -> This is CO positions in [x y z] 
+                [[0 0 0]  [0 1 0]  [0 2 0]  [0 3 0] [0 4 0] [0 5 0]  [0 6 0]]  -> This is empty site positions in [x y z]
 
             EX: Meshgrid
             [[0, 1, 1, 0, 1, 0],
@@ -1548,11 +1548,11 @@ class KMC_Model(Process):
             site_positions = self.lattice.site_positions
             species_coords = []
             for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
-                species_coords.append([])
+                species_coords.append([]) #we first append a blank in order to make index 0 have nothing, so we can use indices like 1,2,3.
                 for i in range(len(config)): #Loop across the x values
                     for j in range(len(config[0])): #Loop across the y values
-                        for s in range(len(config[0][0])): #loop across site index (number of sites)
-                            if (config[i][j][s][0] == k): #check that the species matches.
+                        for s in range(len(config[0][0][0])): #loop across site index (number of sites). Note that we went directly from one [0] to two [0][0] because there is an "extra" layer of nesting in the config object.
+                            if (config[i][j][0][s] == k): #check that the species matches.
                                 #The i,j,s are indices. We need to convert these indices into relative coordinates. (where 1 is a unit cell length)
                                 #First orient to relative location by unit cell relative coordinate with z as zero.
                                 unit_cell_relative_coordinates = [i,j,0]
@@ -1681,8 +1681,8 @@ class KMC_Model(Process):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
-            Ex: [[0 10] [0 11] [0 18] [1 6] [2 3] [2 11] [2 13]] -> This is CO
-                [[0 0]  [0 1]  [0 2]  [0 3] [0 4] [0 5]  [0 6]]  -> This is empty
+            Ex: [[0 10 0] [0 11 0] [0 18 0] [1 6 0] [2 3 0] [2 11 0] [2 13 0]] -> This is CO positions in [x y z] 
+                [[0 0 0]  [0 1 0]  [0 2 0]  [0 3 0] [0 4 0] [0 5 0]  [0 6 0]]  -> This is empty site positions in [x y z]
 
         'directory' sets the directory name where the plot is saved
 
