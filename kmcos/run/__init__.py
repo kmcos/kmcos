@@ -1545,14 +1545,24 @@ class KMC_Model(Process):
         species = self.species_tags   
 
         if matrix_format == "cartesian":
+            site_positions = self.lattice.site_positions
             species_coords = []
             for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
                 species_coords.append([])
                 for i in range(len(config)): #Loop across the x values
                     for j in range(len(config[0])): #Loop across the y values
-                        if (config[i][j][0][0] == k):
-                            species_coords[k].append([i,j])
+                        for s in range(len(config[0][0])): #loop across site index (number of sites)
+                            if (config[i][j][s][0] == k): #check that the species matches.
+                                #The i,j,s are indices. We need to convert these indices into relative coordinates. (where 1 is a unit cell length)
+                                #First orient to relative location by unit cell relative coordinate with z as zero.
+                                unit_cell_relative_coordinates = [i,j,0]
+                                #Then get the site_coordinate relative to that position.
+                                within_unit_cell_site_coordinates = site_positions[s] #relative coordinates for within the unit cell.
+                                #by adding the unit cell position, and the within unit cell position, we should have the full x,y,z in relative coordinates.
+                                species_relative_coordinates = unit_cell_relative_coordinates + within_unit_cell_site_coordinates
+                                species_coords[k].append(species_relative_coordinates)
             final_coords = species_coords
+
 
         elif matrix_format == "meshgrid":
             matrix_array = config * 1.0
