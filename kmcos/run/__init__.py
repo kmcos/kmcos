@@ -1853,13 +1853,13 @@ class KMC_Model(Process):
 
         Examples ::
 
-            model._put([0,0,0,model.lattice.lattice_bridge], model.proclist.co])
-            # puts a CO molecule at the `bridge` site of the lower left unit cell
-
-            model._put([1,0,0,model.lattice.lattice_bridge], model.proclist.co ])
-            # puts a CO molecule at the `bridge` site one to the right
-
-            # ... many more
+            # below puts a CO molecule at the `bridge` site of the lower left unit cell
+            model._put([0,0,0,model.lattice.bridge], model.proclist.co)
+            # below does the same:
+            model._put([0,0,0,"bridge"], "CO")
+            
+            model._put([1,0,0,model.lattice.bridge], model.proclist.co )
+            # below puts a CO molecule at the `bridge` site one to the right
 
             model._adjust_database() # Important !
 
@@ -1887,6 +1887,10 @@ class KMC_Model(Process):
 
         """
         x, y, z, n = site
+        if type(n) == type("string"): #convert any string-named sites into site objects.
+            n = eval("model.lattice." + n)
+        if type(new_species) == type("string"): #convert any string-named species into species objects.
+            new_species = eval("model.proclist." + new_species.lower())
         if reduce:
             x, y, z = (x, y, z) % self.lattice.system_size
             site = np.array([x, y, z, n])
@@ -1915,14 +1919,20 @@ class KMC_Model(Process):
         from 0 to the number of unit cells in the respective direction.
         And `n` specifies the site within the unit cell.
 
-        The database of available processes will be updated automatically.
+        The database of available processes will be updated automatically. 
+        For doing many put and a single update, see the _put() function.
 
         Examples ::
 
-            model.put([0,0,0,model.lattice.site], model.proclist.co ])
-            # puts a CO molecule at the `bridge` site
-            # of the lower left unit cell
+            # below puts a CO molecule at the `bridge` site of the lower left unit cell
+            model.put([0,0,0,model.lattice.bridge], model.proclist.co)
+            # below does the same:
+            model.put([0,0,0,"bridge"], "CO")
+            
+            model.put([1,0,0,model.lattice.bridge], model.proclist.co )
+            # below puts a CO molecule at the `bridge` site one to the right
 
+            
         :param site: Site where to put the new species, i.e. [x, y, z, bridge]
         :type site: list or np.array
         :param new_species: Name of new species.
