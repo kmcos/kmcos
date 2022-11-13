@@ -1560,7 +1560,7 @@ class KMC_Model(Process):
                                 within_unit_cell_site_coordinates = site_positions[s] #relative coordinates for within the unit cell.
                                 #by adding the unit cell position, and the within unit cell position, we should have the full x,y,z in relative coordinates.
                                 species_relative_coordinates = unit_cell_relative_coordinates + within_unit_cell_site_coordinates
-                                species_coords[k].append(species_relative_coordinates)
+                                species_coords[k].append(list(species_relative_coordinates))
             final_coords = species_coords
 
 
@@ -1677,7 +1677,7 @@ class KMC_Model(Process):
         return tileList
 
 
-    def create_configuration_plot(self, directory = "./exported_configurations", plot_settings={}, showFigure=False, exportFigure= True):
+    def create_configuration_plot(self, directory = "./exported_configurations", plot_settings={}, showFigure=False, exportFigure= True, dimensionality=2):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
@@ -1697,11 +1697,26 @@ class KMC_Model(Process):
                 "dpi": 220,
                 "speciesName": False
 
+        'dimensionality' is an integer (either 2 or 3 dimensional) for the number of cartesian dimensions.
+        
         """
         import matplotlib.pyplot as plt
 
         check_directory(directory)
         coords = self.get_species_coordinates(export_csv = False, matrix_format = 'cartesian')
+        import copy
+        coords = copy.deepcopy(coords) #This deepcopy is necessary because we are going to overwrite elements for the 2D case.
+        if dimensionality == 2: #need to remove the z dimension.
+            #the shape of coords is that it's a list of lists: the first list represents all the coords of the first species, the second list represents the coords of the second species, etc., and if any list is empty then it represents no presence of that species.  So for each species, we should first check if it's empty and skip if it's empty.
+            for species_index in range(len(coords)):
+                if len(coords[species_index]) == 0: #thismeans there is nothing to do.
+                    pass
+                else: #else we need to remove the z coordinate for all of the coordinates.
+                    print("line 1714", np.shape(coords[species_index]))
+                    particular_species_coords = np.array(coords[species_index])
+                    particular_species_coords_2D = particular_species_coords[:,0:2] #all rows, indices 0 and 1. The syntax 0:2 excludes the second index.
+                    coords[species_index] = particular_species_coords_2D
+                    print("line 1718", np.shape(coords[species_index]))
         #First put some defaults in if not already defined.
         if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
         if 'y_label' not in plot_settings: plot_settings['y_label'] = ''
