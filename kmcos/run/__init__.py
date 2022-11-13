@@ -1712,11 +1712,9 @@ class KMC_Model(Process):
                 if len(coords[species_index]) == 0: #thismeans there is nothing to do.
                     pass
                 else: #else we need to remove the z coordinate for all of the coordinates.
-                    print("line 1714", np.shape(coords[species_index]))
                     particular_species_coords = np.array(coords[species_index])
                     particular_species_coords_2D = particular_species_coords[:,0:2] #all rows, indices 0 and 1. The syntax 0:2 excludes the second index.
                     coords[species_index] = particular_species_coords_2D
-                    print("line 1718", np.shape(coords[species_index]))
         #First put some defaults in if not already defined.
         if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
         if 'y_label' not in plot_settings: plot_settings['y_label'] = ''
@@ -1743,7 +1741,11 @@ class KMC_Model(Process):
         
         species = self.species_tags
         for (i, key) in zip(list(range(len(coords))), list(species.keys())): #goes through each species and plots their coordinates
-            x, y = list(zip(*coords[i]))
+            if len(coords[i]) == 0: #in this case, there are no species of the type present, and we make a blank list.
+                x, y = [],[] #TODO: make an optional argument to skip the species entirely and leave it out of the legend etc.
+                            #Probably just need to skip the entire block of code below, maybe with a "continue" statement.
+            else:#normal case.
+                x, y = list(zip(*coords[i]))
             if plot_settings['legend'] == True:
                     if plot_settings['speciesName'] == False:
                         ax0.scatter(x,y,label="Species "+str(i+1))
