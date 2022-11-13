@@ -125,6 +125,7 @@ in the `positive` directions, for example.
 
 However, note that if there are two transition state possibilities 
 (one above one site, one above the other site)
+due to a heterolytic cleavage transition state,
 then there are supposed to be double processes and it is not double 
 counting, just two paths that achieve the same reactants and products.
 Most rate constants in the literature for dissociative adsorption
