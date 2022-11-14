@@ -11,10 +11,10 @@ Tutorials
 .. TODO:: describe modelling more complicated structures
           and e.g. boundary conditions
 
-.. include:: model_editor.rst
-
 .. include:: run_model_api.rst
+
+.. include:: development.rst
 
 .. include:: run_model_gui.rst
 
-.. include:: development.rst
+.. include:: model_editor.rst

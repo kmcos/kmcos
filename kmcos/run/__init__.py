@@ -1453,12 +1453,12 @@ class KMC_Model(Process):
         returns as a csv with a XX, YY format
             EX: Cartesian
             Species     Coordinates
-            CO          [0,2]
-            CO          [0,4]
-            CO          [0,5]
-            empty       [0,0]
-            empty       [0,1]
-            empty       [0,3]
+            CO          [0,2,0]
+            CO          [0,4,0]
+            CO          [0,5,0]
+            empty       [0,0,0]
+            empty       [0,1,0]
+            empty       [0,3,0]
 
             EX: Meshgrid
             [[0, 1, 1, 0, 1, 0],
@@ -1583,8 +1583,9 @@ class KMC_Model(Process):
 
         return final_coords
 
-    def get_local_configurations(self, meshgrid, radius = 2, filename ="", directory = "./exported_configurations", export_files=True, unique_only=True):
-        """Gets the coordinates as a meshgrid and returns either the list of all possible smaller meshgrids (i.e. the local configurations), or the unique local configurations
+    def get_local_configurations(self, configurationArray, radius = 2, filename ="", directory = "./exported_configurations", export_files=True, unique_only=True, delimiter="|"):
+        """Takes in a meshgrid or _config object (from _get_configuration) and returns either the list of either all possible smaller meshgrids (i.e. the local configurations), or only the unique local configurations
+        Currently, get_local_configurations is only compatible with 2D configurations.
         
         'meshgrid' is a matrix with all the species
             EX: Meshgrid
@@ -1599,7 +1600,7 @@ class KMC_Model(Process):
         'radius' is the distance from the central species to the adjacent species
             EX: Radius = 1
             [[0, 1, 1,],
-            [1, 1, 1,],   --> This is also one of the local configurations of the meshgrid
+            [1, 1, 1,],   --> This is one of the local configurations of the meshgrid
             [0, 1, 1,]]
 
         'filename' sets the filename for the array of local configurations as a .npy file
@@ -1624,6 +1625,14 @@ class KMC_Model(Process):
             [1, 0, 0,],   
             [0, 1, 1,]]]
         
+        Note that if a config object is passed in, rather than a meshgrid, then each element is a list rather than an integer. 
+        For example, the first row might be [[  [0,1,0], [1,1,0] .... ],  
+        However, the function will still work. So one can use  model._get_configuration() and pass the output of that into get_local_configurations.
+        A config object from model._get_configuration() should not be confused with a global configuration from model.get_global_configuration(),
+        they are two representations of the global configuration but are very different in format.
+        
+        #TODO: We should  have an optional argument for the
+        configurationArrayFormat which can be "meshgrid" versus "_config" since _config is really an internal format. Then we can use the flag and the "try and except" will be a last resort in an else statement.
         """
         #A more efficient way to create the local configurations can be viewed here: https://matthewmcgonagle.github.io/blog/2017/10/13/SelectingSubsquaresWithNumpyIndexing
 
@@ -1639,7 +1648,7 @@ class KMC_Model(Process):
         # subsquares = im[subsquareRow, subsquareCol]
         # subsquareList = subsquares.reshape(-1, sidel, sidel)
 
-        initialMeshgrid = meshgrid
+        initialMeshgrid = np.squeeze(configurationArray) #The squeeze is because if we receive a _config format, we need to remove the deepest level of nesting.
         numRows = len(initialMeshgrid)
         numColumns = len(initialMeshgrid[0])
         #Now getting the individual tiles if not near edge
@@ -1653,25 +1662,48 @@ class KMC_Model(Process):
                     keepTile = False
                 if keepTile == True:
                     tileList.append(initialMeshgrid[rowIndex-radius:rowIndex+radius+1,columnIndex-radius:columnIndex+radius+1])
-
+        
         if unique_only == True:
             tileList = np.unique(tileList, axis=0)
-            if export_files == True:
-                check_directory(directory)
-                if filename == "":
-                    filename = "local_configurations" + "_of_" + str(base.get_kmc_step()) + "_steps"
+            
+        if export_files == True:
+            check_directory(directory)
+            if filename == "":
+                filename = "local_configurations" + "_after_" + str(base.get_kmc_step()) + "_steps"
+            else:
+                if filename[-4:] == ".npy":
+                    filename.replace(".npy", "") + "_after_" + str(base.get_kmc_step()) + "_steps"
                 else:
-                    if filename[-4:] == ".npy":
-                        filename.replace(".npy", "") + "_of_" + str(base.get_kmc_step()) + "_steps"
-                    else:
-                        filename = filename + "_of_" + str(base.get_kmc_step()) + "_steps"
-                filename = directory + "/" + filename
-
+                    filename = filename + "_after_" + str(base.get_kmc_step()) + "_steps"
+            filename = directory + "/" + filename
             with open(filename + ".txt", 'w') as file:
-                file.write('# Array shape: {0}\n'.format(np.array(tileList).shape))
-                for local_configuration in tileList: #loops between all local configurations in subsquareList
-                    np.savetxt(file, local_configuration, fmt='%-7.2f') #saves as txt file
-                    file.write('# New local_configuration\n')
+                if unique_only == True:
+                    file.write('#  unique_only was set to true, these are the unique local configurations present, with radius set to ' + str(radius) + ' unit cells.' + '\n')
+                elif unique_only == False:
+                    file.write('#  unique_only was set to False, these are all of the local configurations present, with radius set to ' + str(radius) + ' unit cells.' + '\n')
+                for local_configuration_index, local_configuration in enumerate(tileList): #loops between all local configurations in subsquareList
+                    file.write('# Local_configuration, index ' + str(local_configuration_index) + '\n')
+                    try: #The try is because a meshgrid works fine, but when a config object is passed in, then an extra step needs to be taken.
+                         #For now, we just detect the need for an extra step using a "try", but it is not a good system.
+                        np.savetxt(file, local_configuration, fmt='%-7.2f', delimiter=delimiter) #saves as txt file
+                    except: 
+                        def reshapeLocalConfigForExport(localConfigArray):
+                            #This is a helpfer function for the case that the local configurations
+                            #are obtained from a _get_configuration() call rather than a meshgrid, which returns a config object that is representation of the global configuration.
+                            #The local configurations are "correctly" obtained "directly" from the config object.
+                            #but the array format of each local configuration retrieved is overly nested.
+                            #There is an extra nesting at the deepest level, so we will convert those to strings to enable the export.
+                            reshapedArray = np.empty(np.shape(localConfigArray)[:-1], dtype='object') ##this takes the shape and drops the last axis, so that (5,5,2) becomes (5,5) for example. We also make our new array type as object, because if we initialize as string type with empty, then the strings are limited to one character.
+                            numRows = np.shape(localConfigArray)[0]
+                            numColumns = np.shape(localConfigArray)[1]
+                            for rowIndex in range(numRows): #This is to go across each row. We use indices because we will need to write.
+                                for columnIndex in range(numColumns): #This is to go across each row's data. We use indices because we will need to write.
+                                    newString = str(localConfigArray[rowIndex][columnIndex])[1:-1] #Here is where we remove the extra nesting. The [1:-1] is to remove brackets from the string.
+                                    reshapedArray[rowIndex][columnIndex] = newString 
+                            return reshapedArray
+                        local_configuration = reshapeLocalConfigForExport(local_configuration)
+                        np.savetxt(file, local_configuration, fmt='%s', delimiter = delimiter) #saves as txt file
+                    
                     np.save(file=filename + ".npy", arr=tileList) #saves as npy file
 
         return tileList
@@ -1721,7 +1753,7 @@ class KMC_Model(Process):
         if 'legendLabels' not in plot_settings: plot_settings['legendLabels'] = ''
         if "legendExport" not in plot_settings: plot_settings['legendExport'] = True
         if "legend" not in plot_settings: plot_settings['legend'] = True
-        if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration'
+        if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration' + "_after_" + str(base.get_kmc_step()) + "_steps"
         if 'dpi' not in plot_settings: plot_settings['dpi'] = 220
         if 'speciesName' not in plot_settings: plot_settings['speciesName'] = False
         if 'num_x_ticks' not in plot_settings: plot_settings['num_x_ticks'] = 7
