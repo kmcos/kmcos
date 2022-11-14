@@ -1721,7 +1721,7 @@ class KMC_Model(Process):
         if 'legendLabels' not in plot_settings: plot_settings['legendLabels'] = ''
         if "legendExport" not in plot_settings: plot_settings['legendExport'] = True
         if "legend" not in plot_settings: plot_settings['legend'] = True
-        if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration'
+        if 'figure_name' not in plot_settings: plot_settings['figure_name'] = 'plottedConfiguration' + "_of_" + str(base.get_kmc_step()) + "_steps"
         if 'dpi' not in plot_settings: plot_settings['dpi'] = 220
         if 'speciesName' not in plot_settings: plot_settings['speciesName'] = False
         if 'num_x_ticks' not in plot_settings: plot_settings['num_x_ticks'] = 7
