@@ -13,6 +13,7 @@ OPTION 1 (python3-venv)::
     sudo apt-get update
     sudo apt-get install python3
     sudo apt-get install python3-venv
+    python3 -m pip install --upgrade pip
     python3 -m venv ~/VENV/kmcos
     source ~/VENV/kmcos/bin/activate
 
@@ -24,6 +25,7 @@ OPTION 2 (virtualenv)::
     sudo apt-get update
     sudo apt-get install python3
     sudo apt-get install virtualenv
+    python3 -m pip install --upgrade pip
     virtualenv -p /usr/bin/python3 ~/VENV/kmcos  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
     source ~/VENV/kmcos/bin/activate
 
@@ -48,6 +50,7 @@ The easiest way to install kmcos is to use one of the automatic installers::
     sudo apt-get install git
     git clone https://github.com/kmcos/kmcos-installers
     cd kmcos-installers
+    python3 -m pip install --upgrade pip
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv.  #For the develop branch, use install-kmcos-linux-venv-develop.bash or install-kmcos-linux-user-develop.bash
     
     
@@ -163,7 +166,9 @@ Guest additions was not working on the mac. So needed to do below in addition to
 
 That worked, then rebooted Ubuntu.
 
-3) bash autorun.sh
+3) Navigated to the virtual disc of the guest additions CD (virtual compact disc)::
+
+        bash autorun.sh
 
 Then was able to use the virtual machine as well as install kmcos normally.
 

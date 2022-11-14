@@ -828,7 +828,7 @@ class KMC_Model(Process):
             time.sleep(delay)
             self.do_steps(steps)
 
-    def show_ascii_picture(self,site,species,hexagonal):
+    def show_ascii_picture(self,site,species,hexagonal=False):
         config=self._get_configuration()
         size=self.size[0]
         for i in reversed(range(size)):
@@ -1526,8 +1526,8 @@ class KMC_Model(Process):
         'matrix_format' has two types of options: meshgrid and cartesian. Cartesian return as a csv where each row 
         represents the coordinates for a single species, and the meshgrid format returns as a csv with a XX, YY format
             EX: Cartesian
-            [[0	 10] [0	 11] [0	 18] [1	 6]	 [2	 3]	 [2	 11] [2	 13]] -> This is CO
-            [[0	 0]	 [0	 1]	 [0	 2]	 [0	 3]	 [0	 4]	 [0	 5]	 [0	 6]]  -> This is empty
+            Ex: [[0 10 0] [0 11 0] [0 18 0] [1 6 0] [2 3 0] [2 11 0] [2 13 0]] -> This is CO positions in [x y z] 
+                [[0 0 0]  [0 1 0]  [0 2 0]  [0 3 0] [0 4 0] [0 5 0]  [0 6 0]]  -> This is empty site positions in [x y z]
 
             EX: Meshgrid
             [[0, 1, 1, 0, 1, 0],
@@ -1536,7 +1536,7 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
-                Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if there are
                 enough spaces in the model.
                 Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
@@ -1545,14 +1545,24 @@ class KMC_Model(Process):
         species = self.species_tags   
 
         if matrix_format == "cartesian":
+            site_positions = self.lattice.site_positions
             species_coords = []
             for k in range(len(species)): #The loop appends coordinates for each respective species in the order they appear in 'species' to species_coords
-                species_coords.append([])
+                species_coords.append([]) #we first append a blank in order to make index 0 have nothing, so we can use indices like 1,2,3.
                 for i in range(len(config)): #Loop across the x values
                     for j in range(len(config[0])): #Loop across the y values
-                        if (config[i][j][0][0] == k):
-                            species_coords[k].append([i,j])
+                        for s in range(len(config[0][0][0])): #loop across site index (number of sites). Note that we went directly from one [0] to two [0][0] because there is an "extra" layer of nesting in the config object.
+                            if (config[i][j][0][s] == k): #check that the species matches.
+                                #The i,j,s are indices. We need to convert these indices into relative coordinates. (where 1 is a unit cell length)
+                                #First orient to relative location by unit cell relative coordinate with z as zero.
+                                unit_cell_relative_coordinates = [i,j,0]
+                                #Then get the site_coordinate relative to that position.
+                                within_unit_cell_site_coordinates = site_positions[s] #relative coordinates for within the unit cell.
+                                #by adding the unit cell position, and the within unit cell position, we should have the full x,y,z in relative coordinates.
+                                species_relative_coordinates = unit_cell_relative_coordinates + within_unit_cell_site_coordinates
+                                species_coords[k].append(list(species_relative_coordinates))
             final_coords = species_coords
+
 
         elif matrix_format == "meshgrid":
             matrix_array = config * 1.0
@@ -1667,12 +1677,12 @@ class KMC_Model(Process):
         return tileList
 
 
-    def create_configuration_plot(self, directory = "./exported_configurations", plot_settings={}, showFigure=False, exportFigure= True):
+    def create_configuration_plot(self, directory = "./exported_configurations", plot_settings={}, showFigure=False, exportFigure= True, dimensionality=2):
         """Returns the spatial view of the kmc_model and make a graph named 'plottedConfiguration.png,' unless specified by 'figure_name' in plot_settings
 
         'coords' is expected to be the results from get_species_coordinates(config, species, meshgrid = 'cartesian')
-            Ex: [[0 10] [0 11] [0 18] [1 6] [2 3] [2 11] [2 13]] -> This is CO
-                [[0 0]  [0 1]  [0 2]  [0 3] [0 4] [0 5]  [0 6]]  -> This is empty
+            Ex: [[0 10 0] [0 11 0] [0 18 0] [1 6 0] [2 3 0] [2 11 0] [2 13 0]] -> This is CO positions in [x y z] 
+                [[0 0 0]  [0 1 0]  [0 2 0]  [0 3 0] [0 4 0] [0 5 0]  [0 6 0]]  -> This is empty site positions in [x y z]
 
         'directory' sets the directory name where the plot is saved
 
@@ -1687,11 +1697,24 @@ class KMC_Model(Process):
                 "dpi": 220,
                 "speciesName": False
 
+        'dimensionality' is an integer (either 2 or 3 dimensional) for the number of cartesian dimensions.
+        
         """
         import matplotlib.pyplot as plt
 
         check_directory(directory)
         coords = self.get_species_coordinates(export_csv = False, matrix_format = 'cartesian')
+        import copy
+        coords = copy.deepcopy(coords) #This deepcopy is necessary because we are going to overwrite elements for the 2D case.
+        if dimensionality == 2: #need to remove the z dimension.
+            #the shape of coords is that it's a list of lists: the first list represents all the coords of the first species, the second list represents the coords of the second species, etc., and if any list is empty then it represents no presence of that species.  So for each species, we should first check if it's empty and skip if it's empty.
+            for species_index in range(len(coords)):
+                if len(coords[species_index]) == 0: #thismeans there is nothing to do.
+                    pass
+                else: #else we need to remove the z coordinate for all of the coordinates.
+                    particular_species_coords = np.array(coords[species_index])
+                    particular_species_coords_2D = particular_species_coords[:,0:2] #all rows, indices 0 and 1. The syntax 0:2 excludes the second index.
+                    coords[species_index] = particular_species_coords_2D
         #First put some defaults in if not already defined.
         if 'x_label' not in plot_settings: plot_settings['x_label'] = ''
         if 'y_label' not in plot_settings: plot_settings['y_label'] = ''
@@ -1718,7 +1741,11 @@ class KMC_Model(Process):
         
         species = self.species_tags
         for (i, key) in zip(list(range(len(coords))), list(species.keys())): #goes through each species and plots their coordinates
-            x, y = list(zip(*coords[i]))
+            if len(coords[i]) == 0: #in this case, there are no species of the type present, and we make a blank list.
+                x, y = [],[] #TODO: make an optional argument to skip the species entirely and leave it out of the legend etc.
+                            #Probably just need to skip the entire block of code below, maybe with a "continue" statement.
+            else:#normal case.
+                x, y = list(zip(*coords[i]))
             if plot_settings['legend'] == True:
                     if plot_settings['speciesName'] == False:
                         ax0.scatter(x,y,label="Species "+str(i+1))
@@ -1826,13 +1853,13 @@ class KMC_Model(Process):
 
         Examples ::
 
-            model._put([0,0,0,model.lattice.lattice_bridge], model.proclist.co])
-            # puts a CO molecule at the `bridge` site of the lower left unit cell
-
-            model._put([1,0,0,model.lattice.lattice_bridge], model.proclist.co ])
-            # puts a CO molecule at the `bridge` site one to the right
-
-            # ... many more
+            # below puts a CO molecule at the `bridge` site of the lower left unit cell
+            model._put([0,0,0,model.lattice.bridge], model.proclist.co)
+            # below does the same:
+            model._put([0,0,0,"bridge"], "CO")
+            
+            model._put([1,0,0,model.lattice.bridge], model.proclist.co )
+            # below puts a CO molecule at the `bridge` site one to the right
 
             model._adjust_database() # Important !
 
@@ -1859,10 +1886,18 @@ class KMC_Model(Process):
                     }
 
         """
-        x, y, z, n = site
+        x, y, z, n_original = site
+        if type(n_original) == type("string"): #convert any string-named sites into site objects.
+            n = eval("self.lattice." + n_original.lower())
+        else:
+            n= n_original
+        if type(new_species) == type("string"): #convert any string-named species into species objects.
+            new_species = eval("self.proclist." + new_species.lower())
         if reduce:
             x, y, z = (x, y, z) % self.lattice.system_size
             site = np.array([x, y, z, n])
+        else: #normal case, using the revised n (wihch may have been a string)
+            site = [x, y, z, n]
 
         # Error checking
         if not x in range(self.lattice.system_size[0]):
@@ -1888,14 +1923,20 @@ class KMC_Model(Process):
         from 0 to the number of unit cells in the respective direction.
         And `n` specifies the site within the unit cell.
 
-        The database of available processes will be updated automatically.
+        The database of available processes will be updated automatically. 
+        For doing many put and a single update, see the _put() function.
 
         Examples ::
 
-            model.put([0,0,0,model.lattice.site], model.proclist.co ])
-            # puts a CO molecule at the `bridge` site
-            # of the lower left unit cell
+            # below puts a CO molecule at the `bridge` site of the lower left unit cell
+            model.put([0,0,0,model.lattice.bridge], model.proclist.co)
+            # below does the same:
+            model.put([0,0,0,"bridge"], "CO")
+            
+            model.put([1,0,0,model.lattice.bridge], model.proclist.co )
+            # below puts a CO molecule at the `bridge` site one to the right
 
+            
         :param site: Site where to put the new species, i.e. [x, y, z, bridge]
         :type site: list or np.array
         :param new_species: Name of new species.
@@ -2234,6 +2275,8 @@ class KMC_Model(Process):
         :type filename: str
 
         """
+        if ".npy" in filename:
+            filename = filename.strip(".npy")
         check_directory(directory)
         np.save(directory + "/" + filename + "_" + str(base.get_kmc_step()) + "_steps" + ".npy", self._get_configuration())
 
@@ -2248,6 +2291,8 @@ class KMC_Model(Process):
         check_directory(directory)
         x, y, z = self.lattice.system_size
         spuck = self.lattice.spuck
+        if ".npy" in filename:
+            filename = filename.strip(".npy")
         config = np.load(directory + '/%s.npy' % filename)
 
         self._set_configuration(config)
