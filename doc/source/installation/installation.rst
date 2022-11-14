@@ -13,6 +13,7 @@ OPTION 1 (python3-venv)::
     sudo apt-get update
     sudo apt-get install python3
     sudo apt-get install python3-venv
+    python3 -m pip install --upgrade pip
     python3 -m venv ~/VENV/kmcos
     source ~/VENV/kmcos/bin/activate
 
@@ -24,6 +25,7 @@ OPTION 2 (virtualenv)::
     sudo apt-get update
     sudo apt-get install python3
     sudo apt-get install virtualenv
+    python3 -m pip install --upgrade pip
     virtualenv -p /usr/bin/python3 ~/VENV/kmcos  #If this fails, try typing "which python3" and replace the path "/usr/bin/python3" with what your system provides.
     source ~/VENV/kmcos/bin/activate
 
@@ -48,6 +50,7 @@ The easiest way to install kmcos is to use one of the automatic installers::
     sudo apt-get install git
     git clone https://github.com/kmcos/kmcos-installers
     cd kmcos-installers
+    python3 -m pip install --upgrade pip
     bash install-kmcos-linux-venv.bash #use 'bash install-kmcos-linux-user.bash' if you are not using a venv.  #For the develop branch, use install-kmcos-linux-venv-develop.bash or install-kmcos-linux-user-develop.bash
     
     
@@ -146,6 +149,31 @@ Installation on Mac OS X 10.10 or above (Deprecated Instructions)
 
 There is more than one way to get required dependencies. MacPorts was previously tested and worked.
 
+
+As of 2022, the MacPorts way does not seem to be working and the virtual machine way is recommended.
+
+The Virtual Machine Way:
+
+Needed to use Ubuntu 20.04 (Using Ubuntu 22 did not work).
+
+Guest additions was not working on the mac. So needed to do below in addition to the instructions in the intro2kmcos doc.
+
+1) Needed to find Virtual Box with finder, right click on the Virtual Box application, show files / show contents, needed to find the VirtualBox.iso file, copy it out to a regular MacOS directory.
+2) Perl was not working, so needed to do the following::
+
+        sudo apt-get update
+        sudo apt-get install build-essential gcc make perl dkms
+
+That worked, then rebooted Ubuntu.
+
+3) Navigated to the virtual disc of the guest additions CD (virtual compact disc)::
+
+        bash autorun.sh
+
+Then was able to use the virtual machine as well as install kmcos normally.
+
+The MacPorts Way:
+
 #. Get MacPorts
     Search for MacPorts online, you'll need to install Xcode in the process
 
@@ -178,8 +206,8 @@ Installation on windows
 
 Direct installation on windows is currently not supported, but it is possible to use either "WSL" or to use Ubuntu on a virtualbox. It is recommended to download virtualbox, to install Ubuntu, and then follow the Ubuntu installation instructions in the intro2kmcos pdf file here: https://github.com/kmcos/intro2kmcos. You may need to adjust the resolution to work effectively.
 
-If you prefer to use WSL rather than Virtualbox, you will need to install WSL Ubuntu. Press the "start menu" button.  Type "Windows Powershell" but don't press enter:  Use run as administrator.::
-    Then use:
+If you prefer to use WSL rather than Virtualbox, you will need to install WSL Ubuntu. Press the "start menu" button.  Type "Windows Powershell" but don't press enter:  Use run as administrator. Then enter::
+    
     wsl --install -d Ubuntu
 
 Now, you can close the Powershell window. Within ubuntu, use::
@@ -193,12 +221,12 @@ From the terminal, type::
 
 With windows 11 and higher, you may see a GUI pop up. If you do not, then you probably will not be able to use a GUI with WSL, and the kmcos export_movie feature also will not work.
 
-For future reference: "cd ~" will take you to the home (default) place for working in Ubuntu, while "cd /" will take you to the root directory. 
+For future reference: "cd ~" will take you to the home (default) place for working in WSL Ubuntu, while "cd /" will take you to the root directory of WSL Ubuntu. 
 
 For sharing files, "cd /mnt/c" will let you access files on to go to the windows C drive.
 By going to mnt/c, you can move files back and forth between Ubuntu directories and the Windows directories.
 
-Now that you have WSL working with Ubuntu, follow the regular instructions from the top of this Installation page.
+Now that you have WSL working with Ubuntu, follow the regular instructions from the top of this Installation page. Going forward, you can start WSL Ubuntu by finding Ubuntu in the windows start menu.
 
 Installing JANAF Thermochemical Tables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

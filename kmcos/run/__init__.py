@@ -828,7 +828,7 @@ class KMC_Model(Process):
             time.sleep(delay)
             self.do_steps(steps)
 
-    def show_ascii_picture(self,site,species,hexagonal):
+    def show_ascii_picture(self,site,species,hexagonal=False):
         config=self._get_configuration()
         size=self.size[0]
         for i in reversed(range(size)):
@@ -1536,7 +1536,7 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
-                Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
+                Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if there are
                 enough spaces in the model.
                 Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
@@ -2275,6 +2275,8 @@ class KMC_Model(Process):
         :type filename: str
 
         """
+        if ".npy" in filename:
+            filename = filename.strip(".npy")
         check_directory(directory)
         np.save(directory + "/" + filename + "_" + str(base.get_kmc_step()) + "_steps" + ".npy", self._get_configuration())
 
@@ -2289,6 +2291,8 @@ class KMC_Model(Process):
         check_directory(directory)
         x, y, z = self.lattice.system_size
         spuck = self.lattice.spuck
+        if ".npy" in filename:
+            filename = filename.strip(".npy")
         config = np.load(directory + '/%s.npy' % filename)
 
         self._set_configuration(config)

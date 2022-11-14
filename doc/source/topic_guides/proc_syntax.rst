@@ -110,21 +110,30 @@ than one equivalent direction for a process and the coordinates
 within the process are also equivalent. Think of dissociative
 oxygen adsorption. Novices typically collect all possible
 directions (e.g. right, up, left, down) and then define this
-process for each direction. Later they realize that in fact
-they `double counted` the process because e.g. adsorption_up is
+process for each direction. This may be incorrect,
+depending on how the rate constant value was defined.
+If the rate constant represents a net rate for
+adsorption / desorption from a pair of sites,
+(from an average or from a single transition state that bridges two sites),
+then the right,up,left, down procedure will have `double counted` the process because e.g. adsorption_up is
 the same processes as adsorption_down, just executed from one
-site above or below. Then they compensate by dividing each
-adsorption rate constant by 2. Later realizing that they
-have to do the same for desorption. Ok, I have done this
-and believe me it is really bad when you are looking for an
-error if at the same you already divide the unit cell size
-by 2 for some reason.
+site above or below. One can compensate by dividing each
+adsorption rate constant by 2 and also each desorption rate constant by 2. 
+One can also avoid double counting by only defining geometrically equivalent
+sites one time per unit cell: a simple trick is to only consider processes
+in the `positive` directions, for example.
 
-The smart way out is to save the pain and to avoid double
-counting completely from the beginning and just think
-how many process are geometrically inequivalent in the
-unit cell. A simple trick is to only consider processes
-in the `positive` directions.
+However, note that if there are two transition state possibilities 
+(one above one site, one above the other site)
+due to a heterolytic cleavage transition state,
+then there are supposed to be double processes and it is not double 
+counting, just two paths that achieve the same reactants and products.
+Most rate constants in the literature for dissociative adsorption
+are defined as an average for the two sites,
+or involve a single homolytic transition state,
+and thus most cases of dissociate adsorption should have a single process
+between up and down as well as between left and right
+(yielding two processes, not four, for a simple cubic system).
 
 
 Taking It Home
