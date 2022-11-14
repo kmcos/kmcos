@@ -1886,14 +1886,18 @@ class KMC_Model(Process):
                     }
 
         """
-        x, y, z, n = site
-        if type(n) == type("string"): #convert any string-named sites into site objects.
-            n = eval("model.lattice." + n)
+        x, y, z, n_original = site
+        if type(n_original) == type("string"): #convert any string-named sites into site objects.
+            n = eval("self.lattice." + n_original.lower())
+        else:
+            n= n_original
         if type(new_species) == type("string"): #convert any string-named species into species objects.
-            new_species = eval("model.proclist." + new_species.lower())
+            new_species = eval("self.proclist." + new_species.lower())
         if reduce:
             x, y, z = (x, y, z) % self.lattice.system_size
             site = np.array([x, y, z, n])
+        else: #normal case, using the revised n (wihch may have been a string)
+            site = [x, y, z, n]
 
         # Error checking
         if not x in range(self.lattice.system_size[0]):
