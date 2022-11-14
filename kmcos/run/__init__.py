@@ -2234,6 +2234,8 @@ class KMC_Model(Process):
         :type filename: str
 
         """
+        if ".npy" in filename:
+            filename = filename.strip(".npy")
         check_directory(directory)
         np.save(directory + "/" + filename + "_" + str(base.get_kmc_step()) + "_steps" + ".npy", self._get_configuration())
 
@@ -2248,6 +2250,8 @@ class KMC_Model(Process):
         check_directory(directory)
         x, y, z = self.lattice.system_size
         spuck = self.lattice.spuck
+        if ".npy" in filename:
+            filename = filename.strip(".npy")
         config = np.load(directory + '/%s.npy' % filename)
 
         self._set_configuration(config)

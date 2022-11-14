@@ -4,42 +4,33 @@ Running the Model From Runfiles
 Running the Model--the API way
 ==============================
 
-In order to analyze a model in quantitatively it is
-more practical to write small client scripts that directly
-talk to the runtime API. As time passes and more of these
-scripts are written over and over some standard functionality
-will likely be integrated into the runtime API. For starters
-a simple script could look as follows ::
+Normally, one uses python runfiles.
+However, it is convenient to initially run commands interactively for learning purposes.
+The simplest thing to do is to start the model
+from within a compiled model directory
+using "python3 kmc_settings.py run"
+
+That will start a python shell, allowing one to skip the below commands ::
 
   #!/usr/bin/env python
-
   from kmcos.run import KMC_Model
-
   model = KMC_Model()
 
-An alternative way that gets you started fast it to run ::
-
-    kmcos shell
-
-and just interact directly with `model`. It is often a good idea to ::
+and just interact directly with `model`. It is often a good idea to use ::
 
     %logstart some_scriptname.py
 
-first in the IPython command to save what you have typed for later use.
+as your first command in the IPython command to save what you have typed for later use.
 
-
-As you can see by default the model prints a disclaimer
-and all rate constants, which can each be turned off
-by instantiating ::
+When using a runfile, the starting banner can be turned off by using::
 
   model = KMC_Model(print_rates=False, banner=False)
 
-The most important method is of course how to run
-the model, which you can do by saying ::
+Now that you have got a model, you try to do some KMC steps ::
 
   model.do_steps(100000)
 
-which would run the model by 100,000 kMC steps.
+which would run 100,000 kMC steps.
 
 Let's say you want to change the temperature and a partial pressure of
 the model you could type ::
@@ -157,38 +148,51 @@ the steps before sampling (`init_steps`) as well as the batch size
 
 .. _manipulate_model_runtime:
 
-Manipulating the Model at Runtime
+Manipulating the Model Species at Runtime
 =================================
 
-It is quite easy to change not only model parameters but
-also the configuration at runtime. For instance if one
-would like to prepare a surface with a certain configuration
-or pattern.
+To change species on the lattice at the start of simulation
+or at any other time in the simulation, one can change
+either the whole configuration, or only species on a specific site.
 
-Given you instantiated a `model` instance a site occupation
-can be changed by calling ::
+To change species on a specific site, one uses the put command.
+There are several syntaxes to use the put command ::
 
   model.put(site=[x,y,z,n], model.proclist.<species>)
+  Where 'n' and <species> are the site type and species, respectively. For example:
+  model.put([0,0,0,model.lattice.ruo2_bridge], model.proclist.co)
+  model.put([0,0,0,"ruo2_bridge"], "model.proclist.co")
+  model.put([0,0,0,2], 1) #The 'n' is has indexing starting from 1 (there is no 0 for n), whereas the <species> indexing starts at 0.
+  
 
-However if changing many sites at once this is quite inefficient,
+If changing many sites at once, the abovev command is quite inefficient,
 since each `put` call, adjusts the book-keeping database. To circumvent
-this you can use the `_put` method, like so ::
+the database update you can use the `_put` method, like so ::
 
   model._put(...)
   model._put(...)
   ...
   model._adjust_database()
 
-though at the end one must not forget to call `_adjust_database()`
+note that after using '_put', one must remember to call `_adjust_database()`
 before executing any next step or the database of available processes
-is inaccurate and the model instance will crash soon.
+will not match the species, the kmc simulation will become incorrect and likely crash after some steps.
 
-You can also get or set the whole configuration of the lattice
-at once using ::
+If one wants to set the whole configuration of the lattice
+once can retreive it, save it, and load it with the following commands ::
 
+  model.dump_config("YourConfigurationName") 
+  model.load_config("YourConfigurationName")
+
+Those commands use the following internal commands as part of how they function :: 
+
+  #saving the configuration uses:
   config = model._get_configuration()
-  # possible change config
+  #loading configuration uses:
   model._set_configuration(config)
+  model._adjust_database()
+  
+
 
 
 Running models in parallel
