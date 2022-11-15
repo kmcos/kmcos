@@ -2060,7 +2060,8 @@ class KMC_Model(Process):
         prng_state = self.proclist.get_seed().tolist() #added Nov 15th 2022, so that get_next_kmc_step can reset the simulation state rather than affect the simulation.
         proc, site = proclist.get_next_kmc_step()
         readableProc = ProcInt(proc)
-        readableSite = SiteInt(site)
+        readableSite = SiteInt(site)  #this line of code basically calls lattice.calculate_nr2lattice. #If you print readableSite here, you will get an integer. But if you print this function's return, something more comes out.
+        #readableSiteDirectly = self.lattice.calculate_nr2lattice(site) #For debugging, I had tried calling lattice.calculate_nr2lattice directly, and the site that was output was the same one.
         self.proclist.put_seed(prng_state) #added Nov 15th 2022, so that get_next_kmc_step can reset the simulation state rather than affect the simulation.
         return readableProc, readableSite
 
