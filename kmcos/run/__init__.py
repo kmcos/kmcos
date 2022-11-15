@@ -1820,7 +1820,7 @@ class KMC_Model(Process):
             plt.close(fig0)
         return fig0, ax0
 
-    def export_picture(self, resolution, scale,  filename="", **kwargs):
+    def export_picture(self, resolution = 150, scale = 20,  filename="", **kwargs):
         """Gets the atoms objects of the kmc_model and returns a atomic view of the configuration and make a file named 'atomic_view.png' unless specified by 'filename' in the function's argument
 
         'filename' sets the filename for the images in the image directory and the video
@@ -1903,14 +1903,14 @@ class KMC_Model(Process):
                        site lattice (Default: False)
         :type reduce: bool
 
-        To see all the available site names, check the site_name in kmc_settings.py.
+        To see all the available site names, use model.settings.site_names, which come from kmc_settings.
             Ex: site_names = ['simple_cubic_hollow']
-            set site name as 'sg.model.lattice.simple_cubic_hollow'
+            set site name as 'model.lattice.simple_cubic_hollow'
             
-            Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
-            set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
+            Ex: site_names = ['ruo2_bridge']
+            set site name as 'model.lattice.ruo2_bridge' 
         
-        To see all the available species names, check the species_tags in kmc_settings.py.
+        To see all the available species names, one can use model.settings.species_tags which comes from kmc_settings.py.
             Ex: species_tags = {
                     "CO":"""""",
                     "O":"""""",
@@ -1977,20 +1977,20 @@ class KMC_Model(Process):
                        lattice (Default: False)
         :type reduce: bool
 
-        To see all the available site names, check the site_name in kmc_settings.py.
+        To see all the available site names, use model.settings.site_names, which come from kmc_settings.
             Ex: site_names = ['simple_cubic_hollow']
-            set site name as 'sg.model.lattice.simple_cubic_hollow'
+            set site name as 'model.lattice.simple_cubic_hollow'
             
-            Ex: site_names = ['ruo2_bridge', 'ruo2_cus', 'ruo2_Burrowed']
-            set site name as 'sg.model.lattice.ruo2_bridge' or 'sg.model.lattice.ruo2_cus' or 'sg.model.lattice.ruo2_Burrowed'
+            Ex: site_names = ['ruo2_bridge']
+            set site name as 'model.lattice.ruo2_bridge' 
         
-        To see all the available species names, check the species_tags in kmc_settings.py.
+        To see all the available species names, one can use model.settings.species_tags which comes from kmc_settings.py.
             Ex: species_tags = {
                     "CO":"""""",
                     "O":"""""",
                     "empty":"""""",
                     }
-
+                    
         """
 
         self._put(site, new_species, reduce=reduce)
@@ -2046,8 +2046,24 @@ class KMC_Model(Process):
             return False
 
     def get_next_kmc_step(self):
+        """
+        Returns the next kmc step's process and which site it would occur on, without taking the step.
+        The output looks like this:
+        (Process model.proclist.o2_adsorption_bridge_right (13), Site (10, 19, 0, 1) [#781])
+        The process name and process nubmer are shown.
+        For the site,the format is the unit cell position in cartesian x,y,z followed by the site type's index (in this example, it is 1). 
+        As noted in the "_put()" function, the site type indexing starts at 1 (not at zero).
+        One can use model.settings.site_names to see the site names, which come from kmc_settings.
+        So a value of (10, 19, 0, 1) would mean unit cell 10,19,0 with site type model.settings.site_names[0] due to the different indexing.
+
+        """
+        prng_state = self.proclist.get_seed().tolist() #added Nov 15th 2022, so that get_next_kmc_step can reset the simulation state rather than affect the simulation.
         proc, site = proclist.get_next_kmc_step()
-        return ProcInt(proc), SiteInt(site)
+        readableProc = ProcInt(proc)
+        readableSite = SiteInt(site)  #this line of code basically calls lattice.calculate_nr2lattice. #If you print readableSite here, you will get an integer. But if you print this function's return, something more comes out.
+        #readableSiteDirectly = self.lattice.calculate_nr2lattice(site) #For debugging, I had tried calling lattice.calculate_nr2lattice directly, and the site that was output was the same one.
+        self.proclist.put_seed(prng_state) #added Nov 15th 2022, so that get_next_kmc_step can reset the simulation state rather than affect the simulation.
+        return readableProc, readableSite
 
     def get_avail(self, arg):
         """Return available (enabled) processes or sites. If the argument is a sequence it is interpreted as a site (x, y, z, n).
