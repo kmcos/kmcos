@@ -39,6 +39,10 @@ from kmcos.types import cmp_coords
 from kmcos.utils import evaluate_template
 import collections
 
+#the clear_model function is normally not called directly from here. It is normally called by the Project class of types.py,
+#which gets accessed by: 
+#kmc_model = kmcos.create_kmc_model(model_name)
+#kmc_model.clear_model()
 def clear_model(model_name, backend="local_smart"):
     #this deletes an existing model so that a directory is ready for exporting a new model.
     #the model name should be a string.

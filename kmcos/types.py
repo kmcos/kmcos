@@ -97,7 +97,7 @@ class Project(object):
         self.output_list = OutputList()
         self.filename = self.model_name + ".xml"
         self.backend = "local_smart" #this is just the default.
-        self.compile_options = ""
+        self.compile_options = "" #typical syntax to use this is in a __build.py file like kmc_model.compile_options = '-d 1' #This string later gets used in kmcos __init__, typically by kmcos.compile(kmc_model).  
         self.error_list = []
 
         # Quick'n'dirty define access functions
