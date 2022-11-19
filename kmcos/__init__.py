@@ -480,4 +480,4 @@ def xml(argumentsString):
     import kmcos.cli as cli
     cli.main('xml'+' ' + argumentsString)    
 
-from kmcos.io import clear_model
+#from kmcos.io import clear_model #this line was commented out Nov 19th 2022, it should not be here and may have been here for testing.
