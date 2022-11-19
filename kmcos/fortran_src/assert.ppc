@@ -1,3 +1,12 @@
+!On Nov 19th 2022, the DEBUG was not working A. Savara added ", *" 
+!before the strings of the ASSERT calls.
+!This has to do with fortran format detection
+!and was performed without really understanding
+!based on following the below link.
+!the error printed was different, it was 
+! at (1) has not been assigned a format label,
+! but the ",*" got around that.
+!https://stackoverflow.com/questions/39498252/error-missing-leading-left-parenthesis-in-format-string-at-1
 #ifdef DEBUG
 #define ASSERT(a, r) if(.not.(a))call assertion_fail(#a ,r)
 #else

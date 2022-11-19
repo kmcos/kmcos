@@ -420,8 +420,8 @@ subroutine update_eq_proc(proc)
     logical :: forward_proc
 
     ! Make sure proc_nr is in the right range
-    ASSERT(proc.gt.0,"update_eq_proc: proc has to be positive")
-    ASSERT(proc.le.nr_of_proc,"update_eq_proc: proc has to be less or equal nr_of_proc.")
+    ASSERT(proc.gt.0, *, "update_eq_proc: proc has to be positive")
+    ASSERT(proc.le.nr_of_proc, *, "update_eq_proc: proc has to be less or equal nr_of_proc.")
 
     !get index of process pair
     pair_index = abs(proc_pair_indices(proc))
@@ -500,7 +500,7 @@ subroutine update_eq_proc(proc)
         endif
 
         !Do a check on procstat_eq
-        ASSERT((procstat_eq(proc)+procstat_eq(r_proc)).le.execution_steps,"update_eq_proc: Execution steps exceeded.")
+        ASSERT((procstat_eq(proc)+procstat_eq(r_proc)).le.execution_steps, *, "update_eq_proc: Execution steps exceeded.")
 
         !Determine if pair is equilibrated.
         if ((procstat_eq(proc)+procstat_eq(r_proc)).eq.execution_steps .and.  abs(procstat_eq(proc)-procstat_eq(r_proc)).lt.(threshold_parameter*execution_steps)) then
@@ -574,8 +574,8 @@ subroutine check_proc_eq(proc, is_eq)
     logical, intent(out) :: is_eq
 
     ! Make sure proc_nr is in the right range
-    ASSERT(proc.gt.0,"add_proc: proc has to be positive")
-    ASSERT(proc.le.nr_of_proc,"add_proc: proc has to be less or equal nr_of_proc.")
+    ASSERT(proc.gt.0, *, "add_proc: proc has to be positive")
+    ASSERT(proc.le.nr_of_proc, *, "add_proc: proc has to be less or equal nr_of_proc.")
 
     is_eq = pair_is_eq(abs(proc_pair_indices(proc)))
 end subroutine check_proc_eq
@@ -815,14 +815,14 @@ subroutine del_proc(proc, site)
     integer(kind=iint) :: memory_address
 
     ! Make sure proc_nr is in the right range
-    ASSERT(proc.gt.0,"add_proc: proc has to be positive")
-    ASSERT(proc.le.nr_of_proc,"add_proc: proc has to be less or equal nr_of_proc.")
+    ASSERT(proc.gt.0, *, "add_proc: proc has to be positive")
+    ASSERT(proc.le.nr_of_proc, *, "add_proc: proc has to be less or equal nr_of_proc.")
     ! Make sure site is in the right range
-    ASSERT(site.gt.0,"add_proc: site has to be positive")
-    ASSERT(site.le.volume,"base/add_proc: site needs to be in volume")
+    ASSERT(site.gt.0, *, "add_proc: site has to be positive")
+    ASSERT(site.le.volume, *, "base/add_proc: site needs to be in volume")
 
     ! assert consistency
-    ASSERT(avail_sites(proc, site, 2) .ne. 0 , "Error: tried to take ability from site that is not there!")
+    ASSERT(avail_sites(proc, site, 2) .ne. 0 , *, "Error: tried to take ability from site that is not there!")
 
     memory_address = avail_sites(proc, site, 2)
     if(memory_address .lt. nr_of_sites(proc))then
@@ -862,15 +862,15 @@ subroutine add_proc(proc, site)
     integer(kind=iint), intent(in) :: proc, site
 
     ! Make sure proc_nr is in the right range
-    ASSERT(proc.gt.0,"base/add_proc: proc has to be positive")
-    ASSERT(proc.le.nr_of_proc,"base/add_proc: proc has to be less or equal nr_of_proc.")
+    ASSERT(proc.gt.0, *, "base/add_proc: proc has to be positive")
+    ASSERT(proc.le.nr_of_proc, *, "base/add_proc: proc has to be less or equal nr_of_proc.")
 
     ! Make sure site is in the right range
-    ASSERT(site.gt.0,"base/add_proc: site has to be positive")
-    ASSERT(site.le.volume,"base/add_proc: site needs to be in volume")
+    ASSERT(site.gt.0, *, "base/add_proc: site has to be positive")
+    ASSERT(site.le.volume, *, "base/add_proc: site needs to be in volume")
 
     ! assert consistency
-    ASSERT(avail_sites(proc, site, 2) == 0, "base/add_proc Error: tried to add ability that is already there")
+    ASSERT(avail_sites(proc, site, 2) == 0, *, "base/add_proc Error: tried to add ability that is already there")
 
     ! increment nr_of_sites(proc)
     nr_of_sites(proc) = nr_of_sites(proc) + 1
@@ -1174,10 +1174,10 @@ subroutine set_rate_const(proc_nr, rate)
     real(kind=rdouble), intent(in) :: rate
 
     ! Make sure proc_nr is in the right range
-    ASSERT(proc_nr.gt.0,"base/set_rate_const: proc_nr has to be positive")
+    ASSERT(proc_nr.gt.0, *, "base/set_rate_const: proc_nr has to be positive")
     !   * the field within the process, but the meaning differs as explained
     !     under 'switch'
-    ASSERT(proc_nr.le.nr_of_proc,"base/set_rate_const: proc_nr less or equal nr_of_proc.")
+    ASSERT(proc_nr.le.nr_of_proc, *, "base/set_rate_const: proc_nr less or equal nr_of_proc.")
     rates(proc_nr) = rate
 
 end subroutine set_rate_const
@@ -1196,10 +1196,10 @@ subroutine set_original_rate_const(proc_nr, rate)
     real(kind=rdouble), intent(in) :: rate
 
     ! Make sure proc_nr is in the right range
-    ASSERT(proc_nr.gt.0,"base/set_rate_const: proc_nr has to be positive")
+    ASSERT(proc_nr.gt.0, *, "base/set_rate_const: proc_nr has to be positive")
     !   * the field within the process, but the meaning differs as explained
     !     under 'switch'
-    ASSERT(proc_nr.le.nr_of_proc,"base/set_rate_const: proc_nr less or equal nr_of_proc.")
+    ASSERT(proc_nr.le.nr_of_proc, *, "base/set_rate_const: proc_nr less or equal nr_of_proc.")
     original_rates(proc_nr) = rate
 
 end subroutine set_original_rate_const
@@ -1221,7 +1221,7 @@ subroutine update_accum_rate()
         accum_rates(i)=accum_rates(i-1)+nr_of_sites(i)*rates(i)
     enddo
 
-    ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found &
+    ASSERT(accum_rates(nr_of_proc).gt.0., *, "base/update_accum_rate found &
         accum_rates(nr_of_proc)=0, so no process is available at all")
 
 end subroutine update_accum_rate
@@ -1244,7 +1244,7 @@ subroutine update_integ_rate()
         integ_rates(i)=integ_rates(i)+nr_of_sites(i)*rates(i)*kmc_time_step
     enddo
 
-    ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found" // &
+    ASSERT(accum_rates(nr_of_proc).gt.0., *, "base/update_accum_rate found" // &
         "accum_rates(nr_of_proc)=0, so no process is available at all")
 
 end subroutine update_integ_rate
@@ -1267,7 +1267,7 @@ subroutine update_integ_counter()
         integ_counter(i)=integ_counter(i)+nr_of_sites(i)*kmc_time_step
     enddo
 
-    ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found" // &
+    ASSERT(accum_rates(nr_of_proc).gt.0., *, "base/update_accum_rate found" // &
         "accum_rates(nr_of_proc)=0, so no process is available at all")
 
 end subroutine update_integ_counter
@@ -1289,7 +1289,7 @@ subroutine update_integ_rate_sb()
         integ_rates_sb(i)=integ_rates_sb(i)+nr_of_sites(i)*original_rates(i)*kmc_time_step
     enddo
 
-    ASSERT(accum_rates(nr_of_proc).gt.0.,"base/update_accum_rate found" // &
+    ASSERT(accum_rates(nr_of_proc).gt.0., *, "base/update_accum_rate found" // &
         "accum_rates(nr_of_proc)=0, so no process is available at all")
 
 end subroutine update_integ_rate_sb
@@ -1452,7 +1452,7 @@ subroutine allocate_system(input_nr_of_proc, input_volume, input_system_name, in
     if(.not. system_allocated)then
         ! copy arguments to module variables
         nr_of_proc = input_nr_of_proc
-        ASSERT(MOD(nr_of_proc,2).eq.0,"base/allocate_system: nr_of_proc must be even")
+        ASSERT(MOD(nr_of_proc,2).eq.0, *, "base/allocate_system: nr_of_proc must be even")
         volume = input_volume
         system_name = input_system_name
         buffer_parameter = input_buffer_parameter
@@ -1981,10 +1981,10 @@ subroutine determine_procsite(ran_proc, ran_site, proc, site)
     !---------------internal variables---------------
 
 
-    ASSERT(ran_proc.ge.0,"base/determine_procsite: ran_proc has to be positive")
-    ASSERT(ran_proc.le.1,"base/determine_procsite: ran_proc has to be less or equal 1")
-    ASSERT(ran_site.ge.0,"base/determine_procsite: ran_site has to be positive")
-    ASSERT(ran_site.le.1,"base/determine_procsite: ran_site has to be less or equal 1")
+    ASSERT(ran_proc.ge.0, *, "base/determine_procsite: ran_proc has to be positive")
+    ASSERT(ran_proc.le.1, *, "base/determine_procsite: ran_proc has to be less or equal 1")
+    ASSERT(ran_site.ge.0, *, "base/determine_procsite: ran_site has to be positive")
+    ASSERT(ran_site.le.1, *, "base/determine_procsite: ran_site has to be less or equal 1")
 
     ! ran_proc <- [0,1] so we multiply with larger value in accum_rates
     call interval_search_real(accum_rates, ran_proc*accum_rates(nr_of_proc), proc)
@@ -1998,10 +1998,10 @@ subroutine determine_procsite(ran_proc, ran_site, proc, site)
         min(nr_of_sites(proc),int(1+ran_site*(nr_of_sites(proc)))),1)
 
 
-    ASSERT(nr_of_sites(proc).gt.0,"base/determine_procsite: chosen process is invalid &
+    ASSERT(nr_of_sites(proc).gt.0, *, "base/determine_procsite: chosen process is invalid &
         because it has no sites available.")
-    ASSERT(site.gt.0,"kmcos/base/determine_procsite: tries to return invalid site")
-    ASSERT(site.le.volume,"base/determine_procsite: tries to return site larger than volume")
+    ASSERT(site.gt.0, *, "kmcos/base/determine_procsite: tries to return invalid site")
+    ASSERT(site.le.volume, *, "base/determine_procsite: tries to return site larger than volume")
 
 
 end subroutine determine_procsite
@@ -2021,17 +2021,17 @@ subroutine update_clocks(ran_time)
 
 
     ! Make sure ran_time is in the right interval
-    ASSERT(ran_time.ge.0.,"base/update_clocks: ran_time variable has to be positive.")
-    ASSERT(ran_time.le.1.,"base/update_clocks: ran_time variable has to be less than 1.")
+    ASSERT(ran_time.ge.0., *, "base/update_clocks: ran_time variable has to be positive.")
+    ASSERT(ran_time.le.1., *, "base/update_clocks: ran_time variable has to be less than 1.")
 
     kmc_time_step = -log(ran_time)/accum_rates(nr_of_proc)
     ! Make sure the difference is not so small, that it is rounded off
-    ! ASSERT(kmc_time+kmc_time_step>kmc_time,"base/update_clocks: precision of kmc_time is not sufficient")
+    ! ASSERT(kmc_time+kmc_time_step>kmc_time, *, "base/update_clocks: precision of kmc_time is not sufficient")
 
     call CPU_TIME(runtime)
 
     ! Make sure we are not dividing by zero
-    ASSERT(accum_rates(nr_of_proc).gt.0,"base/update_clocks: total rate was found to be zero")
+    ASSERT(accum_rates(nr_of_proc).gt.0, *, "base/update_clocks: total rate was found to be zero")
     kmc_time = kmc_time + kmc_time_step
 
     ! Increment kMC steps
@@ -2063,8 +2063,8 @@ pure function get_species(site)
 
     !! DEBUG
     !print *, site
-    !ASSERT(site.ge.1,"kmcos/base/get_species was asked for a zero or negative site")
-    !ASSERT(site.le.volume,"kmcos/base/get_species was asked for a site outside the lattice")
+    !ASSERT(site.ge.1, *, "kmcos/base/get_species was asked for a zero or negative site")
+    !ASSERT(site.le.volume, *, "kmcos/base/get_species was asked for a site outside the lattice")
 
     get_species = lattice(site)
 
@@ -2086,7 +2086,7 @@ subroutine replace_species(site, old_species, new_species)
     !******
     integer(kind=iint), intent(in) :: site, old_species, new_species
 
-    ASSERT(site.le.volume,"kmcos/base/replace_species was asked for a site outside the lattice")
+    ASSERT(site.le.volume, *, "kmcos/base/replace_species was asked for a site outside the lattice")
 
     ! Double-check that we actually remove the atom that we think is there
     if(old_species.ne.lattice(site))then
@@ -2209,15 +2209,15 @@ subroutine interval_search_real(arr, value, return_field)
             mid = mid - 1
         else
             exit leftmostsearch
-            ASSERT(arr(mid).gt.arr(mid-1),"interval_search_real did not return a leftmost")
+            ASSERT(arr(mid).gt.arr(mid-1), *, "interval_search_real did not return a leftmost")
         endif
     enddo leftmostsearch
 
 
-    ASSERT(mid>0,"Returned index has to be at least 1")
-    ASSERT(mid<=size(arr),"Returned index can be at most size(arr)")
-    ASSERT(arr(mid).gt.0.,"Value of returned field has to be greater then 0")
-    ASSERT(value.le.arr(mid),"interval_search_real has an internal error")
+    ASSERT(mid>0, *, "Returned index has to be at least 1")
+    ASSERT(mid<=size(arr), *, "Returned index can be at most size(arr)")
+    ASSERT(arr(mid).gt.0., *, "Value of returned field has to be greater then 0")
+    ASSERT(value.le.arr(mid), *, "interval_search_real has an internal error")
 
     return_field = mid
 
