@@ -1135,14 +1135,11 @@
 #@     site =  avail_sites(proc, &
 #@         min(nr_of_sites(proc),int(1+ran_site*(nr_of_sites(proc)))),1)
 #@ 
-#@ !    print *, avail_sites(proc, &
-#@ !        min(nr_of_sites(proc),int(1+ran_site*(nr_of_sites(proc)))),1)
-#@ !    print *, avail_sites(proc, &
-#@ !        min(nr_of_sites(proc),int(1+ran_site*(nr_of_sites(proc)))),1)
-#@ !    print *, avail_sites(proc, site, 1)
-#@ !    print *, avail_sites(proc, site, 2)
-#@ !    print *, proc
-#@ !    print *, site
+#@ !    print *, "BASE/determine_procsite after avail_sites"
+#@ !    print *,"    BASE/determine_procsite/RAN_PROC",ran_proc
+#@ !    print *,"    BASE/determine_procsite/RAN_site",ran_site
+#@ !    print *,"    BASE/determine_procsite/PROC_NR",proc
+#@ !    print *,"    BASE/determine_procsite/SITE_NR",site
 #@ 
 #@     ASSERT(nr_of_sites(proc).gt.0,"base/determine_procsite: chosen process is invalid &
 #@         because it has no sites available.")
