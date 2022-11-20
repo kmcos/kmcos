@@ -407,9 +407,10 @@ class ProcListWriter():
         for process in data.process_list:
             out.write('    case(%s)\n' % process.name)
             if data.meta.debug > 0:
-                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME","%s"\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/LSITE","lsite"\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/SITE","site"\n')
+            #if True:
+                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME ","%s"\n'
+                           'print *,"PROCLIST/RUN_PROC_NR/LSITE",lsite\n'
+                           'print *,"PROCLIST/RUN_PROC_NR/NR_SITE",nr_site\n')
                            % process.name)
             for action in process.action_list:
                 if action.coord == process.executing_coord():
