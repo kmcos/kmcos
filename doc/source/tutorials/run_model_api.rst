@@ -76,6 +76,11 @@ it also contains some additional data piggy-backed such as ::
   atoms.kmc_time
   atoms.kmc_step
 
+If one wants to know what the next kmc step will be
+and at which site, without executing the step, one can use ::
+
+  model.get_next_kmc_step()
+
 These quantities are often sufficient when running and simulating
 a catalyst surface, but of course the model could be expanded
 to more observables. The Fortran modules `base`, `lattice`,
@@ -178,13 +183,16 @@ note that after using '_put', one must remember to call `_adjust_database()`
 before executing any next step or the database of available processes
 will not match the species, the kmc simulation will become incorrect and likely crash after some steps.
 
+Saving and Reloading the State of the Simulation
+=================================
+
 If one wants to set the whole configuration of the lattice
 once can retreive it, save it, and load it with the following commands ::
 
   model.dump_config("YourConfigurationName") 
   model.load_config("YourConfigurationName")
 
-Those commands use the following internal commands as part of how they function :: 
+While it is not necessary for a regular user to know, those commands use the following internal commands as part of how they function :: 
 
   #saving the configuration uses:
   config = model._get_configuration()
@@ -192,7 +200,19 @@ Those commands use the following internal commands as part of how they function 
   model._set_configuration(config)
   model._adjust_database()
   
+However, simply saving and loading the configuration will not allow you to exactly reproduce the simulation where it left off.
+To do that, you also need to save and reload the pseusdo random generator's state ::
 
+  PRNG_state = model.proclist.get_seed().tolist() #This list can be saved as a pickle or in a text file.
+  model.proclist.put_seed(PRNG_state) #This command takes the PRNG_state as a list and inputs into the simulation.
+  
+By saving both the configuration and the PRNG_state, one can
+start a simulation again on the  same trajectory
+(providing one sets the parameters such as temperature and pressure).
+The snapshots module includes methods saving and loading the
+configuration, PRNG_state, and parameters.
+A single command to save all aspects of the simulation
+and reload the simulation where it leftoff will later be added into the main code and added to the tutorials.
 
 
 Running models in parallel

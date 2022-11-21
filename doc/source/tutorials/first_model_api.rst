@@ -228,11 +228,12 @@ directory you should see a `myfirst_kmc.xml`.
 You will also see a directory ending with _local_smart,
 this directory includes your compiled model.
 
-You can also skip the model exporting and do it later by removing kmcos.compile(kmc_model):
-you can use a separate python file later, or from the command line 
-can run `kmcos export myfirst_kmc.xml` in the same directory as the XML.
+You can also skip the model exporting (and do it later) by commenting out kmcos.compile(kmc_model):
+then you can use a separate python file later.
+For some installations, you can use `kmcos export myfirst_kmc.xml` from the linux terminal
+when you are in the same directory as the XML.
 
-During troubleshooting, exporting separately can be useful to make sure 
+During troubleshooting, exporting separately can sometimes be useful to make sure 
 the compiling occurs gracefully without any line
 containining an error.
 
@@ -248,10 +249,10 @@ Next, let's try seeing how it looks visually with ::
   
   python3 kmc_settings.py view
 
-... and dada! Your first running kMC model right there!
-For some installations, one can type `kmcos benchmark` and `kmcos view.`
+The "view" command only works on certain operating systems.
+For some installations, one can alternativeley type `kmcos benchmark` and `kmcos view.`
 
-For running the model, you should use a runfile.
+For running the model, it is recommended to use a runfile.
 
 If you wonder why the CO molecules are basically just dangling
 there in mid-air that is because you have no background setup, yet.

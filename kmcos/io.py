@@ -386,6 +386,10 @@ class ProcListWriter():
         # While this looks more readable on paper, I am not sure
         # if this make code maintainability a lot worse. So this
         # should probably change.
+        # The integer in NR_SITE, for example it could be 657,
+        # is appropriate to put into model.lattice.calculate_nr2lattice(657)
+        # when doing debugging from the python side.
+        # It should not be confused withe SITE_NR in other fortran subroutines.
 
         out.write('subroutine run_proc_nr(proc, nr_site)\n\n'
                   '!****f* proclist/run_proc_nr\n'
@@ -407,9 +411,10 @@ class ProcListWriter():
         for process in data.process_list:
             out.write('    case(%s)\n' % process.name)
             if data.meta.debug > 0:
-                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME","%s"\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/LSITE","lsite"\n'
-                           'print *,"PROCLIST/RUN_PROC_NR/SITE","site"\n')
+            #if True:
+                out.write(('print *,"PROCLIST/RUN_PROC_NR/NAME ","%s"\n'
+                           'print *,"PROCLIST/RUN_PROC_NR/LSITE",lsite\n'
+                           'print *,"PROCLIST/RUN_PROC_NR/NR_SITE",nr_site\n')
                            % process.name)
             for action in process.action_list:
                 if action.coord == process.executing_coord():
