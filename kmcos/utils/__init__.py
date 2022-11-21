@@ -381,7 +381,7 @@ def build(options):
     extra_flags = {}
 
     if options.no_optimize:
-        extra_flags['gfortran'] = ('-ffree-line-length-none -ffree-form'
+        extra_flags['gfortran'] = ('-ffree-line-length-none -ffree-form' #-ffixed-line-length-none is not used as it seems to be not needed as of Nov 20th, 2022
                                    ' -xf95-cpp-input -Wall -fimplicit-none'
                                    ' -time  -fmax-identifier-length=63 ')
         extra_flags['gnu95'] = extra_flags['gfortran']
@@ -389,7 +389,7 @@ def build(options):
         extra_flags['intelem'] = '-fpp -Wall'
 
     else:
-        extra_flags['gfortran'] = ('-ffree-line-length-none -ffree-form'
+        extra_flags['gfortran'] = ('-ffree-line-length-none -ffree-form' #-ffixed-line-length-none is not used as it seems to be not needed as of Nov 20th, 2022
                                    ' -xf95-cpp-input -Wall -O3 -fimplicit-none'
                                    ' -time -fmax-identifier-length=63 ')
         extra_flags['gnu95'] = extra_flags['gfortran']
