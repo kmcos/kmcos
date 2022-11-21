@@ -1,3 +1,5 @@
+On Nov 20th, 2022, it was found that a variety of the tests are now failing. However, the SQERTSS unit tests and the accelerated_tests\ are passing, among others, so the core code is working. The reasons for some of the other tests should be investigated but is not presently the priority.
+
 Note: Before using these unit tests, it is expected to have UnitTesterSG[COMPLETE]. Enter "pip3 install UnitTesterSG[COMPLETE]" in the terminal to install that. When running tests, you may use the command 'pytest', which runs all tests in a particular directory (including subdirectories), or use syntax 'pytest filename.py' to run a single file. In this document, when 'pytest' is provided by itself, that refers to running pytest without any filename provided (which runs pytest for the entire directory as well as any subdirectories). While running individual tests, some tests may require scrolling up to see if the test passed in the terminal.
 
 inside \ini_test\ --> got the tests to work after editing types.py and utils\__init.py. Ini's work. For mini_101.ini, foo.ini, and the ZGB ini, kmcos export followed by benchmark works. Pytest works.
@@ -20,6 +22,6 @@ python "test_cli_generation.py" runs and updates the files inside \test_cli_gene
 
 inside \accelerated_tests\  added and works on Jan. 8th 2021. Each of the three tests takes about 1 minute. Run the 3 tests separately and not with pytest. For test_1.py, need to scroll up after running to find if the test passed.
 
-inside scaling_thermochemistry_tests\ added and works on Jan 11 2021. It is best to clear the terminal screen before running this test. After it finishes, you have to scroll up a bit to see the passing or not print statements. Updated on April 1st 2021 to have more long snapshots at the end for better steady state convergence. [Could be made shorter if only test CH4 tof which is first of two TOFs. The second TOF which is water takes more steps to converge.].  Currently, this test takes around 5 minutes to run. Pytest works.
+inside scaling_thermochemistry_tests\ added and works on Jan 11 2021. It is best to clear the terminal screen (using "clear") before running this test. After it finishes, you have to scroll up a bit to see the passing or not print statements. Updated on April 1st 2021 to have more long snapshots at the end for better steady state convergence. [Could be made shorter if only test CH4 tof which is first of two TOFs. The second TOF which is water takes more steps to converge.].  Currently, this test takes around 5 minutes to run. Pytest works.
 
 #TODO: Make it so all tests run from a single command and pipe to a text file that can be searched for the word "fail"
