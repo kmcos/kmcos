@@ -1120,10 +1120,14 @@
 #@     ASSERT(ran_proc.le.1,"base/determine_procsite: ran_proc has to be less or equal 1")
 #@     ASSERT(ran_site.ge.0,"base/determine_procsite: ran_site has to be positive")
 #@     ASSERT(ran_site.le.1,"base/determine_procsite: ran_site has to be less or equal 1")
+#@ !    print *, "BASE/determine_procsite before avail_sites"
+#@ !    print *,"    BASE/determine_procsite/RAN_PROC",ran_proc
+#@ !    print *,"    BASE/determine_procsite/RAN_site",ran_site
+#@ !    print *,"    BASE/determine_procsite/PROC",proc
+#@ !    print *,"    BASE/determine_procsite/SITE",site
 #@ 
 #@     ! ran_proc <- [0,1] so we multiply with larger value in accum_rates
 #@     call interval_search_real(accum_rates, ran_proc*accum_rates(nr_of_proc), proc)
-#@ 
 #@ 
 #@     ! the result shall be between 1 and  nrofsite(proc) so we have to add 1 the
 #@     ! scaled random number. But if the random number is closer to 1 than machine
@@ -1132,6 +1136,11 @@
 #@     site =  avail_sites(proc, &
 #@         min(nr_of_sites(proc),int(1+ran_site*(nr_of_sites(proc)))),1)
 #@ 
+#@ !    print *, "BASE/determine_procsite after avail_sites"
+#@ !    print *,"    BASE/determine_procsite/RAN_PROC",ran_proc
+#@ !    print *,"    BASE/determine_procsite/RAN_site",ran_site
+#@ !    print *,"    BASE/determine_procsite/PROC",proc
+#@ !    print *,"    BASE/determine_procsite/SITE",site
 #@ 
 #@     ASSERT(nr_of_sites(proc).gt.0,"base/determine_procsite: chosen process is invalid &
 #@         because it has no sites available.")

@@ -50,7 +50,7 @@ from __future__ import print_function
 
 
 
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):
@@ -480,4 +480,4 @@ def xml(argumentsString):
     import kmcos.cli as cli
     cli.main('xml'+' ' + argumentsString)    
 
-from kmcos.io import clear_model
+#from kmcos.io import clear_model #this line was commented out Nov 19th 2022, it should not be here and may have been here for testing.
