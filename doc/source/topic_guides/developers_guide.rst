@@ -25,15 +25,17 @@ For developers of the project, branch management will follow
 How to edit, install, and test your changes locally
 ---------------------------------------------------
 
-With every change made to the kmcos source code (within the kmcos directory), kmcos needs to be reinstalled for the changes to take place. 
-Before re-installing kmcos, to ensure the re-installation occurs correctly, it's best to delete  any past kmcos installation files in your python environment. To do so, locate the site-package directory for whichever python environment you're using (typically this would be located in a directory that looks something like ~/VENV/kmcos/lib/python3/site-packages/). Within the site-packages directory, delete any subdirectories that have the name kmcos as well as any other files you see with the name kmcos (typically egg or zip files). 
-Next, using the terminal, navigate the kmcos source code directory that you have edited, and make sure you are in the directory where setup.py is located. Run the following commands to reinstall kmcos with changes ::
+First, install kmcos, then you must locate your kmcos installation. Typically it will be in a directory similar to: ~/VENV/kmcos/lib/python3/site-packages/ 
+If you have difficulty finding it, use | python3 -c"import sys; print(sys.path)" |  Then, inside tthe site-packages directory, if kmcos has an "egg" file, you must copy the kmcos directory out of the egg file directly into the site_packages directory. After that, delete any other kmcos egg files or directories so that there is a single kmcos directory inside of site_packages.
+
+OPTION 1 (recommended): Edit the source code directly inside site_packages, or edit the code elsewhere and then paste over the files in site_packages.  Usually, this will be sufficient.
+
+OPTION 2: Edit the source code elsewhere (such as in a shared folder) and reinstall using the setup.py::
 
    source ~/VENV/kmcos/bin/activate #this is the command to enter the python virtual environment
-   python3 setup.py build
-   python3 setup.py install
+   pip install .
 
-Now that the kmcos dependencies are updated, you can start testing your latest changes. 
+This will reinstall kmcos.
 
 Before pushing to github, you should enter the the tests directory and run the unit tests.
 
@@ -197,6 +199,12 @@ All kmcos models contain train main source files: ``base.f90``,
 ``lattice.f90`` and ``proclist.f90``. Each of these source files defines
 a module of the same name. These modules are exposed to Python
 interface.
+
+It is important to know that some of the fortran code
+comes from the directory \kmcos\fortran_src\
+and some of the fortran code comes from the file
+\kmcos\io.py , so io.py should be checked 
+as well, if needed, when looking for fortran source code.
 
 Files for the ``local_smart`` backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
