@@ -2944,7 +2944,8 @@ class ProcListWriter():
         """Write the kmc_settings.py. This contains all parameters, which
         can be changed on the fly and without recompilation of the Fortran 90
         modules.
-        In this function, "data" is the object that we normally call "kmc_model" in a build file, and it is a Project class object from types.py.
+        In this function, "data" is an object analogous to what is normally in the variable "kmc_model" (within a build file), and it is a Project class object from types.py (just like kmc_model is). But this is not actually the same object, it is a fresh object made from the xml (or ini) file.
+        
         """
 
         from kmcos import evaluate_rate_expression
@@ -3052,6 +3053,11 @@ class ProcListWriter():
         site_params = self._get_site_params()
         out.write('site_names = %s\n' % ['%s_%s' % (x[1], x[0]) for x in site_params])
 
+        # surrounding sites dictionary, if present.
+        if "surroundingSitesDict" in data:
+	        out.write("surroundingSitesDict=" +str(data.surroundingSitesDict))
+
+
         # Graphical Representations
         # rename to species
         # and include tags
@@ -3136,10 +3142,13 @@ def export_source(project_tree, export_dir=None, code_generator=None, options=No
     will be stored under the directory export_dir. export_dir will
     be created if it does not exist. The XML representation of the
     model will be included in the kmc_settings.py module.
+    
+    The variable project_tree is a Project object (from types.py)
+    and is analogous to the variable normally named kmc_model in a build file.
 
-    `export_source` is *the* central feature of the `kmcos` approach.
-    In order to generate different *backend* solvers, additional candidates
-    of this methods could be implemented.
+    `export_source` is a central feature of the `kmcos` approach.
+    In order to generate different backend solvers, and allows additional candidates
+    for kmc methods to be implemented.
     """
 
     if code_generator is None:
