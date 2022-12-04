@@ -2944,6 +2944,7 @@ class ProcListWriter():
         """Write the kmc_settings.py. This contains all parameters, which
         can be changed on the fly and without recompilation of the Fortran 90
         modules.
+        In this function, "data" is the object that we normally call "kmc_model" in a build file.
         """
 
         from kmcos import evaluate_rate_expression
@@ -2951,14 +2952,14 @@ class ProcListWriter():
         data = self.data
         out = open(os.path.join(self.dir, 'kmc_settings.py'), 'w')
         out.write('model_name = \'%s\'\n' % self.data.meta.model_name)
-        out.write('simulation_size = 20\n')
+        out.write('simulation_size = 20 #TODO: A. Savara found on 12/04/22 that this is hardcoded in io.py, and it should not be hardcoded. \n') 
         if accelerated:
-            out.write('buffer_parameter = 1000\n')
+            out.write('buffer_parameter = 1000 #TODO: A. Savara found on 12/04/22 that this block of settings is hardcoded in io.py, and it should not be hardcoded.\n' )
             out.write('threshold_parameter = 0.2\n')
             out.write('sampling_steps = 20\n')
             out.write('execution_steps = 200\n')
             out.write('save_limit = 1000\n')
-        out.write('random_seed = 1\n\n')
+        out.write('random_seed = 1 #TODO: A. Savara found on 12/04/22 that this is hardcoded in io.py, and it should not be hardcoded.\n\n' )
 
         # stub for setup function
         out.write('def setup_model(model):\n')
