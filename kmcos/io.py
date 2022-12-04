@@ -2944,7 +2944,7 @@ class ProcListWriter():
         """Write the kmc_settings.py. This contains all parameters, which
         can be changed on the fly and without recompilation of the Fortran 90
         modules.
-        In this function, "data" is the object that we normally call "kmc_model" in a build file.
+        In this function, "data" is the object that we normally call "kmc_model" in a build file, and it is a Project class object from types.py.
         """
 
         from kmcos import evaluate_rate_expression
