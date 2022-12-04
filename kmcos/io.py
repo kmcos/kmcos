@@ -2945,7 +2945,6 @@ class ProcListWriter():
         can be changed on the fly and without recompilation of the Fortran 90
         modules.
         In this function, "data" is an object analogous to what is normally in the variable "kmc_model" (within a build file), and it is a Project class object from types.py (just like kmc_model is). But this is not actually the same object, it is a fresh object made from the xml (or ini) file.
-        
         """
 
         from kmcos import evaluate_rate_expression
@@ -3054,7 +3053,7 @@ class ProcListWriter():
         out.write('site_names = %s\n' % ['%s_%s' % (x[1], x[0]) for x in site_params])
 
         # surrounding sites dictionary, if present.
-        if "surroundingSitesDict" in data:
+        if hasattr(data, "surroundingSitesDict"):
 	        out.write("surroundingSitesDict=" +str(data.surroundingSitesDict))
 
 
