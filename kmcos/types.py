@@ -24,10 +24,12 @@ from xml.dom import minidom
 from kmcos.utils import CorrectlyNamed
 from kmcos.config import APP_ABS_PATH
 
+#DTD hardcoded section.
 kmcproject_v0_1_dtd = '/kmc_project_v0.1.dtd'
 kmcproject_v0_2_dtd = '/kmc_project_v0.2.dtd'
 kmcproject_v0_3_dtd = '/kmc_project_v0.3.dtd'
-xml_api_version = (0, 3)
+kmcproject_v0_4_dtd = '/kmc_project_v0.4.dtd'
+xml_api_version = (0, 4) #This must be updated when the DTD is updated. 0,4 means 0.4
 
 
 class FixedObject(object):
@@ -99,6 +101,7 @@ class Project(object):
         self.backend = "local_smart" #this is just the default.
         self.compile_options = "" #typical syntax to use this is in a __build.py file like kmc_model.compile_options = '-d' #This string later gets used in kmcos __init__, typically by kmcos.compile(kmc_model).  
         self.error_list = []
+        self.connected_variables ={}
 
         # Quick'n'dirty define access functions
         # needed in context with GTKProject
@@ -426,7 +429,10 @@ class Project(object):
             actions = [action._shorthand() for action in process.action_list]
             config.set(section_name, 'actions',
                        ' + '.join(actions))
-
+        if hasattr(self, 'connected_variables'):
+            config.set('connected_variables',
+                       'connected_variables_string',
+                       str(self.connected_variables))
         f = StringIO()
         config.write(f)
 
@@ -544,6 +550,9 @@ class Project(object):
             if output.output:
                 output_elem = ET.SubElement(output_list, 'output')
                 output_elem.set('item', output.name)
+        if hasattr(self, 'connected_variables'):
+            connected_variables_elem = ET.SubElement(root, 'connected_variables')        
+            connected_variables_elem.set('connected_variables_string', str(self.connected_variables))                                             
         return root
 
     def shorten_names(self, max_length=15):
@@ -874,6 +883,11 @@ class Project(object):
                                          color=color,
                                          representation=representation,
                                          tags=tags))
+            if section == 'connected_variables':
+                options = config.options(section)
+                if 'connected_variables_string' in options:
+                    connected_variables_string = config.get(section, 'connected_variables_string')
+                    self.connected_variables = eval(connected_variables_string)                      
 
     def import_xml_file(self, filename):
         """Takes a filename, validates the content against kmc_project.dtd
@@ -885,7 +899,8 @@ class Project(object):
         #  FIXME : automatic removal of comment not supported in
         # stdlib version of ElementTree
 
-        supported_versions = [(0, 2), (0, 3)]
+        #FIXME: This is a bad practice because it requres updating each time, so needs to be changed to parsing/removing.
+        supported_versions = [(0, 2), (0, 3), (0, 4)] 
 
         xmlparser = ET.XMLParser()
         if os.path.exists(filename):
@@ -912,15 +927,18 @@ class Project(object):
             nroot.set('version', '0.2')
             raise Exception('No legacy support!')
         else:
-            if self.version == (0, 2):
-                dtd = ET.DTD(APP_ABS_PATH + kmcproject_v0_2_dtd)
-            elif self.version == (0, 3):
-                dtd = ET.DTD(APP_ABS_PATH + kmcproject_v0_3_dtd)
-            else:
+            # if self.version == (0, 2):
+                # dtd = ET.DTD(APP_ABS_PATH + kmcproject_v0_2_dtd) #TODO: Remove this.
+            # elif self.version == (0, 3):
+                # dtd = ET.DTD(APP_ABS_PATH + kmcproject_v0_3_dtd) #TODO: remove this.
+            # else:
+            try:
+                dtd = ET.DTD(APP_ABS_PATH + eval("kmcproject_v"+str(self.version[0])+"_"+str(self.version[1])+ "_dtd"))
+            except:
                 raise Exception(
                     'xml file version not supported. Is your kmcos too old?')
             if not dtd.validate(root):
-                print(dtd.error_log.filter_from_errors()[0])
+                print("There was an error validating xml/ini/Project object at line 943 of types.py. The error was:", dtd.error_log.filter_from_errors()[0])
                 return
             for child in root:
                 if child.tag == 'lattice':
@@ -1098,6 +1116,9 @@ class Project(object):
                         output_elem = OutputItem(name=item.attrib['item'],
                                                  output=True)
                         self.add_output(output_elem)
+                if child.tag == 'connected_variables':
+                    if 'connected_variables_string' in child.attrib:
+                        self.connected_variables = eval(child.attrib['connected_variables_string'])
 #        elif self.version == (0, 3):
 #            pass
             # import new XML definition

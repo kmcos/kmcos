@@ -3052,11 +3052,6 @@ class ProcListWriter():
         site_params = self._get_site_params()
         out.write('site_names = %s\n' % ['%s_%s' % (x[1], x[0]) for x in site_params])
 
-        # surrounding sites dictionary, if present.
-        if hasattr(data, "surroundingSitesDict"):
-	        out.write("surroundingSitesDict=" +str(data.surroundingSitesDict))
-
-
         # Graphical Representations
         # rename to species
         # and include tags
@@ -3082,6 +3077,11 @@ class ProcListWriter():
             if process.tof_count is not None:
                 out.write('    "%s":%s,\n' % (process.name, process.tof_count))
         out.write('    }\n\n')
+
+        # connected_variables string, if present.
+        if hasattr(data, "connected_variables"):
+	        out.write("connected_variables=" +str(data.connected_variables) +'\n')
+
 
         # XML
         out.write('xml = """%s"""\n' % data)
