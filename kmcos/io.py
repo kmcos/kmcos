@@ -2944,6 +2944,7 @@ class ProcListWriter():
         """Write the kmc_settings.py. This contains all parameters, which
         can be changed on the fly and without recompilation of the Fortran 90
         modules.
+        In this function, "data" is an object analogous to what is normally in the variable "kmc_model" (within a build file), and it is a Project class object from types.py (just like kmc_model is). But this is not actually the same object, it is a fresh object made from the xml (or ini) file.
         """
 
         from kmcos import evaluate_rate_expression
@@ -2951,14 +2952,14 @@ class ProcListWriter():
         data = self.data
         out = open(os.path.join(self.dir, 'kmc_settings.py'), 'w')
         out.write('model_name = \'%s\'\n' % self.data.meta.model_name)
-        out.write('simulation_size = 20\n')
+        out.write('simulation_size = 20 #TODO: A. Savara found on 12/04/22 that this is hardcoded in io.py, and it should not be hardcoded. \n') 
         if accelerated:
-            out.write('buffer_parameter = 1000\n')
+            out.write('buffer_parameter = 1000 #TODO: A. Savara found on 12/04/22 that this block of settings is hardcoded in io.py, and it should not be hardcoded.\n' )
             out.write('threshold_parameter = 0.2\n')
             out.write('sampling_steps = 20\n')
             out.write('execution_steps = 200\n')
             out.write('save_limit = 1000\n')
-        out.write('random_seed = 1\n\n')
+        out.write('random_seed = 1 #TODO: A. Savara found on 12/04/22 that this is hardcoded in io.py, and it should not be hardcoded.\n\n' )
 
         # stub for setup function
         out.write('def setup_model(model):\n')
@@ -3077,6 +3078,11 @@ class ProcListWriter():
                 out.write('    "%s":%s,\n' % (process.name, process.tof_count))
         out.write('    }\n\n')
 
+        # connected_variables string, if present.
+        if hasattr(data, "connected_variables"):
+	        out.write("connected_variables=" +str(data.connected_variables) +'\n')
+
+
         # XML
         out.write('xml = """%s"""\n' % data)
         
@@ -3135,10 +3141,13 @@ def export_source(project_tree, export_dir=None, code_generator=None, options=No
     will be stored under the directory export_dir. export_dir will
     be created if it does not exist. The XML representation of the
     model will be included in the kmc_settings.py module.
+    
+    The variable project_tree is a Project object (from types.py)
+    and is analogous to the variable normally named kmc_model in a build file.
 
-    `export_source` is *the* central feature of the `kmcos` approach.
-    In order to generate different *backend* solvers, additional candidates
-    of this methods could be implemented.
+    `export_source` is a central feature of the `kmcos` approach.
+    In order to generate different backend solvers, and allows additional candidates
+    for kmc methods to be implemented.
     """
 
     if code_generator is None:

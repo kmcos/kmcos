@@ -543,7 +543,7 @@ def jmolcolor_in_hex(i):
 def evaluate_template(template, escape_python=False, **kwargs):
     """Very simple template evaluation function using only exec and str.format()
 
-    There are two flavors of the template language, depending on wether
+    There are two flavors of the template language, depending on whether
     the python parts or the template parts are escaped.
 
     A template can use the full python syntax. Every line starts with '#@ '
