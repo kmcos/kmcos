@@ -169,6 +169,32 @@ the DTD below.
 
 .. literalinclude:: kmc_project_v0.2.dtd
 
+Connected Variables
+====================
+
+The connected_variables dictionary allows a person to pass string-writable objects
+created during the model building into the runtime environment. This can be useful if
+a person needs access to some data structures (like lists of surrounding sites) during runtime.
+Dictionaries, strings, and lists can be passed. This feature is used for the surroundingSitesDict.
+
+The basic syntax in a build_file would be as follows::
+
+    kmc_model = kmcos.create_kmc_model(model_name)
+    kmc_model.connected_variables['frog_list'] = [1,2,3,4]
+
+Then, during runtime, one could do the following::
+
+    print(model.connected_variables['frog_list'])
+    
+Information for developers. Currently (Dec 2022), the way kmcos processes things from the build file to the Runtime environment is as follows::
+
+    A person's build file makes a Project class object (typically "kmc_model"), for example in https://github.com/kmcos/kmcos/blob/master/examples/MyFirstDiffusion__build.py
+    That build file makes an xml file (or ini file), which occurs in types.py _get_etree_xml or _get_etree_ini where a string is made that then gets written to file.
+    That xml/ini is then read back in and validated , which occurs against a DTD. A new Project class object is made from what is read back in.
+    It is important to recognize that the new Project class object has many attributes that are the same as the one in the build file, but it is not the same object. It has fewer of the original attributes due to hardcoded mapping during xml writing and xml reading.
+    When the source code compilation occurs, kmc_settings. is made. What is in kmc_settings roughly mirrors the original Project class object, but it is actually from the new Project class object that has been created from the xml. 
+
+
 Backends
 ========
 
