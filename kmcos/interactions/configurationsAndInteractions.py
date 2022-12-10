@@ -2,10 +2,10 @@ import itertools
 import copy
 import sys
 import warnings
-from cleanCoordinates import *
+from kmcos.interactions.cleanCoordinates import *
 try:
-	import BEPmodule
-	from BEPmodule import *
+	import kmcos.interactions.BEPmodule
+	from kmcos.interactions.BEPmodule import *
 except:
 	pass
 from kmcos.types import * #this is necessary in order to make condition objects.
@@ -50,10 +50,10 @@ def initializeProjectForConfigurationsAndInteractions(projectObject, software ="
 		pt.EaDict = CIProject.EaDict
 		pt.ADict = CIProject.ADict
 		pt.surroundingSitesDict = CIProject.surroundingSitesDict
-        try: #Try to add surroundingSitesDict to the connected variables of the project class object, but this is not required for the module to work.
-            pt.connected_variables['surroundingSitesDict'] = pt.surroundingSitesDict 
-        except:
-            pass
+		try: #Try to add surroundingSitesDict to the connected variables of the project class object, but this is not required for the module to work.
+			pt.connected_variables['surroundingSitesDict'] = pt.surroundingSitesDict 
+		except:
+			pass
 		pt.possibleSpeciesDict =CIProject.possibleSpeciesDict
 		pt.siteDict = CIProject.siteDict 
 		pt.siteTypeDict = CIProject.siteTypeDict 

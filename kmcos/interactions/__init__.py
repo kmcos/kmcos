@@ -9,4 +9,4 @@ c) Defining activation energies based on BEP relations with the pairwise interac
 """
 
 
-from configurationsAndInteractions import *
+from kmcos.interactions.configurationsAndInteractions import *

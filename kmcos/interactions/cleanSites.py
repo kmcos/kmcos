@@ -1,5 +1,5 @@
 import copy
-from cleanCoordinates import *
+from kmcos.interactions.cleanCoordinates import *
 class dummyclass:
 	pass
 
