@@ -647,6 +647,7 @@ class Project(object):
         f.close()
 
         if validate:
+            print("XML file exported to ", filename, ", now validating model.")
             self.validate_model()
 
     def import_file(self, filename):
