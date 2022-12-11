@@ -194,7 +194,7 @@ Then, during runtime, one could do the following::
 
     print(model.connected_variables['frog_list'])
     
-Information for developers. Currently (Dec 2022), the way kmcos processes things from the build file to the Runtime environment is as follows::
+Additional Information for developers. Currently (Dec 2022), the way kmcos processes things from the build file to the Runtime environment is as follows:
 
     A person's build file makes a Project class object (typically "kmc_model"), for example in https://github.com/kmcos/kmcos/blob/master/examples/MyFirstDiffusion__build.py
     That build file makes an xml file (or ini file), which occurs in types.py _get_etree_xml or _get_etree_ini where a string is made that then gets written to file.
