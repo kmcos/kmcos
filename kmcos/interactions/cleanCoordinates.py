@@ -6,27 +6,38 @@ import numpy as np
 #The PND notation is to convert numbers into strings. When we have things like 1.0 becomes p0d0 , and -5.0 becomes n5d0
 
 
+    #This function takes a full coordinate name with a distance, like ruo2___bridge___p1_p0_p0___4
+    #and parses the string to give the distance like '4'
 def extractDistance(coordFullNamePlusDistance):
     distance = coordFullNamePlusDistance.split("___")[3] #the neighbor distance is the 4th part of the string.
     return distance
 
+    #This function takes a full coordinate name lik ruo2___bridge___p1_p0_p0
+    #and parses the string to give layer name like 'ruo2'
 def extractSiteLayerName(coordFullName):
     layerName = coordFullName.split("___")[0] #the layer is the 1st part of the coordFullName
     return layerName
     
+    #This function takes a full coordinate name lik ruo2___bridge___p1_p0_p0
+    #and parses the string to give the site type, like 'bridge'.
 def extractSiteType(coordFullName):
     siteType = coordFullName.split("___")[1] #the site name is the 2nd part of the coordFullName
     return siteType
 
+    #This function takes a full coordinate name lik ruo2___bridge___p1_p0_p0
+    #and parses the string to give the unit cell coordinate in PND, like 'p1_p0_p0'
 def extractSiteUnitCellCoordinateInPND(coordFullName):
     unitCellCoordinateInPND = coordFullName.split("___")[2] #the unit cell coordinate is the 3rd part of the coordFullName
     return unitCellCoordinateInPND #this is in the PandNandD format.
 
+    #This function takes a full coordinate name lik ruo2___bridge___p1_p0_p0
+    #and parses the string to give the unit cell coordinate in a cartesian tuple, like (1,0,0)
 def extractSiteUnitCellCoordinateInTuple(coordFullName):
     unitCellCoordinateInPND = coordFullName.split("___")[2] #the unit cell coordinate is the 3rd part of the coordFullName
     unitCellCoordinateInTuple = convertCoordinateFromPandNandD(unitCellCoordinateInPND)
     return unitCellCoordinateInTuple
     
+    #The originalCoordinate and translationVector must be arrays or tuples, like (0,0,1)
 def applyTranslationVector(originalCoordinate, translationVector): #this applies a translation.
     import numpy as np
     originalCoordinate = np.array(originalCoordinate)
@@ -34,6 +45,7 @@ def applyTranslationVector(originalCoordinate, translationVector): #this applies
     translatedCoordinate = originalCoordinate + translationVector
     return translatedCoordinate #this returns a numpy array, regardless of what you give it.
     
+    #The referenceCoordinate and targetCoordinate must be arrays or tuples, like (0,0,1)
 def getTranslationVector(referenceCoordinate, targetCoordinate): #this expects a list, tuple, array, etc., for each.
     import numpy as np
     referenceCoordinate = np.array(referenceCoordinate)
@@ -90,6 +102,9 @@ def cartesianCoordinateFromPandNandDtoTuple(cartesianAsPandNandDstring):
     cartesianTuple = tuple(cartesianList)
     return cartesianTuple
 
+    #A coordFullName is like this: ruo2___bridge___p1_p0_p0
+    #This function takes such a fullname and a translation vector like this: (0,0,-5) 
+    #Then returns the translated coordinate name, like ruo2___bridge___p1_p0_n5
 def getTranslatedCoordFullname(coordFullName, translationVector):
     siteLayerName = extractSiteLayerName(coordFullName) 
     siteType = extractSiteType(coordFullName)
