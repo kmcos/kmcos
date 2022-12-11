@@ -158,10 +158,13 @@ kmcos.utils
 kmcos kMC project DTD
 ====================
 
-The central storage and exchange format is XML. XML was chosen over
-JSON, pickle or alike because it still seems as the most flexible
+A standardized kmc model format has been made in XML. 
+XML was chosen over JSON, pickle or alike because near 2010 it was the most flexible
 and universal format with good methods to define the overall
 structure of the data.
+
+New infrastrcture for JSON formats now exists, and it is on the to-do list to 
+switch to using JSON to make a standard kmc model format.
 
 One way to define an XML format is by using a document type description
 (DTD) and in fact at every import a kmcos file is validated against
@@ -169,13 +172,18 @@ the DTD below.
 
 .. literalinclude:: kmc_project_v0.2.dtd
 
+
+
 Connected Variables
 ====================
 
 The connected_variables dictionary allows a person to pass string-writable objects
 created during the model building into the runtime environment. This can be useful if
 a person needs access to some data structures (like lists of surrounding sites) during runtime.
-Dictionaries, strings, and lists can be passed. This feature is used for the surroundingSitesDict.
+Dictionaries, strings, and lists can be passed. For more complex variables,
+one could pass the name of a pickle file.
+This feature is used for the surroundingSitesDict.
+
 
 The basic syntax in a build_file would be as follows::
 
