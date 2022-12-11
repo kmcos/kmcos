@@ -194,6 +194,10 @@ class KMC_Model(Process):
         else:
             self.rate_constants = Model_Rate_Constants_OTF()
 
+        #import cleanCoordinates module with a pointer.
+        import kmcos.interactions.cleanCoordinates as cleanCoordinates
+        self.cleanCoordinates = cleanCoordinates
+
         # check if the model has been compiled using the temporal acceleration
         #scheme
         try:
@@ -466,7 +470,7 @@ class KMC_Model(Process):
                     tofs.append(name)
         tofs.sort()
         return ' '.join(tofs)
-
+        
     def deallocate(self):
         """Deallocate all arrays that are allocated
         by the Fortran module. This needs to be called
