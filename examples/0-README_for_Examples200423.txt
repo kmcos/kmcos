@@ -18,3 +18,12 @@ After the simulation has run, you will see a csv file named runfile_TOFs_and_Cov
 
 Various examples exist. More features and a thorough tutorial are forthcoming. Please join the kmcos-users group https://groups.google.com/g/kmcos-users and email any questions if you get stuck.
 
+***
+
+There are several ways of handling interactions between species in kmcos.
+The lat_int and otf backends enable processes with 'dynamic' transition frequencies at the backend.
+However, for some models, at present, the only way to achieve the level of generality needed in the transition frequencies
+is by separate transition frequencies for separate local configurations.
+This can be accomplished with one process per local configuration,
+and an example of how to do this with BEP relation and pairwise interactions
+is in the InteractionsModuleExample directory.
