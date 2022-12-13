@@ -113,24 +113,26 @@ class Project(object):
                                           key=lambda x: x.name)
         
         #The below lines are to always have access to the configurationsAndInteractions module.
-        
-        from kmcos.interactions.configurationsAndInteractions import initializeProjectForConfigurationsAndInteractions
-        initializeProjectForConfigurationsAndInteractions(projectObject=self, software ="kmcos")
-        
-        ######Start of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
-        import  kmcos.interactions.configurationsAndInteractions
-        self.EaDictToParameters = kmcos.interactions.configurationsAndInteractions.EaDictToParameters
-        self.ADictToParameters =  kmcos.interactions.configurationsAndInteractions.ADictToParameters
-        self.getSiteOccupationPossibilities = kmcos.interactions.configurationsAndInteractions.getSiteOccupationPossibilities
-        self.getAllSurroundingPossibilities = kmcos.interactions.configurationsAndInteractions.getAllSurroundingPossibilities
-        self.getConditionsListsFromSitePossibilities = kmcos.interactions.configurationsAndInteractions.getConditionsListsFromSitePossibilities
-        self.addSiteDistinct = kmcos.interactions.configurationsAndInteractions.addSiteDistinct
-        self.addSurroundingSites = kmcos.interactions.configurationsAndInteractions.addSurroundingSites
-        self.autoAddSurroundingSites = kmcos.interactions.configurationsAndInteractions.autoAddSurroundingSites
-        self.autoAddInteractionTerms = kmcos.interactions.configurationsAndInteractions.autoAddInteractionTerms
-        self.addAProcessIncludingNeighbors = kmcos.interactions.configurationsAndInteractions.addAProcessIncludingNeighbors
-        self.addAProcess = kmcos.interactions.configurationsAndInteractions.addAProcess
-        ######End of of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
+        try:
+            from kmcos.interactions.configurationsAndInteractions import initializeProjectForConfigurationsAndInteractions
+            initializeProjectForConfigurationsAndInteractions(projectObject=self, software ="kmcos")
+            
+            ######Start of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
+            import  kmcos.interactions.configurationsAndInteractions
+            self.EaDictToParameters = kmcos.interactions.configurationsAndInteractions.EaDictToParameters
+            self.ADictToParameters =  kmcos.interactions.configurationsAndInteractions.ADictToParameters
+            self.getSiteOccupationPossibilities = kmcos.interactions.configurationsAndInteractions.getSiteOccupationPossibilities
+            self.getAllSurroundingPossibilities = kmcos.interactions.configurationsAndInteractions.getAllSurroundingPossibilities
+            self.getConditionsListsFromSitePossibilities = kmcos.interactions.configurationsAndInteractions.getConditionsListsFromSitePossibilities
+            self.addSiteDistinct = kmcos.interactions.configurationsAndInteractions.addSiteDistinct
+            self.addSurroundingSites = kmcos.interactions.configurationsAndInteractions.addSurroundingSites
+            self.autoAddSurroundingSites = kmcos.interactions.configurationsAndInteractions.autoAddSurroundingSites
+            self.autoAddInteractionTerms = kmcos.interactions.configurationsAndInteractions.autoAddInteractionTerms
+            self.addAProcessIncludingNeighbors = kmcos.interactions.configurationsAndInteractions.addAProcessIncludingNeighbors
+            self.addAProcess = kmcos.interactions.configurationsAndInteractions.addAProcess
+            ######End of of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
+        except:
+            pass
         
 
     def get_speciess(self, pattern=None):
