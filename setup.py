@@ -61,7 +61,8 @@ package_data = {'kmcos':['fortran_src/*f90',
                         'fortran_src/assert.ppc',
                         'kmc_project_v0.1.dtd',
                         'kmc_project_v0.2.dtd',
-                        'kmc_project_v0.3.dtd']}
+                        'kmc_project_v0.3.dtd',
+                        'kmc_project_v0.4.dtd']}
 platforms = ['linux', 'windows']
 if os.name == 'nt':
     scripts = [
