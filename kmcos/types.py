@@ -113,24 +113,26 @@ class Project(object):
                                           key=lambda x: x.name)
         
         #The below lines are to always have access to the configurationsAndInteractions module.
-        
-        from kmcos.interactions.configurationsAndInteractions import initializeProjectForConfigurationsAndInteractions
-        initializeProjectForConfigurationsAndInteractions(projectObject=self, software ="kmcos")
-        
-        ######Start of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
-        import  kmcos.interactions.configurationsAndInteractions
-        self.EaDictToParameters = kmcos.interactions.configurationsAndInteractions.EaDictToParameters
-        self.ADictToParameters =  kmcos.interactions.configurationsAndInteractions.ADictToParameters
-        self.getSiteOccupationPossibilities = kmcos.interactions.configurationsAndInteractions.getSiteOccupationPossibilities
-        self.getAllSurroundingPossibilities = kmcos.interactions.configurationsAndInteractions.getAllSurroundingPossibilities
-        self.getConditionsListsFromSitePossibilities = kmcos.interactions.configurationsAndInteractions.getConditionsListsFromSitePossibilities
-        self.addSiteDistinct = kmcos.interactions.configurationsAndInteractions.addSiteDistinct
-        self.addSurroundingSites = kmcos.interactions.configurationsAndInteractions.addSurroundingSites
-        self.autoAddSurroundingSites = kmcos.interactions.configurationsAndInteractions.autoAddSurroundingSites
-        self.autoAddInteractionTerms = kmcos.interactions.configurationsAndInteractions.autoAddInteractionTerms
-        self.addAProcessIncludingNeighbors = kmcos.interactions.configurationsAndInteractions.addAProcessIncludingNeighbors
-        self.addAProcess = kmcos.interactions.configurationsAndInteractions.addAProcess
-        ######End of of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
+        try:
+            from kmcos.interactions.configurationsAndInteractions import initializeProjectForConfigurationsAndInteractions
+            initializeProjectForConfigurationsAndInteractions(projectObject=self, software ="kmcos")
+            
+            ######Start of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
+            import  kmcos.interactions.configurationsAndInteractions
+            self.EaDictToParameters = kmcos.interactions.configurationsAndInteractions.EaDictToParameters
+            self.ADictToParameters =  kmcos.interactions.configurationsAndInteractions.ADictToParameters
+            self.getSiteOccupationPossibilities = kmcos.interactions.configurationsAndInteractions.getSiteOccupationPossibilities
+            self.getAllSurroundingPossibilities = kmcos.interactions.configurationsAndInteractions.getAllSurroundingPossibilities
+            self.getConditionsListsFromSitePossibilities = kmcos.interactions.configurationsAndInteractions.getConditionsListsFromSitePossibilities
+            self.addSiteDistinct = kmcos.interactions.configurationsAndInteractions.addSiteDistinct
+            self.addSurroundingSites = kmcos.interactions.configurationsAndInteractions.addSurroundingSites
+            self.autoAddSurroundingSites = kmcos.interactions.configurationsAndInteractions.autoAddSurroundingSites
+            self.autoAddInteractionTerms = kmcos.interactions.configurationsAndInteractions.autoAddInteractionTerms
+            self.addAProcessIncludingNeighbors = kmcos.interactions.configurationsAndInteractions.addAProcessIncludingNeighbors
+            self.addAProcess = kmcos.interactions.configurationsAndInteractions.addAProcess
+            ######End of of pointers to functions from  configurationsAndInteractions functions. See that module to understand these functions.######  
+        except:
+            pass
         
 
     def get_speciess(self, pattern=None):
@@ -956,9 +958,9 @@ class Project(object):
             # else:
             try:
                 dtd = ET.DTD(APP_ABS_PATH + eval("kmcproject_v"+str(self.version[0])+"_"+str(self.version[1])+ "_dtd"))
-            except:
+            except Exception as toPrint:
                 raise Exception(
-                    'xml file version not supported. Is your kmcos too old?')
+                    'There was an error checking the xml file against the DTD file. Your DTD file could be missing, or your kmcos version could be too old. The Error returned was:', toPrint)
             if not dtd.validate(root):
                 print("There was an error validating xml/ini/Project object at line 943 of types.py. The error was:", dtd.error_log.filter_from_errors()[0])
                 return
