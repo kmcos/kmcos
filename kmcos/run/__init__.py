@@ -195,8 +195,11 @@ class KMC_Model(Process):
             self.rate_constants = Model_Rate_Constants_OTF()
 
         #import cleanCoordinates module with a pointer.
-        import kmcos.interactions.cleanCoordinates as cleanCoordinates
-        self.cleanCoordinates = cleanCoordinates
+        try:
+            import kmcos.interactions.cleanCoordinates as cleanCoordinates
+            self.cleanCoordinates = cleanCoordinates
+        except:
+            pass
 
         # check if the model has been compiled using the temporal acceleration
         #scheme

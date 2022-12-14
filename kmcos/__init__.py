@@ -50,7 +50,7 @@ from __future__ import print_function
 
 
 
-__version__ = "1.0.9"
+__version__ = "1.1.0"
 VERSION = __version__
 
 def evaluate_param_expression(param, parameters={}):

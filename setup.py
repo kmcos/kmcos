@@ -52,6 +52,7 @@ packages = [
            'kmcos',
            'kmcos.utils',
            'kmcos.run',
+           'kmcos.interactions',
            'kmcos.gui',
            ]
 package_dir = {'kmcos':'kmcos'}
