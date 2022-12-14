@@ -958,9 +958,9 @@ class Project(object):
             # else:
             try:
                 dtd = ET.DTD(APP_ABS_PATH + eval("kmcproject_v"+str(self.version[0])+"_"+str(self.version[1])+ "_dtd"))
-            except:
+            except Exception as toPrint:
                 raise Exception(
-                    'xml file version not supported. Is your kmcos too old?')
+                    'There was an error checking the xml file against the DTD file. Your DTD file could be missing, or your kmcos version could be too old. The Error returned was:', toPrint)
             if not dtd.validate(root):
                 print("There was an error validating xml/ini/Project object at line 943 of types.py. The error was:", dtd.error_log.filter_from_errors()[0])
                 return
