@@ -1,0 +1,21 @@
+This Model is based on Figure 7 in: https://www.frontiersin.org/articles/10.3389/fchem.2019.00202/full
+
+The Supplementary Information files from the article have been modified to work with the newest version of kmcos. 
+
+This example should in principle work for any backend. Note that the "compile_options" choice of "--acf" is needed for this example.
+
+When running the runfile inside of the directory, many allocation/deallocation warnings appear.
+
+The example takes around 1-5 hours to run per "loop" combination with 5 combinations, so takes around 1 to 2 hours with the local_smart backend and lat_int backend.
+
+Cesar Lazo got this example working with python 3 kmcos, but noticed that it does not exactly match the figures in the paper.
+
+A. Savara ran the example with both the local_smart backend and lat_int backend.  The outputs from the two backends were very close to each other, and also to Cesar Lazo's output, but not to the paper.
+
+It's not clear to A. Savara if the example directory is different from the paper due to differing random seeds or different settings (like energies) but the qualitative trend is the same as the paper, and same orders of magnitude, so the feature is assumed to be working.
+
+
+
+
+
+
