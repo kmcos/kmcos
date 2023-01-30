@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""kMC modeling on steroids"""
+"""Kinetic Monte Carlo of Systems"""
 
 import os
 #from distutils.core import setup
