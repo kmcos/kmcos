@@ -453,6 +453,7 @@ class Project(object):
             config.set(section_name, 'actions',
                        ' + '.join(actions))
         if hasattr(self, 'connected_variables'):
+            config.add_section('connected_variables')
             config.set('connected_variables',
                        'connected_variables_string',
                        str(self.connected_variables))
