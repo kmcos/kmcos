@@ -41,3 +41,31 @@ do_snapshots(sps, n_snapshots)
 
 #The final command below writes the simulation details to the logfile
 create_log()
+
+# plot_configuration(self, filename = '', resolution = 150, scale = 20, representation = '', plot_settings = {}):
+
+#The first plot_configuration will use default arguments to construct the plot and export as "plottedConfiguration.png"
+#sg.model.plot_configuration()
+
+#The second plot_configuration will use the atomic argument to contruct the plot and export as "atomic_view.png"
+#for the filename, you can specify with or without the .png at the end. This function will automatically convert to .png file
+sg.model.plot_configuration(filename='MyFirstSnapshots_atomic_view', resolution=100, scale=20, representation='atomic')
+
+
+plot_settings = {
+    "y_label": "y_direction",
+    "x_label": "x_direction",
+    "legendLabel": "Species",
+    "legendExport": False,
+    "legend": True,
+    "figure_name": "Plot",
+    "dpi": 220,
+    "speciesName": True,
+    "num_x_ticks": 3,
+    "num_y_ticks": 3,
+    }
+#the second plot_configuration here will construct the plot using the above dictionary and export the file as "Plot.png"
+# Note that the spatial representation plots by default, but you can always specify in representation
+sg.model.plot_configuration(representation='spatial', plot_settings=plot_settings)
+
+sg.model.export_movie()
