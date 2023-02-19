@@ -728,16 +728,19 @@ class KMC_Model(Process):
             progress_bar.clear()
 
     def do_steps_time(self, t=1.0, n=10000):
-     """Propagate the model `t` s.
+        """Propagate the model `t` s, or n steps (whichever is achieved first.
+        The n steps are intended to act as an upper limit to avoid infnite steps
+        as well as for any other reason that the user may wish to limit the number of steps.
 
-     :param t: Length of time (s) to run (Default: 1)
-     :type t: real
-
-     Returns the number of iterations executed.
-
-     """
-     num_iter = proclist.do_kmc_steps_time(t,n)
-     return num_iter
+        :param t: Length of time (s) to run (Default: 1)
+        :type t: real
+        
+        :param n: Upper limit for number of steps to run (Default: 10000)
+        :type n: int
+        Returns the number of iterations executed.
+        """
+        num_iter = proclist.do_kmc_steps_time(t,n)
+        return num_iter
 
     def do_acc_steps(self, n=10000, stats=True, save_exe=False, save_proc=0):
         """Propagate the model `n` steps using the temporal
@@ -836,6 +839,8 @@ class KMC_Model(Process):
             self.do_steps(steps)
 
     def show_ascii_picture(self,site,species,hexagonal=False):
+        """Shows an ascii picture of the current configuration.
+        """
         config=self._get_configuration()
         size=self.size[0]
         for i in reversed(range(size)):
@@ -910,7 +915,7 @@ class KMC_Model(Process):
                     print("kmcos movie creation failed. Images are in exported_movie_images or user specified directory.", "The error was: ", error)
 
     def peek(self, *args, **kwargs):
-        """Creates a static image of the model
+        """Creates a static image of the model in a popup window.
 
         """
         tag = kwargs.pop('tag', None)
@@ -919,6 +924,8 @@ class KMC_Model(Process):
         ase.visualize.view(self.get_atoms(tag=tag), *args, **kwargs)
 
     def show(self):
+        """Creates a static image of the model in a popup window (this is a duplicate command of 'peek' created for convenience).
+        """
         return self.peek()
 
     def view(self, scaleA = None):
