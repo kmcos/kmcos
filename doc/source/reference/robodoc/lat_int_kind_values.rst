@@ -1,4 +1,4 @@
-libkmc/kind_values
+kmcos/kind_values
 ----------------------------------------
 
     This module offers kind_values for commonly
