@@ -12,7 +12,7 @@ from kmcos.io import *
 # Copy DTD
 import kmcos
 shutil.copy(os.path.join(os.path.dirname(kmcos.__file__),
-                                'kmc_project_v0.2.dtd'),
+                                'kmc_project_v0.4.dtd'),
             '.')
 
 # Fetch doc from dummy project
