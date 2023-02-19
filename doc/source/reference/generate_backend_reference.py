@@ -12,7 +12,7 @@ from kmcos.io import *
 # Copy DTD
 import kmcos
 shutil.copy(os.path.join(os.path.dirname(kmcos.__file__),
-                                'kmc_project_v0.2.dtd'),
+                                'kmc_project_v0.4.dtd'),
             '.')
 
 # Fetch doc from dummy project
@@ -48,7 +48,7 @@ for backend in ['local_smart', 'lat_int', 'otf']:
                    condition_list=[Condition(coord=coord, species='b')],
                    action_list=[Condition(coord=coord, species='a')],
                    )
-    export_source(pt, outdir, code_generator=backend)
+    export_source(kmc_model, outdir, code_generator=backend)
 
     print(glob.glob('{outdir}/*.f90'.format(**locals())))
     for f90_file in glob.glob('{outdir}/*.f90'.format(**locals())):
@@ -57,7 +57,7 @@ for backend in ['local_smart', 'lat_int', 'otf']:
         f90_path = os.path.join(outdir, prefix)
         os.system('robodoc --src {f90_path}.f90 --doc {prefix}_{backend} --singlefile --ascii'.format(**locals()))
 
-        asci = file('{prefix}_{backend}.txt'.format(**locals()), 'r').readlines()
+        asci = open('{prefix}_{backend}.txt'.format(**locals()), 'r').readlines()
 
         new_asci = []
         jump = 0
@@ -85,7 +85,7 @@ for backend in ['local_smart', 'lat_int', 'otf']:
             else:
                 new_asci.append(line)
         if new_asci :
-            rst = file('robodoc/{backend}_{prefix}.rst'.format(**locals()), 'w')
+            rst = open('robodoc/{backend}_{prefix}.rst'.format(**locals()), 'w')
             for line in new_asci:
                 rst.write(line)
             rst.close()
@@ -95,7 +95,7 @@ for backend in ['local_smart', 'lat_int', 'otf']:
 
     shutil.rmtree(outdir)
 
-with file('cli.rst', 'w') as outfile:
+with open('cli.rst', 'w') as outfile:
     from kmcos.cli import usage
     from kmcos import cli
     outfile.write(cli.__doc__)
