@@ -79,8 +79,13 @@ kmcos.run
 .. autoclass:: kmcos.run.LogParameter
 
 
-kmcos.run.KMC_Model (typical usage model.___)
+Model running commands
+================
+
+Typical usage: model.[command]
 ^^^^^^^^
+
+Source code in: https://github.com/kmcos/kmcos/blob/master/kmcos/run/__init__.py
 
 .. autoclass:: kmcos.run.KMC_Model
   :members: _adjust_database,
@@ -89,15 +94,24 @@ kmcos.run.KMC_Model (typical usage model.___)
             _set_configuration,
             base,
             cell_size,
+            create_configuration_plot,
             deallocate,
             do_steps,
+            do_steps_time,
+            do_acc_steps,
             double,
             dump_config,
             export_movie,
+            export_picture,
             get_atoms,
+            get_avail,
             get_backend,
+            get_global_configuration,
+            get_local_configurations,
+            get_next_kmc_step,
             get_occupation_header,
             get_param_header,
+            get_species_coordinates,
             get_std_sampled_data,
             get_tof_header,
             halve,
@@ -107,11 +121,14 @@ kmcos.run.KMC_Model (typical usage model.___)
             nr2site,
             null_species,
             parameters,
+            peek,
+            play_ascii_movie,
             post_mortem,
             plot_configuration,
             print_accum_rate_summation,
             print_adjustable_parameters,
             print_coverages,
+            print_kmc_state,
             print_rates,
             procstat,
             procstat_normalized,
@@ -122,6 +139,7 @@ kmcos.run.KMC_Model (typical usage model.___)
             run,
             settings,
             show,
+            show_ascii_picture,
             site2nr,
             start,
             steps_per_frame,
