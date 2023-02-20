@@ -2069,14 +2069,16 @@ class KMC_Model(Process):
     def get_next_kmc_step(self):
         """
         Returns the next kmc step's process and which site it would occur on, without taking the step.
-        The output looks like this:
-        (Process model.proclist.o2_adsorption_bridge_right (13), Site (10, 19, 0, 1) [#781])
-        The process name and process nubmer are shown.
+        The output looks like this::
+        
+            (Process model.proclist.o2_adsorption_bridge_right (13), Site (10, 19, 0, 1) [#781])
+        
+        The process name and process number are shown.
+        
         For the site,the format is the unit cell position in cartesian x,y,z followed by the site type's index (in this example, it is 1). 
         As noted in the "_put()" function, the site type indexing starts at 1 (not at zero).
         One can use model.settings.site_names to see the site names, which come from kmc_settings.
         So a value of (10, 19, 0, 1) would mean unit cell 10,19,0 with site type model.settings.site_names[0] due to the different indexing.
-
         """
         prng_state = self.proclist.get_seed().tolist() #added Nov 15th 2022, so that get_next_kmc_step can reset the simulation state rather than affect the simulation.
         proc, site = proclist.get_next_kmc_step()
