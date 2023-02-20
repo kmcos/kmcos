@@ -745,13 +745,16 @@ class KMC_Model(Process):
     def do_acc_steps(self, n=10000, stats=True, save_exe=False, save_proc=0):
         """Propagate the model `n` steps using the temporal
         acceleration scheme.
+        
         :param n: Number of steps to run (Default: 10000)
         :type n: int
+        
         :param stats: Calculate statistics for the scaling factors
         :type stats: logical
-        :param save_exe: Track 'save_limit' number of  executions following the execution of the
-        :target process 'save_proc'
+        
+        :param save_exe: Track 'save_limit' number of  executions following the execution of the target process 'save_proc'
         :type save_exe: logical
+        
         :param save_proc: Process to be tracked
         :type save_proc: integer
         """
@@ -1481,8 +1484,10 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
+
                 Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
                 enough spaces in the model.
+                
                 Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
@@ -1550,8 +1555,10 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
+            
                 Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if there are
                 enough spaces in the model.
+                
                 Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
