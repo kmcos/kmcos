@@ -17,9 +17,10 @@ Entry point module for the command-line
 
     kmcos export <xml-file>
 
-
    etc.
 
+   You may also use syntax kmcos.export("...") for any cli command.
+   
 List of commands
 ^^^^^^^^^^^^^^^^
 
@@ -42,7 +43,7 @@ List of commands
             Do not send optimizing flags to compiler.
 
 
-``kmcos edit <xml-file> (deprecated)``
+``kmcos edit <xml-file>``
     Open the kmcos xml-file in a GUI to edit
     the model.
 
@@ -61,6 +62,13 @@ List of commands
             Choose backend. Default is "local_smart".
             lat_int is EXPERIMENTAL and not made
             for production, yet.
+
+        -t/--temp_acc
+            Use temporal acceleration scheme.
+            Builds the modules base_acc.f90, lattice_acc.mpy,
+            proclist_constants_acc.mpy and
+            proclist_generic_subroutines_acc.mpy.
+            Default is false.
 
         -d/--debug
             Turn on assertion statements in F90 code.
@@ -84,7 +92,7 @@ List of commands
 
 ``kmcos import <xml-file>``
     Take a kmcos xml-file and open an ipython shell
-    with the project_tree imported as kmc_model.
+    with the project_tree imported as pt.
 
 
 ``kmcos rebuild``

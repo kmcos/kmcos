@@ -121,7 +121,7 @@ To see all the available species names, check the species_tags in kmc_settings.p
 
 
 #We can do some more steps.
-do_snapshots(sps=10, n_snapshots=2)
+do_snapshots(n_snapshots=2, sps=10)
 
 #After finishing a simulation with snapshots, the final command below writes the simulation details to the logfile.  This command only exports information from steps. It is unrelated to the "put" examples we have used and will ignore them.
 create_log()

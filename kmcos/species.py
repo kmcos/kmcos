@@ -58,7 +58,7 @@ janaf_warning_string = str("""
             touch __init__.py
 
             Then copy all needed data files from the
-            `NIST website <http://kinetics.nist.gov/janaf/>`_
+            `NIST website <https://janaf.nist.gov/>`_
             in the tab-delimited text format
             to the `janaf_data` directory.""")
 try:

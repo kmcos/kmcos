@@ -2,10 +2,110 @@
 Reference
 ********************
 
-Command Line Interface (CLI)
-============================
+Model running commands
+================
 
-.. include:: cli.rst
+Typical usage: model.[command]
+^^^^^^^^
+
+Source code in: https://github.com/kmcos/kmcos/blob/master/kmcos/run/__init__.py
+
+.. autoclass:: kmcos.run.KMC_Model
+  :members: _adjust_database,
+            _get_configuration,
+            _put,
+            _set_configuration,
+            base,
+            cell_size,
+            create_configuration_plot,
+            deallocate,
+            do_steps,
+            do_steps_time,
+            do_acc_steps,
+            double,
+            dump_config,
+            export_movie,
+            export_picture,
+            get_atoms,
+            get_avail,
+            get_backend,
+            get_global_configuration,
+            get_local_configurations,
+            get_next_kmc_step,
+            get_occupation_header,
+            get_param_header,
+            get_species_coordinates,
+            get_std_sampled_data,
+            get_tof_header,
+            halve,
+            lattice,
+            load_config,
+            model.get_std_sampled_data,
+            nr2site,
+            null_species,
+            parameters,
+            peek,
+            play_ascii_movie,
+            post_mortem,
+            plot_configuration,
+            print_accum_rate_summation,
+            print_adjustable_parameters,
+            print_coverages,
+            print_kmc_state,
+            print_rates,
+            procstat,
+            procstat_normalized,
+            procstat_pprint,
+            put,
+            rate_constants,
+            reset,
+            run,
+            settings,
+            show,
+            show_ascii_picture,
+            site2nr,
+            start,
+            steps_per_frame,
+            view,
+            xml,
+
+.. autoclass:: kmcos.run.Model_Rate_Constants
+   :members: __call__,
+             by_name,
+             inverse
+
+.. autoclass:: kmcos.run.Model_Parameters
+   :members: __call__
+
+
+Connected Variables
+====================
+
+The connected_variables dictionary allows a person to pass string-writable objects
+created during the model building into the runtime environment. This can be useful if
+a person needs access to some data structures (like lists of surrounding sites) during runtime.
+Dictionaries, strings, and lists can be passed. For more complex variables,
+one could pass the name of a pickle file.
+This feature is used for the surroundingSitesDict.
+
+
+The basic syntax in a build_file would be as follows::
+
+    kmc_model = kmcos.create_kmc_model(model_name)
+    kmc_model.connected_variables['frog_list'] = [1,2,3,4]
+
+Then, during runtime, one could do the following::
+
+    print(model.connected_variables['frog_list'])
+    
+Additional Information for developers. Currently (Dec 2022), the way kmcos processes things from the build file to the Runtime environment is as follows:
+
+    A person's build file makes a Project class object (typically "kmc_model"), for example in https://github.com/kmcos/kmcos/blob/master/examples/MyFirstDiffusion__build.py
+    That build file makes an xml file (or ini file), which occurs in types.py _get_etree_xml or _get_etree_ini where a string is made that then gets written to file.
+    That xml/ini is then read back in and validated , which occurs against a DTD. A new Project class object is made from what is read back in.
+    It is important to recognize that the new Project class object has many attributes that are the same as the one in the build file, but it is not the same object. It has fewer of the original attributes due to hardcoded mapping during xml writing and xml reading.
+    When the source code compilation occurs, kmc_settings. is made. What is in kmc_settings roughly mirrors the original Project class object, but it is actually from the new Project class object that has been created from the xml. 
+
 
 Data Types
 ==========
@@ -79,63 +179,6 @@ kmcos.run
 .. autoclass:: kmcos.run.LogParameter
 
 
-kmcos.run.KMC_Model (typical usage model.___)
-^^^^^^^^
-
-.. autoclass:: kmcos.run.KMC_Model
-  :members: _adjust_database,
-            _get_configuration,
-            _put,
-            _set_configuration,
-            base,
-            cell_size,
-            deallocate,
-            do_steps,
-            double,
-            dump_config,
-            export_movie,
-            get_atoms,
-            get_backend,
-            get_occupation_header,
-            get_param_header,
-            get_std_sampled_data,
-            get_tof_header,
-            halve,
-            lattice,
-            load_config,
-            model.get_std_sampled_data,
-            nr2site,
-            null_species,
-            parameters,
-            post_mortem,
-            plot_configuration,
-            print_accum_rate_summation,
-            print_adjustable_parameters,
-            print_coverages,
-            print_rates,
-            procstat,
-            procstat_normalized,
-            procstat_pprint,
-            put,
-            rate_constants,
-            reset,
-            run,
-            settings,
-            show,
-            site2nr,
-            start,
-            steps_per_frame,
-            view,
-            xml,
-
-.. autoclass:: kmcos.run.Model_Rate_Constants
-   :members: __call__,
-             by_name,
-             inverse
-
-.. autoclass:: kmcos.run.Model_Parameters
-   :members: __call__
-
 kmcos.view
 ^^^^^^^^^
 
@@ -171,36 +214,6 @@ One way to define an XML format is by using a document type description
 the DTD below.
 
 .. literalinclude:: kmc_project_v0.2.dtd
-
-
-
-Connected Variables
-====================
-
-The connected_variables dictionary allows a person to pass string-writable objects
-created during the model building into the runtime environment. This can be useful if
-a person needs access to some data structures (like lists of surrounding sites) during runtime.
-Dictionaries, strings, and lists can be passed. For more complex variables,
-one could pass the name of a pickle file.
-This feature is used for the surroundingSitesDict.
-
-
-The basic syntax in a build_file would be as follows::
-
-    kmc_model = kmcos.create_kmc_model(model_name)
-    kmc_model.connected_variables['frog_list'] = [1,2,3,4]
-
-Then, during runtime, one could do the following::
-
-    print(model.connected_variables['frog_list'])
-    
-Additional Information for developers. Currently (Dec 2022), the way kmcos processes things from the build file to the Runtime environment is as follows:
-
-    A person's build file makes a Project class object (typically "kmc_model"), for example in https://github.com/kmcos/kmcos/blob/master/examples/MyFirstDiffusion__build.py
-    That build file makes an xml file (or ini file), which occurs in types.py _get_etree_xml or _get_etree_ini where a string is made that then gets written to file.
-    That xml/ini is then read back in and validated , which occurs against a DTD. A new Project class object is made from what is read back in.
-    It is important to recognize that the new Project class object has many attributes that are the same as the one in the build file, but it is not the same object. It has fewer of the original attributes due to hardcoded mapping during xml writing and xml reading.
-    When the source code compilation occurs, kmc_settings. is made. What is in kmc_settings roughly mirrors the original Project class object, but it is actually from the new Project class object that has been created from the xml. 
 
 
 Backends
@@ -263,3 +276,8 @@ otf
 .. include:: robodoc/otf_proclist_constants.rst
 .. include:: robodoc/otf_proclist.rst
 .. include:: robodoc/otf_kind_values.rst
+
+Command Line Interface (CLI)
+============================
+
+.. include:: cli.rst

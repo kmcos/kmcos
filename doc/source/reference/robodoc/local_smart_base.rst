@@ -320,6 +320,12 @@ base/save_system
 
     ``none``
 
+base/set_kmc_step
+""""""""""""""""""""""""""""""""""""""""""""""""""
+    Sets the current kmc_step
+
+    * ``kmc_step`` Writeable integer
+
 base/set_kmc_time
 """"""""""""""""""""""""""""""""""""""""""""""""""
     Sets current kmc_time as rdouble real as defined in kind_values.f90.

@@ -110,14 +110,15 @@ usage['settings-export'] = """kmcos settings-export <xml-file> [<export-path>]
     to the export-path.
                     """
 
-usage['edit'] = """kmcos edit <xml-file>
+usage['edit'] = """kmcos edit <xml-file> (deprecated)
     Open the kmcos xml-file in a GUI to edit
     the model.
                 """
 
 usage['import'] = """kmcos import <xml-file>
     Take a kmcos xml-file and open an ipython shell
-    with the project_tree imported as pt.
+    with the project_tree imported as pt. 
+    (Maybe this feature should later be changed ti import the project tree as kmc_model.)
                   """
 usage['rebuild'] = """kmcos rebuild
     Export code and rebuild binary module from XML
@@ -432,7 +433,7 @@ def main(args=None):
         import kmcos.io
         if not len(args) >= 2:
             raise UserWarning('XML file name expected.')
-        pt = kmcos.io.import_xml_file(args[1])
+        pt = kmcos.io.import_xml_file(args[1]) #TODO: consider changing this line to kmc_model = kmcos.io...
         if len(args) == 2:
             sh(banner='Note: pt = kmcos.io.import_xml(\'%s\')' % args[1])
         elif len(args) == 3: # if optional 3rd argument is given, store model there and exit

@@ -19,9 +19,31 @@ proclist/do_kmc_steps
 
     ``n`` : Number of steps to run
 
-proclist/get_kmc_step
+proclist/do_kmc_steps_time
+""""""""""""""""""""""""""""""""""""""""""""""""""
+    Performs a variable number of KMC steps to try to match the requested
+    simulation time as closely as possible without going over. This routine
+    always performs at least one KMC step before terminating.
+    * Determine the time step for the next process
+    * If the time limit is not exceeded, update clocks, rates, execute process,
+      etc.; otherwise, abort.
+    Ideally we would use state(seed_size) but that was not working, so hardcoded size.
+
+    ``t`` : Requested simulation time increment (input)
+    ``n`` : Maximum number of steps to run (input)
+    ``num_iter`` : the number of executed iterations (output)
+
+proclist/get_next_kmc_step
 """"""""""""""""""""""""""""""""""""""""""""""""""
     Determines next step without executing it.
+    However, it changes the position in the random_number 
+    sequence. The python function for
+    model.get_next_kmc_step() should be used
+    as it makes additional function calls
+    to reset the random numbers.
+    Calling model.proclist.get_next_kmc_step()
+    is discouraged as that will call this subroutine
+    directly and will not reset the random numbers.
 
     ``none``
 
@@ -33,6 +55,13 @@ proclist/get_occupation
     along the second.
 
     ``none``
+
+proclist/get_seed
+""""""""""""""""""""""""""""""""""""""""""""""""""
+   Function to retrieve the state of the random number generator to
+    permit reproducible restart trajectories.
+
+    * None
 
 proclist/init
 """"""""""""""""""""""""""""""""""""""""""""""""""
@@ -51,9 +80,26 @@ proclist/initialize_state
 
     * ``layer`` integer representing layer
 
+proclist/put_seed
+""""""""""""""""""""""""""""""""""""""""""""""""""
+    Subroutine to set the state of the random number generator to
+    permit reproducible restart trajectories.
+
+    * ``state`` an array of integers with the state of the random number
+    generator (input)
+
 proclist/run_proc_nr
 """"""""""""""""""""""""""""""""""""""""""""""""""
     Runs process ``proc`` on site ``nr_site``.
 
     * ``proc`` integer representing the process number
     * ``nr_site``  integer representing the site
+
+proclist/seed_gen
+""""""""""""""""""""""""""""""""""""""""""""""""""
+    Function to transform a single number into a full set of integers
+    required for initializing the random number generator.
+
+    * ``sd`` an integer used to seed a simple random number generator
+    used to generate additional integers for seeding the production random
+    number generator (input)

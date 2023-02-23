@@ -114,6 +114,12 @@ subroutine do_kmc_steps(n)
 
     call update_integ_rate
     call determine_procsite(ran_proc, ran_site, proc_nr, nr_site)
+!    print *, "PROCLIST/DO_KMC_STEP"
+!    print *,"    PROCLIST/DO_KMC_STEP/RAN_TIME",ran_time
+!    print *,"    PROCLIST/DO_KMC_STEP/RAN_PROC",ran_proc
+!    print *,"    PROCLIST/DO_KMC_STEP/RAN_SITE",ran_site
+!    print *,"PROCLIST/DO_KMC_STEP/NR_SITE", nr_site
+!    print *,"PROCLIST/DO_KMC_STEP/PROC_NR", proc_nr       
     call run_proc_nr(proc_nr, nr_site)
     enddo
 
@@ -200,9 +206,17 @@ end subroutine do_kmc_step
 
 subroutine get_next_kmc_step(proc_nr, nr_site)
 
-!****f* proclist/get_kmc_step
+!****f* proclist/get_next_kmc_step
 ! FUNCTION
 !    Determines next step without executing it.
+!    However, it changes the position in the random_number 
+!    sequence. The python function for
+!    model.get_next_kmc_step() should be used
+!    as it makes additional function calls
+!    to reset the random numbers.
+!    Calling model.proclist.get_next_kmc_step()
+!    is discouraged as that will call this subroutine
+!    directly and will not reset the random numbers.
 !
 ! ARGUMENTS
 !
@@ -214,9 +228,13 @@ subroutine get_next_kmc_step(proc_nr, nr_site)
     call random_number(ran_time)
     call random_number(ran_proc)
     call random_number(ran_site)
+!    print *,"PROCLIST/GET_NEXT_KMC_STEP/RAN_TIME",ran_time
+!    print *,"PROCLIST/GET_NEXT_KMC_STEP/RAN_PROC",ran_proc
+!    print *,"PROCLIST/GET_NEXT_KMC_STEP/RAN_SITE",ran_site
     call update_accum_rate
-    call determine_procsite(ran_proc, ran_time, proc_nr, nr_site)
+    call determine_procsite(ran_proc, ran_site, proc_nr, nr_site)
 
+!    print *,"PROCLIST/GET_NEXT_KMC_STEP/PROC_NR",proc_nr
 end subroutine get_next_kmc_step
 
 subroutine get_occupation(occupation)
@@ -507,10 +525,10 @@ subroutine touchup_simple_cubic_hollow(site)
         call del_proc(CO_desorption, site)
     endif
     select case(get_species(site))
-    case(empty)
-        call add_proc(CO_adsorption, site)
     case(CO)
         call add_proc(CO_desorption, site)
+    case(empty)
+        call add_proc(CO_adsorption, site)
     end select
 
 end subroutine touchup_simple_cubic_hollow

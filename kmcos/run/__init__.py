@@ -728,27 +728,33 @@ class KMC_Model(Process):
             progress_bar.clear()
 
     def do_steps_time(self, t=1.0, n=10000):
-     """Propagate the model `t` s.
+        """Propagate the model `t` s, or n steps (whichever is achieved first.
+        The n steps are intended to act as an upper limit to avoid infnite steps
+        as well as for any other reason that the user may wish to limit the number of steps.
 
-     :param t: Length of time (s) to run (Default: 1)
-     :type t: real
-
-     Returns the number of iterations executed.
-
-     """
-     num_iter = proclist.do_kmc_steps_time(t,n)
-     return num_iter
+        :param t: Length of time (s) to run (Default: 1)
+        :type t: real
+        
+        :param n: Upper limit for number of steps to run (Default: 10000)
+        :type n: int
+        Returns the number of iterations executed.
+        """
+        num_iter = proclist.do_kmc_steps_time(t,n)
+        return num_iter
 
     def do_acc_steps(self, n=10000, stats=True, save_exe=False, save_proc=0):
         """Propagate the model `n` steps using the temporal
         acceleration scheme.
+        
         :param n: Number of steps to run (Default: 10000)
         :type n: int
+        
         :param stats: Calculate statistics for the scaling factors
         :type stats: logical
-        :param save_exe: Track 'save_limit' number of  executions following the execution of the
-        :target process 'save_proc'
+        
+        :param save_exe: Track 'save_limit' number of  executions following the execution of the target process 'save_proc'
         :type save_exe: logical
+        
         :param save_proc: Process to be tracked
         :type save_proc: integer
         """
@@ -836,6 +842,8 @@ class KMC_Model(Process):
             self.do_steps(steps)
 
     def show_ascii_picture(self,site,species,hexagonal=False):
+        """Shows an ascii picture of the current configuration.
+        """
         config=self._get_configuration()
         size=self.size[0]
         for i in reversed(range(size)):
@@ -910,7 +918,7 @@ class KMC_Model(Process):
                     print("kmcos movie creation failed. Images are in exported_movie_images or user specified directory.", "The error was: ", error)
 
     def peek(self, *args, **kwargs):
-        """Creates a static image of the model
+        """Creates a static image of the model in a popup window.
 
         """
         tag = kwargs.pop('tag', None)
@@ -919,6 +927,8 @@ class KMC_Model(Process):
         ase.visualize.view(self.get_atoms(tag=tag), *args, **kwargs)
 
     def show(self):
+        """Creates a static image of the model in a popup window (this is a duplicate command of 'peek' created for convenience).
+        """
         return self.peek()
 
     def view(self, scaleA = None):
@@ -1474,8 +1484,10 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
+
                 Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if htere are
                 enough spaces in the model.
+                
                 Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
@@ -1543,8 +1555,10 @@ class KMC_Model(Process):
             [1, 1, 0, 0, 1, 0],
             [1, 0, 1, 1, 1, 0],
             [1, 0, 1, 0, 1, 0]]
+            
                 Note 1: For this case, "0" is empty and "1" is CO. In general, the meshgrid can have higher numbers representing more than 2 species if there are
                 enough spaces in the model.
+                
                 Note 2: The return value for get_global_configuration() and get_species_coordinates() have the same return values when setting matrix_format = 'meshgrid'
 
         """
@@ -2055,14 +2069,16 @@ class KMC_Model(Process):
     def get_next_kmc_step(self):
         """
         Returns the next kmc step's process and which site it would occur on, without taking the step.
-        The output looks like this:
-        (Process model.proclist.o2_adsorption_bridge_right (13), Site (10, 19, 0, 1) [#781])
-        The process name and process nubmer are shown.
+        The output looks like this::
+        
+            (Process model.proclist.o2_adsorption_bridge_right (13), Site (10, 19, 0, 1) [#781])
+        
+        The process name and process number are shown.
+        
         For the site,the format is the unit cell position in cartesian x,y,z followed by the site type's index (in this example, it is 1). 
         As noted in the "_put()" function, the site type indexing starts at 1 (not at zero).
         One can use model.settings.site_names to see the site names, which come from kmc_settings.
         So a value of (10, 19, 0, 1) would mean unit cell 10,19,0 with site type model.settings.site_names[0] due to the different indexing.
-
         """
         prng_state = self.proclist.get_seed().tolist() #added Nov 15th 2022, so that get_next_kmc_step can reset the simulation state rather than affect the simulation.
         proc, site = proclist.get_next_kmc_step()
