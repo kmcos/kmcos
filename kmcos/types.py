@@ -71,8 +71,10 @@ class Project(object):
     A Project holds all other elements needed to describe one
     kMC Project ready to be manipulated, exported, or imported.
 
-    The overall structure is the following as is also displayed
-    in the editor GUI.
+    The Project class is primarily used in build files.
+
+    The overall structure is the following and was also displayed
+    in the editor GUI (but that GUI is deprecated as of 2022).
 
     Project::
 
@@ -453,6 +455,7 @@ class Project(object):
             config.set(section_name, 'actions',
                        ' + '.join(actions))
         if hasattr(self, 'connected_variables'):
+            config.add_section('connected_variables')
             config.set('connected_variables',
                        'connected_variables_string',
                        str(self.connected_variables))
