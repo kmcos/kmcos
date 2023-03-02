@@ -20,10 +20,10 @@ ModelName = "MyFirstThrottling"
 backend = 'local_smart'
 import kmcos.io
 kmcos.io.clear_model(ModelName, backend=backend)
-exec('import ' +ModelName) #This will create the xml. Like import MyFirstThrottling.py
+exec('import ' +ModelName + "__build") #This will create the xml and export/compile.
 import kmcos.cli
-kmcos.cli.main('export '+ModelName+ '.xml '+ ' -o -b '+ backend)  #this will export the model with the standard backend.
-os.chdir('..') #need to go back since export moves into src directory
+#kmcos.cli.main('export '+ModelName+ '.xml '+ ' -o -b '+ backend)  #this exported the model with the standard backend in the past. At that time, the "__build" was not in the filenmae.
+#os.chdir('..') #need to go back since export moves into src directory
 
 
 """
