@@ -1660,6 +1660,8 @@ def update_throttling_guidelines():
     # Recalculate NSP threshold
     tg.NSP_EF_threshold = float(tg.Nsites)/tg.max_time
 
+# This function is not intended to be called directly by users.
+# Users should call do_throttled_snapshots.
 # This function will execute a single snapshot in conjunction with the
 # throttling algorithm. If this is the first time a snapshot has ever been
 # executed, then no throttling is performed.
@@ -1744,9 +1746,12 @@ def do_throttled_snapshot(local_snapshot_idx, sps, tps, eic_module_objects):
         print('Cutoff Time Exceeded')
         tg.cutoff_time_exceeded = True
 
+# This function is intended to be called by users.
 # This function will run a total of Nsnapshots iterations of
-# do_throttled_snapshot. By default it will start every cycle of
-# do_throttled_snapshot calls with an unthrottled snapshot.
+# do_throttled_snapshot. By default (with tg.reset_snapshot_counter=True)
+# this function will start every cycle (every call to this function)
+# with an unthrottled snapshot when calling do_throttled_snapshot.
+# This means using do_throttled_snapshots(Nsnapshots=1) will normally be unthrottled.
 def do_throttled_snapshots(Nsnapshots, sps=None, tps=None,
     eic_module_objects=None):
 
