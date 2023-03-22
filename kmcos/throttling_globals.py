@@ -132,7 +132,9 @@ use_guideline_sps = False    # SPS size #this will override what is set for thro
 # closer than Nsites to an FQP if it exists.
 staggering_factors = [Nsites, Nsites, 10., 1.1]
 
-# Total number of snapshots to take between unthrottling of slow reactions
+# Total number of snapshots to take between unthrottling of slow reactions. 
+# do_throttled_snapshots is intended to be used with a number larger than loop_base
+# For example, if loop_base is 10, it might be good to use do_throttled_snapshots of > 100
 loop_base = 10 #This is "M" in the original SQERTSS paper.
 
 # If the current snapshot counter is an integer multiple of loop_base, should we
