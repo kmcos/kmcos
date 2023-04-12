@@ -1,10 +1,17 @@
+NOTICE
+######
+
+NOTICE
+######
+
+**Please refer to the** `documentation <http://kmcos.readthedocs.org>`_ **for the most
+recent installation instructions.**
+
+**The content below is deprecated and not maintained.**
+
+
 INSTALL
 #######
-
-
-Please refer to the
-`Manual <http://kmcos.readthedocs.org>`_ for installation
-instructions.
 
 Though not recommended, for core functionality you can simply install via ::
 
