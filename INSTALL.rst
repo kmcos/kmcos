@@ -1,9 +1,6 @@
 NOTICE
 ######
 
-NOTICE
-######
-
 **Please refer to the** `documentation <http://kmcos.readthedocs.org>`_ **for the most
 recent installation instructions.**
 
