@@ -6,4 +6,4 @@ a) For most of the .rst files inside doc/source, we edit them directly.
 b) For the important reference section, names of functions are added manually ("by hand") into doc\source\reference\index.rst
 c) For the fortran backend, a robodoc software must be run manually as described in \kmcos\doc\source\reference\README.txt
 
-Note: "b)" seemed like something sphinx would do, but attempting to run sphinx by itself made many new directories. So I think that in the past "b)" was probably made manually, and this we are continuing that way for now.  Switching to what sphinx generates would be a major change to the read the docs and would require more effort than will be devoted at this time.
+Note: "b)" seemed like something sphinx would do, but attempting to run sphinx by itself made many new directories. So I think that in the past "b)" was probably made manually, and this we are continuing that way for now. Switching to what the current version of sphinx generates would be a major change to the read the docs and would require more effort than will be devoted at this time.
