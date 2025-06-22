@@ -121,7 +121,7 @@ setup(
       long_description=long_description,
       maintainer=maintainer,
       maintainer_email=maintainer_email,
-      name=name,
+      name=name.lower(),
       package_data=package_data,
       package_dir=package_dir,
       packages=packages,
